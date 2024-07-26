@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameSystem/PlayerDataSubsystem.h"
@@ -35,7 +35,7 @@ bool ULocalPlayerDataHandle::LoadPlayerData_Implementation(const FString& LoadLo
 {
 	this->LocalData = Cast<UPlayerStructManager>(
 		this->LoadLocalSaveGame(LocalPlayerName + TEXT("P"), LoadLogMsg)
-		);
+	);
 
 	if (IsValid(this->LocalData))
 	{
@@ -71,8 +71,8 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	if (this->LocalFileIsExist(LocalPlayerFileName))
 	{
 		UPlayerStructManager* PlayerInstance = Cast<UPlayerStructManager>(
-			this->LoadLocalSaveGame(LocalPlayerFileName, __FUNCTION__ + FString("加载角色存档"))
-			);
+			this->LoadLocalSaveGame(LocalPlayerFileName, __FUNCTION__ + FString(TEXT("加载角色存档")))
+		);
 
 		if (IsValid(PlayerInstance))
 		{
@@ -109,7 +109,9 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 		UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("土司面包")), 0);
 
 		//保存存档
-		UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this, __FUNCTION__ + FString("保存角色存档"));
+		UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this,
+			__FUNCTION__ +
+			FString(TEXT("保存角色存档")));
 
 		return true;
 	}
