@@ -1,0 +1,40 @@
+{
+	"FileVersion": 3,
+	"Version": 10202,
+	"VersionName": "1.2.2",
+	"FriendlyName": "PolygonButton",
+	"Description": "Polygon clickable area button for UMG",
+	"Category": "Angry",
+	"CreatedBy": "AngrySteiner",
+	"CreatedByURL": "http://github.com/AngrySteiner/PolygonButtonDist",
+	"DocsURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/8622328104c54da8876eee2985bfd060",
+	"SupportURL": "",
+	"EngineVersion": "5.0.0",
+	"CanContainContent": false,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "PolygonButton",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Android",
+				"IOS",
+				"Mac"
+			]
+		},
+		{
+			"Name": "PolygonButtonEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostDefault",
+			"PlatformAllowList": [
+				"Win64",
+				"Android",
+				"IOS",
+				"Mac"
+			]
+		}
+	]
+}
