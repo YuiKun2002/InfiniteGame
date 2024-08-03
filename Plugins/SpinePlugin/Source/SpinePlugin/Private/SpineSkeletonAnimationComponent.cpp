@@ -34,34 +34,39 @@
 
 using namespace spine;
 
-void UTrackEntry::SetTrackEntry(TrackEntry *trackEntry) {
-	this->entry = trackEntry;
-	if (entry) entry->setRendererObject((void *) this);
+void UTrackEntry::SetTrackEntry(TrackEntry* trackEntry) {
+	this->entry = MakeShareable(trackEntry);
+	if (entry) entry->setRendererObject((void*)this);
 }
 
-void callback(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event) {
-	USpineSkeletonAnimationComponent *component = (USpineSkeletonAnimationComponent *) state->getRendererObject();
+void callback(AnimationState* state, spine::EventType type, TrackEntry* entry, Event* event) {
+	USpineSkeletonAnimationComponent* component = (USpineSkeletonAnimationComponent*)state->getRendererObject();
 
 	if (entry->getRendererObject()) {
-		UTrackEntry *uEntry = (UTrackEntry *) entry->getRendererObject();
+		UTrackEntry* uEntry = (UTrackEntry*)entry->getRendererObject();
 		if (type == EventType_Start) {
 			component->AnimationStart.Broadcast(uEntry);
 			uEntry->AnimationStart.Broadcast(uEntry);
-		} else if (type == EventType_Interrupt) {
+		}
+		else if (type == EventType_Interrupt) {
 			component->AnimationInterrupt.Broadcast(uEntry);
 			uEntry->AnimationInterrupt.Broadcast(uEntry);
-		} else if (type == EventType_Event) {
+		}
+		else if (type == EventType_Event) {
 			FSpineEvent evt;
 			evt.SetEvent(event);
 			component->AnimationEvent.Broadcast(uEntry, evt);
 			uEntry->AnimationEvent.Broadcast(uEntry, evt);
-		} else if (type == EventType_Complete) {
+		}
+		else if (type == EventType_Complete) {
 			component->AnimationComplete.Broadcast(uEntry);
 			uEntry->AnimationComplete.Broadcast(uEntry);
-		} else if (type == EventType_End) {
+		}
+		else if (type == EventType_End) {
 			component->AnimationEnd.Broadcast(uEntry);
 			uEntry->AnimationEnd.Broadcast(uEntry);
-		} else if (type == EventType_Dispose) {
+		}
+		else if (type == EventType_Dispose) {
 			component->AnimationDispose.Broadcast(uEntry);
 			uEntry->AnimationDispose.Broadcast(uEntry);
 			uEntry->SetTrackEntry(nullptr);
@@ -83,13 +88,13 @@ void USpineSkeletonAnimationComponent::BeginPlay() {
 }
 
 void UTrackEntry::BeginDestroy() {
-	if (entry) {
+	if (entry.IsValid()) {
 		entry->setRendererObject(nullptr);
 	}
 	Super::BeginDestroy();
 }
 
-void USpineSkeletonAnimationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) {
+void USpineSkeletonAnimationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	InternalTick(DeltaTime, true, TickType == LEVELTICK_ViewportsOnly);
@@ -130,7 +135,7 @@ void USpineSkeletonAnimationComponent::CheckState() {
 		// Are we doing a re-import? Then check if the underlying spine-cpp data
 		// has changed.
 		if (lastAtlas && lastAtlas == Atlas && lastData && lastData == SkeletonData) {
-			spine::Atlas *atlas = Atlas->GetAtlas();
+			spine::Atlas* atlas = Atlas->GetAtlas();
 			if (lastSpineAtlas != atlas) {
 				needsUpdate = true;
 			}
@@ -144,12 +149,12 @@ void USpineSkeletonAnimationComponent::CheckState() {
 		DisposeState();
 
 		if (Atlas && SkeletonData) {
-			spine::SkeletonData *data = SkeletonData->GetSkeletonData(Atlas->GetAtlas());
+			spine::SkeletonData* data = SkeletonData->GetSkeletonData(Atlas->GetAtlas());
 			if (data) {
 				skeleton = new (__FILE__, __LINE__) Skeleton(data);
-				AnimationStateData *stateData = SkeletonData->GetAnimationStateData(Atlas->GetAtlas());
+				AnimationStateData* stateData = SkeletonData->GetAnimationStateData(Atlas->GetAtlas());
 				state = new (__FILE__, __LINE__) AnimationState(stateData);
-				state->setRendererObject((void *) this);
+				state->setRendererObject((void*)this);
 				state->setListener(callback);
 				trackEntries.Empty();
 			}
@@ -188,7 +193,7 @@ void USpineSkeletonAnimationComponent::SetPlaybackTime(float InPlaybackTime, boo
 	CheckState();
 
 	if (state && state->getCurrent(0)) {
-		spine::Animation *CurrentAnimation = state->getCurrent(0)->getAnimation();
+		spine::Animation* CurrentAnimation = state->getCurrent(0)->getAnimation();
 		const float CurrentTime = state->getCurrent(0)->getTrackTime();
 		InPlaybackTime = FMath::Clamp(InPlaybackTime, 0.0f, CurrentAnimation->getDuration());
 		const float DeltaTime = InPlaybackTime - CurrentTime;
@@ -217,71 +222,77 @@ float USpineSkeletonAnimationComponent::GetTimeScale() {
 	return 1;
 }
 
-UTrackEntry *USpineSkeletonAnimationComponent::SetAnimation(int trackIndex, FString animationName, bool loop) {
+UTrackEntry* USpineSkeletonAnimationComponent::SetAnimation(int trackIndex, FString animationName, bool loop) {
 	CheckState();
 	if (state && skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
-		TrackEntry *entry = state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
+		TrackEntry* entry = state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
 		state->enableQueue();
-		UTrackEntry *uEntry = NewObject<UTrackEntry>();
+		UTrackEntry* uEntry = NewObject<UTrackEntry>();
 		uEntry->SetTrackEntry(entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
-	} else
+	}
+	else
 		return NewObject<UTrackEntry>();
 }
 
-UTrackEntry *USpineSkeletonAnimationComponent::AddAnimation(int trackIndex, FString animationName, bool loop, float delay) {
+UTrackEntry* USpineSkeletonAnimationComponent::AddAnimation(int trackIndex, FString animationName, bool loop, float delay) {
 	CheckState();
 	if (state && skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
-		TrackEntry *entry = state->addAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop, delay);
+		TrackEntry* entry = state->addAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop, delay);
 		state->enableQueue();
-		UTrackEntry *uEntry = NewObject<UTrackEntry>();
+		UTrackEntry* uEntry = NewObject<UTrackEntry>();
 		uEntry->SetTrackEntry(entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
-	} else
+	}
+	else
 		return NewObject<UTrackEntry>();
 }
 
-UTrackEntry *USpineSkeletonAnimationComponent::SetEmptyAnimation(int trackIndex, float mixDuration) {
+UTrackEntry* USpineSkeletonAnimationComponent::SetEmptyAnimation(int trackIndex, float mixDuration) {
 	CheckState();
 	if (state) {
-		TrackEntry *entry = state->setEmptyAnimation(trackIndex, mixDuration);
-		UTrackEntry *uEntry = NewObject<UTrackEntry>();
+		TrackEntry* entry = state->setEmptyAnimation(trackIndex, mixDuration);
+		UTrackEntry* uEntry = NewObject<UTrackEntry>();
 		uEntry->SetTrackEntry(entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
-	} else
+	}
+	else
 		return NewObject<UTrackEntry>();
 }
 
-UTrackEntry *USpineSkeletonAnimationComponent::AddEmptyAnimation(int trackIndex, float mixDuration, float delay) {
+UTrackEntry* USpineSkeletonAnimationComponent::AddEmptyAnimation(int trackIndex, float mixDuration, float delay) {
 	CheckState();
 	if (state) {
-		TrackEntry *entry = state->addEmptyAnimation(trackIndex, mixDuration, delay);
-		UTrackEntry *uEntry = NewObject<UTrackEntry>();
+		TrackEntry* entry = state->addEmptyAnimation(trackIndex, mixDuration, delay);
+		UTrackEntry* uEntry = NewObject<UTrackEntry>();
 		uEntry->SetTrackEntry(entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
-	} else
+	}
+	else
 		return NewObject<UTrackEntry>();
 }
 
-UTrackEntry *USpineSkeletonAnimationComponent::GetCurrent(int trackIndex) {
+UTrackEntry* USpineSkeletonAnimationComponent::GetCurrent(int trackIndex) {
 	CheckState();
 	if (state && state->getCurrent(trackIndex)) {
-		TrackEntry *entry = state->getCurrent(trackIndex);
+		TrackEntry* entry = state->getCurrent(trackIndex);
 		if (entry->getRendererObject()) {
-			return (UTrackEntry *) entry->getRendererObject();
-		} else {
-			UTrackEntry *uEntry = NewObject<UTrackEntry>();
+			return (UTrackEntry*)entry->getRendererObject();
+		}
+		else {
+			UTrackEntry* uEntry = NewObject<UTrackEntry>();
 			uEntry->SetTrackEntry(entry);
 			trackEntries.Add(uEntry);
 			return uEntry;
 		}
-	} else
+	}
+	else
 		return NewObject<UTrackEntry>();
 }
 

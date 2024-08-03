@@ -29,7 +29,7 @@
 
 #pragma once
 
-// clang-format off
+ // clang-format off
 #include "Components/ActorComponent.h"
 #include "SpineSkeletonComponent.h"
 #include "spine/spine.h"
@@ -41,7 +41,7 @@ struct SPINEPLUGIN_API FSpineEvent {
 	GENERATED_BODY();
 
 public:
-	void SetEvent(spine::Event *event) {
+	void SetEvent(spine::Event* event) {
 		Name = FString(UTF8_TO_TCHAR(event->getData().getName().buffer()));
 		if (!event->getStringValue().isEmpty()) {
 			StringValue = FString(UTF8_TO_TCHAR(event->getStringValue().buffer()));
@@ -67,12 +67,12 @@ public:
 	float Time;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationStartDelegate, UTrackEntry *, entry);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpineAnimationEventDelegate, UTrackEntry *, entry, FSpineEvent, evt);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationInterruptDelegate, UTrackEntry *, entry);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationCompleteDelegate, UTrackEntry *, entry);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationEndDelegate, UTrackEntry *, entry);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationDisposeDelegate, UTrackEntry *, entry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationStartDelegate, UTrackEntry*, entry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpineAnimationEventDelegate, UTrackEntry*, entry, FSpineEvent, evt);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationInterruptDelegate, UTrackEntry*, entry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationCompleteDelegate, UTrackEntry*, entry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationEndDelegate, UTrackEntry*, entry);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSpineAnimationDisposeDelegate, UTrackEntry*, entry);
 
 UCLASS(ClassGroup = (Spine), meta = (BlueprintSpawnableComponent), BlueprintType)
 class SPINEPLUGIN_API UTrackEntry : public UObject {
@@ -81,8 +81,8 @@ class SPINEPLUGIN_API UTrackEntry : public UObject {
 public:
 	UTrackEntry() {}
 
-	void SetTrackEntry(spine::TrackEntry *trackEntry);
-	spine::TrackEntry *GetTrackEntry() { return entry; }
+	void SetTrackEntry(spine::TrackEntry* trackEntry);
+	spine::TrackEntry* GetTrackEntry() { return entry; }
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	int GetTrackIndex() { return entry ? entry->getTrackIndex() : 0; }
@@ -222,7 +222,7 @@ public:
 	virtual void BeginDestroy() override;
 
 protected:
-	spine::TrackEntry *entry = nullptr;
+	TSharedPtr<spine::TrackEntry> entry;
 };
 
 class USpineAtlasAsset;
@@ -231,13 +231,13 @@ class SPINEPLUGIN_API USpineSkeletonAnimationComponent : public USpineSkeletonCo
 	GENERATED_BODY()
 
 public:
-	spine::AnimationState *GetAnimationState() { return state; };
+	spine::AnimationState* GetAnimationState() { return state; };
 
 	USpineSkeletonAnimationComponent();
 
 	virtual void BeginPlay() override;
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void FinishDestroy() override;
 
@@ -259,19 +259,19 @@ public:
 	float GetTimeScale();
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
-	UTrackEntry *SetAnimation(int trackIndex, FString animationName, bool loop);
+	UTrackEntry* SetAnimation(int trackIndex, FString animationName, bool loop);
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
-	UTrackEntry *AddAnimation(int trackIndex, FString animationName, bool loop, float delay);
+	UTrackEntry* AddAnimation(int trackIndex, FString animationName, bool loop, float delay);
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
-	UTrackEntry *SetEmptyAnimation(int trackIndex, float mixDuration);
+	UTrackEntry* SetEmptyAnimation(int trackIndex, float mixDuration);
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
-	UTrackEntry *AddEmptyAnimation(int trackIndex, float mixDuration, float delay);
+	UTrackEntry* AddEmptyAnimation(int trackIndex, float mixDuration, float delay);
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
-	UTrackEntry *GetCurrent(int trackIndex);
+	UTrackEntry* GetCurrent(int trackIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Animation")
 	void ClearTracks();
@@ -305,19 +305,19 @@ public:
 
 	// used in C event callback. Needs to be public as we can't call
 	// protected methods from plain old C function.
-	void GCTrackEntry(UTrackEntry *entry) { trackEntries.Remove(entry); }
+	void GCTrackEntry(UTrackEntry* entry) { trackEntries.Remove(entry); }
 
 protected:
 	virtual void CheckState() override;
 	virtual void InternalTick(float DeltaTime, bool CallDelegates = true, bool Preview = false) override;
 	virtual void DisposeState() override;
 
-	spine::AnimationState *state;
+	spine::AnimationState* state;
 
 	// keep track of track entries so they won't get GCed while
 	// in transit within a blueprint
 	UPROPERTY()
-	TSet<UTrackEntry *> trackEntries;
+	TSet<UTrackEntry*> trackEntries;
 
 private:
 	/* If the animation should update automatically. */
