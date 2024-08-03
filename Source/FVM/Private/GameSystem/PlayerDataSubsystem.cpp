@@ -67,7 +67,7 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	}
 
 	//查询本地存档是否存在
-	FString LocalPlayerFileName = LocalPlayerName + FString("P");
+	FString LocalPlayerFileName = LocalPlayerName + FString(TEXT("P"));
 	if (this->LocalFileIsExist(LocalPlayerFileName))
 	{
 		UPlayerStructManager* PlayerInstance = Cast<UPlayerStructManager>(
@@ -121,7 +121,7 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 
 bool ULocalPlayerDataHandle::RemovePlayerData_Implementation()
 {
-	return UGameplayStatics::DeleteGameInSlot(LocalPlayerName + FString("P"), 0);
+	return UGameplayStatics::DeleteGameInSlot(LocalPlayerName + FString(TEXT("P")), 0);
 }
 
 UPlayerStructManager* ULocalPlayerDataHandle::GetPlayerData_Implementation()

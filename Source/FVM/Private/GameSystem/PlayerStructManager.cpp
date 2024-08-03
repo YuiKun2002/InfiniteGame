@@ -4,6 +4,7 @@
 #include "GameSystem/PlayerStructManager.h"
 #include "Game/UI/UI_GamePrepare.h"
 #include "GameSystem/TaskSubsystem.h"
+#include "GameSystem/GameDataSubsystem.h"
 #include "GameSystem/GameUserInterfaceSubsystem.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 
@@ -126,7 +127,7 @@ void UPlayerStructManager::SetCoin(const FString& CoinName, int32 _Num)
 	}
 
 	//UGameSystemFunction::SaveCurrentPlayerData();
-	this->Save();
+	this->Save(__FUNCTION__ + FString(TEXT("货币设置操作")));
 }
 
 bool UPlayerStructManager::CheckCoin(const FString& CoinName)
@@ -282,7 +283,7 @@ void UPlayerStructManager::AddPlayerEx(float _ExValue)
 				UFVMGameInstance::GetFVMGameInstance(),
 				LoadClass<UWidgetBase>(0
 					, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BP_PlayerGradeUp.BP_PlayerGradeUp_C'"))
-				)->AddToViewport(100);
+			)->AddToViewport(100);
 
 			if (UGameUserInterfaceSubsystem::GetGameTaskUIInViewportSub())
 			{
@@ -349,7 +350,7 @@ bool UPlayerStructManager::AddNewPlayerLevel(const FString& LevelName, int32 Sta
 
 	if (bState)
 	{
-		UPlayerStructManager::Save();
+		UPlayerStructManager::Save(__FUNCTION__ + FString(TEXT("添加新开启的关卡操作")));
 	}
 
 	return bState;
@@ -372,17 +373,19 @@ FString UPlayerStructManager::GetLastNewLevelName()
 
 void UPlayerStructManager::Update()
 {
-	//加载数据表
-	TArray<FPlayerUpdateClassTableRowBase> UpdataClassData;
-	UGameSystemFunction::GetDataTableRows(
-		TEXT("DataTable'/Game/Resource/BP/Data/DT_PlayerUpdateClass.DT_PlayerUpdateClass'"),
-		UpdataClassData
-	);
+	if (!IsValid(UGameDataSubsystem::GetGameDataSubsystemStatic()))
+	{
+		return;
+	}
+
+	UDataTable* Table = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetAsset()->
+		GetDataByName(GLOBALASSET_PLAYER)->GetDataByName(TEXT("Update"));
+	DataTableAssetData<FPlayerUpdateClassTableRowBase> UpdataClassData(Table);
 
 	//执行更新
-	for (const auto& CurUpdateClass : UpdataClassData)
+	for (const auto& CurUpdateClass : UpdataClassData.GetDatas())
 	{
-		for (const auto& ClassPtr : CurUpdateClass.UpdateClass)
+		for (const auto& ClassPtr : CurUpdateClass.Value.UpdateClass)
 		{
 			UPlayerUpdateClass* CurNewPlayerUpdateClass = nullptr;
 			UClass* CurClass = ClassPtr.Value.LoadSynchronous();
@@ -496,7 +499,7 @@ bool UPlayerStructManager::UseMaterial(const int32& Index, const FString& Materi
 	if (bSave)
 	{
 		this->Remove_Item(this->M_PlayerItems_Material);
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("清理待移除的-材料道具")));
 	}
 
 	return Re;
@@ -629,7 +632,7 @@ bool UPlayerStructManager::AddEquipmentToPlayerBag(FEquipmentBase& _WeaponData)
 		//武器
 	case EEquipment::E_PlayerWeaponFirst:
 	case EEquipment::E_PlayerWeaponSecond:
-	case EEquipment::E_PlayerWeaponSuper: {this->AddPlayerWeaponData(_WeaponData); }break;
+	case EEquipment::E_PlayerWeaponSuper: { this->AddPlayerWeaponData(_WeaponData); }break;
 		//宝石
 	case EEquipment::E_WeaponGem:this->AddPlayerWepaonGemData(_WeaponData); break;
 
@@ -669,14 +672,14 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 
 			UPlayerStructManager::Remove_Item<FPlayerWeaponBase>(
 				UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_FPlayerWeaponDatas
-				);
+			);
 		}
 		else {
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从武器库销毁道具失败，不存在的道具：") + _WeaponData.ItemName);
 		}
 
 	}break;
-		//宝石
+										//宝石
 	case EEquipment::E_WeaponGem: {
 
 		//映射ID->匹配宝石库
@@ -692,7 +695,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 
 			UPlayerStructManager::Remove_Item<FWeaponGem>(
 				UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_FPlayerWeaponGemDatas
-				);
+			);
 		}
 		else {
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从宝石库销毁道具失败，不存在的道具：") + _WeaponData.ItemName);
@@ -789,7 +792,7 @@ void UPlayerStructManager::AddPlayerWepaonGemData(FEquipmentBase& _WeaponData)
 	}
 }
 
-void UPlayerStructManager::Save()
+void UPlayerStructManager::Save(const FString& Msg)
 {
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(Msg);
 }

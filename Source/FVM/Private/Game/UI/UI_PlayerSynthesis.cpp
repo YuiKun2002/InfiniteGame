@@ -525,10 +525,11 @@ void UUI_PlayerSynthesis::ClearPanel()
 {
 	//关闭随机更新
 	UGameSystemFunction::CloseUpdate();
-	//保存存档
-	UGameSystemFunction::SaveCurrentPlayerData();
 
 	this->RemoveFromParent();
+
+	//保存存档
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关闭合成屋界面")));
 }
 
 UButton* UUI_PlayerSynthesis::GetCloverButton()
@@ -588,7 +589,7 @@ void UUI_PlayerSynthesis::GoldCardUp()
 			//删除道具
 			UGameSystemFunction::ClearWaitingItems(Player->M_PlayerItems_Material);
 			//保存数据
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("金卡进化操作")));
 		}
 
 		//搜寻卡片
@@ -684,13 +685,13 @@ void UUI_PlayerSynthesis::ShowDataPanel(
 		this->M_TabWidgets_Panels,
 		ESlateVisibility::Visible,
 		_ListData_ShowIndex
-		);
+	);
 	//大界面选择
 	UGameSystemFunction::WidgetSelect<UWidget>(
 		this->M_TabSelectPanels,
 		ESlateVisibility::Visible,
 		_SynthesisPanel_ShowIndex
-		);
+	);
 	//
 	this->M_InsurancePanelPanel->SetVisibility(_InsurancePanel_State2);
 	this->M_ColoverPanel->SetVisibility(_ColoverPanel_State);

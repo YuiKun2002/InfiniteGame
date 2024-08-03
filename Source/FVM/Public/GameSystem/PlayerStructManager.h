@@ -346,7 +346,7 @@ public:
 	}
 
 	//保存数据
-	static void Save();
+	static void Save(const FString& Msg);
 
 	//移除道具->ID不会移除
 	template <class ItemStruct>

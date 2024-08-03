@@ -3,6 +3,7 @@
 
 #include "GameSystem/GameUserInterfaceSubsystem.h"
 #include "GameSystem/GameAssetSubsystem.h"
+#include "GameSystem/GameDataSubsystem.h"
 #include "GameSystem/FVMGameInstance.h"
 #include "Game/UI/UI_GameInformation.h"
 #include "Game/UI/UI_DialogueInfor.h"
@@ -208,6 +209,9 @@ void UGameUserInterfaceInstance::UnloadAllNotShowResource()
 				TmepInstanceUI.Emplace(TempUI.Key, TempUI.Value);
 			}
 			else {
+				TempUI.Value->MarkAsGarbage();
+				TempUI.Value = nullptr;
+
 				if (UFVMGameInstance::GetDebug())
 				{
 					UGameSystemFunction::FVMLog(
@@ -215,8 +219,6 @@ void UGameUserInterfaceInstance::UnloadAllNotShowResource()
 						TempUI.Key.ToString() + FString(TEXT("UI：")) + FString(TEXT("已释放"))
 					);
 				}
-				TempUI.Value->MarkAsGarbage();
-				TempUI.Value = nullptr;
 			}
 		}
 	}
@@ -238,6 +240,14 @@ void UGameUserInterfaceInstance::ForceUnloadAllResource()
 
 			TempUI.Value->MarkAsGarbage();
 			TempUI.Value = nullptr;
+
+			if (UFVMGameInstance::GetDebug())
+			{
+				UGameSystemFunction::FVMLog(
+					__FUNCTION__,
+					TempUI.Key.ToString() + FString(TEXT("UI：")) + FString(TEXT("已释放"))
+				);
+			}
 		}
 	}
 
@@ -277,12 +287,12 @@ UGameUserInterfaceSubsystem* UGameUserInterfaceSubsystem::GetGameUserInterfaceSu
 	return nullptr;
 }
 
-FName UGameUserInterfaceSubsystem::GetUserInterCategoryName(TSoftClassPtr<UUserInterInsType> ObjectType)
+FName UGameUserInterfaceSubsystem::GetUserInterCategoryName(TSoftClassPtr<UAssetCategoryName> ObjectType)
 {
 	UClass* CurClass = ObjectType.LoadSynchronous();
 	if (IsValid(CurClass))
 	{
-		TSubclassOf<UUserInterInsType> CurFunClass(CurClass);
+		TSubclassOf<UAssetCategoryName> CurFunClass(CurClass);
 		if (CurFunClass.GetDefaultObject())
 		{
 			return CurFunClass.GetDefaultObject()->GetCategoryName();
@@ -297,7 +307,7 @@ FName UGameUserInterfaceSubsystem::GetUserInterCategoryName(TSoftClassPtr<UUserI
 	return FName();
 }
 
-UGameUserInterfaceInstance* UGameUserInterfaceSubsystem::GetUserInterInstance(const FName& Name)
+UGameUserInterfaceInstance* UGameUserInterfaceSubsystem::GetUserInterInstance(FName Name)
 {
 	UGameUserInterfaceInstance** TargetIns = this->Resource.Find(Name);
 
@@ -317,7 +327,7 @@ UGameUserInterfaceInstance* UGameUserInterfaceSubsystem::GetUserInterInstance(co
 	return nullptr;
 }
 
-bool UGameUserInterfaceSubsystem::AddTempUserInterInstance(const FName& Name)
+bool UGameUserInterfaceSubsystem::AddTempUserInterInstance(FName Name)
 {
 	UGameUserInterfaceInstance* OldInstance = this->GetUserInterInstance(Name);
 
@@ -328,7 +338,7 @@ bool UGameUserInterfaceSubsystem::AddTempUserInterInstance(const FName& Name)
 			UGameSystemFunction::FVMLog(__FUNCTION__,
 				FString(TEXT("新增UI实例失败 ，")) +
 				Name.ToString() +
-				FString("已存在！")
+				FString(TEXT("已存在！"))
 			);
 		}
 
@@ -350,11 +360,59 @@ bool UGameUserInterfaceSubsystem::AddTempUserInterInstance(const FName& Name)
 	return true;
 }
 
+bool UGameUserInterfaceSubsystem::RemoveUserInterInstance(FName Name)
+{
+	UGameUserInterfaceInstance** Ins = this->Resource.Find(Name);
+	if (Ins)
+	{
+		if (IsValid(*Ins))
+		{
+			(*Ins)->ForceUnloadAllResource();
+
+			(*Ins) = nullptr;
+			this->Resource.Remove(Name);
+
+			if (UFVMGameInstance::GetDebug())
+			{
+				UGameSystemFunction::FVMLog(__FUNCTION__,
+					FString(TEXT("UI实例释放成功 ，实例名称：")) +
+					Name.ToString()
+				);
+			}
+
+			return true;
+		}
+	}
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		UGameSystemFunction::FVMLog(__FUNCTION__,
+			FString(TEXT("UI实例释放失败 ，实例名称：")) +
+			Name.ToString()
+		);
+	}
+	return false;
+}
+
 void UGameUserInterfaceSubsystem::UnloadAllNotShowResource()
 {
 	for (const auto& Res : this->Resource)
 	{
-		Res.Value->UnloadAllNotShowResource();
+		if (IsValid(Res.Value))
+		{
+			Res.Value->UnloadAllNotShowResource();
+		}
+	}
+}
+
+void UGameUserInterfaceSubsystem::UnloadAllResource()
+{
+	for (const auto& Res : this->Resource)
+	{
+		if (IsValid(Res.Value))
+		{
+			Res.Value->ForceUnloadAllResource();
+		}
 	}
 }
 
@@ -363,7 +421,7 @@ void UGameUserInterfaceSubsystem::ShowGameInformationUISub(UWidget* Widget)
 	if (IsValid(UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic()))
 	{
 		UGameUserInterfaceSubsystem* Ins = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
-		Ins->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(TEXT("GameInfor"));
+		Ins->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(TEXT("GameInfor"));
 	}
 }
 
@@ -376,7 +434,7 @@ void UGameUserInterfaceSubsystem::ShowGameTaskUISub(class UWidget* Widget)
 		//添加到视口
 		UUI_GameTask* Cur =
 			Cast<UUI_GameTask>(
-				Ins->GetUserInterInstance(GLOBALUINAME)->GetUI(TEXT("GameTask"))
+				Ins->GetUserInterInstance(UI_GLOBALUINAME)->GetUI(TEXT("GameTask"))
 			);
 
 		if (IsValid(Cur))
@@ -402,7 +460,7 @@ bool UGameUserInterfaceSubsystem::GetGameTaskUIInViewportSub()
 
 		//结果
 		bool Result = IsValid(
-			Ins->GetUserInterInstance(GLOBALUINAME)->GetIsInViewportUI_ByName(
+			Ins->GetUserInterInstance(UI_GLOBALUINAME)->GetIsInViewportUI_ByName(
 				TEXT("GameTask")
 			)
 		);
@@ -417,7 +475,7 @@ void UGameUserInterfaceSubsystem::RemoveGameTaskUIViewportSub()
 	if (IsValid(UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic()))
 	{
 		UGameUserInterfaceSubsystem* Ins = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
-		Ins->GetUserInterInstance(GLOBALUINAME)->RemoveUI_ByName(TEXT("GameTask"));
+		Ins->GetUserInterInstance(UI_GLOBALUINAME)->RemoveUI_ByName(TEXT("GameTask"));
 	}
 }
 
@@ -427,7 +485,7 @@ void UGameUserInterfaceSubsystem::ShowTaskFinishTipUISub(class UWidget* Widget, 
 	{
 		UGameUserInterfaceSubsystem* Ins = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 		//显示窗口
-		Ins->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(
+		Ins->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(
 			TEXT("TaskFinishTip"), 200
 		);
 	}
@@ -439,7 +497,7 @@ void UGameUserInterfaceSubsystem::ShowNewLevelTipUISub(class UWidget* Widget)
 	{
 		UGameUserInterfaceSubsystem* Ins = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 		//显示窗口
-		Ins->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(
+		Ins->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(
 			TEXT("NewLevelTip"), 90
 		);
 	}
@@ -453,7 +511,7 @@ void UGameUserInterfaceSubsystem::ShowNewItemShowPanel(class UWidget* Widget, co
 		//添加到视口
 		UNewItemShowPanel* Cur =
 			Cast<UNewItemShowPanel>(
-				Ins->GetUserInterInstance(GLOBALUINAME)->GetUI(TEXT("NewItemShow"))
+				Ins->GetUserInterInstance(UI_GLOBALUINAME)->GetUI(TEXT("NewItemShow"))
 			);
 
 		//显示窗口
@@ -474,7 +532,7 @@ void UGameUserInterfaceSubsystem::ShowDialogueInforUISub(class UWidget* Widget)
 	if (IsValid(UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic()))
 	{
 		//显示窗口
-		Ins->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(TEXT("DialogueInfor"));
+		Ins->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(TEXT("DialogueInfor"));
 	}
 }
 
@@ -489,31 +547,22 @@ void UGameUserInterfaceSubsystem::Deinitialize()
 	}
 }
 
-void UGameUserInterfaceSubsystem::InitData()
+void UGameUserInterfaceSubsystem::InitializeUserInterData(UGameDataAsset* DataAsset)
 {
 	if (this->Resource.Num())
 	{
 		return;
 	}
 
-	TSoftObjectPtr<UDataTable>& CurData = NGASub::Get()->GetMainGameAsset()->UserInter_DataTable;
-
-	UDataTable* Table = CurData.LoadSynchronous();
-
-	//加载UI数据表
-	TArray<FGameUserInterfaceTableRowBase> UIDatas;
-	UGameSystemFunction::GetDataTableRows(Table, UIDatas);
-
-	//初始化UI资源
-	int32 Index = 0;
-	for (const FName& RowName : Table->GetRowNames())
+	UDataTable* Table = DataAsset->GetDataByName(GLOBALASSET_UI)->GetDataByName(TEXT("UserInter_DataTable"));
+	DataTableAssetData<FGameUserInterfaceTableRowBase> Datas(Table);
+	for (const auto& CurData : Datas.GetDatas())
 	{
 		//初始化UI实例
 		UGameUserInterfaceInstance* NewUI = NewObject<UGameUserInterfaceInstance>();
 		//初始化对应的UI软类资源
-		NewUI->UI = UIDatas[Index].UI;
+		NewUI->UI.Append(CurData.Value.UI);
 		//添加到管理器
-		this->Resource.Emplace(RowName, NewUI);
-		Index++;
+		this->Resource.Emplace(CurData.Key, NewUI);
 	}
 }

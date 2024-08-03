@@ -115,6 +115,4 @@ class FVM_API UPlayerEquipmentStruct : public UObject
 public:
 	//通过装备类型搜索角色服装原始数据
 	static bool SearchPlayerSuitByEquipment(FString& _ItemName, EPlayerEquipmentType _EPlayerEquipmentType, FPlayerEquipment& OutData);
-	//获取数据表路径
-	static FString GetDataTablePath(const EPlayerEquipmentSlotPosition& _EPlayerEquipmentSlotPosition, const EPlayerEquipmentType& _EPlayerEquipmentType);
 };

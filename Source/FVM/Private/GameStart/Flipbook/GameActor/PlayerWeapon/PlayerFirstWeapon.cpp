@@ -26,8 +26,9 @@ void APlayerFirstWeapon::InitWeaponData(UPlayerStructManager* _Player, const FSt
 {
 	FPlayerWeaponFirst TempData;
 
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 	//获取基础数据(从数据库中查询具体数据)
-	for (const auto& Data : UGlobalDatas::Global_SourceEquipmentData_WeaponFirst)
+	for (const auto& Data : Cache->GetWeaponFirst())
 	{
 		if (Data.M_FEquipment.ItemName.Equals(_WeaponName))
 		{

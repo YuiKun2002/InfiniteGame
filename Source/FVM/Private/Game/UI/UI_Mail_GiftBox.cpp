@@ -74,7 +74,7 @@ void UUI_Mail_GiftBox::Receive()
 	}
 
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("邮件领取操作")));
 
 	FString Tip = TEXT("领取成功");
 	UWidgetBase::CreateTipWidget(Tip);
@@ -103,7 +103,7 @@ void UUI_Mail_GiftBox::DestroyMail()
 		this->GetMailBox()->GetMailData()->M_Mail_ID
 	);
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("邮件删除操作")));
 	//重新加载数据
 	this->GetMailBox()->GetMail()->LoadList();
 
@@ -149,7 +149,7 @@ void UUI_Mail_GiftBox::Show()
 	//设置当前邮件状态（邮件数据来自背包）
 	this->GetMailBox()->GetMailData()->M_MailState = this->GetMailBox()->GetMailState();
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("邮件显示操作")));
 
 
 	if (this->GetMailBox()->GetMailState() == 2)

@@ -465,7 +465,7 @@ void UMesheControllComponent::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("[%s]M_AMapMeshe is a nullptr"), __FUNCTION__);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f,
 			FColor::Red,
-			*FString(__FUNCTION__ + FString("M_AMapMeshe is a nullptr")));
+			*FString(__FUNCTION__ + FString(TEXT("M_AMapMeshe is a nullptr"))));
 	}
 }
 

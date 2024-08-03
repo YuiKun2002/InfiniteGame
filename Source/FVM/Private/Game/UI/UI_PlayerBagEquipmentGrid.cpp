@@ -70,15 +70,18 @@ void UUI_PlayerBagEquipmentGrid::AttachToBag()
 
 		switch (this->M_BagUI->GetPanel_Index())
 		{
-		case 0:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_EquipmentGrid, M_EuipmentData); break;
-		case 1:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_CardGrid, M_EuipmentData); break;
-		case 2:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_MaterialGrid, M_EuipmentData); break;
+		case 0:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_EquipmentGrid, this->M_EuipmentData); break;
+		case 1:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_CardGrid, this->M_EuipmentData); break;
+		case 2:this->M_BagUI->AddBagGrid(this->M_BagUI->GetPanel_Index(), this->M_BagUI->M_BagNumber, Group.M_MaterialGrid, this->M_EuipmentData); break;
 		}
 
 		this->M_BagUI->CloseSelectBagPanel();
 
-		//保存数据
-		UGameSystemFunction::SaveCurrentPlayerData();
+		if (this->M_EuipmentData)
+		{
+			//保存数据
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行背包的装备操作，名称：")) + this->M_EuipmentData->ItemName);
+		}
 	}
 }
 
@@ -159,7 +162,7 @@ void UUI_PlayerBagEquipmentGrid::UsePlayerSuit()
 
 			//数据复制（相当于更新->将之前的数据更新成现在的服装数据）
 			_Data.CopyValue(_EpData, _Param0);
-		};
+			};
 
 		//装备服装
 		switch (Data.M_EPlayerEquipmentSlotPosition)
@@ -172,7 +175,7 @@ void UUI_PlayerBagEquipmentGrid::UsePlayerSuit()
 		case EPlayerEquipmentSlotPosition::E_Player_Face:CancelSuit(Player->M_FPlayerSuit.M_Face, Data, true); break;
 		case EPlayerEquipmentSlotPosition::E_Player_Glasses:CancelSuit(Player->M_FPlayerSuit.M_Glasses, Data, true);  break;
 		case EPlayerEquipmentSlotPosition::E_Player_Cap:CancelSuit(Player->M_FPlayerSuit.M_Cap, Data, true);  break;
-		case EPlayerEquipmentSlotPosition::E_Player_Suit: {CancelSuit(Player->M_FPlayerSuit.M_Suit, Data, true);  Player->M_FPlayerSuit.M_bPlayerSuit = true; }break;
+		case EPlayerEquipmentSlotPosition::E_Player_Suit: { CancelSuit(Player->M_FPlayerSuit.M_Suit, Data, true);  Player->M_FPlayerSuit.M_bPlayerSuit = true; }break;
 		default:
 			UWidgetBase::CreateTipWidget(TEXT("这个服装不适合你穿"));
 			return;
@@ -185,7 +188,7 @@ void UUI_PlayerBagEquipmentGrid::UsePlayerSuit()
 		}
 
 		//保持游戏
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行角色服装装备")));
 
 
 		if (IsValid(this->M_BagUI))
@@ -247,16 +250,16 @@ void UUI_PlayerBagEquipmentGrid::Equip_Weapon(FPlayerWepaon& _LFPlayerWepaon)
 	}
 
 	//保存游戏
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行角色武器装备")));
 }
 
 void UUI_PlayerBagEquipmentGrid::Equip_MainWeapon()
 {
 	//获取角色
 	UPlayerStructManager* const Player = UFVMGameInstance::GetPlayerStructManager_Static();
-
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 	//获取基础数据(从数据库中查询具体数据)
-	for (const auto& Data : UGlobalDatas::Global_SourceEquipmentData_WeaponFirst)
+	for (const auto& Data : Cache->GetWeaponFirst())
 	{
 		if (Data.M_FEquipment.ItemName.Equals(this->M_EuipmentData->ItemName))
 		{

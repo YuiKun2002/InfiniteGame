@@ -147,12 +147,12 @@ void USynModel_GemSplit::GemSplit()
 		//执行任务
 		UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
 
-		UGameSystemFunction::SaveCurrentPlayerData();
-
 		this->WidgetReset();
 		this->WidgetResetLoadData();
 
 		this->M_SynUi->CreateTipWidget(TEXT("分解成功"));
+
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石分解操作")));
 	}
 }
 

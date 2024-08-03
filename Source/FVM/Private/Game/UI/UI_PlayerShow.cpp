@@ -267,7 +267,7 @@ void UUI_PlayerShow::UnInstallPlayerSuit(EPlayerEquipmentSlotPosition _LEPlayerE
 
 		if (!this->M_bConst)
 			this->M_CurrentPlayer->CancelEquipByID(LData.M_ItemID);
-	};
+		};
 
 	switch (_LEPlayerEquipmentSlotPosition)
 	{
@@ -290,7 +290,9 @@ void UUI_PlayerShow::UnInstallPlayerSuit(EPlayerEquipmentSlotPosition _LEPlayerE
 	}
 
 	if (!this->M_bConst)
-		UGameSystemFunction::SaveCurrentPlayerData();
+	{
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("角色服装卸载操作")));
+	}
 }
 
 void UUI_PlayerShow::PlayerSuitHidden(bool _bShowSuit)

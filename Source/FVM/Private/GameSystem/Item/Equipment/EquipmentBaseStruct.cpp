@@ -4,7 +4,6 @@
 #include "GameSystem/Item/Equipment/EquipmentBaseStruct.h"
 #include "GameSystem/PlayerStructManager.h"
 #include "GameSystem/FVMGameInstance.h"
-#include "GameSystem/GlobalDatas.h"
 
 template <class DataTableRowType, class EquipmentType = FEquipmentBase>
 void GetEquipmentRowDatasPtr(TArray<DataTableRowType>& _Item_Rows, TArray<EquipmentType*>& _OutArrays)
@@ -25,6 +24,7 @@ void GetEquipmentByType(TArray<FEquipmentBase*>& _Item, bool _Select, EEquipment
 
 class EquipmentTypeFactory {
 private:
+	UPROPERTY()
 	TArray<FEquipmentBase*>& M_ItemBuffer;
 public:
 	bool M_Select;
@@ -41,18 +41,19 @@ public:
 public:
 	static void GetAllDatas(TArray<FEquipmentBase*>& _OutArrays, bool _Select, EEquipment _Type)
 	{
+		UEquipmentDataAssetCache* ECache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+
 		EquipmentTypeFactory LocalEquipmentTypeFactory(_OutArrays, _Select, _Type);
 
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_Bag, EEquipment::E_Bag);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_PlayerEquipment, EEquipment::E_PlayerEquipment);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_GiftBox, EEquipment::E_Gift);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_WeaponFirst, EEquipment::E_PlayerWeaponFirst);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_WeaponSecond, EEquipment::E_PlayerWeaponSecond);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_WeaponSuper, EEquipment::E_PlayerWeaponSuper);
-
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetBag(), EEquipment::E_Bag);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetPlayerEquipment(), EEquipment::E_PlayerEquipment);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetGiftBox(), EEquipment::E_Gift);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponFirst(), EEquipment::E_PlayerWeaponFirst);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponSecond(), EEquipment::E_PlayerWeaponSecond);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponSuper(), EEquipment::E_PlayerWeaponSuper);
 		//宝石
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_WeaponGem_Frist_Laser, EEquipment::E_WeaponGem);
-		LocalEquipmentTypeFactory.GetEquipmentType(UGlobalDatas::Global_SourceEquipmentData_WeaponGem_Second_Attack, EEquipment::E_WeaponGem);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetGemLaser(), EEquipment::E_WeaponGem);
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetGemAttack(), EEquipment::E_WeaponGem);
 	}
 };
 

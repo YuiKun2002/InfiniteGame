@@ -47,8 +47,8 @@ public:
 public:
 	UFUNCTION()
 		void SetHiLight(bool bvalue);
-	UFUNCTION(BlueprintCallable)
-		FString GetName();
+
+	virtual FString ToString_Implementation() override;
 
 };
 

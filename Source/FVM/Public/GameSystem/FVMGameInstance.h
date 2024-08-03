@@ -13,11 +13,6 @@ class UPlayerStructManager;
 class UGameMapStructManager;
 class UGameConfigManager;
 class UMouseStructManager;
-class UUI_MainFramework;
-class UAudioComponent;
-class USaveGame;
-class UWidgetBase;
-class UUI_ItemTitleTip;
 
 UCLASS()
 class FVM_API UFVMGameInstance : public UGameInstance
@@ -25,118 +20,86 @@ class FVM_API UFVMGameInstance : public UGameInstance
 	GENERATED_BODY()
 public:
 	//设置Debug(true则显示测试文字)
-	static bool M_bShowDebugText;
+	UPROPERTY()
+	bool M_bShowDebugText = false;
 	//游戏是否更新
 	UPROPERTY(EditAnywhere)
-		bool M_bGameUpdate = false;
-	//数据是否加载了
-	UPROPERTY(EditAnywhere)
-		bool M_DataLoad = false;
-	//当前地图
-	UPROPERTY()
-		UWidgetBase* M_CurrentMap = nullptr;
-	//当前玩家主框架的UI
-	UPROPERTY()
-		UUI_MainFramework* M_MainUIFrame = nullptr;
+	bool M_bGameUpdate = false;
 public:
 	//设置更新
 	UFUNCTION()
-		static void SetUpdateGame();
-	//设置主要的UI框架
-	UFUNCTION(BlueprintCallable)
-		void SetMainFramework(UUI_MainFramework* _UUI_MainFramework);
+	static void SetUpdateGame();
 	//设置游戏debug测试
 	UFUNCTION(BlueprintCallable)
-		static void SetGameDebug(bool _Value);
+	static void SetGameDebug(bool _Value);
 	//设置游戏版本
 	UFUNCTION(BlueprintCallable)
-		static void SetGameVersion(FString _Version);
-	//设置地图UI
-	UFUNCTION(BlueprintCallable)
-		void SetWorldMapWidget(UWidgetBase* _CurrentMap);
+	static void SetGameVersion(FString _Version);
 public:
 	//获取游戏配置
 	UFUNCTION(BlueprintCallable)
-		UGameConfigManager* GetGameConfigManager();
+	UGameConfigManager* GetGameConfigManager();
 	//获取游戏地图配置管理
 	UFUNCTION(BlueprintCallable)
-		UGameMapStructManager* GetGameMapStructManager();
+	UGameMapStructManager* GetGameMapStructManager();
 	//获取角色结构管理
 	UFUNCTION(BlueprintCallable)
-		UPlayerStructManager* GetPlayerStructManager();
+	UPlayerStructManager* GetPlayerStructManager();
 	//获取老鼠结构管理
 	UFUNCTION(BlueprintCallable)
-		UMouseStructManager* GetMouseStructManager();
-	//获取ui标题提示->非windows平台返回nullptr
-	UFUNCTION(BlueprintCallable)
-		UUI_ItemTitleTip* const GetUI_ItemTitleTip();
-	UFUNCTION(BlueprintCallable)
-		UUI_MainFramework* GetMainFramework();
-	//获取世界的地图
-	UFUNCTION(BlueprintCallable)
-		UWidgetBase* GetWorldMap();
+	UMouseStructManager* GetMouseStructManager();
 
 	//获取游戏debug测试
 	UFUNCTION(BlueprintCallable)
-		static bool GetDebug();
+	static bool GetDebug();
 	//获取角色存档
 	UFUNCTION(BlueprintCallable)
-		static UPlayerStructManager* GetPlayerStructManager_Static();
+	static UPlayerStructManager* GetPlayerStructManager_Static();
 	//获取配置文件
 	UFUNCTION(BlueprintCallable)
-		static UGameConfigManager* GetGameConfigManager_Static();
+	static UGameConfigManager* GetGameConfigManager_Static();
 	//获取游戏版本
 	UFUNCTION(BlueprintCallable)
-		static FString GetGameVersion();
+	static FString GetGameVersion();
 	//获取更新
 	UFUNCTION(BlueprintCallable)
-		static bool GetUpdateGame();
+	static bool GetUpdateGame();
 public:
 	//加载一个游戏地图管理器（可以选择是否从数据表中加载数据,会先判断本地是否存在,如果选择true,会从数据表检索，如果成功则会自动创建）
 	UFUNCTION(BlueprintCallable)
-		UGameMapStructManager* LoadGameMapStructManager(const FString& _FileName);
-	//--------------------------------------------------[UI界面]-------------------------------------------------------
-	//创建一个基础标题提示(显示名称，是否显示)
-	UFUNCTION(BlueprintCallable)
-		static void CreateBaseTipWidget(const FString& _ShowTitle, bool _bShow);
-	//--------------------------------------------------[UI界面]-------------------------------------------------------
+	UGameMapStructManager* LoadGameMapStructManager(const FString& _FileName);
 
 	//--------------------------------------------------[角色配置]-------------------------------------------------------
 	//获取游戏特效是否开启
 	UFUNCTION(BlueprintCallable)
-		static bool GetGameConfig_GameEFEnabled();
+	static bool GetGameConfig_GameEFEnabled();
 	//--------------------------------------------------[角色配置]-------------------------------------------------------
 public:
 	//获取FVM2游戏实例
 	UFUNCTION(BlueprintCallable)
-		static UFVMGameInstance* GetFVMGameInstance();
-	//创建一个主要的ui显示框架
-	UFUNCTION(BlueprintCallable)
-		static void CreateMainFramePanel();
+	static UFVMGameInstance* GetFVMGameInstance();
 
 	//更新背景音乐的音量
 	UFUNCTION(BlueprintCallable)
-		void UpdateBGMVolume();
+	void UpdateBGMVolume();
 	//设置背景音乐缩放
 	UFUNCTION(BlueprintCallable)
-		static void SetBGMScale(float Value);
+	static void SetBGMScale(float Value);
 	//播放背景音乐
 	UFUNCTION(BlueprintCallable)
-		static void PlayBGM_Static(const FSoftObjectPath& _MusicName, bool _Loop = true);
+	static void PlayBGM_Static(const FSoftObjectPath& _MusicName, bool _Loop = true);
 	//获取当前播放的背景音乐
 	UFUNCTION(BlueprintCallable)
-		static FSoftObjectPath GetPlayBGMName();
+	static FSoftObjectPath GetPlayBGMName();
 	//播放音效
 	UFUNCTION(BlueprintCallable)
-		static void PlayBGM_S_Static(
-			const FString& _MusicName,
-			const FString& _MusicPath = FString("GameBG")
-		);
+	static void PlayBGM_S_Static(
+		const FString& _MusicName,
+		const FString& _MusicPath = FString(TEXT("GameBG"))
+	);
 	//获取音效音量
 	UFUNCTION(BlueprintCallable)
-		static float GetBGMS_Volume();
-
-	UFVMGameInstance();
+	static float GetBGMS_Volume();
 public:
 	//删除玩家背包中有待删除的道具
 	template<class ItemType>
@@ -155,19 +118,11 @@ public:
 		//重新复制新值
 		_Arrays = _Buff;
 	}
-protected:
-	//初始化
-	virtual void Init() override;
-	//关闭
-	virtual void Shutdown() override;
 private:
-	//平台设置的对象
-	UPROPERTY()
-		UUI_ItemTitleTip* M_Windows_ShowUI_ItemTitleTip = nullptr;
 	//游戏地图数据
 	UPROPERTY()
-		UGameMapStructManager* M_UGameMapStructManager = nullptr;
+	UGameMapStructManager* M_UGameMapStructManager = nullptr;
 	//老鼠结构数据
 	UPROPERTY()
-		UMouseStructManager* M_MouseStructManager = nullptr;
+	UMouseStructManager* M_MouseStructManager = nullptr;
 };

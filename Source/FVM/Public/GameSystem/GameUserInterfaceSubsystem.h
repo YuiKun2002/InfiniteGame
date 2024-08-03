@@ -4,30 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "GameSystem/GameDataSubsystem.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameSystem/Item/Task/TaskStructBase.h"
 #include "GameUserInterfaceSubsystem.generated.h"
 
 class UWidgetBase;
+class UAssetCategoryName;
 
-/*
-	UI的分类名称
-
-	如果需要修改，请修改【数据表DT_GameUserInterface】【蓝图实现BP_xxxx_CateName】【C++的UI宏名称】
-*/
-#define GLOBALUINAME FName(TEXT("Global"))
-#define WORLDMAPUINAME FName(TEXT("WorldMap"))
-
-
-
-//UI实例的类型[蓝图实现，全局的宏]
-UCLASS(BlueprintType, Blueprintable)
-class FVM_API UUserInterInsType : public UObject {
-	GENERATED_BODY()
+//UI结构体
+USTRUCT(BlueprintType)
+struct FGameUserInterfaceTableRowBase : public FTableRowBase {
+	GENERATED_USTRUCT_BODY()
 public:
-	//获取分类名称
-	UFUNCTION(BlueprintImplementableEvent)
-	FName GetCategoryName();
+	//更新的类条目【完全不建议后期修改名称】
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, TSoftClassPtr<UWidgetBase>> UI;
+};
+
+//UI集合结构体
+USTRUCT(BlueprintType)
+struct FGameUserInterfaceGroupTableRowBase : public FTableRowBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//UI的名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName UserInterName;
+
+	//UI的资产
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<UWidgetBase> UserInterSource;
 };
 
 //UI实例
@@ -45,6 +51,7 @@ public:
 	//新增临时UI，游戏结束释放，不会被保存
 	UFUNCTION(BlueprintCallable, Category = "新增UI")
 	bool AddTempNewUI(FName NewName, TSoftClassPtr<UWidgetBase> Resource);
+
 	//通过名称获取UI
 	UFUNCTION(BlueprintPure, Category = "获取UI")
 	UWidgetBase* GetUI(FName Name);
@@ -88,16 +95,6 @@ public:
 	void Unload();
 };
 
-//UI结构体
-USTRUCT(BlueprintType)
-struct FGameUserInterfaceTableRowBase : public FTableRowBase {
-	GENERATED_USTRUCT_BODY()
-public:
-	//更新的类条目【完全不建议后期修改名称】
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<FName, TSoftClassPtr<UWidgetBase>> UI;
-};
-
 /**
  * 全局UI子系统
  */
@@ -106,25 +103,31 @@ class FVM_API UGameUserInterfaceSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
+	//数据初始化
+	UFUNCTION()
+	void InitializeUserInterData(class UGameDataAsset* DataAsset);
 
 	//获取子系统
 	UFUNCTION(BlueprintPure, Category = "UI子系统")
 	static UGameUserInterfaceSubsystem* GetGameUserInterfaceSubsystemStatic();
-	//初始化
-	UFUNCTION(BlueprintCallable, Category = "UI子系统 | 初始化")
-	void InitData();
 	//获取名称
 	UFUNCTION(BlueprintPure, Category = "UI子系统 | 获取UI")
-	FName GetUserInterCategoryName(TSoftClassPtr<UUserInterInsType> ObjectType);
+	FName GetUserInterCategoryName(TSoftClassPtr<UAssetCategoryName> ObjectType);
 	//通过Name获取UI实例【使用前请确保Name有效】
 	UFUNCTION(BlueprintPure, Category = "UI子系统 | 获取UI")
-	UGameUserInterfaceInstance* GetUserInterInstance(const FName& Name);
+	UGameUserInterfaceInstance* GetUserInterInstance(FName Name);
 	//新增临时UI实例,游戏结束释放，不会被保存
 	UFUNCTION(BlueprintCallable, Category = "UI子系统 | 新增UI")
-	bool AddTempUserInterInstance(const FName& Name);
+	bool AddTempUserInterInstance(FName Name);
+	//直接移除UI实例并且释放当前实例的所有UI
+	UFUNCTION(BlueprintCallable, Category = "UI子系统 | 移除UI")
+	bool RemoveUserInterInstance(FName Name);
 	//直接释放全部界面并且未显示的UI
 	UFUNCTION(BlueprintCallable, Category = "UI子系统 | 释放UI")
 	void UnloadAllNotShowResource();
+	//直接释放全部的界面
+	UFUNCTION(BlueprintCallable, Category = "UI子系统 | 释放UI")
+	void UnloadAllResource();
 public:
 
 	/*

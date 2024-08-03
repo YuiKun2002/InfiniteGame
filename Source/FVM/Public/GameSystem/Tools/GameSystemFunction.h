@@ -58,8 +58,8 @@
 #include "GameSystemFunction.generated.h"
 
 //信息
-inline FString FVMAddLogPanel(const FString& Content, const FString& Flag = FString("t")) {
-	return FString(FString("<") + Flag + FString(">") + Content + FString("</>"));
+inline FString FVMAddLogPanel(const FString& Content, const FString& Flag = FString(TEXT("t"))) {
+	return FString(FString(TEXT("<")) + Flag + FString(TEXT(">")) + Content + FString(TEXT("</>")));
 };
 
 
@@ -118,10 +118,10 @@ public:
 public:
 	//保持当前角色存档（使用前必须保证角色存档已经被加载过）
 	UFUNCTION(BlueprintCallable)
-	static void SaveCurrentPlayerData(const FString& SaveLogMsg = TEXT(""));
+	static void SaveCurrentPlayerData(const FString& SaveLogMsg);
 	//读取当前角色存档（使用前必须保证角色存档已经被加载过）
 	UFUNCTION(BlueprintCallable)
-	static UPlayerStructManager* LoadCurrentPlayerData(const FString& LoadLogMsg = TEXT(""));
+	static UPlayerStructManager* LoadCurrentPlayerData(const FString& LoadLogMsg);
 	//保持当前配置存档（使用前必须保证配置存档已经被加载过）
 	UFUNCTION(BlueprintCallable)
 	static void SaveCurrentGameConfigData();
@@ -215,7 +215,7 @@ public:
 
 	//追加聊天信息都字符串
 	UFUNCTION(BlueprintCallable)
-	static FString BlueprintAddLog(const FString& Content, const FString& Flag = FString("t"));
+	static FString BlueprintAddLog(const FString& Content, const FString& Flag = FString(TEXT("t")));
 public:
 	//物体创建--------------------------------------------------------------------------开始
 	//创建球体碰撞（14 卡片对象   通道3）
@@ -458,9 +458,10 @@ public:
 		{
 			TArray<RowType*> L;
 			DataTableIns->GetAllRows("List", L);
+			_OutRows.Reserve(_OutRows.Num() + L.Num());
 			for (auto Content : L)
 			{
-				_OutRows.Emplace(*Content);
+				_OutRows.Add(*Content);
 			}
 		}
 	}
@@ -514,7 +515,7 @@ public:
 	//通过Name直接获取UI具体的实例【使用前请确保{对象}有效】
 	UFUNCTION(BlueprintPure)
 	static class UWidgetBase* GetUserInterWidgetByClass(
-		TSoftClassPtr<class UUserInterInsType> ObjectType,
+		TSoftClassPtr<class UAssetCategoryName> ObjectType,
 		FName Name
 	);
 	//通过Name直接获取UI具体的实例【使用前请确保Name有效】
@@ -525,7 +526,7 @@ public:
 	//通过Class获取UI实例【使用前请确保Class有效】
 	UFUNCTION(BlueprintPure)
 	static UGameUserInterfaceInstance* GetUserInterInstanceByClass(
-		TSoftClassPtr<class UUserInterInsType> ObjectType
+		TSoftClassPtr<class UAssetCategoryName> ObjectType
 	);
 	//通过Name获取UI实例【使用前请确保Name有效】
 	static UGameUserInterfaceInstance* GetUserInterInstanceByName(

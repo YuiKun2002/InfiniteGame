@@ -80,7 +80,11 @@ void UUI_GiftBox::SetGiftBoxData(const FString& _Name)
 
 	//加载礼盒数据
 	TArray<FGiftBox> Item;
-	UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_GiftBox_Data, FGiftBox>(UGlobalDatas::Global_SourceEquipmentData_GiftBox, Item);
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_GiftBox_Data, FGiftBox>(
+		Cache->GetGiftBox(),
+		Item
+	);
 	UEquipmentBaseStruct::GetEquipmentArraysData<FGiftBox>(_Name, Item, this->M_GiftBoxData, Result);
 
 	if (Result)
@@ -113,7 +117,7 @@ void UUI_GiftBox::OpenGiftOnce()
 	}
 
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("礼盒开启一次")));
 	//UGameSystemFunction::LoadCurrentPlayerData();
 
 	this->GetPlayerBagEquipmentGrid()->RelaodBagEquipment();
@@ -126,7 +130,7 @@ void UUI_GiftBox::OpenGiftAll()
 	//礼盒数量减一
 	FEquipmentBase* Item = UItemBaseStruct::GetItemFromBag<FEquipmentBase>(
 		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Equipment, this->M_Title
-		);
+	);
 
 	if (Item)
 	{
@@ -156,7 +160,7 @@ void UUI_GiftBox::OpenGiftAll()
 	}
 
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("礼盒全部开启")));
 
 	this->GetPlayerBagEquipmentGrid()->RelaodBagEquipment();
 
@@ -176,10 +180,10 @@ void UUI_GiftBox::AnalysisGiftBoxData()
 			//如果当前开启将所有道具全部选择 （对当前的类型的所有道具进行全选）
 			switch (Item.M_ItemType)
 			{
-			case EGiftBox_Item_Type::E_Card: {UCardBaseStruct::GetAllCardName(this->M_ItemBase); }break;
-			case EGiftBox_Item_Type::E_Equipment: {UEquipmentBaseStruct::GetAllEquipmentName(this->M_ItemBase); }break;
-			case EGiftBox_Item_Type::E_Material: {UMaterialBaseStruct::GetAllMaterial(this->M_ItemBase); }break;
-			case EGiftBox_Item_Type::E_Coin: {this->M_ItemBase.Append(FPlayerCoinAdd::GetCoinNames()); }break;
+			case EGiftBox_Item_Type::E_Card: { UCardBaseStruct::GetAllCardName(this->M_ItemBase); }break;
+			case EGiftBox_Item_Type::E_Equipment: { UEquipmentBaseStruct::GetAllEquipmentName(this->M_ItemBase); }break;
+			case EGiftBox_Item_Type::E_Material: { UMaterialBaseStruct::GetAllMaterial(this->M_ItemBase); }break;
+			case EGiftBox_Item_Type::E_Coin: { this->M_ItemBase.Append(FPlayerCoinAdd::GetCoinNames()); }break;
 			}
 		}
 		else {

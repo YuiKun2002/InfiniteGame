@@ -207,7 +207,7 @@ void USynModel_CardChange::LoadCards()
 	//合并数组
 	CanChangeCards.Append(NotChangeCards);
 
-	this->PlayerSynthesis->LoadCards(CanChangeCards,BagCount);
+	this->PlayerSynthesis->LoadCards(CanChangeCards, BagCount);
 }
 
 void USynModel_CardChange::LoadMaterials()
@@ -406,7 +406,7 @@ void USynModel_CardChange::ChangeCard()
 	);
 
 	//保存游戏
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("卡片转职操作")));
 
 	//取消选择
 	this->CancelMainCard();

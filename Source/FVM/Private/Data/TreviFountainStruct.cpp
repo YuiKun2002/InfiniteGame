@@ -44,20 +44,25 @@ void UTreviFountainStruct::SendItemToPlayerBag(FTreviFountainItemStruct _Item)
 
 	//货币资源判断
 	if (_Item.M_ItemType == ETreviFountainItemType::TT_Material)
+	{
 		for (int32 CoinIndex = 0; CoinIndex < 4; CoinIndex++)
 		{
 			if (_Item.M_ItemName.Equals(Coins[CoinIndex]))
 			{
-				if (!UFVMGameInstance::GetPlayerStructManager_Static()->AddCoin(_Item.M_ItemCount, CoinIndex))
+				if (UFVMGameInstance::GetPlayerStructManager_Static()->AddCoin(_Item.M_ItemCount, CoinIndex))
 				{
-					if (UFVMGameInstance::GetDebug())
-						UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("货币资源添加失败!!"));
+					UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送货币到角色，发送内容：")) + Coins[CoinIndex]);
+					return;
 				}
-
-				UGameSystemFunction::SaveCurrentPlayerData();
-				return;
+				else {
+					if (UFVMGameInstance::GetDebug())
+					{
+						UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("货币资源添加失败!!"));
+					}
+				}
 			}
 		}
+	}
 
 	switch (_Item.M_ItemType)
 	{
@@ -116,9 +121,9 @@ ETreviFountainItemQualityType UTreviFountainStruct::GetRandomItems(FTreviFountai
 			//重置优秀抽奖次数
 			_RandomStruct.ResetEpicCount();
 
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("-------------------------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("-------------------------------------------------------------------------------")));
 			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("史诗保底")));
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("-------------------------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("-------------------------------------------------------------------------------")));
 
 		}
 		else if (_RandomStruct.GetExcellentMax())//优秀（保底）
@@ -130,9 +135,9 @@ ETreviFountainItemQualityType UTreviFountainStruct::GetRandomItems(FTreviFountai
 
 			//重置优秀抽奖次数
 			_RandomStruct.ResetExcellentCount();
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("-------------------------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("-------------------------------------------------------------------------------")));
 			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("优秀保底")));
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("-------------------------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("-------------------------------------------------------------------------------")));
 		}
 		else if (Rate <= _RandomStruct.GetEpicRate()) //抽奖
 		{

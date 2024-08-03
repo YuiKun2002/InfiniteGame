@@ -2,7 +2,7 @@
 
 
 #include "GameSystem/Item/Material/MaterialBaseStruct.h"
-#include "GameSystem/GlobalDatas.h"
+#include "Data/MaterialDataStruct.h"
 
 //--------------------------------------------------------------------------------------------------
 //                       CPP全局材料转换函数【可以自由转换数据表的数据】
@@ -71,7 +71,9 @@ private:
 public:
 	SpawnTypeSerachResultManager() = delete;
 	SpawnTypeSerachResultManager(const FString& _MaterailName, FMaterialBase& _OutputData, bool _SelectType, const EMaterialType& _Material, bool& _Result) :M_MaterailName(_MaterailName), M_OutputData(_OutputData), M_Result(_Result), M_SelectType(_SelectType), M_Material(_Material)
-	{}
+	{
+
+	}
 public:
 	//搜寻结果
 	template<class TargetType = FMaterial_CardSynthesisBlueprint_Data>
@@ -90,7 +92,7 @@ void GetMaterialTypeData(TArray<MaterailType>& _Item, int32 _UniformCount)
 
 	for (uint8 LocalDefType = 0u; LocalDefType <= (uint8)EMaterialType::E_Max; LocalDefType++)
 	{
-	  UMaterialBaseStruct::GetSourceData(LocalDatas, (const EMaterialType&)LocalDefType);
+		UMaterialBaseStruct::GetSourceData(LocalDatas, (const EMaterialType&)LocalDefType);
 	}
 
 	for (auto Data : LocalDatas)
@@ -106,21 +108,24 @@ void GetMaterialTypeData(TArray<MaterailType>& _Item, int32 _UniformCount)
 //【根据类型获取源数据】
 void UMaterialBaseStruct::GetSourceData(TArray<FMaterialBase*>& _Data, const EMaterialType& _Type)
 {
+
+	UMaterialDataAssetCache* UCache = GetGameDataAssetCache<UMaterialDataAssetCache>(GLOBALASSET_MATERIAL);
+
 	switch (_Type)
 	{
 		//新建数据源数组获取【合成配方】
-	case EMaterialType::E_Blueprint:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Blueprint); break;
+	case EMaterialType::E_Blueprint:FMaterialBaseTransform(_Data, UCache->GetBlueprint()); break;
 		//新建数据源数组获取【合成材料】....
-	case EMaterialType::E_CardSynthesisMaterial:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_BlueprintMaterial); break;
+	case EMaterialType::E_CardSynthesisMaterial:FMaterialBaseTransform(_Data, UCache->GetBlueprintMater()); break;
 
-	case EMaterialType::E_CardChangeJobMaterial:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_ChangeJobMaterial); break;
-	case EMaterialType::E_Spices:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Spices); break;
-	case EMaterialType::E_Clover:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Clover); break;
-	case EMaterialType::E_CardSkillBook:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_CardSkillBooks); break;
-	case EMaterialType::E_Ticket:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Tickets); break;
-	case EMaterialType::E_Crystal:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Crystals); break;
-	case EMaterialType::E_Bit:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_Bits); break;
-	case EMaterialType::E_LevelKey:FMaterialBaseTransform(_Data, UGlobalDatas::Global_SourceMaterialData_LevelKeys); break;
+	case EMaterialType::E_CardChangeJobMaterial:FMaterialBaseTransform(_Data, UCache->GetChange()); break;
+	case EMaterialType::E_Spices:FMaterialBaseTransform(_Data, UCache->GetSpices()); break;
+	case EMaterialType::E_Clover:FMaterialBaseTransform(_Data, UCache->GetClover()); break;
+	case EMaterialType::E_CardSkillBook:FMaterialBaseTransform(_Data, UCache->GetSkillBook()); break;
+	case EMaterialType::E_Ticket:FMaterialBaseTransform(_Data, UCache->GetTicket()); break;
+	case EMaterialType::E_Crystal:FMaterialBaseTransform(_Data, UCache->GetCrystal()); break;
+	case EMaterialType::E_Bit:FMaterialBaseTransform(_Data, UCache->GetBit()); break;
+	case EMaterialType::E_LevelKey:FMaterialBaseTransform(_Data, UCache->GetLevelKey()); break;
 	}
 }
 //【根据名称，指定类型，获取道具数据】
@@ -128,19 +133,33 @@ bool UMaterialBaseStruct::SearchMaterailFromDataTable(const FString& _MaterailNa
 {
 	bool _Result = false;
 
+	UMaterialDataAssetCache* UCache =
+		Cast<UMaterialDataAssetCache>(
+			UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(GLOBALASSET_MATERIAL)
+		);
+
+	if (!IsValid(UCache))
+	{
+		UCache = NewObject<UMaterialDataAssetCache>();
+		UGameDataSubsystem::GetGameDataSubsystemStatic()->AddGameDataAssetCache(
+			GLOBALASSET_MATERIAL,
+			UCache
+		);
+	}
+
 	SpawnTypeSerachResultManager LocalSpawn(_MaterailName, OutputData, _SelectType, _Material, _Result);
 	//新建类型查询【合成配方】
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Blueprint, EMaterialType::E_Blueprint);
+	LocalSpawn.SpawnTypeSerach(UCache->GetBlueprint(), EMaterialType::E_Blueprint);
 	//新建类型查询【合成材料】......
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_BlueprintMaterial, EMaterialType::E_CardSynthesisMaterial);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_ChangeJobMaterial, EMaterialType::E_CardChangeJobMaterial);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Spices, EMaterialType::E_Spices);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Clover, EMaterialType::E_Clover);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_CardSkillBooks, EMaterialType::E_CardSkillBook);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Tickets, EMaterialType::E_Ticket);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Crystals, EMaterialType::E_Crystal);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_Bits, EMaterialType::E_Bit);
-	LocalSpawn.SpawnTypeSerach(UGlobalDatas::Global_SourceMaterialData_LevelKeys, EMaterialType::E_LevelKey);
+	LocalSpawn.SpawnTypeSerach(UCache->GetBlueprintMater(), EMaterialType::E_CardSynthesisMaterial);
+	LocalSpawn.SpawnTypeSerach(UCache->GetChange(), EMaterialType::E_CardChangeJobMaterial);
+	LocalSpawn.SpawnTypeSerach(UCache->GetSpices(), EMaterialType::E_Spices);
+	LocalSpawn.SpawnTypeSerach(UCache->GetClover(), EMaterialType::E_Clover);
+	LocalSpawn.SpawnTypeSerach(UCache->GetSkillBook(), EMaterialType::E_CardSkillBook);
+	LocalSpawn.SpawnTypeSerach(UCache->GetTicket(), EMaterialType::E_Ticket);
+	LocalSpawn.SpawnTypeSerach(UCache->GetCrystal(), EMaterialType::E_Crystal);
+	LocalSpawn.SpawnTypeSerach(UCache->GetBit(), EMaterialType::E_Bit);
+	LocalSpawn.SpawnTypeSerach(UCache->GetLevelKey(), EMaterialType::E_LevelKey);
 
 	return _Result;
 }

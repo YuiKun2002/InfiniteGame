@@ -4,10 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-
 #include "GameSystem/Item/ItemStruct.h"
-#include "GameSystem/GlobalDatas.h"
-
 #include "PlayerStructBase.generated.h"
 
  //地图（结构关联（GameSystemFunction：LoadMap；SetMap））

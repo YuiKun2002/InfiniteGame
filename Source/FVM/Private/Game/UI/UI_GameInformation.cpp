@@ -33,7 +33,7 @@ void UUI_GameInformationMapItemBox::SetHiLight(bool bvalue)
 	}
 }
 
-FString UUI_GameInformationMapItemBox::GetName()
+FString UUI_GameInformationMapItemBox::ToString_Implementation()
 {
 	return this->ItemName;
 }
@@ -432,7 +432,7 @@ void UUI_GameInformation::ShowMouse(const FString& SearchKey)
 
 		this->MouseDataTable = LoadObject<UDataTable>(
 			nullptr, TEXT("DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'")
-			);
+		);
 
 		this->TimeLoad_Mouse_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Mouse_Manager_T"));
 		this->TimeLoad_Mouse_Manager->InitWidget_First(

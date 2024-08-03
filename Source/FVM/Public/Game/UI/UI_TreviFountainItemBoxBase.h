@@ -13,19 +13,16 @@ UCLASS()
 class FVM_API UUI_TreviFountainItemBoxBase : public UWidgetBase
 {
 	GENERATED_BODY()
-private:
-	//物品名称
-	UPROPERTY()
-		FString M_ItemName = TEXT("");
 public:
 	//设置名称
 	UFUNCTION(BlueprintCallable)
-		void SetItemName(const FString& _ItemName);
-public:
-	//获取名称
-	UFUNCTION(BlueprintCallable)
-		FString GetItemName();
+	void SetItemName(const FString& _ItemName);
+	virtual FString ToString_Implementation() override;
 public:
 	//界面初始化
 	bool Initialize() override;
+private:
+	//物品名称
+	UPROPERTY()
+	FString M_ItemName = TEXT("");
 };

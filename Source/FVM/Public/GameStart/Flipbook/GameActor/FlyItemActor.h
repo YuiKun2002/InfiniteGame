@@ -24,10 +24,10 @@ struct FlyItem_Property_AudioPath {
 public:
 	//BGM的根目录名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_AudioRootPathName = FString("ItemAudio");
+		FString M_AudioRootPathName = FString(TEXT("ItemAudio"));
 	//BGM的名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_AudioName = FString("");
+		FString M_AudioName = FString(TEXT(""));
 };
 
 //飞行物携带属性-动画资源(Fly & Split)

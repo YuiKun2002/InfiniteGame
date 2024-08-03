@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GameSystem/GameDataSubsystem.h"
 #include "GameSystem/Item/ItemBaseStruct.h"
 #include "CardBaseStruct.generated.h"
 
@@ -65,22 +66,22 @@ struct FCardChangeJobs {
 public:
 	//是否可以转职
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_IsChange = false;
+	bool M_IsChange = false;
 	//转职对象
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ChangeMaterialsName = "";
+	FString M_ChangeMaterialsName = "";
 	//转职类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardType M_ChangeType = ECardType::E_ATK;
+	ECardType M_ChangeType = ECardType::E_ATK;
 	//转职等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_ChangeGrade = 9;
+	int32 M_ChangeGrade = 9;
 	//转职关键字
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ChangeKeyName;
+	FString M_ChangeKeyName;
 	//转职等级【一，二，三，终...】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ChangeGradeKeyName = TEXT("一");
+	FString M_ChangeGradeKeyName = TEXT("一");
 };
 
 //等级提升结构
@@ -90,22 +91,22 @@ struct FGrade {
 public:
 	//当前经验值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_CurrentEx = 0.f;
+	float M_CurrentEx = 0.f;
 	//当前经验值最大值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_CurrentTopEx = 100.f;
+	float M_CurrentTopEx = 100.f;
 	//下一次经验值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_NextEx = 150.f;
+	float M_NextEx = 150.f;
 	//经验值成长率
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_NextExUpRate = 0.2f;
+	float M_NextExUpRate = 0.2f;
 	//当前等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CurrentGrade = 0;
+	int32 M_CurrentGrade = 0;
 	//最大等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_MaxGrade = 10;
+	int32 M_MaxGrade = 10;
 };
 
 //----------------------------------------------卡片结构-----------------------------------------------------
@@ -154,7 +155,7 @@ struct FCardKeyIdleAnimation {
 public:
 	//副词
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath IdlePath;
+	FSoftObjectPath IdlePath;
 };
 
 //卡片预览图
@@ -164,19 +165,19 @@ struct FCardpreViewHead {
 public:
 	//卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString CardName;
+	FString CardName;
 	//预览动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath CardViewAnim;
+	FSoftObjectPath CardViewAnim;
 	//卡片优先级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 CardLayer = 0;
+	int32 CardLayer = 0;
 	//预览图偏移
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector2D CardViewOffset;
+	FVector2D CardViewOffset;
 	//预览图缩放
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector2D CardViewScale = FVector2D(2.f);
+	FVector2D CardViewScale = FVector2D(2.f);
 };
 
 //卡片基础底层
@@ -189,91 +190,91 @@ public:
 public:
 	//卡片种类
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardCategoryTag CardCategoryTag = ECardCategoryTag::Def;
+	ECardCategoryTag CardCategoryTag = ECardCategoryTag::Def;
 	//卡片属于白天还是夜晚
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_CardDay = true;
+	bool M_CardDay = true;
 	//自我替换（自我替换刷新生命）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_ReplaceSelf = false;
+	bool M_ReplaceSelf = false;
 	//是否允许被复制（将用于幻幻鸡类型的卡片变身）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bEnableCopy = true;
+	bool M_bEnableCopy = true;
 	//携带咖啡粉则自动激活卡片（夜间转换）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_AutoEnableCardDay = true;
+	bool M_AutoEnableCardDay = true;
 	//卡片价格
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CardPrice = 250;
+	int32 M_CardPrice = 250;
 	//冷却时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_CardColdDown = 3.f;
+	float M_CardColdDown = 3.f;
 	//卡片星星等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CardGrade = 0;
+	int32 M_CardGrade = 0;
 	//卡片生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_CardHP = 10.f;
+	float M_CardHP = 10.f;
 	//卡片优先级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CardLayer = 0;
+	int32 M_CardLayer = 0;
 	//卡片是否可以重叠(覆盖)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_CardOverlap = false;
+	bool M_CardOverlap = false;
 	//卡片重叠对象名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_CardOverlapName;
+	TArray<FString> M_CardOverlapName;
 	//卡片价格是否随玩家放置个数线性增加
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_CardPriceAutoUp = false;
+	bool M_CardPriceAutoUp = false;
 	//卡片每次增加25火苗
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CardPriceUpNum = 25;
+	int32 M_CardPriceUpNum = 25;
 	//卡片转职
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FCardChangeJobs M_FCardChangeJobs;
+	FCardChangeJobs M_FCardChangeJobs;
 	//卡片类型(用于结构转型)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardType M_ECardType = ECardType::E_ATK;
+	ECardType M_ECardType = ECardType::E_ATK;
 	//卡片技能升级后开启的能力
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardSkillType M_ECardSkillType = ECardSkillType::E_ATTACKSPEED;
+	ECardSkillType M_ECardSkillType = ECardSkillType::E_ATTACKSPEED;
 	//卡片对应的技能书名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_CardSkillBookName = FString(TEXT("NULL"));
+	FString M_CardSkillBookName = FString(TEXT("NULL"));
 	//卡片星星升级类型->表示每上升一个等级会随之提升某一项数据
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardUpGradeType M_ECardUpGradeType = ECardUpGradeType::E_Atk_Up;
+	ECardUpGradeType M_ECardUpGradeType = ECardUpGradeType::E_Atk_Up;
 	//因为等级每次的提升比率
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_M_ECardUpGradeUpRate = 0.f;
+	float M_M_ECardUpGradeUpRate = 0.f;
 	//卡片线路类型->顾名思义就是种植的当前网格，如果网格是【陆地】类型（当前卡片类型必须是:陆地）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineType M_ELineType = ELineType::OnGround;
+	ELineType M_ELineType = ELineType::OnGround;
 	//道具描述2
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString ItemDescrible_2 = FString(TEXT("描述信息待完善"));
+	FString ItemDescrible_2 = FString(TEXT("描述信息待完善"));
 	//卡片对应的蓝图实例
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftClassPath CardActorResource;
+	FSoftClassPath CardActorResource;
 	//卡片的大头像
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath CardActorHead;
+	FSoftObjectPath CardActorHead;
 	//确定卡片特殊性(标记特殊会在强化中表示高概率卡片)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_SpecialCard_SynthesisUpGrade = false;
+	bool M_SpecialCard_SynthesisUpGrade = false;
 	//是否启用碰撞
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bEnableCardCollision = true;
+	bool M_bEnableCardCollision = true;
 	//卡片碰撞类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardCollisionType M_ECardCollisionType = ECardCollisionType::E_CardActor2;
+	ECardCollisionType M_ECardCollisionType = ECardCollisionType::E_CardActor2;
 	//卡片碰撞宽度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_CardCollsionWidth = 20.f;
+	float M_CardCollsionWidth = 20.f;
 	//射线设置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FLineTraceSetting> M_LineTraceSettings;
+	TArray<FLineTraceSetting> M_LineTraceSettings;
 	//网格检测设置
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	//	TArray<FLineCheckSetting> M_LineCheckSetting;
@@ -283,6 +284,7 @@ public:
 
 class UPlayerStructManager;
 
+//卡片基础数据结构
 UCLASS()
 class FVM_API UCardBaseStruct : public UObject
 {
@@ -293,25 +295,25 @@ public:
 public:
 	//返回所有卡片的名称
 	UFUNCTION(BlueprintCallable)
-		static void GetAllCardName(TArray<FItemBase>& _CardName);
+	static void GetAllCardName(TArray<FItemBase>& _CardName);
 	//根据类型返回数据表路径
 	UFUNCTION(BlueprintCallable)
-		static FString GetCardDataTablePath(ECardType _Type);
+	static FString GetCardDataTablePath(ECardType _Type);
 	//搜索卡片查询所有的卡片数据表
 	UFUNCTION(BlueprintCallable)
-		static bool SearchCardFromDataTable(
-			const FString& _CardName,
-			FItemCard& OutputData,
-			bool _SelectCardType = false,
-			ECardType _CardType = ECardType::E_ATK,
-			int32 _UniformGrade = 0
-		);
+	static bool SearchCardFromDataTable(
+		const FString& _CardName,
+		FItemCard& OutputData,
+		bool _SelectCardType = false,
+		ECardType _CardType = ECardType::E_ATK,
+		int32 _UniformGrade = 0
+	);
 	//返回所有卡片的数据
 	UFUNCTION(BlueprintCallable)
-		static void GetAllCardsData(TArray<FItemCard>& _CardDatas, int32 _UniformGrade = 0);
+	static void GetAllCardsData(TArray<FItemCard>& _CardDatas, int32 _UniformGrade = 0);
 	//创建所有的卡片到背包
 	UFUNCTION(BlueprintCallable)
-		static void CreateAllCardToBag(UPlayerStructManager* _Player, int32 _UniformCardGrade);
+	static void CreateAllCardToBag(UPlayerStructManager* _Player, int32 _UniformCardGrade);
 public:
 	/*-----------------------------------------------卡片-----------------------------------------------*/
 	/*-----------------------------------------------卡片-----------------------------------------------*/

@@ -96,11 +96,11 @@ void UGameConfigSubsystem::PlayGameSoundEffects(const FString& SoundEffectName, 
 	}
 
 	const FString& LSoundPath =
-		FString("SoundWave'/Game/Resource/BP/Audio/") +
+		FString(TEXT("SoundWave'/Game/Resource/BP/Audio/")) +
 		SoundEffectPathName + ("/") +
 		SoundEffectName +
-		FString(".") +
-		SoundEffectName + FString("'");
+		FString(TEXT(".")) +
+		SoundEffectName + FString(TEXT("'"));
 
 	USoundBase* Sound = LoadObject<USoundBase>(0, *LSoundPath);
 

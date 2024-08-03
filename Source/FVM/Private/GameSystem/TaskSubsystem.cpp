@@ -164,7 +164,7 @@ void UTaskSubsystem::ExecuteTasks(UObject* ObjectClass)
 			}
 		}
 
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("保存完成的{任务}")));
 	}
 }
 
@@ -441,21 +441,21 @@ void UTaskSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	UGameSystemFunction::GetDataTableRows<FMainTask>(
 		TEXT("DataTable'/Game/Resource/BP/Data/Task/Main/DT_MainTask.DT_MainTask'"),
 		this->MainTask
-		);
+	);
 	//加载每日任务数据表
 	UGameSystemFunction::GetDataTableRows<FDayTask>(
 		TEXT("DataTable'/Game/Resource/BP/Data/Task/Day/DT_DayTask.DT_DayTask'"),
 		this->DayTask
-		);
+	);
 	//加载支线任务数据表
 	UGameSystemFunction::GetDataTableRows<FPlayerUpTask>(
 		TEXT("DataTable'/Game/Resource/BP/Data/Task/Other/DT_PlayerUpTask.DT_PlayerUpTask'"),
 		this->PlayerUpTask
-		);
+	);
 	UGameSystemFunction::GetDataTableRows<FChallengeTask>(
 		TEXT("DataTable'/Game/Resource/BP/Data/Task/Other/DT_ChallengeTask.DT_ChallengeTask'"),
 		this->ChallengeTask
-		);
+	);
 }
 
 void UTaskSubsystem::Deinitialize()
@@ -514,7 +514,7 @@ void UTaskSubsystem::InitDayTask()
 			//清理每日累积
 			UPlayerRecord::InitDayRecord();
 			//保存
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("初始化每日任务")));
 		}
 
 		//更新任务

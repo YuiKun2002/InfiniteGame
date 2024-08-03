@@ -20,13 +20,13 @@ private:
 private:
 	//头像
 	UPROPERTY()
-		UImage* M_Head = nullptr;
+	UImage* M_Head = nullptr;
 	//史诗道具（动画显示）
 	UPROPERTY()
-		UImage* M_ItemEpic_Image = nullptr;
+	UImage* M_ItemEpic_Image = nullptr;
 	//按钮（点击之后显示名称）
 	UPROPERTY()
-		UButton* M_Button = nullptr;
+	UButton* M_Button = nullptr;
 public:
 	//初始化
 	bool Initialize() override;
@@ -35,14 +35,13 @@ public:
 public:
 	//加载数据
 	UFUNCTION(BlueprintCallable)
-		void LoadData();
+	void LoadData();
 	//显示信息介绍界面
 	UFUNCTION(BlueprintCallable)
-		void ShowInformation();
+	void ShowInformation();
 	//获取物品名称
-	UFUNCTION(BlueprintCallable)
-	   FString GetItemName();
+	virtual FString ToString_Implementation() override;
 	//移除信息介绍界面       
 	UFUNCTION(BlueprintCallable)
-		void RemoveInformation();
+	void RemoveInformation();
 };

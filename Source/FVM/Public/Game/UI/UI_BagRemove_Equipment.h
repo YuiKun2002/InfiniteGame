@@ -24,10 +24,10 @@ private:
 		UHorizontalBox* M_EquipmentCountPanel = nullptr;
 public:
 	//装备名称
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString M_EquipmentName;
 	//装备数量
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString M_EquipmentNum;
 public:
 	virtual bool Initialize() override;

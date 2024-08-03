@@ -13,7 +13,7 @@ void UUI_Mail_MessageBox::OpenMail()
 	this->SetMailStateTexture(this->GetMailState());
 
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("打开邮件界面")));
 
 	//设置主题
 	this->GetMail()->SetMailContent(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerName, this->GetMailData()->M_MailTheme, this->GetMailData()->M_MailContent);

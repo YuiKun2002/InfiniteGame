@@ -22,6 +22,7 @@
 #include "Engine/Texture2D.h"
 #include "Game/UI/Tips/UI_Tip.h"
 #include "Game/UI/Tips/UI_SelectTip.h"
+#include "Game/UI/Tips/UI_ItemTitleTip.h"
 
 /*
 
@@ -51,6 +52,11 @@ void UWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	// Blueprint'/Game/Resource/Texture/UI/Game/TreviFountain/Animation/BP_2DCatch_GetItemAnimation.BP_2DCatch_GetItemAnimation'
+}
+
+FString UWidgetBase::ToString_Implementation()
+{
+	return UGameSystemFunction::GetObjectName(this);
 }
 
 void UWidgetBase::PlayOperateAudio(bool _bCancel_Audio, bool _bWindowsMouseEnterAudio, bool _bWindows)
@@ -173,7 +179,7 @@ void UWidgetBase::SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<c
 		}
 
 		FButtonStyle _Style = _ButtonComponent->WidgetStyle;
-		FSlateBrush _Normal, _Hovered, _Pressed,_Dis;
+		FSlateBrush _Normal, _Hovered, _Pressed, _Dis;
 
 		_Normal.TintColor = FSlateColor(FLinearColor(FVector4(1.f, 1.f, 1.f, 1.f)));
 		_Hovered.TintColor = FSlateColor(FLinearColor(FVector4(.7f, .7f, .7f, 1.f)));
@@ -278,6 +284,11 @@ void UWidgetBase::SetImageBrush(UImage* _ImageComponent, FString _ImageTexturePa
 	}
 }
 
+void UWidgetBase::SetImageBrushByTexture(UImage* _ImageComponent, TSoftObjectPtr<UTexture2D> _ImageTexturePath, FVector _Color /*= FVector(1.f)*/, float Alph /*= 1.f*/, bool _ResetSize /*= false*/, FVector _Scale /*= FVector(1.f, 1.f, 0.f)*/, bool _bHit /*= false */)
+{
+	UWidgetBase::SetImageBrush(_ImageComponent, _ImageTexturePath.ToString(), _Color, Alph, _ResetSize, _Scale, _bHit);
+}
+
 void UWidgetBase::SetImageColor(UImage* _ImageComponent, FVector _Color, float Alph)
 {
 	if (!_ImageComponent)
@@ -333,7 +344,10 @@ void UWidgetBase::AddTextToRichText(const FString& _Content, URichTextBlock* _Ri
 
 	FString SContent = _RichTextBlock->GetText().ToString() + _Content + TEXT("<br><br>");
 
-	_RichTextBlock->SetText(FText::FromString(UKismetStringLibrary::Replace(SContent, TEXT("<br>"), TEXT("\r\n"), ESearchCase::IgnoreCase)));
+	_RichTextBlock->SetText(
+		FText::FromString(UKismetStringLibrary::Replace(
+			SContent, TEXT("<br>"), TEXT("\r\n"), ESearchCase::IgnoreCase)
+		));
 }
 
 UCanvasPanelSlot* UWidgetBase::WidgetToCanvasSlot(UWidget* _Widget)
@@ -352,5 +366,22 @@ void UWidgetBase::SetWidgetSacle(UWidget* _Widget, const FVector2D& _Sacle)
 UTexture2D* UWidgetBase::LoadTexture2D(const FString& _Path)
 {
 	return UWidgetBase::WidgetLoadTexture2D(_Path);
+}
+
+void UWidgetBase::ShowTip(bool bShowState)
+{
+	if (IsValid(this->ShowTipWidget))
+	{
+		this->ShowTipWidget->CreateBaseTipWidget(this->ToString(), bShowState);
+	}
+	else {
+		UWidgetBase* Widget = UGameSystemFunction::GetUserInterWidgetByName(UI_GLOBALUINAME, TEXT("ItemTitleTip"));
+		UUI_ItemTitleTip* TipWidget = Cast<UUI_ItemTitleTip>(Widget);
+		if (IsValid(TipWidget))
+		{
+			this->ShowTipWidget = TipWidget;
+			this->ShowTipWidget->CreateBaseTipWidget(this->ToString(), bShowState);
+		}
+	}
 }
 

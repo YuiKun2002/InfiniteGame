@@ -447,7 +447,7 @@ void USynModel_CardUpgrade::UpdateCardListStyle()
 			_img->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			UWidgetBase::SetImageBrush(_img, UGameSystemFunction::GetCardGradeImagePath(this->CardDatas[Index].CardData.M_CardGrade));
 		}
-	};
+		};
 
 	if (this->CardDatas[0].PlayerBagIndex != -1)
 	{
@@ -613,7 +613,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 
 			CurDatas[Index].PlayerBagIndex = -1;
 		}
-	};
+		};
 
 
 	//卡片强化，提升 或者 下降
@@ -701,7 +701,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 		//清空待删除的道具
 		UGameSystemFunction::ClearWaitingItems<FItemCard>(
 			UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card
-			);
+		);
 
 		//查询主卡索引
 		TMap<int32, FItemCard> CurCards = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->FindCardByName(
@@ -755,7 +755,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 	this->WidgetResetLoadData();
 
 	//保存存档
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("卡片强化操作")));
 }
 
 void USynModel_CardUpgrade::InitWidgets(UButton*& CardButt, const FString& WidgetName1, UImage*& CardGradeImg, const FString& WidgetName2, UTextBlock*& CardPriceText, const FString& WidgetName3)
@@ -814,7 +814,7 @@ bool USynModel_CardUpgrade::AddCard(const int32 Index, FSynModelCardUpgradeData 
 		UWidgetBase::SetImageBrush(_img,
 			UGameSystemFunction::GetCardGradeImagePath(this->CardDatas[Index].CardData.M_CardGrade)
 		);
-	};
+		};
 
 	//更新保险金 金额
 	if (this->CardDatas[0].PlayerBagIndex != -1)

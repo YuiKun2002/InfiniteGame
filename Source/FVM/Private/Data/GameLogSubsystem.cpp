@@ -302,7 +302,7 @@ bool UMailInstructions::ReadInstruction(const TArray<FString>& Instruction)
 
 			UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerMails.Empty();
 
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("一键领取邮件操作")));
 
 			return true;
 		}
@@ -312,9 +312,10 @@ bool UMailInstructions::ReadInstruction(const TArray<FString>& Instruction)
 		{
 			//初始化指令大全
 			TArray<FMail> Mail_;
+			UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 			UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(
-				UGlobalDatas::Global_SourceMailData_Mail, Mail_
-				);
+				Cache->GetMail(), Mail_
+			);
 
 			FString LContent;
 			LContent += FALD(TEXT("邮件所有的道具名称：")) + TEXT("\r\n");
@@ -336,10 +337,10 @@ bool UMailInstructions::ReadInstruction(const TArray<FString>& Instruction)
 		FMail _MailData;
 
 		TArray<FMail> Mail_;
-
+		UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 		UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(
-			UGlobalDatas::Global_SourceMailData_Mail, Mail_
-			);
+			Cache->GetMail(), Mail_
+		);
 
 		if (UEquipmentBaseStruct::GetMailArraysData(Cur, Mail_, _MailData))
 		{
@@ -351,7 +352,7 @@ bool UMailInstructions::ReadInstruction(const TArray<FString>& Instruction)
 	if (b)
 	{
 		//保存数据
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("将邮件内容一键发送角色")));
 		return true;
 	}
 

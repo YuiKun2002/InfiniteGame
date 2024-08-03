@@ -28,7 +28,7 @@ void UUI_ShopPayTip::PayButton()
 	}
 
 	//读取原存档
-	UPlayerStructManager* NewLoadLocalPlayer = UGameSystemFunction::LoadCurrentPlayerData();
+	UPlayerStructManager* NewLoadLocalPlayer = UGameSystemFunction::LoadCurrentPlayerData(__FUNCTION__ + FString(TEXT("准备进行支付操作")));
 	if (IsValid(NewLoadLocalPlayer))
 	{
 		UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetPlayerDataInstance(NewLoadLocalPlayer);
@@ -191,7 +191,7 @@ void UUI_ShopPayTip::PayButton()
 			}break;
 			}
 			//保存数据
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("支付完成")));
 			//购买成功
 			FString Tip = TEXT("获得道具:") + ItemName + TEXT("*") + FString::FromInt(ItemCount * this->M_BuyCountSendNums);
 			UWidgetBase::CreateTipWidget(Tip, FVector(1.f, 0.5f, 0.f));

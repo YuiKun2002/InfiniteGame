@@ -304,7 +304,7 @@ bool UUI_TreviFountain::SwitchPay(int32 _Index, int32 _FirstCoin, int32 _SecondC
 	this->UpdateCoin();
 
 	//保存
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("许愿池支付操作")));
 
 	return true;
 }

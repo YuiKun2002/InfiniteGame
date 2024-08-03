@@ -380,8 +380,6 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 			{
 				//创建徽章或者钥匙交换UI
 
-				//禁用触摸
-				APlayerView::GetPlayerViewInstance()->DisEnableTouch();
 				//暂停游戏
 				AGameMapInstance::GetVSManagerComponent_Static()->SetGamePause();
 				//创建UI

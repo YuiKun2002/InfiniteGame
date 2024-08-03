@@ -131,7 +131,7 @@ bool UVSManagerComponent::CreatePlayer(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 						, LoadClass<ACardActor>(0,
 							TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/木盘子.木盘子_C'")
-							), CardData, 0, false);
+						), CardData, 0, false);
 				}
 			}break;
 			case ELineType::Underwater:
@@ -144,7 +144,7 @@ bool UVSManagerComponent::CreatePlayer(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 						, LoadClass<ACardActor>(0,
 							TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/苏打气泡.苏打气泡_C'")
-							), CardData, 0, false);
+						), CardData, 0, false);
 				}
 			}break;
 			default:
@@ -179,8 +179,9 @@ bool UVSManagerComponent::CreatePlayer(
 				//设置新套装
 				PlayerIns->SetPlayerSuit(NewSuit);
 
+				UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 				//设置武器
-				for (const auto& Data : UGlobalDatas::Global_SourceEquipmentData_WeaponFirst)
+				for (const auto& Data : Cache->GetWeaponFirst())
 				{
 					if (Data.M_FEquipment.ItemName.Equals(FirstWeaponName))
 					{
@@ -214,7 +215,7 @@ bool UVSManagerComponent::CreatePlayer(
 				UFVMGameInstance::GetFVMGameInstance(),
 				LoadClass<UUI_GamePlayerHead>(nullptr,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BP_PlayerHead.BP_PlayerHead_C'"))
-				);
+			);
 			UIPlayerHead->Init(bMainPlayer, PlayerHead, PlayerGrade, PlayerName);
 			AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->M_UUI_CardBar->AddPlayerInfor(UIPlayerHead);
 
@@ -306,7 +307,7 @@ void UVSManagerComponent::GameStart()
 	this->M_UIBottomTip = CreateWidget<UUI_BottomTip>(
 		this->GetWorld(),
 		LoadClass<UUI_BottomTip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_BottomTip.BPUI_BottomTip_C'"))
-		);
+	);
 
 
 
@@ -318,7 +319,7 @@ void UVSManagerComponent::GameStart()
 			this->UI_VSCountDown = CreateWidget<UUI_VSCountDown>(
 				this->GetWorld(),
 				LoadClass<UUI_VSCountDown>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/BPUI_Timer.BPUI_Timer_C'"))
-				);
+			);
 
 			//开始倒计时
 			this->UI_VSCountDown->Enable(

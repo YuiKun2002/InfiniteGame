@@ -73,8 +73,7 @@ public:
 	UFUNCTION()
 		void Get();
 	//获取物品名称
-	UFUNCTION(BlueprintCallable)
-		FString GetItemName();
+	virtual FString ToString_Implementation() override;
 public:
 	//发送道具
 	void SendItem(const FTreviFountainItemStruct& _Item);

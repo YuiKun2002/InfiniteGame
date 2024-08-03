@@ -263,7 +263,7 @@ bool UGameSystemFunction::AddGameinstructions(const UObject* WorldContext, const
 	return false;
 }
 
-FString UGameSystemFunction::BlueprintAddLog(const FString& Content, const FString& Flag /*= FString("t")*/)
+FString UGameSystemFunction::BlueprintAddLog(const FString& Content, const FString& Flag /*= FString(TEXT("t")*/)
 {
 	return FVMAddLogPanel(Content, Flag);
 }
@@ -300,15 +300,15 @@ void UGameSystemFunction::LoadMap()
 
 
 		//关闭当前进入的UI地图
-		UserInter->GetUserInterInstance(WORLDMAPUINAME)->RemoveUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
+		UserInter->GetUserInterInstance(UI_WORLDMAPUINAME)->RemoveUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
 		//设置新的UI地图名称
 		Player->M_PlayerInMap.CurrentInMapUIName = MapPah;
 		//显示新的UI地图
-		UserInter->GetUserInterInstance(WORLDMAPUINAME)->ShowUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
+		UserInter->GetUserInterInstance(UI_WORLDMAPUINAME)->ShowUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
 
 		//重新显示框架
-		UserInter->GetUserInterInstance(GLOBALUINAME)->RemoveUI_ByName(TEXT("MainFrame"));
-		UserInter->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(TEXT("MainFrame"));
+		UserInter->GetUserInterInstance(UI_GLOBALUINAME)->RemoveUI_ByName(TEXT("MainFrame"));
+		UserInter->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(TEXT("MainFrame"));
 
 		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("{加载当前进入的地图UI}")));
 	}
@@ -344,15 +344,15 @@ void UGameSystemFunction::LoadLastMap()
 		}
 
 		//关闭当前进入的UI地图
-		UserInter->GetUserInterInstance(WORLDMAPUINAME)->RemoveUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
+		UserInter->GetUserInterInstance(UI_WORLDMAPUINAME)->RemoveUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
 		//设置新的UI地图名称
 		Player->M_PlayerInMap.CurrentInMapUIName = MapPah;
 		//显示新的UI地图
-		UserInter->GetUserInterInstance(WORLDMAPUINAME)->ShowUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
+		UserInter->GetUserInterInstance(UI_WORLDMAPUINAME)->ShowUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
 
 		//重新显示框架
-		UserInter->GetUserInterInstance(GLOBALUINAME)->RemoveUI_ByName(TEXT("MainFrame"));
-		UserInter->GetUserInterInstance(GLOBALUINAME)->ShowUI_ByName(TEXT("MainFrame"));
+		UserInter->GetUserInterInstance(UI_GLOBALUINAME)->RemoveUI_ByName(TEXT("MainFrame"));
+		UserInter->GetUserInterInstance(UI_GLOBALUINAME)->ShowUI_ByName(TEXT("MainFrame"));
 
 		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("{加载上一次进入的地图UI}")));
 	}
@@ -458,7 +458,7 @@ void UGameSystemFunction::ResetDataTable(class UDataTable* _datatable)
 		if (CardData)
 		{
 			//加载Actor资源
-			//FString Ref = FString("Blueprint'/Game/Resource/BP/GameStart/Item/Card/" + CardData->ItemName + "." + CardData->ItemName + "_C'");
+			//FString Ref = FString(TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/" + CardData->ItemName + "." + CardData->ItemName + "_C'");
 			//CardData->CardActorResource = FSoftClassPath(Ref);
 		//	CardData->CardActorHead = FSoftObjectPath(FString(TEXT("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Card/CardBg2/T") + CardData->ItemName + ".T" + CardData->ItemName + "'"));
 		}
@@ -1045,7 +1045,7 @@ void UGameSystemFunction::SendVersionCompensate()
 		int32 Count = Player->M_GameVersionCompensate.Num();
 
 		if (UFVMGameInstance::GetDebug())
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("----------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("----------------------------------------------------------------")));
 
 		if (UFVMGameInstance::GetDebug())
 			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("当前邮件数量：") + FString::FromInt(Count)) + TEXT("总量：") + FString::FromInt(DataCount));
@@ -1091,7 +1091,7 @@ void UGameSystemFunction::SendVersionCompensate()
 		}
 
 		if (UFVMGameInstance::GetDebug())
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString("----------------------------------------------------------------"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("----------------------------------------------------------------")));
 
 		//保存
 		//UGameSystemFunction::SaveCurrentPlayerData();
@@ -1104,14 +1104,14 @@ bool UGameSystemFunction::SendMailToPlayerMailBox(const FString& _Name)
 	FMail _MailData;
 
 	TArray<FMail> Mail_;
-
-	UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(UGlobalDatas::Global_SourceMailData_Mail, Mail_);
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(Cache->GetMail(), Mail_);
 
 	if (UEquipmentBaseStruct::GetMailArraysData(_Name, Mail_, _MailData))
 	{
 		UGameSystemFunction::SendMailToCurrentPlayer(_MailData);
 		//保存数据
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("邮件发送，发送信息：")) + _Name);
 
 		return true;
 	}
@@ -1141,15 +1141,19 @@ bool UGameSystemFunction::SendCardToPlayerBag(const FString& _CardName, int32 _L
 		UGameLogSubsystem::AddPlayerGetCardLog(_CardName, _Lv);
 
 		if (UFVMGameInstance::GetDebug())
+		{
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送防御卡：") + _CardName + TEXT("到背包"));
+		}
 
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送防御卡：")) + _CardName + TEXT("到背包"));
 
 		return true;
 	}
 
 	if (UFVMGameInstance::GetDebug())
+	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送防御卡失败：") + _CardName);
+	}
 
 	return false;
 }
@@ -1213,16 +1217,22 @@ bool UGameSystemFunction::SendEquipmentToPlayerBag(const FString& _EquipmentName
 		UGameLogSubsystem::AddPlayerGetEquipmentLog(EquipmentData.ItemName, _Count, EquipmentData.M_EquipmentGrade);
 
 		if (_bSave)
-			UGameSystemFunction::SaveCurrentPlayerData();
+		{
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送装备：")) + EquipmentData.ItemName + TEXT("到背包"));
+		}
 
 		if (UFVMGameInstance::GetDebug())
+		{
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备：") + EquipmentData.ItemName + TEXT("到背包"));
+		}
 
 		return true;
 	}
 
 	if (UFVMGameInstance::GetDebug())
+	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备失败：") + EquipmentData.ItemName);
+	}
 
 	return false;
 }
@@ -1269,19 +1279,25 @@ bool UGameSystemFunction::SendMaterialToPlayerBag(const FString& _MaterialName, 
 		}
 
 		if (UFVMGameInstance::GetDebug())
+		{
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料：") + MaterialBaseData.ItemName + TEXT("到背包"));
+		}
 
 		UGameLogSubsystem::AddPlayerGetMaterialLog(MaterialBaseData.ItemName, _Count);
 
 		//保存数据
 		if (_bSave)
-			UGameSystemFunction::SaveCurrentPlayerData();
+		{
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送材料：")) + MaterialBaseData.ItemName + TEXT("到背包"));
+		}
 
 		return true;
 	}
 
 	if (UFVMGameInstance::GetDebug())
+	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料失败：") + MaterialBaseData.ItemName);
+	}
 
 	return false;
 }
@@ -1401,7 +1417,7 @@ void UGameSystemFunction::ClearWaitingItemsForEquip(TArray<FEquipmentBase>& _Arr
 
 
 
-class UWidgetBase* UGameSystemFunction::GetUserInterWidgetByClass(TSoftClassPtr<class UUserInterInsType> ObjectType, FName Name)
+class UWidgetBase* UGameSystemFunction::GetUserInterWidgetByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType, FName Name)
 {
 	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 	if (IsValid(UIStaticClass))
@@ -1470,7 +1486,7 @@ bool UGameSystemFunction::AddTempUserInterInstanceByName(FName Name)
 	return false;
 }
 
-UGameUserInterfaceInstance* UGameSystemFunction::GetUserInterInstanceByClass(TSoftClassPtr<class UUserInterInsType> ObjectType)
+UGameUserInterfaceInstance* UGameSystemFunction::GetUserInterInstanceByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType)
 {
 	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 	if (IsValid(UIStaticClass))

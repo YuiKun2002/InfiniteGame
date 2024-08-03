@@ -111,7 +111,7 @@ void UUI_GameOver::ShowOver1()
 		i++;
 	}
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关卡结束，保存进度1")));
 }
 
 void UUI_GameOver::ShowOver2(bool bWin)
@@ -178,18 +178,18 @@ void UUI_GameOver::ShowOver2(bool bWin)
 	//执行任务
 	UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
 
-	UGameSystemFunction::SaveCurrentPlayerData();
-
 	//添加角色经验值
 	UFVMGameInstance::GetPlayerStructManager_Static()->AddPlayerEx(CurEx * (bWin ? 0.9f : 0.2f));
 	//设置角色等级
 	FSoftObjectPath PlayerGradePath = UGameSystemFunction::GetPlayerGradeImagePath();
 	this->PlayerGradeHead->SetBrushFromTexture(Cast<UTexture2D>(PlayerGradePath.TryLoad()));
+
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关卡结束，保存进度2")));
 }
 
 void UUI_GameOver::ShowOver3()
 {
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关卡结束，保存进度3")));
 }
 
 bool UUI_GameOver::FindMaterial(const FString& Name)

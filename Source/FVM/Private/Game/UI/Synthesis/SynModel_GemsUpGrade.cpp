@@ -820,10 +820,12 @@ void USynModel_GemsUpGrade::GemUpGrade()
 
 	//清除材料
 	if (LRemoveItemResult)
+	{
 		UGameSystemFunction::ClearWaitingItems(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material);
+	}
 
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石强化操作")));
 
 	//重新加载数据
 	this->LoadEquipment();

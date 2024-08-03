@@ -75,9 +75,7 @@ public:
 	//获取卡片数据
 	FItemCard* const GetFItemCardData();
 public:
-	//获取物品名称
-	UFUNCTION(BlueprintCallable)
-		FString GetItemName();
+	virtual FString ToString_Implementation() override;
 public:
 	//显示卡片的细节
 	UFUNCTION()

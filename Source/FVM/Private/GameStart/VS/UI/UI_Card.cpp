@@ -71,7 +71,7 @@ void UUI_Card::SetCardGrade(const int32& _Grade)
 	if (_Grade > 0 && _Grade < 17)
 	{
 		FSlateBrush Image;
-		Image.SetResourceObject(LoadTexture2D(FString("Texture2D'/Game/Resource/Texture/CardGrade/") + FString::FormatAsNumber(_Grade) + FString(".") + FString::FormatAsNumber(_Grade) + FString("'")));
+		Image.SetResourceObject(LoadTexture2D(FString(TEXT("Texture2D'/Game/Resource/Texture/CardGrade/")) + FString::FromInt(_Grade) + FString(TEXT(".")) + FString::FromInt(_Grade) + FString(TEXT("'"))));
 		Image.DrawAs = ESlateBrushDrawType::Image;
 		this->M_UImage_Grade->SetBrush(Image);
 		this->M_UImage_Grade->SetVisibility(ESlateVisibility::SelfHitTestInvisible);

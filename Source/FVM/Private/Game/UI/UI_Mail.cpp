@@ -20,7 +20,7 @@ void UUI_Mail::SendMsgToSystem()
 
 void UUI_Mail::AnalysisMsg(FString _Value)
 {
-	if (UGameSystemFunction::AddGameinstructions(this, FString("/mail ") + _Value))
+	if (UGameSystemFunction::AddGameinstructions(this, FString(TEXT("/mail ")) + _Value))
 	{
 		this->LoadList();
 	}
@@ -135,13 +135,20 @@ void UUI_Mail::InitializeMsgText()
 
 	//初始化指令大全
 	TArray<FMail> Mail_;
-	UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(UGlobalDatas::Global_SourceMailData_Mail, Mail_);
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	if (IsValid(Cache))
+	{
+		UEquipmentBaseStruct::GetEquipmentRowDatas<FEquipment_FMail_Data, FMail>(Cache->GetMail(), Mail_);
 
-	FString LContent;
+		FString LContent;
 
-	for (const auto& _Data_Name : Mail_)
-		LContent += _Data_Name.M_MailTitle + TEXT("\n");
-	this->M_ConfigList->SetText(FText::FromString(LContent));
+		for (const auto& _Data_Name : Mail_)
+		{
+			LContent += _Data_Name.M_MailTitle + TEXT("\n");
+		}
+
+		this->M_ConfigList->SetText(FText::FromString(LContent));
+	}
 }
 
 void UUI_Mail::CreateNewMailToList(FMail& _Mail)

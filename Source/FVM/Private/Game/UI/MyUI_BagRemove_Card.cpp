@@ -29,7 +29,7 @@ void UMyUI_BagRemove_Card::SetCard(const FString& _HeadPath, int32 _CardGrade)
 	this->M_CardGradeImage->SetVisibility(ESlateVisibility::Hidden);
 	if (_CardGrade > 0 && _CardGrade < 17)
 	{
-		FString _Grade = FString("Texture2D'/Game/Resource/Texture/CardGrade/") + FString::FormatAsNumber(_CardGrade) + "." + FString::FormatAsNumber(_CardGrade) + "'";
+		FString _Grade = FString(TEXT("Texture2D'/Game/Resource/Texture/CardGrade/")) + FString::FromInt(_CardGrade) + "." + FString::FromInt(_CardGrade) + "'";
 		UWidgetBase::SetImageBrush(this->M_CardGradeImage, _Grade);
 	}
 }

@@ -57,7 +57,7 @@ void UUI_TreviFountain2Box::SetBoxStyle(const FString& _ItemHeadPath, bool _bOpe
 
 	if (_bOpened)
 	{
-		UWidgetBase::SetImageBrush(this->M_UImage, _ItemHeadPath, FVector(1.f), 1.f, _bOpened, FVector(1.f, 1.f, 0.f),true);
+		UWidgetBase::SetImageBrush(this->M_UImage, _ItemHeadPath, FVector(1.f), 1.f, _bOpened, FVector(1.f, 1.f, 0.f), true);
 	}
 
 
@@ -162,7 +162,7 @@ void UUI_TreviFountain2Box::Get()
 	UGameSystemFunction::SendMaterialToPlayerBag(TEXT("三级四叶草"), 1);
 }
 
-FString UUI_TreviFountain2Box::GetItemName()
+FString UUI_TreviFountain2Box::ToString_Implementation()
 {
 	return this->M_Name;
 }

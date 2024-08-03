@@ -385,7 +385,7 @@ void USynModel_GoldCardUp::CardUp()
 	);
 
 	//保存
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("金卡进化操作")));
 
 	UWidgetBase::CreateTipWidget(
 		FString(TEXT("进化成功【") + TargetData.ItemName + TEXT("】"))

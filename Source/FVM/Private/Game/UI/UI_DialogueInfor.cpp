@@ -34,7 +34,7 @@ void UUI_DialogueListItem::Cancel()
 	{
 		UFVMGameInstance::GetPlayerStructManager_Static()->bJoinDialogue = false;
 
-		UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+		UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("取消间章剧情操作")));
 
 		this->UI->Load();
 	}

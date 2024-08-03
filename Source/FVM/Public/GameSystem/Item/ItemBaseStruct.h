@@ -3,15 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "Engine/DataTable.h"
-//资源加载
-#include "GameStart/VS/MapBaseType.h"
-
-#include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
+#include "UObject/NoExportTypes.h"
+#include "GameStart/VS/MapBaseType.h"
+#include "Engine/StreamableManager.h"
+#include "GameSystem/GameDataSubsystem.h"
 #include "Engine/Classes/Engine/DataTable.h"
-
 #include "ItemBaseStruct.generated.h"
 
 // this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
@@ -62,16 +60,16 @@ struct FLineCheckSetting {
 public:
 	//检测类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineTraceType M_ELineTraceType = ELineTraceType::E_MouseGround;
+	ELineTraceType M_ELineTraceType = ELineTraceType::E_MouseGround;
 	//检测发射位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineTracePosition M_ELineTracePosition = ELineTracePosition::E_Right;
+	ELineTracePosition M_ELineTracePosition = ELineTracePosition::E_Right;
 	//检测长度[-1表示不限制长度]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 CheckLength = -1;
+	int32 CheckLength = -1;
 	//检测偏移[如果是左右检测(行偏移)如果是上下检测(列偏移)]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 CheckOffset = 0;
+	int32 CheckOffset = 0;
 };
 
 //射线偏移结构设置
@@ -81,25 +79,25 @@ struct FLineTraceSetting {
 public:
 	//开始位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector M_BeginLocation = FVector();
+	FVector M_BeginLocation = FVector();
 	//结束位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector M_EndLocation = FVector();
+	FVector M_EndLocation = FVector();
 	//设置位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineTracePosition M_ELineTracePosition = ELineTracePosition::E_Right;
+	ELineTracePosition M_ELineTracePosition = ELineTracePosition::E_Right;
 	//开始固定格子长度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bEnableSettingGridCount = false;
+	bool M_bEnableSettingGridCount = false;
 	//最长几个格子
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_GridCount = 1;
+	int32 M_GridCount = 1;
 	//射线最终的偏移位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector M_LineTraceOffset = FVector();
+	FVector M_LineTraceOffset = FVector();
 	//检测类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineTraceType M_ELineTraceType = ELineTraceType::E_MouseGround;
+	ELineTraceType M_ELineTraceType = ELineTraceType::E_MouseGround;
 };
 
 //---------------------------------------------------------------------------------------------------------
@@ -131,34 +129,34 @@ struct FSkillBookData {
 public:
 	//技能书名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Name = FString(TEXT("小笼包"));
+	FString M_Name = FString(TEXT("小笼包"));
 	//提示信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Tip = FString(TEXT("提升攻速"));
+	FString M_Tip = FString(TEXT("提升攻速"));
 	//转职卡片名称(同样可以使用当前技能书)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_ChangeCardNames;
+	TArray<FString> M_ChangeCardNames;
 	//技能书头像名称-每一个等级对应一个名称(路径由程序自动完善)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_HeadNames;
+	TArray<FString> M_HeadNames;
 	//技能书等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_LV = 0;
+	int32 M_LV = 0;
 	//技能书当前经验值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CurrentEx = 0;
+	int32 M_CurrentEx = 0;
 	//技能书当前需要的总经验值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CurrentTotalEx = 200;
+	int32 M_CurrentTotalEx = 200;
 	//技能书下一个等级需要的加成经验值比例
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_NextAddTotalEx = 1.5f;
+	float M_NextAddTotalEx = 1.5f;
 	//是否满级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_IsMax = false;
+	bool M_IsMax = false;
 	//技能书分类
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ESkillBookTipCategory M_TabCategory = ESkillBookTipCategory::S_Normal;
+	ESkillBookTipCategory M_TabCategory = ESkillBookTipCategory::S_Normal;
 };
 
 
@@ -175,10 +173,10 @@ struct FPlayerVersionCompensate
 public:
 	//发送状态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_SendState = false;
+	bool M_SendState = false;
 	//发送的邮件名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_SendMailName = TEXT("");
+	FString M_SendMailName = TEXT("");
 };
 
 
@@ -189,40 +187,40 @@ struct FMail {
 public:
 	//邮件发送人
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailSendPlayer;
+	FString M_MailSendPlayer;
 	//邮件标题(输入的指令)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailTitle;
+	FString M_MailTitle;
 	//邮件主题(显示的标题)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailTheme;
+	FString M_MailTheme;
 	//邮件内容
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailContent;
+	FString M_MailContent;
 	//邮件发送道具名称(对应道具名称)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailSendItemName;
+	FString M_MailSendItemName;
 	//道具数量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_MailItemCount = 1;
+	int32 M_MailItemCount = 1;
 	//邮件状态(0未读，1未领取，2以领取)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_MailState = 0;
+	int32 M_MailState = 0;
 	//邮件类型（true 系统  false付费）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_MailType = true;
+	bool M_MailType = true;
 	//金额
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_MailPayNum = 10;
+	int32 M_MailPayNum = 10;
 	//付费类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_MailPayType = 0;
+	int32 M_MailPayType = 0;
 	//付费的类型名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MailPayTypeName = TEXT("金币");
+	FString M_MailPayTypeName = TEXT("金币");
 	//ID个数（保证邮件的唯一）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_Mail_ID = 0;
+	int32 M_Mail_ID = 0;
 };
 
 USTRUCT(BlueprintType)
@@ -235,19 +233,19 @@ public:
 public:
 	//道具名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString ItemName = FString(TEXT("Null"));
+	FString ItemName = FString(TEXT("Null"));
 	//道具描述
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString ItemDescrible = FString(TEXT("空数据"));
+	FString ItemDescrible = FString(TEXT("空数据"));
 	//显示的纹理路径
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath ItemTexturePath = FSoftObjectPath(FString("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Card/CardBg/TCard_0.TCard_0'"));
+	FSoftObjectPath ItemTexturePath = FSoftObjectPath(FString(TEXT("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Card/CardBg/TCard_0.TCard_0'")));
 	//是否被认为是等待删除的对象
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool bWaitRemove = false;
+	bool bWaitRemove = false;
 	//物品ID号(可以不用设置)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_ItemID = -1;
+	int32 M_ItemID = -1;
 };
 
 //物品结构
@@ -261,6 +259,32 @@ public:
 		return false;
 	}
 };
+
+//获取数据表原生数据
+template<typename Type>
+TArray<Type>& GetDataTableSourceData(
+	TArray<Type>& InData,
+	DataTableAssetData<Type>& InTable,
+	FName DataName,
+	FName Name
+) {
+	if (InData.Num())
+	{
+		return InData;
+	}
+	else {
+		InTable.InitDataTable(
+			UGameDataSubsystem::GetGameDataSubsystemStatic()->GetAsset()->
+			GetDataByName(DataName)->GetDataByName(Name)
+		);
+
+		InTable.GetValues(InData);
+
+		InTable.InitDataTable(nullptr);
+	}
+
+	return InData;
+}
 
 UCLASS()
 class FVM_API UItemBaseStruct : public UObject
@@ -294,21 +318,5 @@ public:
 	static inline ItemType* GetItemFromBag(TArray<ItemType>& _Player, const FString& _ItemName)
 	{
 		return UItemBaseStruct::GetMetaByName<ItemType>(_Player, _ItemName);
-	}
-
-	//获取表数据
-	template<class RowType>
-	static void GetTableRow(const FString& _Path, TArray<RowType*>& _OutRows)
-	{
-		//if (!UItemBaseStruct::M_Globle_UItemBaseStruct_Ptr)
-		//	UItemBaseStruct::M_Globle_UItemBaseStruct_Ptr = NewObject<UItemBaseStruct>(UItemBaseStruct::StaticClass(), TEXT("GlobleUItemBaseStruct"));
-		//FStreamableDelegate LocalCallBack;
-		//UItemBaseStruct::M_Globle_StreamableHandle = Streamable.RequestAsyncLoad(FSoftObjectPath(_Path), LocalCallBack);
-
-		FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
-
-		UDataTable* Table = Cast<UDataTable>(Streamable.LoadSynchronous(FSoftObjectPath(_Path)));
-		if (Table)
-			Table->GetAllRows("List", _OutRows);
 	}
 };

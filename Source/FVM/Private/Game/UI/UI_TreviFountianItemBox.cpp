@@ -46,7 +46,7 @@ void UUI_TreviFountianItemBox::ShowInformation()
 	}
 }
 
-FString UUI_TreviFountianItemBox::GetItemName()
+FString UUI_TreviFountianItemBox::ToString_Implementation()
 {
 	return this->Data.M_ItemName;
 }

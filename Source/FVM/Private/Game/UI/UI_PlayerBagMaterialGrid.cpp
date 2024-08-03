@@ -114,7 +114,23 @@ UButton* UUI_PlayerBagMaterialGrid::GetButton()
 	return this->M_Button;
 }
 
+/*
 FString UUI_PlayerBagMaterialGrid::GetItemName()
+{
+	if (this->GetMaterialData())
+	{
+		return this->GetMaterialData()->ItemName;
+	}
+	else if (this->M_EquipmentBaseData)
+	{
+		return this->M_EquipmentBaseData->ItemName;
+	}
+
+	return FString();
+}
+*/
+
+FString UUI_PlayerBagMaterialGrid::ToString_Implementation()
 {
 	if (this->GetMaterialData())
 	{
@@ -204,7 +220,7 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 		this->MaterialBaseCopyData.ItemName,
 		_Spices,
 		EMaterialType::E_Spices
-		))
+	))
 	{
 		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName + TEXT("]查询失败!")));
 		return;
@@ -271,7 +287,7 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 		this->M_MaterialBaseData->ItemName,
 		_Clover,
 		EMaterialType::E_Clover
-		))
+	))
 	{
 		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->M_MaterialBaseData->ItemName + TEXT("]查询失败!")));
 		return;
@@ -471,7 +487,7 @@ void UUI_PlayerBagMaterialGrid::UseCardSkillBook()
 	UUI_ItemDesTip* TipComp = CreateWidget<UUI_ItemDesTip>(this,
 		LoadClass<UUI_ItemDesTip>(0,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemDesTip.BPUI_ItemDesTip_C'"))
-		);
+	);
 
 	TipComp->SetContentTitleText(this->M_MaterialBaseData->ItemName);
 	TipComp->SetContentText(Content);
@@ -489,7 +505,7 @@ void UUI_PlayerBagMaterialGrid::UseSkillBook()
 {
 	UDataTable* Table = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardSkillBookData/CardSkillBooks.CardSkillBooks'")
-		);
+	);
 
 	for (auto& Item : UFVMGameInstance::GetPlayerStructManager_Static()->M_SkillBookDatas)
 	{
@@ -556,7 +572,7 @@ bool UUI_PlayerBagMaterialGrid::UseSkillBookData(FCardSkillBookMaterial _Data, i
 
 
 		return false;
-	};
+		};
 
 	auto DataUpdate = [](TArray<FMaterialBase>& _MDatas, FMaterialBase& _MB, int32 _Count, FSkillBookData& _SkillItem, int32 _Lv, int32 _Ex, int32 _ExTotal) {
 		//清理道具
@@ -578,7 +594,7 @@ bool UUI_PlayerBagMaterialGrid::UseSkillBookData(FCardSkillBookMaterial _Data, i
 		_SkillItem.M_LV = _Lv;
 		_SkillItem.M_CurrentEx = _Ex;
 		_SkillItem.M_CurrentTotalEx = _ExTotal;
-	};
+		};
 
 	bool _Result = false;
 
@@ -708,7 +724,7 @@ bool UUI_PlayerBagMaterialGrid::UseSkillBookData(FCardSkillBookMaterial _Data, i
 	}
 
 	UGameSystemFunction::ClearWaitingItems(MaterialsData);
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("使用技能书操作")));
 
 	return _Result;
 }

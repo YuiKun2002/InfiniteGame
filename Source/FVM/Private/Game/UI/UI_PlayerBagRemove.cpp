@@ -433,9 +433,6 @@ void UUI_PlayerBagRemove::Remove()
 
 		UPlayerStructManager::Remove_Item<FMaterialBase>(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material);
 
-		//保存数据
-		UGameSystemFunction::SaveCurrentPlayerData();
-
 		this->M_UIBag->LoadMaterialData();
 	}
 
@@ -444,4 +441,8 @@ void UUI_PlayerBagRemove::Remove()
 
 	//移出UI
 	this->RemoveFromParent();
+
+	//保存数据
+	int32 RemoveNum = this->M_PanelNumber;
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行背包道具移除操作，移除界面号：")) + FString::FromInt(RemoveNum));
 }

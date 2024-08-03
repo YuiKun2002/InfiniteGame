@@ -50,7 +50,7 @@ void UUI_PlayerBagCardDetail::RemoveCurrent()
 	}
 
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行卡片移出")));
 
 	this->RemoveFromParent();
 

@@ -14,18 +14,23 @@ UCLASS()
 class FVM_API UUI_ItemTitleTip : public UWidgetBase
 {
 	GENERATED_BODY()
-private:
-	//是否隐藏
-	bool M_bHidd = true;
 public:
 	//显示的标题
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Title = TEXT("冻布丁");
-public:
-	//初始化
-	bool Initialize() override;
+	FString M_Title = TEXT("冻布丁");
 public:
 	//是否显示
 	UFUNCTION(BlueprintCallable)
-		void SetShow(bool _bShow, const FString& _Title);
+	void SetShow(bool _bShow, const FString& _Title);
+	//--------------------------------------------------[UI界面]-------------------------------------------------------
+	//创建一个基础标题提示(显示名称，是否显示)
+	UFUNCTION(BlueprintCallable)
+	void CreateBaseTipWidget(const FString& _ShowTitle, bool _bShow);
+	//--------------------------------------------------[UI界面]-------------------------------------------------------
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetText(const FString& Title);
+private:
+	//是否隐藏
+	UPROPERTY()
+	bool M_bHidd = true;
 };

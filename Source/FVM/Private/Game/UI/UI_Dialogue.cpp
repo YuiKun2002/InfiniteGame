@@ -116,7 +116,7 @@ void UUI_Dialogue::SetDialogue(int32 ID, const TSoftObjectPtr<UDialogueDataAsset
 		this->CurDialogue.Emplace(Temp);
 	}
 
-	UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+	UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("加载剧情")));
 
 	//开始对话
 	this->ExeDialogueFirst();
@@ -164,7 +164,7 @@ void UUI_Dialogue::DialogueComplete()
 		else {
 			UFVMGameInstance::GetPlayerStructManager_Static()->PlayerCurrentDialogueID = this->CurID;
 		}
-		UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+		UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("剧情完成")));
 	}
 
 	//释放当前加载的数据表

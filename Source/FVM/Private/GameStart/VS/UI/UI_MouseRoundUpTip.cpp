@@ -85,7 +85,7 @@ void UUI_MouseRoundUpTip::GameContinue()
 		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material
 	);
 	//保存游戏
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("使用了关卡钥匙或者徽章")));
 
 	//设置Key的使用
 	AGameMapInstance::GetVSManagerComponent_Static()->M_bUseKey = true;
@@ -97,8 +97,6 @@ void UUI_MouseRoundUpTip::GameContinue()
 	AGameMapInstance::GetMouseManagerComponent_Static()->ShowMouseUI(
 		AGameMapInstance::GetMouseManagerComponent_Static()->M_UMouseStructManager->GetRoundTotal()
 	);
-
-	APlayerView::GetPlayerViewInstance()->EnableTouch();
 }
 
 void UUI_MouseRoundUpTip::SetData(bool IsKey, FString Key1, FString Key2)

@@ -3,6 +3,12 @@
 
 #include "GameSystem/FVMGameInstance.h" 
 
+#include "Data/GameLogSubsystem.h"
+#include "Data/MapData/MapDataStruct.h"
+
+#include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetSystemLibrary.h>
+
 #include "GameSystem/GameConfigSubsystem.h"
 #include "GameSystem/PlayerDataSubsystem.h"
 
@@ -10,100 +16,10 @@
 #include "GameSystem/GameMapStructManager.h"
 #include "GameSystem/GameConfigManager.h"
 #include "GameSystem/MouseStructManager.h"
-#include "Data/GameLogSubsystem.h"
-
+#include "GameSystem/GameUserInterfaceSubsystem.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 
-#include "Game/UI/UI_MainFramework.h"
-
-//地图数据-老鼠回合数据表
-#include "Data/MapData/MapDataStruct.h"
-//技能书数据表
-#include "Data/CardSkillBookStruct.h"
-
-#include "GameSystem/GlobalDatas.h"
-
-#include <Components/AudioComponent.h>
-#include <Kismet/GameplayStatics.h>
-#include <Kismet/KismetSystemLibrary.h>
-
 #include "GameFramework/GameUserSettings.h"
-
-//UI 层 函数库
-#include <Blueprint/WidgetLayoutLibrary.h>
-
-//标题提示UI->争对Windows平台
-#include "Game/UI/Tips/UI_ItemTitleTip.h"
-
-#include "GameSystem/GameUserInterfaceSubsystem.h"
-
-
-//是否显示游戏测试文字
-bool UFVMGameInstance::M_bShowDebugText = false;
-
-UUI_ItemTitleTip* const UFVMGameInstance::GetUI_ItemTitleTip()
-{
-	if (UGameplayStatics::GetPlatformName().Equals(TEXT("Windows")))
-	{
-		return this->M_Windows_ShowUI_ItemTitleTip;
-	}
-
-	return nullptr;
-}
-
-UFVMGameInstance::UFVMGameInstance()
-{
-
-}
-
-void UFVMGameInstance::Init()
-{
-	Super::Init();
-
-	//预加载数据
-	if (UFVMGameInstance::GetDebug())
-	{
-		UE_LOG(LogTemp, Log, TEXT("加载静态UFVMGameInstance"));
-		UE_LOG(LogTemp, Log, TEXT("加载数据表!"));
-	}
-
-	UGlobalDatas::InitCardsDatasLoader();
-
-
-	//初始化->争对Windows平台UI
-	if (UGameplayStatics::GetPlatformName().Equals(TEXT("Windows")))
-	{
-		this->M_Windows_ShowUI_ItemTitleTip = CreateWidget<UUI_ItemTitleTip>(
-			this->GetWorld(),
-			LoadClass<UUI_ItemTitleTip>(0,
-				TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemTitleTip.BPUI_ItemTitleTip_C'")));
-	}
-}
-
-void UFVMGameInstance::Shutdown()
-{
-	Super::Shutdown();
-
-	//卡片数据卸载
-	if (UFVMGameInstance::GetDebug())
-	{
-		UE_LOG(LogTemp, Log, TEXT("卸载数据表!"));
-	}
-
-	UGlobalDatas::UnLoadCardsDatasLoader();
-
-	//判断地图UI是否存在
-	if (this->M_CurrentMap)
-	{
-		this->M_CurrentMap->RemoveFromParent();
-	}
-
-	//玩家的主要UI界面显示
-	if (this->M_MainUIFrame)
-	{
-		this->M_MainUIFrame->RemoveFromParent();
-	}
-}
 
 FString UFVMGameInstance::GetGameVersion()
 {
@@ -115,11 +31,6 @@ FString UFVMGameInstance::GetGameVersion()
 	return TEXT("");
 }
 
-UUI_MainFramework* UFVMGameInstance::GetMainFramework()
-{
-	return this->M_MainUIFrame;
-}
-
 void UFVMGameInstance::SetUpdateGame()
 {
 	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
@@ -128,22 +39,21 @@ void UFVMGameInstance::SetUpdateGame()
 	}
 }
 
-void UFVMGameInstance::SetMainFramework(UUI_MainFramework* _UUI_MainFramework)
-{
-	if (!this->M_MainUIFrame)
-		this->M_MainUIFrame = _UUI_MainFramework;
-
-	this->M_MainUIFrame->AddToViewport();
-}
-
 void UFVMGameInstance::SetGameDebug(bool _Value)
 {
-	UFVMGameInstance::M_bShowDebugText = _Value;
+	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
+	{
+		UFVMGameInstance::GetFVMGameInstance()->M_bShowDebugText = _Value;
+	}
 }
 
 bool UFVMGameInstance::GetDebug()
 {
-	return UFVMGameInstance::M_bShowDebugText;
+	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
+	{
+		return UFVMGameInstance::GetFVMGameInstance()->M_bShowDebugText;
+	}
+	return false;
 }
 
 void UFVMGameInstance::SetGameVersion(FString _Version)
@@ -154,17 +64,6 @@ void UFVMGameInstance::SetGameVersion(FString _Version)
 	}
 }
 
-void UFVMGameInstance::SetWorldMapWidget(UWidgetBase* _CurrentMap)
-{
-	if (_CurrentMap && this->M_CurrentMap)
-		this->M_CurrentMap->RemoveFromParent();
-
-	this->M_CurrentMap = _CurrentMap;
-
-	if (this->M_CurrentMap)
-		this->M_CurrentMap->AddToViewport();
-}
-
 bool UFVMGameInstance::GetUpdateGame()
 {
 	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
@@ -173,11 +72,6 @@ bool UFVMGameInstance::GetUpdateGame()
 	}
 
 	return false;
-}
-
-UWidgetBase* UFVMGameInstance::GetWorldMap()
-{
-	return this->M_CurrentMap;
 }
 
 UGameMapStructManager* UFVMGameInstance::LoadGameMapStructManager(const FString& _FileName)
@@ -249,28 +143,6 @@ UPlayerStructManager* UFVMGameInstance::GetPlayerStructManager()
 	return nullptr;
 }
 
-void UFVMGameInstance::CreateBaseTipWidget(const FString& _ShowTitle, bool _bShow)
-{
-	UUI_ItemTitleTip* const UITitle = UFVMGameInstance::GetFVMGameInstance()->GetUI_ItemTitleTip();
-	if (IsValid(UITitle))
-	{
-		if (_bShow)
-		{
-			//设置标题
-			UITitle->SetShow(true, _ShowTitle);
-			//获取鼠标位置
-			FVector2D LPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(UFVMGameInstance::GetFVMGameInstance()->GetWorld());
-			//设置缩放
-			LPosition *= UWidgetLayoutLibrary::GetViewportScale(UFVMGameInstance::GetFVMGameInstance()->GetWorld());
-			//设置最终位置
-			UITitle->SetPositionInViewport(LPosition, true);
-		}
-		else {
-			UITitle->SetShow(false, TEXT(""));
-		}
-	}
-}
-
 bool UFVMGameInstance::GetGameConfig_GameEFEnabled()
 {
 	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
@@ -334,28 +206,6 @@ UFVMGameInstance* UFVMGameInstance::GetFVMGameInstance()
 
 	return nullptr;
 }
-
-void UFVMGameInstance::CreateMainFramePanel()
-{
-	if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
-	{
-		if (UFVMGameInstance::GetFVMGameInstance()->GetMainFramework())
-		{
-			UFVMGameInstance::GetFVMGameInstance()->GetMainFramework()->RemoveFromParent();
-
-			UFVMGameInstance::GetFVMGameInstance()->GetMainFramework()->AddToViewport();
-		}
-		else {
-			UFVMGameInstance::GetFVMGameInstance()->SetMainFramework(
-				CreateWidget<UUI_MainFramework>(
-					UFVMGameInstance::GetFVMGameInstance()->GetWorld(),
-					LoadClass<UUI_MainFramework>(0,
-						TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/BPUI_MainFrame.BPUI_MainFrame_C'")
-						)));
-		}
-	}
-}
-
 
 void UFVMGameInstance::PlayBGM_Static(const FSoftObjectPath& _MusicName, bool _Loop)
 {

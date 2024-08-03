@@ -15,7 +15,7 @@ void UUI_TreviFountainItemBoxBase::SetItemName(const FString& _ItemName)
 	this->M_ItemName = _ItemName;
 }
 
-FString UUI_TreviFountainItemBoxBase::GetItemName()
+FString UUI_TreviFountainItemBoxBase::ToString_Implementation()
 {
 	return this->M_ItemName;
 }

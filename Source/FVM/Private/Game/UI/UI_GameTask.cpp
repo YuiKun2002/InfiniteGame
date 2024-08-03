@@ -143,7 +143,11 @@ void UUI_GameTask::GetTaskItems()
 			NewObject<UTaskFuncObjectExe>(UTaskFuncObjectExe::StaticClass(), CurNewClass)->OnInit();
 		}
 
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(
+			__FUNCTION__ +
+			FString(TEXT("领取任务，领取名称：")) +
+			this->CurSelect->TaskTitle->GetText().ToString()
+		);
 	}
 }
 
@@ -152,7 +156,7 @@ UWidget* UUI_GameTask::WidgetCreateTaskList(UItemDataTable* _Data, int32 _Index)
 	UUI_GameTaskItem* NewUI = CreateWidget<UUI_GameTaskItem>(
 		this, LoadClass<UUI_GameTaskItem>(nullptr,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/GameTask/BP_TaskItem.BP_TaskItem_C'"))
-		);
+	);
 
 	FTaskBase* CurTask = ((FTaskBase*)(_Data->GetValue()));
 	FTaskIndex NewIndex;
@@ -188,7 +192,7 @@ UWidget* UUI_GameTask::WidgetCreateTaskItemList(UItemDataTable* _Data, int32 _In
 	UUI_GameTaskItemShow* NewUI = CreateWidget<UUI_GameTaskItemShow>(
 		this, LoadClass<UUI_GameTaskItemShow>(nullptr,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/GameTask/BP_TaskItemStruct.BP_TaskItemStruct_C'"))
-		);
+	);
 	FTaskItemStruct* CurTask = ((FTaskItemStruct*)(_Data->GetValue()));
 	NewUI->Set(CurTask->ImagePath, CurTask->ItemCount, CurTask->ItemName);
 	return NewUI;

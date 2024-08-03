@@ -427,7 +427,7 @@ void UUI_PlayerBag::UseCurrentGrid(uint8 _PanelIndex, uint8 _BagNumber, int32 _P
 	if (Grid.Num() > _BagNumber - 1)
 	{
 		//当前背包网格名称
-		this->M_BagVectorName = FString("PanelGridBag_") + FString::FromInt(_PanelIndex) + FString::FromInt(_BagNumber);
+		this->M_BagVectorName = FString(TEXT("PanelGridBag_")) + FString::FromInt(_PanelIndex) + FString::FromInt(_BagNumber);
 		this->M_BagNumber = _BagNumber;
 
 		//从背包中获取已经装备的背包
@@ -569,7 +569,7 @@ void UUI_PlayerBag::LoadItemsDataEnd(UUI_PlayerBag* _bag)
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("---------------玩家宝石数据存储(结束)---------------"));
 	}
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("装备道具刷新完成")));
 }
 
 void UUI_PlayerBag::LoadCardData()
@@ -640,7 +640,7 @@ void UUI_PlayerBag::OpenRemovePanel()
 		//初始化界面
 		for (int32 i = 0; i < 3; i++)
 		{
-			this->M_UUI_PlayerBagRemove_Panels.Emplace(CreateWidget<UUI_PlayerBagRemove>(this, UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(FSoftClassPath(FString("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagRemoveItems.BP_PlayerBagRemoveItems_C'")))));
+			this->M_UUI_PlayerBagRemove_Panels.Emplace(CreateWidget<UUI_PlayerBagRemove>(this, UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagRemoveItems.BP_PlayerBagRemoveItems_C'"))))));
 		}
 
 		//初始化界面数据据
@@ -728,7 +728,7 @@ void UUI_PlayerBag::CloseBagPanel()
 	this->Clear();
 
 	//保存游戏
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关闭背包界面")));
 
 	this->RemoveFromParent();
 }

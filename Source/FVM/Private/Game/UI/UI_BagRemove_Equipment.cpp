@@ -3,13 +3,14 @@
 
 #include "Game/UI/UI_BagRemove_Equipment.h"
 #include  <Components/HorizontalBox.h>
+#include  <Components/Image.h>
 bool UUI_BagRemove_Equipment::Initialize()
 {
 	if (!Super::Initialize())
 		return false;
 
-	this->M_EquipmentHead = this->GetWidgetComponent<UImage>(this, "Head");
-	this->M_EquipmentCountPanel = this->GetWidgetComponent<UHorizontalBox>(this, "HorizontalBox_114");
+	this->M_EquipmentHead = this->GetWidgetComponent<UImage>(this, TEXT("Head"));
+	this->M_EquipmentCountPanel = this->GetWidgetComponent<UHorizontalBox>(this, TEXT("HorizontalBox_114"));
 
 	return true;
 }
@@ -27,7 +28,7 @@ void UUI_BagRemove_Equipment::SetEquipment(const FString& _HeadPath, bool _IsOve
 
 	if (_IsOverlap)
 	{
-		M_EquipmentNum = FString("x") + FString::FromInt(_ItemCount);
+		M_EquipmentNum = FString(TEXT("x")) + FString::FromInt(_ItemCount);
 		this->M_EquipmentCountPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 	else

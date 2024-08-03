@@ -63,7 +63,7 @@ void UUI_PlayerInfor::UpdatePlayerInfor()
 	this->M_PlayerLog = TEXT("未来可自定义");
 
 	//更新VIP显示
-	UWidgetBase::SetButtonStyle(this->M_Player_VIP, FString("Texture2D'/Game/Resource/Texture/VIP/0/" + FString::FormatAsNumber(Player->M_FPlayerVIP.M_VIP + 1) + "." + FString::FormatAsNumber(Player->M_FPlayerVIP.M_VIP + 1) + "'"));
+	UWidgetBase::SetButtonStyle(this->M_Player_VIP, FString(TEXT("Texture2D'/Game/Resource/Texture/VIP/0/") + FString::FromInt(Player->M_FPlayerVIP.M_VIP + 1) + "." + FString::FromInt(Player->M_FPlayerVIP.M_VIP + 1) + "'"));
 }
 
 void UUI_PlayerInfor::UpdatePlayerGrade()

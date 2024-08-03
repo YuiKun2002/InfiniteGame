@@ -42,6 +42,6 @@ void UUI_MouseBoss_Slider::SetBossName(const FString& _Name)
 
 void UUI_MouseBoss_Slider::SetBossHead(const FString& _HeadName)
 {
-	const FString& _BossHeadPath = FString("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/BossHead/") + _HeadName + FString(".") + _HeadName + TEXT("'");
+	const FString& _BossHeadPath = FString(TEXT("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/BossHead/")) + _HeadName + FString(TEXT(".")) + _HeadName + TEXT("'");
 	this->M_BossHead->SetBrushFromTexture(LoadObject<UTexture2D>(0, *_BossHeadPath));
 }

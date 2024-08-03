@@ -2,8 +2,8 @@
 
 
 #include "GameSystem/Item/Card/CardBaseStruct.h"
+#include "Data/CardData/CardDataStruct.h"
 #include "GameSystem/PlayerStructManager.h"
-#include "GameSystem/GlobalDatas.h"
 
 //将卡片数据结构表转换成数据组
 template<class CardDataStructType, class CardType>
@@ -87,16 +87,29 @@ FString UCardBaseStruct::GetCardDataTablePath(ECardType _Type)
 // 如果有新卡片->首先修改类型->得到全局数据->然后在此添加数据引用
 // 
 //----------------------------------------------------------------------------------------------
-
 void UCardBaseStruct::GetAllCardsByType(ECardType _Type, TArray<FItemCard*>& _OutCardSourceDatas)
 {
+	//获取缓存数据
+	UCardDataAssetCache* Cache = Cast<UCardDataAssetCache>(
+		UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(GLOBALASSET_CARD)
+	);
+
+	if (!IsValid(Cache))
+	{
+		Cache = NewObject<UCardDataAssetCache>();
+		UGameDataSubsystem::GetGameDataSubsystemStatic()->AddGameDataAssetCache(
+			GLOBALASSET_CARD,
+			Cache
+		);
+	}
+
 	switch (_Type)
 	{
-	case ECardType::E_ATK:SourceCardDataStructTransform(UGlobalDatas::Global_SourceData_CardATK, _OutCardSourceDatas); return;
-	case ECardType::E_SPAWN:SourceCardDataStructTransform(UGlobalDatas::Global_SourceData_Spawn, _OutCardSourceDatas); return;
-	case ECardType::E_DEFENCE:SourceCardDataStructTransform(UGlobalDatas::Global_SourceData_Defence, _OutCardSourceDatas); return;
-	case ECardType::E_Function:SourceCardDataStructTransform(UGlobalDatas::Global_SourceData_Function, _OutCardSourceDatas); return;
-	case ECardType::E_RangeATK:SourceCardDataStructTransform(UGlobalDatas::Global_SourceData_RangeATK, _OutCardSourceDatas); return;
+	case ECardType::E_ATK:SourceCardDataStructTransform(Cache->GetCardATK(), _OutCardSourceDatas); return;
+	case ECardType::E_SPAWN:SourceCardDataStructTransform(Cache->GetCardSpawn(), _OutCardSourceDatas); return;
+	case ECardType::E_DEFENCE:SourceCardDataStructTransform(Cache->GetCardDefence(), _OutCardSourceDatas); return;
+	case ECardType::E_Function:SourceCardDataStructTransform(Cache->GetCardFunction(), _OutCardSourceDatas); return;
+	case ECardType::E_RangeATK:SourceCardDataStructTransform(Cache->GetCardRangeATK(), _OutCardSourceDatas); return;
 	default:break;
 	}
 }

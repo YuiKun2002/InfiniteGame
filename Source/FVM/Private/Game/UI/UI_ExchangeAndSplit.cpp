@@ -654,7 +654,7 @@ void UUI_ExchangeAndSplit::SaveCurInfor(FPlayerExchangeAndSplit Data)
 	UFVMGameInstance::GetPlayerStructManager_Static()
 		->M_FPlayerExchangeAndSplitInfor.Emplace(this->M_Title, Data);
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("兑换与分解{切换运势}")));
 }
 
 void UUI_ExchangeAndSplit::SplitCurSelectItem()
@@ -766,5 +766,5 @@ void UUI_ExchangeAndSplit::GameClose()
 	this->InitPlayerMaterialData(true);
 	this->InitPlayerMaterialData(false);
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关闭{兑换与分解}界面")));
 }

@@ -161,7 +161,7 @@ bool UPlayerInstructions::SendEquip(const TArray<FString>& Instruction)
 
 				return false;
 			}
-		};
+			};
 
 		//其他指令【-g】 设置宝石等级
 		if (this->GetSystem()->InstructionTest(Instruction[1], TEXT("-g")))
@@ -403,7 +403,7 @@ bool UPlayerInstructions::ClearIns(const TArray<FString>& Instruction)
 			UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment
 		);
 
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("装备全部销毁操作")));
 
 		return true;
 	}
@@ -415,7 +415,7 @@ bool UPlayerInstructions::ClearIns(const TArray<FString>& Instruction)
 		{
 			UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->GetPlayerDataInstance()->M_PlayerItems_Card.Empty();
 
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("卡片全部销毁操作")));
 		}
 
 		return true;
@@ -428,7 +428,7 @@ bool UPlayerInstructions::ClearIns(const TArray<FString>& Instruction)
 		{
 			UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->GetPlayerDataInstance()->M_PlayerItems_Material.Empty();
 
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("材料全部销毁操作")));
 		}
 
 		return true;
@@ -503,7 +503,7 @@ bool UPlayerInstructions::SetSKIns(const TArray<FString>& Instruction)
 				}
 			}
 
-			UGameSystemFunction::SaveCurrentPlayerData();
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("设置技能书等级操作")));
 
 			return true;
 		}
@@ -591,7 +591,7 @@ bool UPlayerInstructions::ReturnDialogue(const TArray<FString>& Instruction)
 
 			UGameSystemFunction::AddGameLog(UFVMGameInstance::GetFVMGameInstance(), FALD(TEXT("剧情已回退！请前往查看进度！")));
 
-			UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+			UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("剧情回退操作")));
 		}
 	}
 

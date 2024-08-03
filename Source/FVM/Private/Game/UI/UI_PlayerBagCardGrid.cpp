@@ -71,7 +71,7 @@ FItemCard* const UUI_PlayerBagCardGrid::GetFItemCardData()
 	return this->M_FItemCard;
 }
 
-FString UUI_PlayerBagCardGrid::GetItemName()
+FString UUI_PlayerBagCardGrid::ToString_Implementation()
 {
 	if (this->GetFItemCardData())
 	{
@@ -212,7 +212,7 @@ void UUI_PlayerBagCardGrid::AddSynthesisChangeJobs()
 			FString(ChangeKeyName + TEXT("[") + ChangeGradeKeyName + TEXT("转") + GradeNum[i] + TEXT("]")),
 			_Material,
 			EMaterialType::E_CardChangeJobMaterial
-			))
+		))
 		{
 			CurData.Visible = ESlateVisibility::Collapsed;
 		}
@@ -225,7 +225,7 @@ void UUI_PlayerBagCardGrid::AddSynthesisChangeJobs()
 				CurData.ChangeMaterialName
 			);
 		}
-	};
+		};
 
 	//更具等级决定材料数量
 	if (this->CopyData.M_FCardChangeJobs.M_ChangeGrade > 9)
@@ -275,7 +275,7 @@ void UUI_PlayerBagCardGrid::AddSynthesisGoldCardUp()
 	{
 		if (Card.Value.M_CardGrade == this->CopyData.M_CardGrade)
 		{
-			Data.PlayerBagIndex  = Card.Key;
+			Data.PlayerBagIndex = Card.Key;
 			break;
 		}
 	}
@@ -472,7 +472,7 @@ void UUI_PlayerBagCardGrid::UpdateButtonTexture(const FString& _Price)
 	if (this->M_FItemCard->M_CardGrade != 0)
 	{
 		FSlateBrush GradeBrush;
-		GradeBrush.SetResourceObject(UAssetManager::GetStreamableManager().LoadSynchronous(FSoftObjectPath(FString("Texture2D'/Game/Resource/Texture/CardGrade/") + FString::FromInt(this->M_FItemCard->M_CardGrade) + (".") + FString::FormatAsNumber(this->M_FItemCard->M_CardGrade) + ("'"))));
+		GradeBrush.SetResourceObject(UAssetManager::GetStreamableManager().LoadSynchronous(FSoftObjectPath(FString(TEXT("Texture2D'/Game/Resource/Texture/CardGrade/")) + FString::FromInt(this->M_FItemCard->M_CardGrade) + (".") + FString::FromInt(this->M_FItemCard->M_CardGrade) + ("'"))));
 		GradeBrush.DrawAs = ESlateBrushDrawType::Image;
 		this->M_CardGradeImage->SetBrush(GradeBrush);
 	}

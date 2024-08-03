@@ -267,5 +267,5 @@ void UUI_TreviFountain2::GetItems_8()
 	//设置图片
 	this->M_UI_TreviFountain2Panel->SetItemHeads(HeadImages);
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行8次许愿操作")));
 }

@@ -524,7 +524,7 @@ void USynModel_WepaonGems::GemEnable()
 	if (LResult)
 	{
 		UGameSystemFunction::ClearWaitingItems(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material);
-		UGameSystemFunction::SaveCurrentPlayerData();
+		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("开启宝石槽位")));
 		this->WidgetDataReload();
 
 		//刷新槽
@@ -647,7 +647,7 @@ void USynModel_WepaonGems::DirectRemoveGemDestory()
 	WeaponData->M_WeaponGem[this->M_CurrentUninstallGemSlotIndex].M_WepaonGemHeadPath.Empty();
 	WeaponData->M_WeaponGem[this->M_CurrentUninstallGemSlotIndex].M_WeaponGemGrade = 0;
 
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石直接销毁")));
 
 	//重新加载
 	this->WidgetDataReload();
@@ -689,7 +689,7 @@ void USynModel_WepaonGems::DirectRemoveGemReturnToBag()
 	}
 
 	//保存数据
-	UGameSystemFunction::SaveCurrentPlayerData();
+	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石返还角色背包")));
 	//重新加载数据
 	this->WidgetDataReload();
 	//重新选择当前武器
@@ -733,10 +733,10 @@ void USynModel_WepaonGems::GemSlotOpen(const int32& _Index)
 
 		switch (_Index)
 		{
-		case 0: {LText += TEXT("铁钻"); this->M_NeedMaterialName = TEXT("铁钻"); }break;
-		case 1: {LText += TEXT("钢钻"); this->M_NeedMaterialName = TEXT("钢钻"); }break;
-		case 2: {LText += TEXT("金刚钻"); this->M_NeedMaterialName = TEXT("金刚钻"); }break;
-		case 3: {LText += TEXT("月石钻"); this->M_NeedMaterialName = TEXT("月石钻"); }break;
+		case 0: { LText += TEXT("铁钻"); this->M_NeedMaterialName = TEXT("铁钻"); }break;
+		case 1: { LText += TEXT("钢钻"); this->M_NeedMaterialName = TEXT("钢钻"); }break;
+		case 2: { LText += TEXT("金刚钻"); this->M_NeedMaterialName = TEXT("金刚钻"); }break;
+		case 3: { LText += TEXT("月石钻"); this->M_NeedMaterialName = TEXT("月石钻"); }break;
 		}
 
 		LText += TEXT("】开启当前槽位?");
@@ -874,7 +874,7 @@ void USynModel_WepaonGems::GemAttach()
 
 							//调用任务
 							UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
-							UGameSystemFunction::SaveCurrentPlayerData();
+							UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石镶嵌操作")));
 
 							break;
 						}
@@ -895,7 +895,7 @@ void USynModel_WepaonGems::GemAttach()
 					this->SetCurrentSelectGem(nullptr, -1);
 
 					//保存数据
-					UGameSystemFunction::SaveCurrentPlayerData();
+					UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("宝石镶嵌操作")));
 
 					//重新加载数据
 					this->WidgetDataReload();

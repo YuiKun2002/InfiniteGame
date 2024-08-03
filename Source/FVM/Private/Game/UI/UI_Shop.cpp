@@ -104,10 +104,10 @@ void UUI_Shop::InitDataTable()
 
 	//初始化界面选项卡----------------------------------------------------------------
 	for (int32 i = 0; i < 8; i++)
-		this->M_ShopTabs.Emplace(this->GetWidgetComponent<UButton>(this, FString("_Func_") + FString::FromInt(i) + FString("_")));
+		this->M_ShopTabs.Emplace(this->GetWidgetComponent<UButton>(this, FString(TEXT("_Func_")) + FString::FromInt(i) + FString(TEXT("_"))));
 
 	//选项卡路径
-	this->M_ShopTabsDef.Append({ FString("T_Shop_3"),FString("T_Shop_1") ,FString("T_Shop_2") ,FString("T_Shop_6") ,FString("T_Shop_5") ,FString("T_Shop_4") ,FString("T_Shop_7"),FString("T_Shop_8") });
+	this->M_ShopTabsDef.Append({ FString(TEXT("T_Shop_3")),FString(TEXT("T_Shop_1")) ,FString(TEXT("T_Shop_2")) ,FString(TEXT("T_Shop_6")) ,FString(TEXT("T_Shop_5")) ,FString(TEXT("T_Shop_4")) ,FString(TEXT("T_Shop_7")),FString(TEXT("T_Shop_8")) });
 
 	//初始化界面选项卡----------------------------------------------------------------
 
@@ -198,9 +198,9 @@ void UUI_Shop::SelectShopTab(EShopTab _Tab)
 {
 	for (uint8 i = 0; i < M_ShopTabs.Num(); i++)
 		if (i != (uint8)(_Tab))
-			UWidgetBase::SetButtonStyle(this->M_ShopTabs[i], FString("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/") + this->M_ShopTabsDef[i] + FString("_a.") + FString(".") + this->M_ShopTabsDef[i] + FString("_a'"));
+			UWidgetBase::SetButtonStyle(this->M_ShopTabs[i], FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) + this->M_ShopTabsDef[i] + FString(TEXT("_a.")) + FString(TEXT(".")) + this->M_ShopTabsDef[i] + FString(TEXT("_a'")));
 
-	UWidgetBase::SetButtonStyle(this->M_ShopTabs[(uint8)(_Tab)], FString("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/") + this->M_ShopTabsDef[(uint8)(_Tab)] + FString(".") + this->M_ShopTabsDef[(uint8)(_Tab)] + FString("'"));
+	UWidgetBase::SetButtonStyle(this->M_ShopTabs[(uint8)(_Tab)], FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) + this->M_ShopTabsDef[(uint8)(_Tab)] + FString(TEXT(".")) + this->M_ShopTabsDef[(uint8)(_Tab)] + FString(TEXT("'")));
 
 	switch (_Tab)
 	{

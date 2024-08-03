@@ -119,7 +119,7 @@ public:
 public:
 	//当前正在播放的音频名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor | Condition")
-		FString M_CurrentPlaySoundName = FString("");
+		FString M_CurrentPlaySoundName = FString(TEXT(""));
 public:
 	// Sets default values for this actor's properties
 	AGameMapInstance();

@@ -119,7 +119,7 @@ void UDialogueSubsystem::SaveCurrentDialogue()
 
 				UFVMGameInstance::GetPlayerStructManager_Static()->bShowDialogue = false;
 				UFVMGameInstance::GetPlayerStructManager_Static()->bJoinDialogue = false;
-				UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+				UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("{间章}剧情完成")));
 			}
 		}
 	}
@@ -145,7 +145,7 @@ void UDialogueSubsystem::SaveCurrentDialogue()
 
 			UFVMGameInstance::GetPlayerStructManager_Static()->bShowDialogue = false;
 
-			UFVMGameInstance::GetPlayerStructManager_Static()->Save();
+			UFVMGameInstance::GetPlayerStructManager_Static()->Save(__FUNCTION__ + FString(TEXT("剧情完成")));
 		}
 	}
 }

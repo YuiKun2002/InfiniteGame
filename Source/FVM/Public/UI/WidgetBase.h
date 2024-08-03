@@ -44,75 +44,80 @@ class FVM_API UWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	virtual bool Initialize() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-public:
 	//播放操作音效
 	UFUNCTION(BlueprintCallable)
-		void PlayOperateAudio(bool _bUseCancel_Audio = false, bool _bWindowsMouseEnterAudio = false, bool _bWindows = false);
+	void PlayOperateAudio(bool _bUseCancel_Audio = false, bool _bWindowsMouseEnterAudio = false, bool _bWindows = false);
 	//播放操作音效->默认
 	UFUNCTION(BlueprintCallable)
-		void PlayOperateAudioDef();
-public:
-	//绑定按钮事件
-	template <class Type>
-	static void ButtonDelegateBind(UButton* _ButtonComponent, Type* _DelegateClass, FName _FuncName)
-	{
-
-		if (_ButtonComponent->OnClicked.IsBound())
-			_ButtonComponent->OnClicked.Clear();
-
-		FScriptDelegate Func;
-		Func.BindUFunction(_DelegateClass, _FuncName);
-		_ButtonComponent->OnClicked.Add(Func);
-	}
-public:
+	void PlayOperateAudioDef();
 	//设置按钮风格
 	UFUNCTION(BlueprintCallable)
-		static void SetButtonStyle(UButton* _ButtonComponent, FString _ButtonTexturePath, bool _bRefresh = false);
+	static void SetButtonStyle(UButton* _ButtonComponent, FString _ButtonTexturePath, bool _bRefresh = false);
 	//设置按钮风格
 	UFUNCTION(BlueprintCallable)
-		static void SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh = false);
+	static void SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh = false);
 	//设置一个图片的原始大小赋予盒子大小
 	UFUNCTION(BlueprintCallable)
-		static void SetBoxResetSize(USizeBox* _USizeBoxComponent, FString _ButtonTexturePath);
+	static void SetBoxResetSize(USizeBox* _USizeBoxComponent, FString _ButtonTexturePath);
 	//设置一个图片的原始大小赋予盒子大小
 	UFUNCTION(BlueprintCallable)
-		static void SetBoxResetSizeSoft(USizeBox* _USizeBoxComponent, TSoftObjectPtr<class UTexture2D> Texture);
+	static void SetBoxResetSizeSoft(USizeBox* _USizeBoxComponent, TSoftObjectPtr<class UTexture2D> Texture);
 	//设置图片纹理(bHit = 是否可以点击图片  默认false)
 	UFUNCTION(BlueprintCallable)
-		static void SetImageBrush(UImage* _ImageComponent, FString _ImageTexturePath, FVector _Color = FVector(1.f), float Alph = 1.f, bool _ResetSize = false, FVector _Scale = FVector(1.f, 1.f, 0.f), bool _bHit = false);
+	static void SetImageBrush(
+		UImage* _ImageComponent,
+		FString _ImageTexturePath,
+		FVector _Color = FVector(1.f),
+		float Alph = 1.f,
+		bool _ResetSize = false,
+		FVector _Scale = FVector(1.f, 1.f, 0.f),
+		bool _bHit = false
+	);
+	static void SetImageBrushByTexture(
+		UImage* _ImageComponent,
+		TSoftObjectPtr<UTexture2D> _ImageTexturePath,
+		FVector _Color = FVector(1.f),
+		float Alph = 1.f,
+		bool _ResetSize = false,
+		FVector _Scale = FVector(1.f, 1.f, 0.f),
+		bool _bHit = false
+	);
 	//设置图片颜色
 	UFUNCTION(BlueprintCallable)
-		static void SetImageColor(UImage* _ImageComponent, FVector _Color = FVector(1.f), float Alph = 1.f);
+	static void SetImageColor(UImage* _ImageComponent, FVector _Color = FVector(1.f), float Alph = 1.f);
 	//通过Widget加载2d纹理
 	UFUNCTION(BlueprintCallable)
-		static UTexture2D* WidgetLoadTexture2D(const FString& _Path);
+	static UTexture2D* WidgetLoadTexture2D(const FString& _Path);
 	//创建一个提示
 	UFUNCTION(BlueprintCallable)
-		static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f);
+	static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f);
 	//创建一个选择确认提示框
 	UFUNCTION(BlueprintCallable)
-		static UButton* const CreateSelectTipWidget(const FString& _Content);
+	static UButton* const CreateSelectTipWidget(const FString& _Content);
 	//从自配置文件中设置画布比例
 	UFUNCTION(BlueprintCallable)
-		static void SetWidgetScaleFromConfig(UWidget* _Widget_Panel);
+	static void SetWidgetScaleFromConfig(UWidget* _Widget_Panel);
 	//将UI转换成(CanvasSlot)并且拥有Progress行为
 	UFUNCTION(BlueprintCallable)
-		static void SetWidgetTransformProgress(UWidget* _Widget_Panel, float X_Position, float XMaxSize, float Alpha);
+	static void SetWidgetTransformProgress(UWidget* _Widget_Panel, float X_Position, float XMaxSize, float Alpha);
 	//向富文本框添加文字
 	UFUNCTION(BlueprintCallable)
-		static void AddTextToRichText(const FString& _Content, URichTextBlock* _RichTextBlock);
+	static void AddTextToRichText(const FString& _Content, URichTextBlock* _RichTextBlock);
 	//将组件转换成一个CanvasSlot
 	UFUNCTION(BlueprintCallable)
-		static UCanvasPanelSlot* WidgetToCanvasSlot(UWidget* _Widget);
-public:
+	static UCanvasPanelSlot* WidgetToCanvasSlot(UWidget* _Widget);
 	//设置画布缩放
 	UFUNCTION(BlueprintCallable)
-		void SetWidgetSacle(UWidget* _Widget, const FVector2D& _Sacle);
+	void SetWidgetSacle(UWidget* _Widget, const FVector2D& _Sacle);
 	//加载2D纹理
 	UFUNCTION(BlueprintCallable)
-		UTexture2D* LoadTexture2D(const FString& _Path);
+	UTexture2D* LoadTexture2D(const FString& _Path);
+	//显示标题提示文字[建议实现鼠标的移入和移出]
+	UFUNCTION(BlueprintCallable)
+	void ShowTip(bool bShowState);
+public:
+	virtual bool Initialize() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 public:
 	template <class _Cast, class T = UWidgetBase>
 	_Cast* GetWidgetComponent(T* _Widget, const FString& _ComponentName, const FString& _FuncName = "")
@@ -130,7 +135,7 @@ public:
 		}
 
 		//获取组件
-		_Cast* WidgetComponent = Cast<_Cast>(_Widget->GetWidgetFromName(*_ComponentName));
+		_Cast* WidgetComponent = Cast<_Cast>(_Widget->GetWidgetFromName(FName(_ComponentName)));
 		if (!WidgetComponent)
 		{
 			UE_LOG(LogTemp, Error, TEXT("[%s]:%s这个名称在传入的Widget中不存在!"), *_FuncName, *_ComponentName);
@@ -139,7 +144,26 @@ public:
 		return WidgetComponent;
 	}
 
-	//UI 动画
-public:
+	//绑定按钮事件
+	template <class Type>
+	static void ButtonDelegateBind(UButton* _ButtonComponent, Type* _DelegateClass, FName _FuncName)
+	{
 
+		if (_ButtonComponent->OnClicked.IsBound())
+			_ButtonComponent->OnClicked.Clear();
+
+		FScriptDelegate Func;
+		Func.BindUFunction(_DelegateClass, _FuncName);
+		_ButtonComponent->OnClicked.Add(Func);
+	}
+private:
+	//UI的名字显示
+	UPROPERTY()
+	class UUI_ItemTitleTip* ShowTipWidget = nullptr;
+public:
+	//获取名字
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	FString ToString();
+protected:
+	virtual FString ToString_Implementation();
 };
