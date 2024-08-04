@@ -17,6 +17,8 @@
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetSystemLibrary.h>
 
+#include "SpineSkeletonAnimationComponent.h"
+
 void UCardAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -49,18 +51,20 @@ void UCardAttackComponent::LoadResource()
 		this->AttackCardActor->GetCurrentSecondAttackDelay()
 	);
 
-	//播放动画
-	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
-
-	//添加资源[默认子弹，默认动画] 添加默认攻击动作
+	//添加子弹的对象池
 	this->Pool.Emplace(UObjectPoolManager::MakePoolManager(
 		this->GetWorld(),
 		this->AttackCardActor->CardActor_BulletClassObj,
 		1));
 
+	//添加资源[默认子弹，默认动画] 添加默认攻击动作
 	this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
 		this->AttackCardActor->CardActor_BulletClassObj,
 		this->AttackCardActor->CardActor_AttackAnim));
+
+	//播放动画
+	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
+	this->SetTrackEntry(nullptr);
 }
 
 void UCardAttackComponent::AddLaunchRadomItem(int32 RandomValue, TSoftClassPtr<AFlyItemActor> Res, TSoftObjectPtr<UPaperFlipbook> Anim)
@@ -77,6 +81,13 @@ void UCardAttackComponent::AddLaunchRadomItem(int32 RandomValue, TSoftClassPtr<A
 	//添加新的攻击方式
 	this->Pool.Emplace(UObjectPoolManager::MakePoolManager(this->GetWorld(), Res, 1));
 	this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, RandomValue, Res, Anim));
+}
+
+void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
+{
+	UE_LOG(LogTemp, Error, TEXT("AAA"));
+
+	this->OnAnimationPlayEnd();
 }
 
 void UCardAttackComponent::Spawn()
@@ -155,7 +166,13 @@ void UCardAttackComponent::PlayAttackAnimation()
 	this->LauncherItem(this->OtherItems, this->CurFinishItems, this->TargetCardOtherItem);
 
 	//this->AttackCardActor->SetPlayAnimation(this->TargetCardOtherItem.GetAnim());
-	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
+	//this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
+
+	//播放动画
+	UTrackEntry* Track = this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
+	Track->AnimationComplete.AddDynamic(
+		this, &UCardAttackComponent::OnAnimationComplete);
+	this->SetTrackEntry(Track);
 }
 
 void UCardAttackComponent::PlayIdleAnimation()
@@ -163,6 +180,7 @@ void UCardAttackComponent::PlayIdleAnimation()
 	Super::PlayIdleAnimation();
 
 	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
+	this->SetTrackEntry(nullptr);
 }
 
 void UCardAttackComponent::BeginDestroy()

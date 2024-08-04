@@ -61,12 +61,6 @@ UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UCardLauncherComponent : public UActorComponent
 {
 	GENERATED_BODY()
-private:
-	UPROPERTY()
-	ASpineActor* M_OwnerActor = nullptr;
-private:
-	//攻击模式
-	bool M_BeginAttackMod = false;
 public:
 	//条件
 	UPROPERTY()
@@ -79,13 +73,29 @@ public:
 	UCardLauncherComponent();
 	//获取Actor Base
 	ASpineActor* const GetSpineActor();
-private:
-	//攻击
-	void Attack(const float& DeltaTime, const FVector& _Location = FVector::ZeroVector);
-	//生成投射物
-	void SpawnCardItem(const float& DeltaTime);
-	//生成
-	void SpawnProjection();
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void TickCondition(float DeltaTime);
+
+	//资源加载
+	virtual void LoadResource();
+
+	//设置攻击模式的开启和关闭
+	UFUNCTION(BlueprintCallable)
+	void SetAttackModEnabled(bool _value);
+	//设置动画轨道
+	UFUNCTION()
+	void SetTrackEntry(class UTrackEntry* Track);
+	//设置发射的属性
+	UFUNCTION(BlueprintCallable)
+	void InitLaunchProperty(
+		int32 _LaunchCount,
+		float _AttackDelay,
+		float _FirstProjectionAttackDelay,
+		float _ProjectionAttackDelay
+	);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -99,25 +109,21 @@ protected:
 	virtual void PlayIdleAnimation();
 	//初始化攻击条件时间等
 	virtual void InitCondition();
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void TickCondition(float DeltaTime);
-
-	//资源加载
-	virtual void LoadResource();
-
-	//设置攻击模式的开启和关闭
-	UFUNCTION(BlueprintCallable)
-	void SetAttackModEnabled(bool _value);
-
-	//当动画播放完毕时触发
-	UFUNCTION()
-	void OnAnimationPlayEnd(class UTrackEntry* Track);
+	//当动画结束时
 	virtual	void OnAnimationPlayEnd();
-public:
-	//设置发射的属性
-	UFUNCTION(BlueprintCallable)
-	void InitLaunchProperty(int32 _LaunchCount, float _AttackDelay, float _FirstProjectionAttackDelay, float _ProjectionAttackDelay);
+private:
+	//攻击
+	void Attack(const float& DeltaTime, const FVector& _Location = FVector::ZeroVector);
+	//生成投射物
+	void SpawnCardItem(const float& DeltaTime);
+	//生成
+	void SpawnProjection();
+private:
+	UPROPERTY()
+	ASpineActor* M_OwnerActor = nullptr;
+	UPROPERTY()
+	class UTrackEntry* AnimTrackEntry = nullptr;
+private:
+	//攻击模式
+	bool M_BeginAttackMod = false;
 };

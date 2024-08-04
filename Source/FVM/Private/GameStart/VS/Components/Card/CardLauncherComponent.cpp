@@ -36,8 +36,9 @@ void UCardLauncherComponent::BeginPlay()
 		return;
 	}
 
-	this->M_OwnerActor->GetCurrentAnimationTrackEntry(0)->AnimationComplete.AddDynamic(
-		this, &UCardLauncherComponent::OnAnimationPlayEnd);
+	/*this->AnimTrackEntry = this->M_OwnerActor->GetCurrentAnimationTrackEntry(0);
+	this->AnimTrackEntry->AnimationComplete.AddDynamic(
+		this, &UCardLauncherComponent::OnAnimationPlayEnd);*/
 }
 
 // Called every frame
@@ -91,12 +92,15 @@ void UCardLauncherComponent::OnAnimationPlayEnd()
 	}
 }
 
-void UCardLauncherComponent::OnAnimationPlayEnd(UTrackEntry* Track)
+void UCardLauncherComponent::SetTrackEntry(class UTrackEntry* Track)
 {
-	
-	UE_LOG(LogTemp,Error,TEXT("AAA"));
+	if (IsValid(this->AnimTrackEntry))
+	{
+		this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
+	}
 
-	this->OnAnimationPlayEnd();
+	this->AnimTrackEntry = nullptr;
+	this->AnimTrackEntry = Track;
 }
 
 //发射个数，攻击速度，首次攻击延迟，每次攻击延迟

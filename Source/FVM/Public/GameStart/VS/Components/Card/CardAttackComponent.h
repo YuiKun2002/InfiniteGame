@@ -32,16 +32,16 @@ public:
 private:
 	//子弹类型
 	UPROPERTY()
-		UClass* CurRes = nullptr;
+	UClass* CurRes = nullptr;
 	//攻击动画
 	UPROPERTY()
-		UPaperFlipbook* ActionAnim = nullptr;
+	UPaperFlipbook* ActionAnim = nullptr;
 	//触发值[随机值] 100为100%触发
 	UPROPERTY()
-		int32 CurValue = 100;
+	int32 CurValue = 100;
 	//对应对象池的索引
 	UPROPERTY()
-		int32 CurPoolIndex = -1;
+	int32 CurPoolIndex = -1;
 };
 
 //攻击动作初始化完成
@@ -57,9 +57,9 @@ public:
 private:
 	//攻击动作数组
 	UPROPERTY()
-		TArray<FCardOtherItem> Buffer;
+	TArray<FCardOtherItem> Buffer;
 	UPROPERTY()
-		int32 ConstCount = 0;
+	int32 ConstCount = 0;
 };
 
 /**
@@ -81,46 +81,52 @@ protected:
 	//销毁
 	virtual void BeginDestroy() override;
 public:
+
 	//资源加载
 	UFUNCTION(BlueprintCallable)
-		virtual void LoadResource() override;
+	virtual void LoadResource() override;
+
 	//添加随机发射物【新增攻击动作】
 	UFUNCTION(BlueprintCallable)
-		void AddLaunchRadomItem(
-			int32 RandomValue,
-			TSoftClassPtr<AFlyItemActor> Res,
-			TSoftObjectPtr<UPaperFlipbook> Anim
-		);
-public:
+	void AddLaunchRadomItem(
+		int32 RandomValue,
+		TSoftClassPtr<AFlyItemActor> Res,
+		TSoftObjectPtr<UPaperFlipbook> Anim
+	);
+
+	//当动画播放完毕时触发
+	UFUNCTION()
+	void OnAnimationComplete(class UTrackEntry* Track);
+
 	UCardAttackComponent();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 protected:
 	//攻击卡
 	UPROPERTY(EditAnywhere)
-		AAttackCardActor* AttackCardActor = nullptr;
+	AAttackCardActor* AttackCardActor = nullptr;
 private:
 	UPROPERTY()
-		float time = 0.f;
+	float time = 0.f;
 	UPROPERTY()
-		bool bFirst = false;
+	bool bFirst = false;
 	UPROPERTY()
-		bool bInitItemSort = false;
+	bool bInitItemSort = false;
 	//随机数
 	UPROPERTY()
-		int32 RandomNumber = 0;
+	int32 RandomNumber = 0;
 	//随机内容集合
 	UPROPERTY()
-		TArray<FCardOtherItem> OtherItems;
+	TArray<FCardOtherItem> OtherItems;
 	//对象池
 	UPROPERTY()
-		TArray<UObjectPoolManager*> Pool;
+	TArray<UObjectPoolManager*> Pool;
 	//当前已经初始化完毕的子弹对象【全部的攻击动作】
 	UPROPERTY()
-		TMap<int32, FCardOtherItemInitFinish> CurFinishItems;
+	TMap<int32, FCardOtherItemInitFinish> CurFinishItems;
 	//当前生成的对象【当前使用的攻击动作】
 	UPROPERTY()
-		FCardOtherItem TargetCardOtherItem;
+	FCardOtherItem TargetCardOtherItem;
 protected:
 	//初始化发射器
 	void InitLaunch(
