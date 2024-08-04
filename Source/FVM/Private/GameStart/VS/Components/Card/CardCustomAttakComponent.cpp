@@ -28,7 +28,7 @@ void UCardCustomAttakComponent::BeginPlay()
 
 	//替换卡片类
 
-	this->M_CardActor = Cast<AAttackCardActor>(this->GetFlipbookActor());
+	this->M_CardActor = Cast<AAttackCardActor>(this->GetSpineActor());
 	this->MouseManager = AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent;
 	if (!this->M_CardActor)
 	{

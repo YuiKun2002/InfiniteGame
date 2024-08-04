@@ -11,7 +11,7 @@ class UPaperFlipbook;
 class AFlyItemActor;
 class AMouseActor;
 
-#define SpineCardAnimationState_Idle TEXT("Idle")
+#define SpineCardAnimationState_Idle TEXT("01_idle")
 #define SpineCardAnimationState_Attack TEXT("Attack")
 
 /*

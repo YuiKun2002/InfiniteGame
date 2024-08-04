@@ -16,7 +16,7 @@ UCardLauncherComponent::UCardLauncherComponent()
 
 }
 
-AGameActorFlipbookBase* const UCardLauncherComponent::GetFlipbookActor()
+ASpineActor* const UCardLauncherComponent::GetSpineActor()
 {
 	return this->M_OwnerActor;
 }
@@ -26,18 +26,17 @@ void UCardLauncherComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->M_OwnerActor = Cast<AGameActorFlipbookBase>(this->GetOwner());
+	this->M_OwnerActor = Cast<ASpineActor>(this->GetOwner());
 
 	if (!this->M_OwnerActor)
 	{
-		UE_LOG(LogTemp, Error, TEXT("获取AGameActorFlipbookBase失败!"));
+		UE_LOG(LogTemp, Error, TEXT("[%s]获取ASpineActor失败!"), __FUNCTION__);
 		this->SetComponentTickEnabled(false);
 		return;
 	}
 
-	this->M_OwnerActor->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(
-		this, &UCardLauncherComponent::OnAnimationPlayEnd
-	);
+	this->M_OwnerActor->GetCurrentAnimationTrackEntry(0)->AnimationComplete.AddDynamic(
+		this, &UCardLauncherComponent::OnAnimationPlayEnd);
 }
 
 // Called every frame
@@ -77,7 +76,7 @@ void UCardLauncherComponent::SetAttackModEnabled(bool _value)
 	this->M_BeginAttackMod = _value;
 }
 
-void UCardLauncherComponent::OnAnimationPlayEnd()
+void UCardLauncherComponent::OnAnimationPlayEnd(UTrackEntry* Track)
 {
 	//攻击模式状态
 	if (this->M_Condition.InAttack)

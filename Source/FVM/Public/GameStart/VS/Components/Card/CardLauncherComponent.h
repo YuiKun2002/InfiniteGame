@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SpineActor.h"
 #include "Components/ActorComponent.h"
-#include "GameStart/Flipbook/GameActorFlipbookBase.h"
 #include "CardLauncherComponent.generated.h"
 
 //发射器属性
@@ -14,16 +14,16 @@ struct FLauncherCondition {
 public:
 	//一共发射多少次
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_ItemCount = 1;
+	int32 M_ItemCount = 1;
 	//攻击延迟(从卡片默认状态到攻击状态直到开启首次投射模式的时间)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_AttackDelay = 3.5f;
+	float M_AttackDelay = 3.5f;
 	//首次投射延迟时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_FirstProjectionDelay = 1.f;
+	float M_FirstProjectionDelay = 1.f;
 	//投射时间间隔
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float ProjectionDelay = 0.3f;
+	float ProjectionDelay = 0.3f;
 };
 
 //发射器条件属性
@@ -63,22 +63,22 @@ class FVM_API UCardLauncherComponent : public UActorComponent
 	GENERATED_BODY()
 private:
 	UPROPERTY()
-		AGameActorFlipbookBase* M_OwnerActor = nullptr;
+	ASpineActor* M_OwnerActor = nullptr;
 private:
 	//攻击模式
 	bool M_BeginAttackMod = false;
 public:
 	//条件
 	UPROPERTY()
-		FLauncherComponentCondition M_Condition;
+	FLauncherComponentCondition M_Condition;
 	//发射器条件
 	UPROPERTY()
-		FLauncherCondition M_LauncherCondition;
+	FLauncherCondition M_LauncherCondition;
 public:
 	// Sets default values for this component's properties
 	UCardLauncherComponent();
 	//获取Actor Base
-	AGameActorFlipbookBase* const GetFlipbookActor();
+	ASpineActor* const GetSpineActor();
 private:
 	//攻击
 	void Attack(const float& DeltaTime, const FVector& _Location = FVector::ZeroVector);
@@ -110,12 +110,12 @@ public:
 
 	//设置攻击模式的开启和关闭
 	UFUNCTION(BlueprintCallable)
-		void SetAttackModEnabled(bool _value);
+	void SetAttackModEnabled(bool _value);
 
 	//当动画播放完毕时触发
-	virtual	void OnAnimationPlayEnd();
+	virtual	void OnAnimationPlayEnd(UTrackEntry* Track);
 public:
 	//设置发射的属性
 	UFUNCTION(BlueprintCallable)
-		void InitLaunchProperty(int32 _LaunchCount, float _AttackDelay, float _FirstProjectionAttackDelay, float _ProjectionAttackDelay);
+	void InitLaunchProperty(int32 _LaunchCount, float _AttackDelay, float _FirstProjectionAttackDelay, float _ProjectionAttackDelay);
 };
