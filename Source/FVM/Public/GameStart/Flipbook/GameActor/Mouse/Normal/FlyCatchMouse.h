@@ -68,7 +68,7 @@ public:
 		USphereComponent* MBodyComponent = nullptr;
 	//卡片动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UPaperFlipbookComponent* CurCardAnim = nullptr;
+		class ASpineActor* CurCardAnim = nullptr;
 	//动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FFlyCatchMouseResourceStruct AnimRes;

@@ -698,7 +698,7 @@ void UGameSystemFunction::CreateMapMatrix(FLine _Line, int32 _RowCount, int32 _C
 					AGameActorFlipbookBase* AAnims = Mesh->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 						LoadClass<AGameActorFlipbookBase>(0,
 							TEXT("Class'/Script/FVM.GameActorFlipbookBase'")));
-					AAnims->SetTranslucentSortPriority(8000);
+					AAnims->SetRenderLayer(8000);
 					AAnims->InitRotation();
 					AAnims->GetMyActor()->SetFlipbook(Anim);
 					AAnims->SetAnimationPlayEndDestroy();

@@ -15,7 +15,7 @@ AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldC
 
 	NewMesheLauncherActor->CurMapMeshe = MapMeshe;
 
-	NewMesheLauncherActor->SetTranslucentSortPriority(7000);
+	NewMesheLauncherActor->SetRenderLayer(7000);
 
 	NewMesheLauncherActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
 

@@ -152,7 +152,7 @@ void UAN_Out::Init()
 
 	this->Get()->SetActorLocation(FirstVec);
 
-	this->Get()->SetTranslucentSortPriority(
+	this->Get()->SetRenderLayer(
 		this->Get()->GetMesheComp()->GetMapMesh(RanRow, this->Get()->GetMouseLine().Col)->GetTranslucency()
 	);
 
@@ -248,7 +248,7 @@ void UAN_Out::RandomChangePosition()
 	);
 
 	//设置渲染层
-	this->Get()->SetTranslucentSortPriority(
+	this->Get()->SetRenderLayer(
 		this->Get()->GetMesheComp()->GetMapMesh(RanRow, RanCol)->GetTranslucency()
 	);
 }

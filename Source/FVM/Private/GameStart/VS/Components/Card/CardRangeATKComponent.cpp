@@ -105,7 +105,13 @@ void UCardRangeATKComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-	this->RangeATKCardActor->SetPlayAnimation(UGameSystemFunction::LoadRes(this->RangeATKCardActor->CardActor_AttackAnim));
+	//this->RangeATKCardActor->SetPlayAnimation(UGameSystemFunction::LoadRes(this->RangeATKCardActor->CardActor_AttackAnim));
+
+	this->RangeATKCardActor->SetAnimation(
+		0,
+		SpineAnimationState_RangeATKCard_Attack,
+		true
+	);
 
 	if (this->RangeATKCardActor->GetRangeATKCardData().M_FCardRangeATK_Audio.M_bEnable)
 	{
@@ -118,8 +124,14 @@ void UCardRangeATKComponent::PlayAttackAnimation()
 
 void UCardRangeATKComponent::PlayIdleAnimation()
 {
-	this->RangeATKCardActor->SetPlayAnimation(
+	/*this->RangeATKCardActor->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(this->RangeATKCardActor->CardActor_DefAnim)
+	);*/
+
+	this->RangeATKCardActor->SetAnimation(
+		0,
+		SpineAnimationState_RangeATKCard_Idle,
+		true
 	);
 }
 
@@ -150,8 +162,10 @@ void UCardRangeATKComponent::LoadResource()
 	);
 
 	//播放默认动画
-	this->RangeATKCardActor->SetPlayAnimation(
-		UGameSystemFunction::LoadRes(this->RangeATKCardActor->CardActor_DefAnim)
+	this->RangeATKCardActor->SetAnimation(
+		0,
+		SpineAnimationState_RangeATKCard_Idle,
+		true
 	);
 
 	//打印速度Log

@@ -90,7 +90,7 @@ void ACardActor::SetCardGrade(const int32& _CardGrade)
 	{
 		UDataTable* CurGradeDataTable = LoadObject<UDataTable>(this,
 			TEXT("DataTable'/Game/Resource/BP/Data/CardData/1_CardGradeAnim.1_CardGradeAnim'")
-			);
+		);
 
 		if (FCard_GradeAnim_Data* CurGradeData = CurGradeDataTable->FindRow<FCard_GradeAnim_Data>(
 			FName(FString::FromInt(_CardGrade)), TEXT("Grade")))
@@ -255,7 +255,7 @@ void ACardActor::SetCurrentAttackSelfMouse(AMouseActor* _MouseActor)
 	this->M_CardProperty.M_CurrentAttackSelfMouse = _MouseActor;
 }
 
-void ACardActor::SetTranslucentSortPriority(int32 _Layer)
+void ACardActor::SetRenderLayer(int32 _Layer)
 {
 	// 木盘子 -1  0  0,1
 	// 小笼包 0   1  2,3
@@ -278,7 +278,7 @@ void ACardActor::SetTranslucentSortPriority(int32 _Layer)
 		break;
 	}*/
 
-	Super::SetTranslucentSortPriority(_Layer);
+	Super::SetRenderLayer(_Layer);
 	this->M_CardGradeStaticMesh->SetTranslucentSortPriority(_Layer + 1);
 }
 
@@ -342,8 +342,8 @@ void ACardActor::OnCardMovedUpdate(
 	const FLine& _Line
 )
 {
-	this->SetActorLocation(_Location - this->M_OffsetPosition);
-	this->SetTranslucentSortPriority(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
+	this->SetActorLocation(_Location);
+	this->SetRenderLayer(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
 	this->SetLine(_Line);
 }
 
@@ -351,14 +351,14 @@ void ACardActor::OnCardMoveBegin(const int32& _Layer, const FLine& _Line)
 {
 	this->M_bFloatMode = true;
 	this->SetLine(_Line);
-	this->SetTranslucentSortPriority(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
+	this->SetRenderLayer(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
 }
 
 void ACardActor::OnCardMoveEnd(const int32& _Layer, const FLine& _Line)
 {
 	this->M_bFloatMode = false;
 	this->SetLine(_Line);
-	this->SetTranslucentSortPriority(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
+	this->SetRenderLayer(_Layer + this->M_SourceCardDataBase.M_CardLayer + 1);
 }
 
 void ACardActor::BeginPlay()
@@ -485,14 +485,14 @@ void ACardActor::UpdateCardEnableState()
 		//如果没有设置则设置卡片颜色
 		if (!this->M_bColorSet)
 		{
-			this->SetFlipbookColor(FVector(0.2f), 1.f);
+			this->SetRenderColor(SPINE_COLOR_DARK);
 			this->M_bColorSet = true;
 		}
 	}
 	else {
 		if (this->M_bColorSet)
 		{
-			this->SetFlipbookColor(FVector(1.f), 1.f);
+			this->SetRenderColor(SPINE_COLOR_WHITE);
 			this->M_bColorSet = false;
 			this->CardActive();
 		}
@@ -530,11 +530,11 @@ ACardActor::ACardActor()
 	this->CurCheckMesheLine = FLine(-1);
 
 	this->M_CardGradeStaticMesh = this->CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CardGradeMeshComponent"));
-	this->M_CardGradeStaticMesh->SetupAttachment(this->GetGameLocation());
+	this->M_CardGradeStaticMesh->SetupAttachment(this->GetPointComponent());
 	this->M_CardGradeStaticMesh->SetWorldRotation(FRotator(0.f, 0.f, 90.f));
 
 	this->M_CardTypeBoxCollision = this->CreateDefaultSubobject<UBoxComponent>(TEXT("CardTypeBox"));
-	this->M_CardTypeBoxCollision->SetupAttachment(this->GetRootComponent());
+	this->M_CardTypeBoxCollision->SetupAttachment(this->GetPointComponent());
 
 	this->CurCardDataComponent = this->CreateDefaultSubobject<UCardDataComponent>(TEXT("CurCardDataComponent"));
 

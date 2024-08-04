@@ -34,20 +34,21 @@
 
 namespace spine {
 
-	typedef void (*DisposeRendererObject)(void *rendererObject);
+	typedef void (*DisposeRendererObject)(void* rendererObject);
 
 	class SP_API HasRendererObject {
 	public:
-		explicit HasRendererObject() : _rendererObject(0), _dispose(0) {};
+		explicit HasRendererObject() : _rendererObject(nullptr), _dispose(nullptr) {};
 
 		virtual ~HasRendererObject() {
 			if (_dispose && _rendererObject)
 				_dispose(_rendererObject);
 		}
 
-		void *getRendererObject() { return _rendererObject; }
+		void* getRendererObject() { return _rendererObject; }
 
-		void setRendererObject(void *rendererObject, DisposeRendererObject dispose = 0) {
+		void setRendererObject(void* rendererObject, DisposeRendererObject dispose = nullptr) {
+
 			if (_dispose && _rendererObject && _rendererObject != rendererObject)
 				_dispose(_rendererObject);
 
@@ -55,8 +56,15 @@ namespace spine {
 			_dispose = dispose;
 		}
 
+		void unLoad()
+		{
+			_rendererObject = nullptr;
+			_dispose = nullptr;
+		}
+
 	private:
-		void *_rendererObject;
+
+		void* _rendererObject;
 		DisposeRendererObject _dispose;
 	};
 

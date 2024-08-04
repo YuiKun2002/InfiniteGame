@@ -8,6 +8,10 @@
 #include "UObject/NoExportTypes.h"
 #include "MapBaseType.generated.h"
 
+//颜色
+#define SPINE_COLOR_DARK FLinearColor(0.2f,0.2f,0.2f,1.f)
+#define SPINE_COLOR_WHITE FLinearColor(1.f,1.f,1.f,1.f)
+
 
 //渲染层级
 namespace TranslucencyConst {
@@ -109,10 +113,10 @@ struct FItem_Buff {
 public:
 	//条件->是否携带Buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bCondition = false;
+	bool M_bCondition = false;
 	//多少个buff （key（buff） value（time））
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<Buff_Infor, float> M_Buffers;
+	TMap<Buff_Infor, float> M_Buffers;
 };
 
 //方向
@@ -216,9 +220,9 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 Row = 0;
+	int32 Row = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 Col = 0;
+	int32 Col = 0;
 };
 
 
@@ -229,13 +233,13 @@ struct FMapTranform {
 public:
 	//位置
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FVector M_Location = FVector(570.f, 0.f, 110.f);
+	FVector M_Location = FVector(570.f, 0.f, 110.f);
 	//旋转
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FRotator M_Rotation = FRotator(0.f, 90.f, 0.f);
+	FRotator M_Rotation = FRotator(0.f, 90.f, 0.f);
 	//缩放
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FVector M_Scale = FVector(1., 1.f, 1.f);
+	FVector M_Scale = FVector(1., 1.f, 1.f);
 };
 
 class UPaperSprite;
@@ -246,7 +250,7 @@ struct FMapSprite {
 public:
 	//地图的背景
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		UPaperSprite* M_MapBackgroundSprite = nullptr;
+	UPaperSprite* M_MapBackgroundSprite = nullptr;
 };
 
 

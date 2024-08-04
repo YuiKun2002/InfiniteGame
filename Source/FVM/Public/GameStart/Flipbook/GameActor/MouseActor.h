@@ -428,7 +428,7 @@ public:
 	virtual void InMapMeshe(ELineType CurLineType);
 
 	//排序设置
-	virtual void SetTranslucentSortPriority(int32 _Layer) override;
+	virtual void SetRenderLayer(int32 _Layer) override;
 public:
 	//Tick 更新
 	virtual void Tick(float DeltaTime) override;

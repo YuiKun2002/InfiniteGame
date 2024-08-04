@@ -35,7 +35,13 @@ void UCardSpawnComponent::LoadResource()
 	this->M_Resource.M_UPaperFlipbook_Spawn_Up = UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_UpAnim);
 
 	//播放默认动画
-	this->CurSpawnCardActor->GetRenderComponent()->SetFlipbook(UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1));
+	/*this->CurSpawnCardActor->GetRenderComponent()->SetFlipbook(
+		UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1)
+	);*/
+	this->CurSpawnCardActor->SetAnimation(
+		0,
+		SpineAnimationState_SpawnCard_Spawn,
+		true);
 
 
 	//初始化基础数据以及生成器
@@ -55,7 +61,7 @@ void UCardSpawnComponent::LoadResource()
 		//生产速度
 		CurData.M_SpawnSpeed,
 		//生产延迟【等待生产动画播放完毕的时间】
-		CurData.M_FirstSpawnDelay == 0.f ? 
+		CurData.M_FirstSpawnDelay == 0.f ?
 		UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1)->GetTotalDuration() : CurData.M_FirstSpawnDelay,
 		//生产多个时，每一个的延迟
 		0.f
@@ -89,7 +95,7 @@ void UCardSpawnComponent::Spawn()
 
 	if (IsValid(CurFlame))
 	{
-		
+
 		if (this->M_SpawnFlameValue < 25)
 		{
 			CurFlame->SetActorScale3D(FVector(0.7f));
@@ -111,14 +117,24 @@ void UCardSpawnComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-	this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Spawn);
+	//this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Spawn);
+
+	this->CurSpawnCardActor->SetAnimation(
+		0,
+		SpineAnimationState_SpawnCard_Spawn,
+		true);
 }
 
 void UCardSpawnComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Idle);
+	//this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Idle);
+
+	this->CurSpawnCardActor->SetAnimation(
+		0,
+		SpineAnimationState_SpawnCard_Idle,
+		true);
 }
 
 
@@ -152,7 +168,13 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 				//设置属性
 				this->M_SpawnFlameValue = this->M_SpawnFlameValue * this->M_SpawnCondition.M_SpawnFlameNumRate;
 				//播放生长动画
-				this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Spawn_Up);
+				//this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Spawn_Up);
+
+				this->CurSpawnCardActor->SetAnimation(
+					0,
+					SpineAnimationState_SpawnCard_Grow,
+					true);
+
 
 				/*---动画重新赋值---*/
 				//默认动画
@@ -195,7 +217,11 @@ void UCardSpawnComponent::OnAnimationPlayEnd()
 		{
 			//当生长动画播放完毕之后
 			this->InWeekUp = false;
-			this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Idle);
+
+			this->CurSpawnCardActor->SetAnimation(
+				0,
+				SpineAnimationState_SpawnCard_Idle,
+				true);
 		}
 	}
 }

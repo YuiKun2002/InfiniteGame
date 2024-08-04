@@ -222,7 +222,7 @@ public:
 	virtual void BeginDestroy() override;
 
 protected:
-	TSharedPtr<spine::TrackEntry> entry;
+	spine::TrackEntry* entry = nullptr;
 };
 
 class USpineAtlasAsset;

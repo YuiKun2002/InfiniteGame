@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
 #include "GameStart/VS/Components/Card/CardFuncCompImplement.h"
 #include "GameStart/VS/Components/CardManagerComponent.h"
+#include "SpineSkeletonAnimationComponent.h"
 
 #include "GameStart/VS/MapBaseType.h"
 #include "GameStart/VS/GameMapInstance.h"
@@ -50,22 +51,34 @@ void UCardFunctionComponent::BeginPlay()
 	this->M_CardMapMeshe = this->FunctionCardActor->GetUIMapMesh();
 
 	//播放默认动画
-	if (UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml))
+	/*if (UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml))
 	{
-		this->FunctionCardActor->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml));
-	}
+		this->FunctionCardActor->SetPlayAnimation(
+			UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml)
+		);
+	}*/
 
-	//绑定动画播放完毕函数
-	this->FunctionCardActor->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(
+	UTrackEntry* Track = this->FunctionCardActor->SetAnimation(
+		0,
+		SpineAnimationState_BurgerCard_Idle,
+		true
+	);
+
+	Track->AnimationComplete.AddDynamic(
 		this, &UCardFunctionComponent::OnAnimationPlayEnd
 	);
+
+	//绑定动画播放完毕函数
+	//this->FunctionCardActor->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(
+	//	this, &UCardFunctionComponent::OnAnimationPlayEnd
+	//);
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunction(this);
 }
 
 
-void UCardFunctionComponent::OnAnimationPlayEnd()
+void UCardFunctionComponent::OnAnimationPlayEnd(UTrackEntry* Track)
 {
 	if (FVM_VS_GamePause())
 	{

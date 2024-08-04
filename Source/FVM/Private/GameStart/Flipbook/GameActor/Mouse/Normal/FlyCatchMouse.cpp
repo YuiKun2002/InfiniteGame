@@ -12,20 +12,21 @@
 #include <Components/BoxComponent.h>
 #include "Data/GameLogSubsystem.h"
 #include "GameStart/VS/MapMeshe.h"
+#include "SpineActor.h"
 
 AFlyCatchMouse::AFlyCatchMouse()
 {
 	this->MMesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("FCMouseMeshComp"));
 	this->MBodyComponent = CreateDefaultSubobject<USphereComponent>(TEXT("FCMouseBodyComp"));
 
-	this->CurCardAnim = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FCCardAnimComp"));
+	//this->CurCardAnim = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FCCardAnimComp"));
 
 	//设置依附
 	this->MMesheComponent->SetupAttachment(this->GetRootComponent());
 	this->MBodyComponent->SetupAttachment(this->MMesheComponent);
 
 	//卡片动画
-	this->CurCardAnim->SetupAttachment(this->GetRenderComponent());
+	//this->CurCardAnim->SetupAttachment(this->GetRenderComponent());
 }
 
 void AFlyCatchMouse::Tick(float DeltaTime)
@@ -86,7 +87,7 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				);
 
 				//设置渲染层
-				this->SetTranslucentSortPriority(
+				this->SetRenderLayer(
 					this->CurUI->GetMapMeshe()->GetTranslucency()
 				);
 
@@ -120,7 +121,11 @@ void AFlyCatchMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->CurCardAnim->SetFlipbook(nullptr);
+	/*if (IsValid(this->CurCardAnim))
+	{
+		this->CurCardAnim->SetAnimationClear();
+	}*/
+
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
 	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
@@ -142,7 +147,7 @@ void AFlyCatchMouse::MouseInit()
 	);
 
 	//初始化位置
-	this->SetTranslucentSortPriority(99999);
+	this->SetRenderLayer(99999);
 	this->CurLocation = this->GetActorLocation();
 	this->bEnter = false;
 
@@ -221,7 +226,7 @@ void AFlyCatchMouse::MouseInit()
 					this->CurLocation = this->GetActorLocation();
 					this->CurFlag = this->GetWorld()->SpawnActor<AFlyCatchMouseFlag>(CurFlagClass);
 					this->CurFlag->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation());
-					this->CurFlag->SetTranslucentSortPriority(9999);
+					this->CurFlag->SetRenderLayer(9999);
 					this->DealyTime = 3.f;
 					this->fToGroundTime = 1.f;
 					this->bEnter = true;
@@ -263,7 +268,7 @@ void AFlyCatchMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		this->SetPlayAnimation(nullptr);
-		this->CurCardAnim->SetFlipbook(nullptr);
+		//this->CurCardAnim->SetAnimationClear();
 	}
 
 	if (IsValid(this->CurFlag))
@@ -300,19 +305,22 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 				this->CurCatchCard = nullptr;
 			}
 		}
-
+		
+		/*
 		//设置防御卡动画
 		if (IsValid(this->CurCatchCard))
 		{
-			this->CurCardAnim->SetFlipbook(
-				this->CurCatchCard->GetRenderComponent()->GetFlipbook()
+			this->CurCardAnim->SetAnimation(0,
+				this->CurCatchCard->GetCurrentAnimationName(0),
+				true
 			);
-			this->CurCardAnim->SetTranslucentSortPriority(this->GetTranslucentSortPriority() - 1);
-			this->CurCardAnim->Stop();
+			this->CurCardAnim->SetRenderLayer(this->GetTranslucentSortPriority() - 1);
+			this->CurCardAnim->SetAnimationTimeScale(0, 0.f);
 		}
 		else {
-			this->CurCardAnim->SetFlipbook(nullptr);
+			this->CurCardAnim->SetAnimationClear(0);
 		}
+		*/
 
 		//消灭防御卡	
 		if (IsValid(this->CurCatchCard))

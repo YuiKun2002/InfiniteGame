@@ -82,7 +82,7 @@ void UCardDoubleAttackComponent::Spawn()
 			//生成子弹
 			AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
 				this->SPool[this->STargetCardOtherItem.GetIndex()]->GetObjectActor()
-				);
+			);
 
 			//新生成的对象设置自定义拥有者(CardActor)
 			_TargetActor->SetLine(this->AttackCardActor->GetLine().Row);
@@ -120,7 +120,9 @@ void UCardDoubleAttackComponent::PlayAttackAnimation()
 		//初始化数据
 		this->LauncherItem(this->SOtherItems, this->CurSFinishItems, this->STargetCardOtherItem);
 
-		this->AttackCardActor->SetPlayAnimation(this->STargetCardOtherItem.GetAnim());
+		//this->AttackCardActor->SetPlayAnimation(this->STargetCardOtherItem.GetAnim());
+
+		this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
 
 	}
 	else {

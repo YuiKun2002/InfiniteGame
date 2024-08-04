@@ -64,7 +64,7 @@ void ABoss_DaLiShen::Attack3_Tick(float DeltaTime)
 
 		DaLiShen_Attack_Line_Down->InitRotation();
 		DaLiShen_Attack_Line_Down->SetFlipbookPitchRotation(90.f);
-		DaLiShen_Attack_Line_Down->SetTranslucentSortPriority(8000.f);
+		DaLiShen_Attack_Line_Down->SetRenderLayer(8000.f);
 
 		//上
 		AGameActorFlipbookBase* DaLiShen_Attack_Line_Up = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
@@ -74,7 +74,7 @@ void ABoss_DaLiShen::Attack3_Tick(float DeltaTime)
 
 		DaLiShen_Attack_Line_Up->InitRotation();
 		DaLiShen_Attack_Line_Up->SetFlipbookPitchRotation(-90.f);
-		DaLiShen_Attack_Line_Up->SetTranslucentSortPriority(8000.f);
+		DaLiShen_Attack_Line_Up->SetRenderLayer(8000.f);
 
 
 		this->SetCurrentMoveSpeed(this->GetMoveSpeed());
@@ -137,7 +137,7 @@ void ABoss_DaLiShen::Update_Attack_1(float DeltaTime)
 			LocalObj->InitRotation();
 			LocalObj->AddActorLocalOffset(FVector(5.f, 30.f, 0.f));
 			LocalObj->SetTarget(AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->GetMapMeshLocation(SRandRow, SRandCol));
-			LocalObj->SetTranslucentSortPriority(8000);
+			LocalObj->SetRenderLayer(8000);
 
 			if (this->Attack_2_CurrentCount < 9)
 				this->Attack_2_CurrentCount++;
@@ -161,7 +161,7 @@ void ABoss_DaLiShen::Update_Attack_1(float DeltaTime)
 				LocalObj->InitRotation();
 				LocalObj->AddActorLocalOffset(FVector(5.f, Locations[Attack_2_CurrentCount], 0.f));
 				LocalObj->SetTarget(AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->GetMapMeshLocation(SRandRow, SRandCol));
-				LocalObj->SetTranslucentSortPriority(8000);
+				LocalObj->SetRenderLayer(8000);
 
 				if (this->Attack_2_CurrentCount < 9)
 					this->Attack_2_CurrentCount++;
@@ -280,7 +280,7 @@ void ABoss_DaLiShen::OnAnimationPlayEnd()
 			this->GetActorTransform());
 
 		DaLiShen_Attack_Line_Left->InitRotation();
-		DaLiShen_Attack_Line_Left->SetTranslucentSortPriority(8000.f);
+		DaLiShen_Attack_Line_Left->SetRenderLayer(8000.f);
 
 		AGameActorFlipbookBase* DaLiShen_Attack_Line_Right = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 			LoadClass<AGameActorFlipbookBase>(0,
@@ -288,7 +288,7 @@ void ABoss_DaLiShen::OnAnimationPlayEnd()
 			this->GetActorTransform());
 
 		DaLiShen_Attack_Line_Right->InitRotation();
-		DaLiShen_Attack_Line_Right->SetTranslucentSortPriority(8000.f);
+		DaLiShen_Attack_Line_Right->SetRenderLayer(8000.f);
 
 
 		this->SetCurrentMoveSpeed(this->GetMoveSpeed());

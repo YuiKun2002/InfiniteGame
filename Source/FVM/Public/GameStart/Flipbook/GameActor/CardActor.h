@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SpineActor.h"
 #include "GameStart/VS/MapBaseType.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "GameStart/VS/Components/Card/CardDataComponent.h"
@@ -81,7 +82,7 @@ DECLARE_DELEGATE_OneParam(FCardBeHurtDelegate, AMouseActor* CurMouseActor);
 DECLARE_DELEGATE_TwoParams(FCardLifeHpChangeDelegate, float ATK_Value, float UpHP_Value);
 
 UCLASS()
-class FVM_API ACardActor : public AGameActorFlipbookBase
+class FVM_API ACardActor : public ASpineActor
 {
 	GENERATED_BODY()
 public:
@@ -179,7 +180,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetCollisionEnable(bool bValue);
 	//设置层级
-	virtual	void SetTranslucentSortPriority(int32 _Layer) override;
+	virtual	void SetRenderLayer(int32 _Layer) override;
 public:
 
 	//解析actor

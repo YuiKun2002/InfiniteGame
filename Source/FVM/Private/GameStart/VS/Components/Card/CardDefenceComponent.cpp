@@ -36,31 +36,16 @@ void UCardDefenceComponent::UpdateState()
 		if (HP >= HPTop * (0.6f))
 		{
 			//第一状态
-			if (UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim1))
-			{
-				this->DefenceCardActor->SetPlayAnimation(
-					UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim1)
-				);
-			}
+			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Full, true);
 		}
 		else if (HP >= HPTop * (0.3f) && HP < HPTop * (0.6f))
 		{
 			//第二状态
-			if (UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim2))
-			{
-				this->DefenceCardActor->SetPlayAnimation(
-					UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim2)
-				);
-			}
+			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Damage, true);
 		}
 		else {
 			//第三状态
-			if (UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim3))
-			{
-				this->DefenceCardActor->SetPlayAnimation(
-					UGameSystemFunction::LoadRes(this->DefenceCardActor->CardActor_DefAnim3)
-				);
-			}
+			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Low, true);
 		}
 
 	}
@@ -136,8 +121,8 @@ void UCardDefenceComponent::Death()
 
 		AGameActorFlipbookBase* Flip = this->DefenceCardActor->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 			LoadClass<AGameActorFlipbookBase>(0, TEXT("Class'/Script/FVM.GameActorFlipbookBase'"))
-			);
-		Flip->SetTranslucentSortPriority(8000);
+		);
+		Flip->SetRenderLayer(8000);
 		Flip->InitRotation();
 		Flip->SetActorLocation(Trans.GetLocation());
 		Flip->GetMyActor()->SetFlipbook(Cast<UPaperFlipbook>(CardData.M_DeathBombAnimFlipbookPath.TryLoad()));

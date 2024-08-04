@@ -83,7 +83,7 @@ void ANormalBase::UpdateMoveFunc(const float& DeltaTime)
 				//修改移动基数
 				this->fSpeedBaseValue = this->fSpeedBaseValue / 3.2f;
 				//设置渲染层
-				this->SetTranslucentSortPriority(this->iNextTranslucenty);
+				this->SetRenderLayer(this->iNextTranslucenty);
 			}
 			else {
 				//设置目标位置

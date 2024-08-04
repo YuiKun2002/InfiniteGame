@@ -20,7 +20,7 @@ void AMagicMasterHpAddtionBuff::Init(AMouseActor* MouseActor, TSoftObjectPtr<UPa
 		this->time = this->CTime;
 		this->InitRotation();
 		this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim));
-		this->SetTranslucentSortPriority(this->CurMouse->GetTranslucentSortPriority() + 5);
+		this->SetRenderLayer(this->CurMouse->GetTranslucentSortPriority() + 5);
 		this->SetActorLocation(this->CurMouse->GetActorLocation() + FVector(0.f, 0.f, 20.f));
 		this->SetAnimationPlayEndDestroy();
 	}
@@ -41,7 +41,7 @@ void AMagicMasterHpAddtionBuff::Tick(float DeltaTime)
 
 		if (IsValid(this->CurMouse))
 		{
-			this->SetTranslucentSortPriority(this->CurMouse->GetTranslucentSortPriority() + 5);
+			this->SetRenderLayer(this->CurMouse->GetTranslucentSortPriority() + 5);
 			this->SetActorLocation(this->CurMouse->GetActorLocation() + FVector(0.f, 0.f, 20.f));
 		}
 	}

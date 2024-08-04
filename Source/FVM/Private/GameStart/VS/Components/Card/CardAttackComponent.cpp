@@ -50,7 +50,7 @@ void UCardAttackComponent::LoadResource()
 	);
 
 	//播放动画
-	this->AttackCardActor->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AttackCardActor->CardActor_DefAnim));
+	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
 
 	//添加资源[默认子弹，默认动画] 添加默认攻击动作
 	this->Pool.Emplace(UObjectPoolManager::MakePoolManager(
@@ -120,7 +120,7 @@ void UCardAttackComponent::Spawn()
 		//生成子弹
 		AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
 			this->Pool[this->TargetCardOtherItem.GetIndex()]->GetObjectActor()
-			);
+		);
 
 		//新生成的对象设置自定义拥有者(CardActor)
 		_TargetActor->SetLine(this->AttackCardActor->GetLine().Row);
@@ -154,14 +154,15 @@ void UCardAttackComponent::PlayAttackAnimation()
 	//初始化数据
 	this->LauncherItem(this->OtherItems, this->CurFinishItems, this->TargetCardOtherItem);
 
-	this->AttackCardActor->SetPlayAnimation(this->TargetCardOtherItem.GetAnim());
+	//this->AttackCardActor->SetPlayAnimation(this->TargetCardOtherItem.GetAnim());
+	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
 }
 
 void UCardAttackComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->AttackCardActor->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AttackCardActor->CardActor_DefAnim));
+	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
 }
 
 void UCardAttackComponent::BeginDestroy()

@@ -77,7 +77,7 @@ ACardActor* UUI_CustomMapMeshe::CreateCard(UCardManagerComponent* _CardMComp)
 		Card->SetCardUI(_CardMComp->GetUICard(CardData.ItemName));
 
 		//设置层
-		Card->SetTranslucentSortPriority(CurMap->GetTranslucency() + CardData.M_CardLayer);
+		Card->SetRenderLayer(CurMap->GetTranslucency() + CardData.M_CardLayer);
 
 		//产生阶段结束
 		UGameplayStatics::FinishSpawningActor(Card, Trans);

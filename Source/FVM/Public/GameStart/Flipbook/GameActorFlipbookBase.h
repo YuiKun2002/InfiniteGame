@@ -72,7 +72,7 @@ public:
 
 	//设置渲染顺序
 	UFUNCTION(BlueprintCallable)
-		virtual	void SetTranslucentSortPriority(int32 _Layer);
+		virtual	void SetRenderLayer(int32 _Layer);
 	//获取渲染顺序
 	UFUNCTION(BlueprintCallable)
 		int32 GetTranslucentSortPriority() const;

@@ -835,7 +835,11 @@ void AMouseActor::SetMouseMoveOtherLineFunc(FLine NewLine)
 	//重新设置新路线
 	this->SetMouseLine(NewLine);
 	//设置渲染层级
-	this->SetTranslucentSortPriority(AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->GetMesh(NewLine.Row, NewLine.Col)->GetTranslucency());
+	this->SetRenderLayer(
+		AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->GetMesh(
+			NewLine.Row, NewLine.Col
+		)->GetTranslucency()
+	);
 }
 
 void AMouseActor::UpdateMoveFunc(const float& DeltaTime)
@@ -961,7 +965,7 @@ void AMouseActor::BeginPlay()
 	//设置材质
 	this->GetRenderComponent()->SetMaterial(0, LoadObject<UMaterialInstance>(this,
 		TEXT("MaterialInstanceConstant'/Game/Resource/BP/Martials/Mouse/MI_MouseRender.MI_MouseRender'")
-		));
+	));
 
 	//生成buff
 	this->M_Buff = UGameBuff::MakeGameBuff(this, EGameBuffCharTag::Mouse);
@@ -1123,8 +1127,8 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
 						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
 					}
-				}
-				);
+					}
+					);
 			this->InWaterTimeLine->PlayFromStart();
 		}
 	}
@@ -1148,9 +1152,9 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 	this->M_Proper_Condition.M_CurrentInType = CurLineType;
 }
 
-void AMouseActor::SetTranslucentSortPriority(int32 _Layer)
+void AMouseActor::SetRenderLayer(int32 _Layer)
 {
-	Super::SetTranslucentSortPriority(_Layer + 19);
+	Super::SetRenderLayer(_Layer + 19);
 
 	this->InWaterAnim->SetTranslucency(_Layer + 20);
 }

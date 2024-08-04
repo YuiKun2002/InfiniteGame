@@ -102,7 +102,7 @@ void ADJChannel::MouseTick(const float& DeltaTime)
 						);
 						CurMouse->InMapMeshe(this->CurMapMeshe->GetLineType());
 						CurMouse->CloseInWaterTimeLine();
-						CurMouse->SetTranslucentSortPriority(this->CurMapMeshe->GetTranslucency());
+						CurMouse->SetRenderLayer(this->CurMapMeshe->GetTranslucency());
 						CurMouse->SetActorLocation(CurLo);
 					}
 				}
@@ -448,7 +448,7 @@ void UDJ_Out::Init()
 			this->Get()->GetMeshe()->GetMapMeshRowAndCol().Col - 1);
 		NewLocation.Y = 430.f;
 		this->Get()->SetActorLocation(NewLocation);
-		this->Get()->SetTranslucentSortPriority(
+		this->Get()->SetRenderLayer(
 			this->Get()->GetMeshe()->GetMapMesh(this->Get()->GetMouseLine().Row,
 				this->Get()->GetMeshe()->GetMapMeshRowAndCol().Col - 1
 			)->GetTranslucency());

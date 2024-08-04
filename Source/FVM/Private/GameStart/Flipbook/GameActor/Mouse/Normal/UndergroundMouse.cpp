@@ -82,7 +82,7 @@ void AUndergroundMouse::MoveingUpdate(float DeltaTime)
 				AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->GetMapMeshRowAndCol().Col - 1
 			)->GetTranslucency();
 
-			this->SetTranslucentSortPriority(CurTran);
+			this->SetRenderLayer(CurTran);
 
 			return;
 		}

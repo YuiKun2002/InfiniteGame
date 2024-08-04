@@ -6,6 +6,9 @@
 #include "GameStart/Flipbook/GameActor/CardActor/ATK/ATKCardActorBase.h"
 #include "RangeATKCardActor.generated.h"
 
+#define SpineAnimationState_RangeATKCard_Idle TEXT("Idle")
+#define SpineAnimationState_RangeATKCard_Attack TEXT("Attack")
+
 /**
  *	范围攻击类卡片
  */

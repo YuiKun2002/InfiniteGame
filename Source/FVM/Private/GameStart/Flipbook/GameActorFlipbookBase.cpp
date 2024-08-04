@@ -124,7 +124,7 @@ void AGameActorFlipbookBase::SetGameActorFlipbookRotation(FRotator _rotation)
 	this->SetActorRelativeRotation(_rotation);
 }
 
-void AGameActorFlipbookBase::SetTranslucentSortPriority(int32 _Layer)
+void AGameActorFlipbookBase::SetRenderLayer(int32 _Layer)
 {
 	this->CurActorTransLayer = _Layer;
 	this->GetRenderComponent()->SetTranslucentSortPriority(_Layer);

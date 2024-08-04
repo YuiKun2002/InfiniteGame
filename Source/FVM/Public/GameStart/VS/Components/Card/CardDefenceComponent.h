@@ -10,6 +10,10 @@ class ACardActor;
 class ADefenceCardActor;
 class UPaperFlipbook;
 
+#define CardDefenceAnimState_Full TEXT("Full")
+#define CardDefenceAnimState_Damage TEXT("Damage")
+#define CardDefenceAnimState_Low TEXT("Low")
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UCardDefenceComponent : public UActorComponent
 {

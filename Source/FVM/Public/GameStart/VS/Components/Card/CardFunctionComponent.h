@@ -20,16 +20,16 @@ class FVM_API UCardFunctionComponent : public UActorComponent
 private:
 	//卡片组件
 	UPROPERTY()
-		AFunctionCardActor* FunctionCardActor = nullptr;
+	AFunctionCardActor* FunctionCardActor = nullptr;
 	//格子组件(当卡片放下时->获取格子)
 	UPROPERTY()
-		UUI_MapMeshe* M_CardMapMeshe = nullptr;
+	UUI_MapMeshe* M_CardMapMeshe = nullptr;
 private:
 	//当前上一次选择的卡片每次
 	UPROPERTY()
-		FString M_PlayerLastSelectCardActorName;
+	FString M_PlayerLastSelectCardActorName;
 	UPROPERTY()
-		UClass* M_PlayerLastSelectCardActorClass = nullptr;
+	UClass* M_PlayerLastSelectCardActorClass = nullptr;
 public:
 	// Sets default values for this component's properties
 	UCardFunctionComponent();
@@ -38,30 +38,31 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	//当动画播放完毕
-	void OnAnimationPlayEnd();
+	UFUNCTION()
+	void OnAnimationPlayEnd(UTrackEntry* Track);
 
 	//获取上一次使用的卡片名称
 	UFUNCTION()
-		FString GetLastCardName() const;
+	FString GetLastCardName() const;
 	//获取上一次使用的卡片的资产类
 	UFUNCTION()
-		UClass* GetLasrCardResourceClass() const;
+	UClass* GetLasrCardResourceClass() const;
 	//获取对应的防御卡
 	UFUNCTION()
-		AFunctionCardActor* GetCardActor();
+	AFunctionCardActor* GetCardActor();
 	//获取卡片对应的网格
 	UFUNCTION()
-		UUI_MapMeshe* GetCardMeshe();
+	UUI_MapMeshe* GetCardMeshe();
 	//事件触发器
 	UFUNCTION()
-		void EventTrigger(
-			UPrimitiveComponent* OverlappedComponent,
-			AActor* OtherActor,
-			UPrimitiveComponent* OtherComp,
-			int32 OtherBodyIndex,
-			bool bFromSweep,
-			const FHitResult& SweepResult
-		);
+	void EventTrigger(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

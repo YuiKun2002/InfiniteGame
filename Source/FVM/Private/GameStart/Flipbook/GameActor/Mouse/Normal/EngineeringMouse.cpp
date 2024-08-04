@@ -342,7 +342,7 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 						CurCard.Emplace(TargetCard1);
 
 						//CurProj->SetFlipbookPitchRotation(90.f);
-						CurProj->SetTranslucentSortPriority(9999);
+						CurProj->SetRenderLayer(9999);
 						CurProj->CInit(CurMapMeshe->GetActorLocation(), CurCard);
 						return;
 					}

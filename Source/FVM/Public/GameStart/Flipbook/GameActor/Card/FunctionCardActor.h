@@ -6,9 +6,40 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "FunctionCardActor.generated.h"
 
-/**
- * 功能卡片
- */
+#define SpineAnimationState_SpawnCard_Def TEXT("Def")
+#define SpineAnimationState_SpawnCard_DefSpawn TEXT("DefSpawn")
+#define SpineAnimationState_SpawnCard_Grow TEXT("Grow")
+#define SpineAnimationState_SpawnCard_GrowDef TEXT("GrowDef")
+#define SpineAnimationState_SpawnCard_GrowSpawn TEXT("GrowSpawn")
+
+#define SpineAnimationState_UniformCard_Bomb TEXT("Bomb")
+
+#define SpineAnimationState_ActiveCard_Active TEXT("Active")
+
+#define SpineAnimationState_CatBoxCard_FullReady TEXT("FullReady")
+#define SpineAnimationState_CatBoxCard_DamageReady TEXT("DamageReady")
+#define SpineAnimationState_CatBoxCard_LowReady TEXT("LowReady")
+#define SpineAnimationState_CatBoxCard_FullAttack TEXT("FullAttack")
+#define SpineAnimationState_CatBoxCard_DamageAttack TEXT("DamageAttack")
+#define SpineAnimationState_CatBoxCard_LowAttack TEXT("LowAttack")
+
+#define SpineAnimationState_BurgerCard_Idle TEXT("Idle")
+#define SpineAnimationState_BurgerCard_Eatting TEXT("Eatting")
+#define SpineAnimationState_BurgerCard_EattingCompelet TEXT("EattingCompelet")
+#define SpineAnimationState_BurgerCard_Attack TEXT("Attack")
+#define SpineAnimationState_BurgerCard_Catch TEXT("Catch")
+
+#define SpineAnimationState_FlourbagCard_Idle TEXT("Idle")
+#define SpineAnimationState_FlourbagCard_Left TEXT("Left")
+#define SpineAnimationState_FlourbagCard_Right TEXT("Right")
+
+#define SpineAnimationState_ElectricBreadCard_Idle TEXT("Idle")
+#define SpineAnimationState_ElectricBreadCard_Attack TEXT("Attack")
+
+
+
+
+
 
 class AFlyItemActor;
 class UBoxComponent;
@@ -66,9 +97,13 @@ class FVM_API AFunctionActor : public AActor
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnInit(class AFunctionCardActor* CurCardActor);
+	void OnInit(class AFunctionCardActor* CurCardActor);
 };
 
+
+/**
+ * 功能卡片
+ */
 UCLASS()
 class FVM_API AFunctionCardActor : public ACardActor
 {
@@ -81,36 +116,36 @@ public:
 public:
 	//设置重叠
 	UFUNCTION(BlueprintCallable)
-		void SetOverlapBoxComponent(UBoxComponent* Box);
+	void SetOverlapBoxComponent(UBoxComponent* Box);
 	//设置功能组件
 	UFUNCTION(BlueprintCallable)
-		void SetFunctionComponent(UCardFunctionComponent* CardFuncComp);
+	void SetFunctionComponent(UCardFunctionComponent* CardFuncComp);
 
 
 	//运行卡片功能类
 	UFUNCTION(BlueprintCallable)
-		void ExecuteCardFuncClassByCardFunction(UCardFunctionComponent* CardComp);
+	void ExecuteCardFuncClassByCardFunction(UCardFunctionComponent* CardComp);
 	//卡片功能重叠
 	UFUNCTION(BlueprintCallable)
-		void ExecuteCardFuncClassByCardFunctionOnOverlapBegin(UCardFunctionComponent* CardFuncComp, AActor* OverlapObj);
+	void ExecuteCardFuncClassByCardFunctionOnOverlapBegin(UCardFunctionComponent* CardFuncComp, AActor* OverlapObj);
 	//卡片功能动画播放完毕
 	UFUNCTION(BlueprintCallable)
-		void ExecuteCardFuncClassByCardFunctionOnAnimPlayEnd(UCardFunctionComponent* CardFuncComp);
+	void ExecuteCardFuncClassByCardFunctionOnAnimPlayEnd(UCardFunctionComponent* CardFuncComp);
 	//卡片功能更新
 	UFUNCTION(BlueprintCallable)
-		void ExecuteCardFuncClassByCardFunctionUpdate(UCardFunctionComponent* CardFuncComp, const float& DeltaTime);
+	void ExecuteCardFuncClassByCardFunctionUpdate(UCardFunctionComponent* CardFuncComp, const float& DeltaTime);
 	//卡片死亡
 	UFUNCTION()
-		void ExecuteCardFuncDeath();
+	void ExecuteCardFuncDeath();
 	//获取当前正在执行的功能
 	UFUNCTION(BlueprintCallable)
-		UCardFunctionBase* GetCurrentExecuteCardFuncClass();
+	UCardFunctionBase* GetCurrentExecuteCardFuncClass();
 
 
 public:
 	//默认动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAniml;
+	TSoftObjectPtr<UPaperFlipbook> CardActor_DefAniml;
 public:
 
 	virtual void BeginPlay() override;
@@ -120,20 +155,20 @@ public:
 private:
 	//功能卡片数据
 	UPROPERTY()
-		FItemCardFunction ItemCardFunction;
+	FItemCardFunction ItemCardFunction;
 	//碰撞盒体
 	UPROPERTY()
-		UBoxComponent* OverlapBoxComponent = nullptr;
+	UBoxComponent* OverlapBoxComponent = nullptr;
 	//功能组件
 	UPROPERTY()
-		class UCardFunctionComponent* CardFuncComponent = nullptr;
+	class UCardFunctionComponent* CardFuncComponent = nullptr;
 	//当前卡片的功能
 	UPROPERTY()
-		TSet<TSoftClassPtr<class UCardFunctionBase>> CardFunctionClass;
+	TSet<TSoftClassPtr<class UCardFunctionBase>> CardFunctionClass;
 	//当前卡片的功能实例队列
 	UPROPERTY()
-		TArray<class UCardFunctionBase*> CardFunctionClassInstanceQueue;
+	TArray<class UCardFunctionBase*> CardFunctionClassInstanceQueue;
 	//当前卡片功能触发死亡
 	UPROPERTY()
-		TArray<class UCardFunctionBase*> CardFunctionClassInstanceOnDeathQueue;
+	TArray<class UCardFunctionBase*> CardFunctionClassInstanceOnDeathQueue;
 };

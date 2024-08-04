@@ -674,7 +674,7 @@ AMouseActor* UMouseSpawnManager::SpawnMouse(
 			M_MesheControllComponent->
 			GetMapMeshCurrentRight(Line.Row)->GetTranslucency();
 		//设置排序
-		CurNewMouse->SetTranslucentSortPriority(CurSort);
+		CurNewMouse->SetRenderLayer(CurSort);
 		//设置线路
 		CurNewMouse->SetMouseLine(Line);
 		//设置血量
@@ -734,7 +734,7 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 			M_MesheControllComponent->
 			GetMapMeshCurrentRight(MouseLine.Row)->GetTranslucency();
 		//设置排序
-		CurNewMouse->SetTranslucentSortPriority(CurSort);
+		CurNewMouse->SetRenderLayer(CurSort);
 		//设置血量
 		int32 CurLevel = AGameMapInstance::GetGameMapInstance()->GetGameMapStructManager()->LevelConfig.MouseLevel <= 0
 			?
@@ -844,7 +844,7 @@ bool UMouseSpawnManager::MakeNewMouseByName(UDataTable* MouseDataTable, FString 
 					M_MesheControllComponent->
 					GetMapMeshCurrentRight(Line.Row)->GetTranslucency();
 				//设置排序
-				CurNewMouse->SetTranslucentSortPriority(CurSort);
+				CurNewMouse->SetRenderLayer(CurSort);
 
 				//设置血量
 				int32 CurLevel =

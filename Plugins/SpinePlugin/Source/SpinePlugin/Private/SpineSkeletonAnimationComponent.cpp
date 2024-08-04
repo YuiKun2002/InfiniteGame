@@ -35,7 +35,7 @@
 using namespace spine;
 
 void UTrackEntry::SetTrackEntry(TrackEntry* trackEntry) {
-	this->entry = MakeShareable(trackEntry);
+	this->entry = trackEntry;
 	if (entry) entry->setRendererObject((void*)this);
 }
 
@@ -88,8 +88,8 @@ void USpineSkeletonAnimationComponent::BeginPlay() {
 }
 
 void UTrackEntry::BeginDestroy() {
-	if (entry.IsValid()) {
-		entry->setRendererObject(nullptr);
+	if (entry) {
+		entry->unLoad();
 	}
 	Super::BeginDestroy();
 }

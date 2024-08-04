@@ -27,7 +27,7 @@ void ABoss_LXQS::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->CurMesheComp, this->CurMouseColisionComp, FVector2D(110.f, 20.f));
 
-	
+
 }
 
 void ABoss_LXQS::OnResourceLoadFinished()
@@ -367,7 +367,9 @@ void ULXQS_MoveDownState::Init(class ABoss_LXQS* OnwerClass)
 	//初始化目标位置
 	this->M_TargetLocation = MesheLocation;
 	//设置排序
-	this->Onwer->SetTranslucentSortPriority(this->Onwer->GetMesheCtlComp()->GetMapMeshCurrentRight(RanLine)->GetTranslucency());
+	this->Onwer->SetRenderLayer(
+		this->Onwer->GetMesheCtlComp()->GetMapMeshCurrentRight(RanLine)->GetTranslucency()
+	);
 	//设置曲线
 	this->SetCurve(this->Onwer->StateMoveDownCurve, TEXT("StateMoveDownCurve"));
 	//播放时间线动画
@@ -474,7 +476,7 @@ void ULXQS_ShootMissileState::Init(class ABoss_LXQS* OnwerClass)
 	OnwerClass->GetWorld()->SpawnActor<APaperFlipbookActor>(
 		UGameSystemFunction::LoadRes(OnwerClass->MouseAimLog),
 		Trans
-		);
+	);
 
 	//播放上下移动的动画
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
@@ -512,7 +514,7 @@ void ULXQS_ShootMissileState::Update(const float& tick)
 				this->Onwer->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 					UGameSystemFunction::LoadRes(this->Onwer->MouseMissileClass),
 					Trans
-					);
+				);
 
 				this->ColNum--;
 			}
@@ -643,7 +645,7 @@ void ULXQS_ShootBubbleState::Init(class ABoss_LXQS* OnwerClass)
 		this->Onwer->GetWorld()->SpawnActor<APaperFlipbookActor>(
 			UGameSystemFunction::LoadRes(this->Onwer->MouseAimLog),
 			Trans
-			);
+		);
 
 		//加入射击目标
 		this->TargetCardMeshes.Emplace(this->CardMesheBuffer[RandomSelect]);
@@ -698,7 +700,7 @@ void ULXQS_ShootBubbleState::Update(const float& tick)
 					ALXQS_BubbleBomb* BubbleBomb = this->Onwer->GetWorld()->SpawnActor<ALXQS_BubbleBomb>(
 						UGameSystemFunction::LoadRes(this->Onwer->MouseBubbleClass),
 						Trans
-						);
+					);
 					//给泡泡初始化网格
 					BubbleBomb->CurMehshe = CurMeshe;
 				}
@@ -814,7 +816,7 @@ void ULXQS_RotationMoveState::Update(const float& tick)
 			this->Onwer->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 				UGameSystemFunction::LoadRes(this->Onwer->MouseRotationMoveItem),
 				Trans
-				);
+			);
 		}
 	}
 }
@@ -862,7 +864,7 @@ void ULXQS_RotationMoveState::AnimPlayEnd()
 			//初始化目标位置
 			this->M_TargetLocation = MesheLocation;
 			//设置排序
-			this->Onwer->SetTranslucentSortPriority(
+			this->Onwer->SetRenderLayer(
 				this->Onwer->GetMesheCtlComp()->GetMapMesh(RanRow,
 					this->Onwer->GetMesheCtlComp()->GetMapMeshRowAndCol().Col - 1)->GetTranslucency());
 			//播放时间线动画
@@ -885,7 +887,8 @@ void ULXQS_RotationMoveState::AnimPlayEnd()
 			//初始化目标位置
 			this->M_TargetLocation = MesheLocation;
 			//设置排序
-			this->Onwer->SetTranslucentSortPriority(this->Onwer->GetMesheCtlComp()->GetMapMesh(RanRow, 1)->GetTranslucency());
+			this->Onwer->SetRenderLayer(
+				this->Onwer->GetMesheCtlComp()->GetMapMesh(RanRow, 1)->GetTranslucency());
 			//播放时间线动画
 			this->Start();
 		}

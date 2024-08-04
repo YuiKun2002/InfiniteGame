@@ -70,7 +70,7 @@ void UCardCustomAttakComponent::Spawn()
 
 	//获取对象池的对象
 	//生成子弹
-	
+
 	if (!IsValid(this->Pool))
 	{
 		return;
@@ -119,15 +119,14 @@ void UCardCustomAttakComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-
-	this->M_CardActor->GetRenderComponent()->SetFlipbook(this->M_Attack);
+	this->M_CardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
 }
 
 void UCardCustomAttakComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->M_CardActor->GetRenderComponent()->SetFlipbook(this->M_Idle);
+	this->M_CardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
 }
 
 

@@ -19,7 +19,7 @@ void ARubbishObstacle::Init(FRubbishCardMouseResourceStruct& Res, const FVector&
 	this->InitRotation();
 	this->fTime = 0.5f;
 	this->fSpawnDelay = 8.f;
-	this->SetTranslucentSortPriority(Translucenty);
+	this->SetRenderLayer(Translucenty);
 	this->SetLifeSpan(Time + this->fSpawnDelay);
 	this->fRate = HurtCardRate;
 }

@@ -182,7 +182,7 @@ void UMesheControllComponent::SpawnMeshes()
 			CurAnim->SetRow(AnimalPathIndex);
 			CurAnim->SetActorTransform(LocalTrans);
 			CurAnim->InitRotation();
-			CurAnim->SetTranslucentSortPriority(this->GetMapMeshCurrentRight(AnimalPathIndex)->GetTranslucency());
+			CurAnim->SetRenderLayer(this->GetMapMeshCurrentRight(AnimalPathIndex)->GetTranslucency());
 
 			if (UFVMGameInstance::GetDebug())
 			{

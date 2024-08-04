@@ -462,7 +462,7 @@ void AFL_CallMouseActor::Tick(float DeltaTime)
 			this->State->GetMesheLocation(RanRow, RanCol),
 			10, 0.f, 0.f, FLine(RanRow, RanCol), ELineType::OnGround, EMouseTag::Boss
 		);
-		CurNewMouse->SetTranslucentSortPriority(CurMeshe->GetTranslucency());
+		CurNewMouse->SetRenderLayer(CurMeshe->GetTranslucency());
 		CurNewMouse->InMapMeshe(CurMeshe->GetLineType());
 		CurNewMouse->SetMouseLine(FLine(RanRow, RanCol));
 		Cast<AFL_CallBox>(CurNewMouse)->SpawnBox(CurMeshe, this->State->GetMesheLocation(RanRow, RanCol));
@@ -625,7 +625,7 @@ void AFL_KillCardActor::Tick(float DeltaTime)
 			this->State->GetMesheLocation(RanRow, RanCol),
 			10, 0.f, 0.f, FLine(RanRow, RanCol), ELineType::OnGround, EMouseTag::Boss
 		);
-		CurNewMouse->SetTranslucentSortPriority(CurMeshe->GetTranslucency());
+		CurNewMouse->SetRenderLayer(CurMeshe->GetTranslucency());
 		CurNewMouse->InMapMeshe(CurMeshe->GetLineType());
 		CurNewMouse->SetMouseLine(FLine(RanRow, RanCol));
 		//禁用网格
@@ -842,13 +842,13 @@ void AFL_CallBugActor::Init(UFL_CallBug* CurState)
 				10, 0.f, 0.f, FLine(RanRow, RanCol), ELineType::OnGround, EMouseTag::Boss
 			);
 
-			CurNewMouse->SetTranslucentSortPriority(CurMeshe->GetTranslucency());
+			CurNewMouse->SetRenderLayer(CurMeshe->GetTranslucency());
 			CurNewMouse->InMapMeshe(CurMeshe->GetLineType());
 			CurNewMouse->SetMouseLine(FLine(RanRow, RanCol));
 			//禁用网格
 			CurMeshe->SetMesheEnable(false, CurNewMouse);
 			CurState->GetA()->CurValidBox.Emplace(Cast<AFL_CallBox>(CurNewMouse));
-			CurNewMouse->SetTranslucentSortPriority(
+			CurNewMouse->SetRenderLayer(
 				TranslucencyConst::GetLayer(TranslucencyConst::ETranslucency::EBgBlock) + 50
 			);
 

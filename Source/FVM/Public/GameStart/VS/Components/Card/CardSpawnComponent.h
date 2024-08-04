@@ -11,6 +11,9 @@ class AFlameActor;
 class ASpawnCardActor;
 class UPaperFlipbook;
 
+#define SpineAnimationState_SpawnCard_Idle TEXT("Idle")
+#define SpineAnimationState_SpawnCard_Spawn TEXT("Spawn")
+#define SpineAnimationState_SpawnCard_Grow TEXT("Grow")
 
 UENUM(BlueprintType)
 enum class FCardSpawn : uint8 {

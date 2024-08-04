@@ -82,11 +82,11 @@ void UUI_MapMeshe::PlayCard(
 		if (_CardData.M_CardLayer == -1)
 		{
 			//设置卡片排序优先级
-			Card->SetTranslucentSortPriority(0);
+			Card->SetRenderLayer(0);
 		}
 		else {
 			//设置卡片排序优先级
-			Card->SetTranslucentSortPriority(this->GetCharTranslucency() + _CardData.M_CardLayer + 1);
+			Card->SetRenderLayer(this->GetCharTranslucency() + _CardData.M_CardLayer + 1);
 		}
 
 	}
@@ -994,7 +994,7 @@ void UUI_MapMeshe::OnMouseEnter(AMouseActor* Mouse)
 	{
 		if (Mouse->GetMouseLine().Row == this->M_Line.Row)
 		{
-			Mouse->SetTranslucentSortPriority(this->GetTranslucency());
+			Mouse->SetRenderLayer(this->GetTranslucency());
 			Mouse->InMapMeshe(this->M_ELineType);
 		}
 	}

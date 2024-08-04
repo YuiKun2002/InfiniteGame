@@ -1,5 +1,7 @@
 #include "GameStart/VS/Components/Card/CardFuncCompImplement.h"
 
+#include "SpineSkeletonAnimationComponent.h"
+
 #include "GameStart/Flipbook/GameActor/CardActor/AttackCardActor.h"
 #include "GameStart/Flipbook/GameActor/FlameActor.h"
 #include "GameStart/Flipbook/GameActor/FlyItemCardFuncImplement.h"
@@ -47,13 +49,13 @@ UCardFunctionBase* UCardFunctionGrow::MakeNewClass() { return NewObject<UCardFun
 bool UCardFunctionGrow::Execute(class UCardFunctionComponent* CardFuncComp) {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Grow_CardFunc.DT_Grow_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionGrowImplementTRB* CurFindData = CurData->FindRow<FCardFunctionGrowImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardFuncGrow")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -122,10 +124,33 @@ bool UCardFunctionGrow::Update(class UCardFunctionComponent* CardFuncComp, const
 		}
 		else
 		{
+
 			//开始播放生长动画
-			CardFuncComp->GetCardActor()->SetPlayAnimationOnce(
+			/*CardFuncComp->GetCardActor()->SetAnimation(
 				UGameSystemFunction::LoadRes(this->CardDataTRB.GrowAnim),
 				UGameSystemFunction::LoadRes(this->CardDataTRB.GrowFinishAnim)
+			);*/
+
+			//当前动画轨道
+			UTrackEntry* CurTrack = CardFuncComp->GetCardActor()->AddAnimation(
+				0,
+				SpineAnimationState_SpawnCard_Grow,
+				false,
+				0.f
+			);
+
+			float GrowTime = 1.f;
+			if (IsValid(CurTrack))
+			{
+				GrowTime = CurTrack->GetTrackTime();
+			}
+
+			//轨道融合【生长完毕】
+			CardFuncComp->GetCardActor()->AddAnimation(
+				0,
+				SpineAnimationState_SpawnCard_GrowDef,
+				true,
+				GrowTime
 			);
 
 			//播放BGM
@@ -161,13 +186,13 @@ bool UCardFunctionBombBase::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Bomb_CardFunc.DT_Bomb_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionBombImplementTRB* CurFindData = CurData->FindRow<FCardFunctionBombImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardBomb")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -639,8 +664,14 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 {
 	//播放爆炸动画
-	CardFuncComp->GetCardActor()->SetPlayAnimation(
+	/*CardFuncComp->GetCardActor()->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(CardDataTRB.BombAnimPath)
+	);*/
+
+	CardFuncComp->GetCardActor()->SetAnimation(
+		0,
+		SpineAnimationState_UniformCard_Bomb,
+		true
 	);
 
 	//actor对象加载
@@ -843,13 +874,13 @@ bool UCardFunctionActive::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Active_CardFunc.DT_Active_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionActiveTRB* CurFindData = CurData->FindRow<FCardFunctionActiveTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardActive")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -893,7 +924,7 @@ bool UCardFunctionActive::Update(class UCardFunctionComponent* CardFuncComp, con
 	}
 
 	//动画
-	UPaperFlipbook* Anim = UGameSystemFunction::LoadRes(this->CardDataTRB.ActiveAnimPath);
+	/*UPaperFlipbook* Anim = UGameSystemFunction::LoadRes(this->CardDataTRB.ActiveAnimPath);
 	if (!Anim)
 	{
 		Anim = this->CardDataTRB.ActiveAnimPath.LoadSynchronous();
@@ -902,7 +933,13 @@ bool UCardFunctionActive::Update(class UCardFunctionComponent* CardFuncComp, con
 	if (Anim)
 	{
 		CardFuncComp->GetCardActor()->SetPlayAnimation(Anim);
-	}
+	}*/
+
+	CardFuncComp->GetCardActor()->SetAnimation(
+		0,
+		SpineAnimationState_ActiveCard_Active,
+		true
+	);
 
 	return false;
 }
@@ -1058,13 +1095,13 @@ bool UCardFunctionProjectileATK::Execute(class UCardFunctionComponent* CardFuncC
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_ProjectileATK_CardFunc.DT_ProjectileATK_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionProjectileATKImplementTRB* CurFindData = CurData->FindRow<FCardFunctionProjectileATKImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardProjectileATK")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -1216,13 +1253,13 @@ bool UCardFunctionTrigger::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Trigger_CardFunc.DT_Trigger_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionTriggerImplementTRB* CurFindData = CurData->FindRow<FCardFunctionTriggerImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardTrigger")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -1346,13 +1383,13 @@ bool UCardFunctionCatBox::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_CatBox_CardFunc.DT_CatBox_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionCatBoxImplementTRB* CurFindData = CurData->FindRow<FCardFunctionCatBoxImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardCatBox")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -1416,15 +1453,28 @@ bool UCardFunctionCatBox::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 
 	if (CurHP > HP * 0.6)
 	{
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.State1));
+		//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.State1));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_CatBoxCard_FullReady,
+			true
+		);
 	}
 	else if (CurHP > HP * 0.3)
 	{
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.State2));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_CatBoxCard_DamageReady,
+			true
+		);
 	}
 	else
 	{
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.State3));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_CatBoxCard_LowReady,
+			true
+		);
 	}
 
 	this->JudgeState(CardFuncComp);
@@ -1452,15 +1502,30 @@ bool UCardFunctionCatBox::JudgeState(class UCardFunctionComponent* CardFuncComp)
 
 				if (CurHP > HP * 0.6)
 				{
-					CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK1));
+					CardFuncComp->GetCardActor()->SetAnimation(
+						0,
+						SpineAnimationState_CatBoxCard_FullAttack,
+						true
+					);
+					//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK1));
 				}
 				else if (CurHP > HP * 0.3)
 				{
-					CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK2));
+					CardFuncComp->GetCardActor()->SetAnimation(
+						0,
+						SpineAnimationState_CatBoxCard_DamageAttack,
+						true
+					);
+					//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK2));
 				}
 				else
 				{
-					CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK3));
+					CardFuncComp->GetCardActor()->SetAnimation(
+						0,
+						SpineAnimationState_CatBoxCard_LowAttack,
+						true
+					);
+					//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK3));
 				}
 
 				const FItemCardFunction& CurCardData = CardFuncComp->GetCardActor()->GetFunctionCardData();
@@ -1507,13 +1572,13 @@ bool UCardFunctionBurger::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Burger_CardFunc.DT_Burger_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionBurgerImplementTRB* CurFindData = CurData->FindRow<FCardFunctionBurgerImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("CardCatBox")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -1592,7 +1657,12 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 	if (this->CurState == 1u)
 	{
 		//设置动画播放
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateEat));
+		//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateEat));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_BurgerCard_Eatting,
+			true
+		);
 		if (this->bHit)
 		{
 			//设置咀嚼次数
@@ -1618,8 +1688,15 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 			//咀嚼结束
 			this->iEattingCount = 0;
 			this->CurState = 4u;
+
+			CardFuncComp->GetCardActor()->SetAnimation(
+				0,
+				SpineAnimationState_BurgerCard_EattingCompelet,
+				true
+			);
+
 			//播放动画
-			CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateFinish));
+			//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateFinish));
 		}
 	}
 	else if (this->CurState == 3u)//吸附状态
@@ -1658,7 +1735,12 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 		}
 
 		//设置攻击状态
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK));
+		//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_BurgerCard_Attack,
+			true
+		);
 		//攻击状态
 		this->CurState = 1u;
 	}
@@ -1678,7 +1760,13 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 			this->CurState = 0u;
 		}
 
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateDef));
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_BurgerCard_Idle,
+			true
+		);
+
+		//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateDef));
 	}
 
 	return true;
@@ -1717,7 +1805,13 @@ void UCardFunctionBurger::EnableRangeATK(class UCardFunctionComponent* CardFuncC
 	if (this->MouseBuffer.Num() > 0.f)
 	{
 		//播放动画
-		CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateCatch));
+		//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateCatch));
+
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_BurgerCard_Catch,
+			true
+		);
 		//切换吸附状态
 		this->CurState = 3u;
 	}
@@ -1746,7 +1840,12 @@ void UCardFunctionBurger::DisEnableRangeATK(class UCardFunctionComponent* CardFu
 			this->MouseBuffer.Emplace(CurMouse);
 
 			//播放动画
-			CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK));
+			//CardFuncComp->GetCardActor()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->CardDataTRB.StateATK));
+			CardFuncComp->GetCardActor()->SetAnimation(
+				0,
+				SpineAnimationState_BurgerCard_Attack,
+				true
+			);
 			//切换状态
 			this->CurState = 1u;
 		}
@@ -1825,13 +1924,13 @@ bool UCardFunctionFlourbag::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Flourbag_CardFunc.DT_Flourbag_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionFlourbagImplementTRB* CurFindData = CurData->FindRow<FCardFunctionFlourbagImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("Flourbag")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -1896,9 +1995,16 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 			if (IsValid(this->Gen(CardFuncComp, true)))
 			{
 				this->bCheckPlay = true;
-				CardFuncComp->GetCardActor()->SetPlayAnimation(
+				/*CardFuncComp->GetCardActor()->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->CardDataTRB.StateLeft)
+				);*/
+
+				CardFuncComp->GetCardActor()->SetAnimation(
+					0,
+					SpineAnimationState_FlourbagCard_Left,
+					true
 				);
+
 				//关闭碰撞
 				CardFuncComp->GetCardActor()->SetCollisionEnable(false);
 				//初始化位置
@@ -1912,9 +2018,16 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 			if (IsValid(this->Gen(CardFuncComp, false)))
 			{
 				this->bCheckPlay = true;
-				CardFuncComp->GetCardActor()->SetPlayAnimation(
+				/*CardFuncComp->GetCardActor()->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->CardDataTRB.StateRight)
+				);*/
+
+				CardFuncComp->GetCardActor()->SetAnimation(
+					0,
+					SpineAnimationState_FlourbagCard_Right,
+					true
 				);
+
 				//关闭碰撞
 				CardFuncComp->GetCardActor()->SetCollisionEnable(false);
 				//初始化位置
@@ -1941,8 +2054,14 @@ bool UCardFunctionFlourbag::OnAnimPlayEnd(class UCardFunctionComponent* CardFunc
 	{
 		this->bEnd = false;
 
-		CardFuncComp->GetCardActor()->SetPlayAnimation(
+		/*CardFuncComp->GetCardActor()->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->CardDataTRB.State1)
+		);*/
+
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_FlourbagCard_Idle,
+			true
 		);
 
 		FLine Cur = CardFuncComp->GetCardActor()->GetLine();
@@ -2061,7 +2180,7 @@ void UCardFunctionFlourbag::Init(UCardFunctionComponent* CardFuncComp)
 			CurObj->bEnd = true;
 			CurObj->bCheckPlay = false;
 		}
-		);
+	);
 }
 
 UCardFunctionBase* UCardFunctionHiddFogBlock::MakeNewClass()
@@ -2139,13 +2258,13 @@ bool UCardFunctionElectric::Execute(class UCardFunctionComponent* CardFuncComp)
 {
 	UDataTable* CurData = LoadObject<UDataTable>(0,
 		TEXT("DataTable'/Game/Resource/BP/Data/CardData/CardFunction/DT_Electric_CardFunc.DT_Electric_CardFunc'")
-		);
+	);
 	if (CurData)
 	{
 		FCardFunctionElectricImplementTRB* CurFindData = CurData->FindRow<FCardFunctionElectricImplementTRB>(
 			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
 			TEXT("Electric")
-			);
+		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
@@ -2247,9 +2366,16 @@ bool UCardFunctionElectric::OnAnimPlayEnd(class UCardFunctionComponent* CardFunc
 	if (this->bATK)
 	{
 		//切换动画
-		CardFuncComp->GetCardActor()->SetPlayAnimation(
+		/*CardFuncComp->GetCardActor()->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->CardDataTRB.State1)
+		);*/
+
+		CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			SpineAnimationState_ElectricBreadCard_Idle,
+			true
 		);
+
 		this->bATK = false;
 		this->Target = nullptr;
 	}
@@ -2338,8 +2464,14 @@ void UCardFunctionElectric::SetATK()
 {
 	if (IsValid(this->CurActor))
 	{
-		this->CurActor->SetPlayAnimation(
+	/*	this->CurActor->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->CardDataTRB.State2)
+		);*/
+
+		this->CurActor->SetAnimation(
+			0,
+			SpineAnimationState_ElectricBreadCard_Attack,
+			true
 		);
 
 		this->bATK = true;
@@ -2389,7 +2521,7 @@ void UCardFunctionElectric::Create(UCardFunctionComponent* CardFuncComp, FVector
 	{
 		AActor* CurActorAnim = CardFuncComp->GetCardActor()->GetWorld()->SpawnActor<AActor>(
 			UGameSystemFunction::LoadRes(this->CardDataTRB.ATKAnim)
-			);
+		);
 		//设置坐标
 		CurActorAnim->SetActorLocation(Location);
 	}
