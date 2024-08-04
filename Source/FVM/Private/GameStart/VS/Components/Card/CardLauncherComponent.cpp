@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GameStart/VS/Components/Card/CardLauncherComponent.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameSystem/FVMGameInstance.h"
 #include "Math/UnrealMathUtility.h"
@@ -30,7 +31,7 @@ void UCardLauncherComponent::BeginPlay()
 
 	if (!this->M_OwnerActor)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[%s]获取ASpineActor失败!"), __FUNCTION__);
+		UE_LOG(LogTemp, Error, TEXT("[%s]获取ASpineActor失败!"), *FString(__FUNCTION__));
 		this->SetComponentTickEnabled(false);
 		return;
 	}
@@ -76,7 +77,7 @@ void UCardLauncherComponent::SetAttackModEnabled(bool _value)
 	this->M_BeginAttackMod = _value;
 }
 
-void UCardLauncherComponent::OnAnimationPlayEnd(UTrackEntry* Track)
+void UCardLauncherComponent::OnAnimationPlayEnd()
 {
 	//攻击模式状态
 	if (this->M_Condition.InAttack)
@@ -88,6 +89,14 @@ void UCardLauncherComponent::OnAnimationPlayEnd(UTrackEntry* Track)
 		//播放默认模式
 		this->PlayIdleAnimation();
 	}
+}
+
+void UCardLauncherComponent::OnAnimationPlayEnd(UTrackEntry* Track)
+{
+	
+	UE_LOG(LogTemp,Error,TEXT("AAA"));
+
+	this->OnAnimationPlayEnd();
 }
 
 //发射个数，攻击速度，首次攻击延迟，每次攻击延迟

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -113,7 +113,9 @@ public:
 	void SetAttackModEnabled(bool _value);
 
 	//当动画播放完毕时触发
-	virtual	void OnAnimationPlayEnd(UTrackEntry* Track);
+	UFUNCTION()
+	void OnAnimationPlayEnd(class UTrackEntry* Track);
+	virtual	void OnAnimationPlayEnd();
 public:
 	//设置发射的属性
 	UFUNCTION(BlueprintCallable)

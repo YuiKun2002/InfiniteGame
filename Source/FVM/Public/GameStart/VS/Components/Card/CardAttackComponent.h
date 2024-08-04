@@ -8,10 +8,6 @@
 #include "GameStart/VS/MapBaseType.h"
 #include "CardAttackComponent.generated.h"
 
-/**
- * 卡片攻击组件【一般直线攻击卡片】小笼包，三线，双向等这种类型的基础卡片
- */
-
 class AAttackCardActor;
 class AMapMouseMesheManager;
 class UMesheControllComponent;
@@ -66,6 +62,9 @@ private:
 		int32 ConstCount = 0;
 };
 
+/**
+ * 卡片攻击组件【一般直线攻击卡片】小笼包，三线，双向等这种类型的基础卡片
+ */
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UCardAttackComponent : public UCardLauncherComponent
 {
