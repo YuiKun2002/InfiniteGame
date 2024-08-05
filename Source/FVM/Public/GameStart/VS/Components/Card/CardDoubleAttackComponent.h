@@ -29,33 +29,33 @@ public:
 public:
 	//添加随机发射物【新增攻击动作】
 	UFUNCTION(BlueprintCallable)
-		void AddLaunchRadomItemSecond(
-			int32 RandomValue,
-			TSoftClassPtr<AFlyItemActor> Res,
-			TSoftObjectPtr<UPaperFlipbook> Anim
-		);
+	void AddLaunchRadomItemSecond(
+		int32 RandomValue,
+		TSoftClassPtr<AFlyItemActor> Res,
+		TSoftClassPtr<class UAssetCategoryName> AnimName
+	);
 private:
 	UPROPERTY()
-		bool bSFirst = false;
+	bool bSFirst = false;
 	UPROPERTY()
-		bool bSInitItemSort = false;
+	bool bSInitItemSort = false;
 	//随机内容集合
 	UPROPERTY()
-		TArray<FCardOtherItem> SOtherItems;
+	TArray<FCardOtherItem> SOtherItems;
 	//对象池
 	UPROPERTY()
-		TArray<UObjectPoolManager*> SPool;
+	TArray<UObjectPoolManager*> SPool;
 	//当前已经初始化完毕的子弹对象【全部的攻击动作】
 	UPROPERTY()
-		TMap<int32, FCardOtherItemInitFinish> CurSFinishItems;
+	TMap<int32, FCardOtherItemInitFinish> CurSFinishItems;
 	//当前生成的对象【当前使用的攻击动作】
 	UPROPERTY()
-		FCardOtherItem STargetCardOtherItem;
+	FCardOtherItem STargetCardOtherItem;
 private:
 	UPROPERTY()
-		class UMouseManagerComponent* MouseComp = nullptr;
+	class UMouseManagerComponent* MouseComp = nullptr;
 	UPROPERTY()
-		class UMouseLineManager* LineComp = nullptr;
+	class UMouseLineManager* LineComp = nullptr;
 	UPROPERTY()
-		class AMouseActor* CurSky = nullptr;
+	class AMouseActor* CurSky = nullptr;
 };

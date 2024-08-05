@@ -98,6 +98,9 @@ void UCardLauncherComponent::SetTrackEntry(class UTrackEntry* Track)
 	{
 		this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
 	}
+	else {
+		return;
+	}
 
 	this->AnimTrackEntry = nullptr;
 	this->AnimTrackEntry = Track;

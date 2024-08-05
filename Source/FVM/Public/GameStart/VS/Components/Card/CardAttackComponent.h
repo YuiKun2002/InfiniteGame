@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 #pragma once
 
@@ -22,20 +22,20 @@ public:
 		int32 PoolIndex,
 		int32 RValue,
 		TSoftClassPtr<AFlyItemActor> Res,
-		TSoftObjectPtr<UPaperFlipbook> Anim
+		FString AnimName
 	);
 
 	int32 GetValue() const;
 	int32 GetIndex() const;
 	UClass* GetRes() const;
-	UPaperFlipbook* GetAnim() const;
+	FString GetAnim() const;
 private:
 	//子弹类型
 	UPROPERTY()
 	UClass* CurRes = nullptr;
 	//攻击动画
 	UPROPERTY()
-	UPaperFlipbook* ActionAnim = nullptr;
+	FString ActionAnim;
 	//触发值[随机值] 100为100%触发
 	UPROPERTY()
 	int32 CurValue = 100;
@@ -88,18 +88,16 @@ public:
 
 	//添加随机发射物【新增攻击动作】
 	UFUNCTION(BlueprintCallable)
-	void AddLaunchRadomItem(
+	bool AddLaunchRadomItem(
 		int32 RandomValue,
 		TSoftClassPtr<AFlyItemActor> Res,
-		TSoftObjectPtr<UPaperFlipbook> Anim
+		TSoftClassPtr<class UAssetCategoryName> AnimName
 	);
 
 	//当动画播放完毕时触发
 	UFUNCTION()
 	void OnAnimationComplete(class UTrackEntry* Track);
 
-	UCardAttackComponent();
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 protected:
 	//攻击卡
@@ -127,6 +125,9 @@ private:
 	//当前生成的对象【当前使用的攻击动作】
 	UPROPERTY()
 	FCardOtherItem TargetCardOtherItem;
+	//当前发呆动画
+	UPROPERTY()
+	FString TargetIdleAnimationName;
 protected:
 	//初始化发射器
 	void InitLaunch(

@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameStart/VS/Components/Card/CardAttackComponent.h"
@@ -17,6 +17,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetSystemLibrary.h>
 
+#include "GameSystem/GameDataSubsystem.h"
 #include "SpineSkeletonAnimationComponent.h"
 
 void UCardAttackComponent::BeginPlay()
@@ -57,17 +58,37 @@ void UCardAttackComponent::LoadResource()
 		this->AttackCardActor->CardActor_BulletClassObj,
 		1));
 
-	//添加资源[默认子弹，默认动画] 添加默认攻击动作
-	this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
+	//初始化攻击动画
+	bool bAddResult = this->AddLaunchRadomItem(
+		100,
 		this->AttackCardActor->CardActor_BulletClassObj,
-		this->AttackCardActor->CardActor_AttackAnim));
+		this->AttackCardActor->CardActor_Attack
+	);
+	if (!bAddResult)
+	{
+		//添加资源[默认子弹，默认动画] 添加默认攻击动作
+		this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
+			this->AttackCardActor->CardActor_BulletClassObj,
+			SpineCardAnimationState_Attack));
+	}
 
-	//播放动画
-	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
+	//初始化发呆动画
+	UClass* IdleClass = UGameSystemFunction::LoadRes(this->AttackCardActor->CardActor_Idle);
+	TSubclassOf<UAssetCategoryName> IdleNameResource(IdleClass);
+	if (IsValid(IdleNameResource.GetDefaultObject()))
+	{
+		this->TargetIdleAnimationName = IdleNameResource.GetDefaultObject()->GetCategoryName().ToString();
+	}
+	else {
+		this->TargetIdleAnimationName = SpineCardAnimationState_Idle;
+	}
+
+	//播放发呆动画
+	this->AttackCardActor->SetAnimation(0, this->TargetIdleAnimationName, true);
 	this->SetTrackEntry(nullptr);
 }
 
-void UCardAttackComponent::AddLaunchRadomItem(int32 RandomValue, TSoftClassPtr<AFlyItemActor> Res, TSoftObjectPtr<UPaperFlipbook> Anim)
+bool UCardAttackComponent::AddLaunchRadomItem(int32 RandomValue, TSoftClassPtr<AFlyItemActor> Res, TSoftClassPtr<UAssetCategoryName> AnimName)
 {
 	if (RandomValue <= 0)
 	{
@@ -78,15 +99,27 @@ void UCardAttackComponent::AddLaunchRadomItem(int32 RandomValue, TSoftClassPtr<A
 		RandomValue = 0;
 	}
 
-	//添加新的攻击方式
-	this->Pool.Emplace(UObjectPoolManager::MakePoolManager(this->GetWorld(), Res, 1));
-	this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, RandomValue, Res, Anim));
+	UClass* NameClass = AnimName.LoadSynchronous();
+	TSubclassOf<UAssetCategoryName> NameObjectResource(NameClass);
+	if (IsValid(NameObjectResource.GetDefaultObject()))
+	{
+		//添加新的攻击方式
+		this->Pool.Emplace(UObjectPoolManager::MakePoolManager(this->GetWorld(), Res, 1));
+		this->OtherItems.Emplace(FCardOtherItem(
+			this->Pool.Num() - 1,
+			RandomValue,
+			Res,
+			NameObjectResource.GetDefaultObject()->GetCategoryName().ToString()
+		));
+
+		return true;
+	}
+
+	return false;
 }
 
 void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
-	UE_LOG(LogTemp, Error, TEXT("AAA"));
-
 	this->OnAnimationPlayEnd();
 }
 
@@ -165,11 +198,9 @@ void UCardAttackComponent::PlayAttackAnimation()
 	//初始化数据
 	this->LauncherItem(this->OtherItems, this->CurFinishItems, this->TargetCardOtherItem);
 
-	//this->AttackCardActor->SetPlayAnimation(this->TargetCardOtherItem.GetAnim());
-	//this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
-
 	//播放动画
-	UTrackEntry* Track = this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
+	UTrackEntry* Track = this->AttackCardActor->SetAnimation(0, this->TargetCardOtherItem.GetAnim(), true);
+	//绑定动画事件
 	Track->AnimationComplete.AddDynamic(
 		this, &UCardAttackComponent::OnAnimationComplete);
 	this->SetTrackEntry(Track);
@@ -179,7 +210,7 @@ void UCardAttackComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
+	this->AttackCardActor->SetAnimation(0, this->TargetIdleAnimationName, true);
 	this->SetTrackEntry(nullptr);
 }
 
@@ -198,12 +229,6 @@ void UCardAttackComponent::BeginDestroy()
 
 	this->Pool.Empty();
 }
-
-UCardAttackComponent::UCardAttackComponent()
-{
-
-}
-
 
 void UCardAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -371,10 +396,10 @@ FCardOtherItem::FCardOtherItem(
 	int32 PoolIndex,
 	int32 RValue,
 	TSoftClassPtr<AFlyItemActor> Res,
-	TSoftObjectPtr<UPaperFlipbook> Anim) : CurValue(RValue), CurPoolIndex(PoolIndex)
+	FString AnimName) : CurValue(RValue), CurPoolIndex(PoolIndex)
 {
 	this->CurRes = UGameSystemFunction::LoadRes(Res);
-	this->ActionAnim = UGameSystemFunction::LoadRes(Anim);
+	this->ActionAnim = AnimName;
 }
 
 int32 FCardOtherItem::GetValue() const
@@ -392,7 +417,7 @@ UClass* FCardOtherItem::GetRes() const
 	return this->CurRes;
 }
 
-UPaperFlipbook* FCardOtherItem::GetAnim() const
+FString FCardOtherItem::GetAnim() const
 {
 	return this->ActionAnim;
 }

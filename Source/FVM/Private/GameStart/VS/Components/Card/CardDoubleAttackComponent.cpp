@@ -168,7 +168,7 @@ void UCardDoubleAttackComponent::TickComponent(float DeltaTime, ELevelTick TickT
 void UCardDoubleAttackComponent::AddLaunchRadomItemSecond(
 	int32 RandomValue,
 	TSoftClassPtr<AFlyItemActor> Res,
-	TSoftObjectPtr<UPaperFlipbook> Anim
+	TSoftClassPtr<UAssetCategoryName> AnimName
 )
 {
 	if (RandomValue <= 0)
@@ -180,7 +180,17 @@ void UCardDoubleAttackComponent::AddLaunchRadomItemSecond(
 		RandomValue = 0;
 	}
 
-	//添加新的攻击方式
-	this->SPool.Emplace(UObjectPoolManager::MakePoolManager(this->GetWorld(), Res, 1));
-	this->SOtherItems.Emplace(FCardOtherItem(this->SPool.Num() - 1, RandomValue, Res, Anim));
+	UClass* NameClass = AnimName.LoadSynchronous();
+	TSubclassOf<UAssetCategoryName> NameObjectResource(NameClass);
+	if (IsValid(NameObjectResource.GetDefaultObject()))
+	{
+		//添加新的攻击方式
+		this->SPool.Emplace(UObjectPoolManager::MakePoolManager(this->GetWorld(), Res, 1));
+		this->SOtherItems.Emplace(FCardOtherItem(
+			this->SPool.Num() - 1,
+			RandomValue,
+			Res,
+			NameObjectResource.GetDefaultObject()->GetCategoryName().ToString()
+		));
+	}
 }
