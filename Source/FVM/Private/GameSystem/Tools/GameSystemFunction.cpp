@@ -1486,6 +1486,26 @@ bool UGameSystemFunction::AddTempUserInterInstanceByName(FName Name)
 	return false;
 }
 
+FName UGameSystemFunction::GetAssetCategoryName(TSoftClassPtr<UAssetCategoryName> ObjectType)
+{
+	UClass* NameClass = nullptr;
+	if (!IsValid(ObjectType.Get()))
+	{
+		NameClass = ObjectType.LoadSynchronous();
+	}
+	else {
+		NameClass = ObjectType.Get();
+	}
+
+	TSubclassOf<UAssetCategoryName> NameClassSource(NameClass);
+	if (IsValid(NameClassSource.GetDefaultObject()))
+	{
+		return NameClassSource.GetDefaultObject()->GetCategoryName();
+	}
+
+	return FName();
+}
+
 UGameUserInterfaceInstance* UGameSystemFunction::GetUserInterInstanceByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType)
 {
 	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();

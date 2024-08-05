@@ -88,21 +88,8 @@ void UCardCustomAttakComponent::Spawn()
 	FTransform NewTrans;
 	NewTrans.SetLocation(_trans.GetLocation());
 
-	//AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
-	//	UGameplayStatics::BeginDeferredActorSpawnFromClass(this->GetWorld(), this->M_AFlyItemActor->GetClass(), NewTrans));
-	////新生成的对象设置自定义拥有者(CardActor)
-	//_TargetActor->M_CustomActorOwner = this->M_CardActor;
-	//_TargetActor->SetMouseActorLocation(this->M_CardActor->GetCurrentMouse());
-	//_TargetActor->SetATK(this->M_CardActor->GetCurrentATK());
-	//_TargetActor->SetSecondATK(this->M_CardActor->GetCurrentSecondATK(this->M_CardActor->GetATKCardData().M_SputteringATKRate));
-	//_TargetActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
-	//_TargetActor->SetLine(this->M_CardActor->GetLine().Row);
-	//UGameplayStatics::FinishSpawningActor(_TargetActor, NewTrans);
-
 	//新生成的对象设置自定义拥有者(CardActor)
 	_TargetActor->SetActorTransform(NewTrans);
-	_TargetActor->AddActorLocalOffset(_TargetActor->M_OffsetPosition);
-	_TargetActor->M_CustomActorOwner = this->M_CardActor;
 	_TargetActor->SetMouseActorLocation(this->M_CardActor->GetCurrentMouse());
 	_TargetActor->SetATK(this->M_CardActor->GetCurrentATK());
 	_TargetActor->SetSecondATK(

@@ -87,8 +87,6 @@ void UCardDoubleAttackComponent::Spawn()
 			//新生成的对象设置自定义拥有者(CardActor)
 			_TargetActor->SetLine(this->AttackCardActor->GetLine().Row);
 			_TargetActor->SetActorTransform(NewTrans);
-			_TargetActor->AddActorLocalOffset(_TargetActor->M_OffsetPosition);
-			_TargetActor->M_CustomActorOwner = this->AttackCardActor;
 			_TargetActor->SetMouseActorLocation(this->AttackCardActor->GetCurrentMouse());
 			_TargetActor->SetATK(CurATK);
 			_TargetActor->SetSecondATK(

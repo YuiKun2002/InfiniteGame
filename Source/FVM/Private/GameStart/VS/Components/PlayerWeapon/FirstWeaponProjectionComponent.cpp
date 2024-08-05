@@ -191,8 +191,6 @@ AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyI
 
 	AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(this->Pool->GetObjectActor());
 	L_AFlyItemActor_->SetActorTransform(Trans);
-	L_AFlyItemActor_->AddActorLocalOffset(L_AFlyItemActor_->M_OffsetPosition);
-	L_AFlyItemActor_->M_CustomActorOwner = this->M_Owner;
 	L_AFlyItemActor_->SetMouseActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
 	L_AFlyItemActor_->SetATK(this->M_Owner->GetPlayerFirstWeaponData().M_ATKBase);
 	L_AFlyItemActor_->SetSecondATK(this->M_Owner->GetPlayerFirstWeaponData().M_SputteringATKRate);

@@ -116,7 +116,13 @@ void AGameActorFlipbookBase::SetFlipbookRotation(FRotator _rotation)
 
 void AGameActorFlipbookBase::SetFlipbookPitchRotation(float _angle)
 {
-	this->M_Actor->SetRelativeRotation(FRotator(_angle, this->M_Actor->GetRelativeRotation().Yaw, this->M_Actor->GetRelativeRotation().Roll));
+	this->M_Actor->SetRelativeRotation(
+		FRotator(
+			_angle,
+			this->M_Actor->GetRelativeRotation().Yaw,
+			this->M_Actor->GetRelativeRotation().Roll
+		)
+	);
 }
 
 void AGameActorFlipbookBase::SetGameActorFlipbookRotation(FRotator _rotation)

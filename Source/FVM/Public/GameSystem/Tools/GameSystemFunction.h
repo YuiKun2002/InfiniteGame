@@ -535,6 +535,10 @@ public:
 	//新增临时UI实例,游戏结束释放，不会被保存
 	UFUNCTION(BlueprintCallable)
 	static bool AddTempUserInterInstanceByName(FName Name);
+
+	//获取分类名称类获取名称
+	UFUNCTION(BlueprintPure)
+	static FName GetAssetCategoryName(TSoftClassPtr<class UAssetCategoryName> ObjectType);
 };
 
 //分时加载器
@@ -699,7 +703,6 @@ public:
 		this->M_Delegates.Empty();
 	}
 };
-
 
 
 //券商城加载管理器

@@ -43,27 +43,27 @@ void UFlyItemReboundCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCar
 		case EShootDirection::EDown:
 		{
 			_Comp->SetMoveDirection(EShootDirection::EUp);
-			CurFlyItem->SetFlipbookPitchRotation(90.f);
+			CurFlyItem->SetRotation(90.f);
 			return;
 		}
 		case EShootDirection::ELeft:
 		{
 			_Comp->SetMoveDirection(EShootDirection::ERight);
-			CurFlyItem->SetFlipbookPitchRotation(-180);
-			CurFlyItem->GetMyActor()->SetRelativeLocation(CurFlyItem->GetMyActor()->GetRelativeLocation() * -1.f);
+			CurFlyItem->SetRotation(-180);
+			//CurFlyItem->GetMyActor()->SetRelativeLocation(CurFlyItem->GetMyActor()->GetRelativeLocation() * -1.f);
 			return;
 		}
 		case EShootDirection::ERight:
 		{
 			_Comp->SetMoveDirection(EShootDirection::ELeft);
-			CurFlyItem->SetFlipbookPitchRotation(180);
-			CurFlyItem->GetMyActor()->SetRelativeLocation(CurFlyItem->GetMyActor()->GetRelativeLocation() * -1.f);
+			CurFlyItem->SetRotation(180);
+			//CurFlyItem->GetMyActor()->SetRelativeLocation(CurFlyItem->GetMyActor()->GetRelativeLocation() * -1.f);
 			return;
 		}
 		case EShootDirection::EUp:
 		{
 			_Comp->SetMoveDirection(EShootDirection::EDown);
-			CurFlyItem->SetFlipbookPitchRotation(-90.f);
+			CurFlyItem->SetRotation(-90.f);
 			return;
 		}
 		case EShootDirection::ERotation:
@@ -194,7 +194,6 @@ void UFlyItemAcrossCardFunc::Execute(
 	//设置功能组件数据(防止某些功能重复使用)
 	_FlyActor->SetActor_CardFunction_Component(Cast<UActorComponent>(CardFuncComp));
 	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
-	_FlyActor->AddActorLocalOffset(_FlyActor->M_OffsetPosition);
 	//获取数据
 	CurFlyItem->FlyItemActorSwap(_FlyActor);
 	_FlyActor->Init();
@@ -221,18 +220,18 @@ void UFlyItemAcrossCardFunc::Execute(
 		case EShootDirection::EUp:
 		{
 			//设置旋转
-			_FlyActor->SetFlipbookPitchRotation(0.f);
+			_FlyActor->SetRotation(0.f);
 			_FlyActor->SetActorLocation(CardFuncComp->GetCardActor()->GetActorLocation());
 			CurSComp->SetMoveDirection(EShootDirection::ERight);
 		}
 		break;
 		case EShootDirection::ELeft:
 		{
-			FVector LocalPos = _FlyActor->GetMyActor()->GetRelativeLocation();
-			LocalPos.Y *= -1.f;
+			//FVector LocalPos = _FlyActor->GetMyActor()->GetRelativeLocation();
+			//LocalPos.Y *= -1.f;
 
-			_FlyActor->GetMyActor()->SetRelativeLocation(LocalPos);
-			_FlyActor->GetMyActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
+			//_FlyActor->GetMyActor()->SetRelativeLocation(LocalPos);
+			//_FlyActor->GetMyActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
 
 			CurSComp->SetMoveDirection(EShootDirection::ELeft);
 		}

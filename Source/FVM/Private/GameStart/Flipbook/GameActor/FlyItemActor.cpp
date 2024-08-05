@@ -2,6 +2,8 @@
 
 
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
+#include "SpineSkeletonAnimationComponent.h"
+
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
@@ -38,8 +40,9 @@ AFlyItemActor::AFlyItemActor()
 	this->M_SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AFlyItemActor::OnBoxOverlapBegin);
 	this->M_SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AFlyItemActor::OnBoxOverlapEnd);
 	//绑定播放完成事件
-	this->GetRenderComponent()->OnAnimationComplete.Unbind();
-	this->GetRenderComponent()->OnAnimationComplete.BindUObject(this, &AFlyItemActor::AnimComplete);
+	this->SetTrackEntry(nullptr);
+	//this->GetRenderComponent()->OnAnimationComplete.Unbind();
+	//this->GetRenderComponent()->OnAnimationComplete.BindUObject(this, &AFlyItemActor::AnimComplete);
 }
 
 void AFlyItemActor::InitCollision()
@@ -59,10 +62,8 @@ void AFlyItemActor::BeginPlay()
 
 	this->AddActorLocalOffset(FVector(-4.f, 0.f, 0.f));
 
-	this->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
-
 	//设置渲染层8000
-	this->GetRenderComponent()->SetTranslucency(8000);
+	this->SetRenderLayer(8000);
 
 	this->CurReturnTime = this->ReturnTime;
 }
@@ -116,7 +117,6 @@ void AFlyItemActor::PoolInit(class UObjectPoolManager* PoolManager)
 
 	this->SetActorHiddenInGame(false);
 	this->SetActorTickEnabled(true);
-	this->GetRenderComponent()->CancelAnimationPlayEndDestroy();
 	this->bReturnPool = false;
 	this->SetTargetHitState(false);
 	this->M_CurrentHitMouseActor = nullptr;
@@ -163,7 +163,7 @@ bool AFlyItemActor::ReturnPool()
 	return false;
 }
 
-void AFlyItemActor::AnimComplete()
+void AFlyItemActor::AnimComplete(UTrackEntry* Track)
 {
 	this->ReturnPool();
 }
@@ -173,11 +173,11 @@ void AFlyItemActor::Init()
 	this->SetFloatModeEnable(false);
 
 	//初始化动画资源
-	this->M_FlyItem_Property_AnimRes.M_Begin =
-		UGameSystemFunction::LoadRes(this->M_FlyItem_Property_AnimRes.M_FlyItemAnim_Fly);
+	this->M_FlyItem_Property_AnimRes.FlyItemDefAnimName =
+		UGameSystemFunction::GetAssetCategoryName(this->M_FlyItem_Property_AnimRes.FlyItemDefAnimNameClass).ToString();
 
-	this->M_FlyItem_Property_AnimRes.M_End =
-		UGameSystemFunction::LoadRes(this->M_FlyItem_Property_AnimRes.M_FlyItemAnim_Split);
+	this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName =
+		UGameSystemFunction::GetAssetCategoryName(this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimNameClass).ToString();
 
 	//播放BGM
 	UFVMGameInstance::PlayBGM_S_Static(
@@ -185,11 +185,16 @@ void AFlyItemActor::Init()
 		this->M_FlyItem_Property_AudioBegin.M_AudioRootPathName
 	);
 
-	//播放Split动画
-	if (this->M_FlyItem_Property_AnimRes.M_Begin)
-	{
-		this->GetRenderComponent()->SetFlipbook(this->M_FlyItem_Property_AnimRes.M_Begin);
-	}
+	////播放Split动画
+	//if (this->M_FlyItem_Property_AnimRes.M_Begin)
+	//{
+	//	this->GetRenderComponent()->SetFlipbook(this->M_FlyItem_Property_AnimRes.M_Begin);
+	//}
+
+	//播放飞行动画
+	this->SetTrackEntry(
+		this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemDefAnimName, true)
+	);
 
 	this->M_AActorComponent_CardFunction = nullptr;
 	this->SetTargetHitState(false);
@@ -304,25 +309,48 @@ void AFlyItemActor::SetReturnPoolTime(float Time /*= 0.f*/)
 	this->CurReturnTime = Time;
 }
 
+void AFlyItemActor::SetTrackEntry(class UTrackEntry* Track)
+{
+	if (IsValid(this->AnimTrackEntry))
+	{
+		if (this->AnimTrackEntry == Track)
+		{
+			return;
+		}
+		else {
+			this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
+		}
+	}
+	else {
+		return;
+	}
+
+	this->AnimTrackEntry = nullptr;
+	this->AnimTrackEntry = Track;
+}
+
 void AFlyItemActor::PlayAnim_Fly()
 {
-	//播放Fly动画
-	if (this->M_FlyItem_Property_AnimRes.M_Begin)
-	{
-		this->GetRenderComponent()->SetPlayAnimation(this->M_FlyItem_Property_AnimRes.M_Begin);
-	}
+	//播放飞行动画
+	this->SetTrackEntry(
+		this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemDefAnimName, true)
+	);
 }
 
 void AFlyItemActor::PlayAnim_Split()
 {
-	if (!this->M_FlyItem_Property_AnimRes.M_End)
+	if (this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName.IsEmpty())
 	{
 		this->ReturnPool();
 		return;
 	}
 
 	//播放Split动画
-	this->GetRenderComponent()->SetPlayAnimation(this->M_FlyItem_Property_AnimRes.M_End);
+	UTrackEntry* Trac = this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName, false);
+	//函数绑定
+	Trac->AnimationComplete.AddDynamic(this, &AFlyItemActor::AnimComplete);
+	//设置轨道
+	this->SetTrackEntry(Trac);
 }
 
 void AFlyItemActor::HitEnd(UPrimitiveComponent* _UBoxComp)
@@ -363,16 +391,15 @@ void AFlyItemActor::Hit()
 
 		//关闭碰撞
 		M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 		//播放Split动画
 		this->PlayAnim_Split();
+
 		//如果是静态对象则直接返回
 		if (this->M_FlyCondition.M_bStaticFlyItem)
 		{
 			this->ReturnPool();
 			return;
-		}
-		else {
-			this->SetAnimationPlayEndDestroy();
 		}
 	}
 }
@@ -412,7 +439,6 @@ void AFlyItemActor::CreateStaticItem(TSoftClassPtr<AFlyItemActor> CurFlyItemActo
 
 	_TargetActor->M_FlyCondition.M_bStaticFlyItem = true;
 	_TargetActor->SetActorTransform(Trans);
-	_TargetActor->AddActorLocalOffset(_TargetActor->M_OffsetPosition);
 	_TargetActor->SetATK(this->GetSecondATK());
 	_TargetActor->SetSecondATK(this->GetSecondATK());
 	_TargetActor->Init();
@@ -501,15 +527,11 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	//坐标
 	FTransform Trans = this->GetTransform();
 	Trans.SetLocation(Trans.GetLocation() + Offset);
-
 	_TargetActor->SetActorTransform(Trans);
-	_TargetActor->AddActorLocalOffset(_TargetActor->M_OffsetPosition);
-	_TargetActor->M_CustomActorOwner = this->M_CustomActorOwner;
 	_TargetActor->SetMouseActorLocation(this->M_MouseActorLocation);
 	_TargetActor->SetATK(this->M_FlyData.ATK);
 	_TargetActor->SetSecondATK(this->M_FlyData._SecondATK);
 	_TargetActor->SetLine(this->M_FlyData.M_Line + _LineOffset);
-	_TargetActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
 	_TargetActor->SetFlyConstraintLine(_IsbConstaintLine);
 	_TargetActor->Init();
 	_TargetActor->OnInit();
@@ -524,11 +546,10 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	//通过node节点更具Direction设置Pitch旋转
 	switch (_Node.M_EShootDirection)
 	{
-	case EShootDirection::EUp: {_TargetActor->SetFlipbookPitchRotation(90.f); } break;
-	case EShootDirection::EDown: {_TargetActor->SetFlipbookPitchRotation(-90.f); }break;
+	case EShootDirection::EUp: { _TargetActor->SetRotation(90.f); } break;
+	case EShootDirection::EDown: { _TargetActor->SetRotation(-90.f); }break;
 	case EShootDirection::ELeft: {
-		_TargetActor->SetFlipbookPitchRotation(180.f);
-		_TargetActor->GetMyActor()->SetRelativeLocation(_TargetActor->GetMyActor()->GetRelativeLocation() * -1.f);
+		_TargetActor->SetRotation(180.f);
 	}break;
 	default:; break;
 	}
@@ -584,12 +605,9 @@ void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
 
 	//新生成的对象设置自定义拥有者(CardActor)
 	_TargetActor->SetActorTransform(Trans);
-	_TargetActor->AddActorLocalOffset(_TargetActor->M_OffsetPosition);
-	_TargetActor->M_CustomActorOwner = this->M_CustomActorOwner;
 	_TargetActor->SetMouseActorLocation(this->M_MouseActorLocation);
 	_TargetActor->SetATK(this->M_FlyData.ATK);
 	_TargetActor->SetSecondATK(this->M_FlyData._SecondATK);
-	_TargetActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
 	_TargetActor->SetFlyConstraintLine(false);
 	_TargetActor->AddActorLocalOffset(Offset);
 	_TargetActor->SetActorRelativeRotation(FRotator(0.f, 0.f, _RotationAngle));
@@ -617,12 +635,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
 			break;
 		}
 	}
-
-}
-
-void AFlyItemActor::SetFlipbook(TSubclassOf<UPaperFlipbook>& _Res)
-{
-	this->GetRenderComponent()->SetFlipbook(_Res.GetDefaultObject());
 }
 
 AFlyItemActor* AFlyItemActor::FlyItemActorSwap(AFlyItemActor* _FlyActor)
@@ -630,7 +642,6 @@ AFlyItemActor* AFlyItemActor::FlyItemActorSwap(AFlyItemActor* _FlyActor)
 	if (IsValid(_FlyActor))
 	{
 		//新生成的对象设置自定义拥有者(CardActor)
-		_FlyActor->M_CustomActorOwner = this->M_CustomActorOwner;
 		_FlyActor->M_MouseActorLocation = this->M_MouseActorLocation;
 		_FlyActor->M_FlyData.ATK = this->M_FlyData.ATK;
 		_FlyActor->M_FlyData.CurATK = this->M_FlyData.CurATK;
@@ -821,6 +832,11 @@ void AFlyItemActor::SetMouseActorLocation(AActor* _MouseActor)
 void AFlyItemActor::AddAttackType(ELineType _type)
 {
 	this->M_AttackType.Emplace(_type);
+}
+
+class UTrackEntry* AFlyItemActor::GetTrackEntry()
+{
+	return this->AnimTrackEntry;
 }
 
 bool AFlyItemActor::GetFirstHitResult() const
