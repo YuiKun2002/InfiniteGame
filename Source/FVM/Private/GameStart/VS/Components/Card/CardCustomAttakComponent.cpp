@@ -40,8 +40,8 @@ void UCardCustomAttakComponent::LoadResource()
 {
 	Super::LoadResource();
 
-	this->M_Idle = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_DefAnim);
-	this->M_Attack = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_AttackAnim);
+	//this->M_Idle = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_DefAnim);
+	//this->M_Attack = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_AttackAnim);
 
 	this->Pool = UObjectPoolManager::MakePoolManager(this->GetWorld(),
 		this->M_CardActor->CardActor_BulletClassObj, 1
@@ -84,9 +84,9 @@ void UCardCustomAttakComponent::Spawn()
 	}
 
 	//获取对象的变换位置
-	const FTransform& _trans = this->M_CardActor->GetActorTransform();
+	//const FTransform& _trans = this->M_CardActor->GetActorTransform();
 	FTransform NewTrans;
-	NewTrans.SetLocation(_trans.GetLocation());
+	NewTrans.SetLocation(this->M_CardActor->GetBulletLauncherLocation());
 
 	//新生成的对象设置自定义拥有者(CardActor)
 	_TargetActor->SetActorTransform(NewTrans);

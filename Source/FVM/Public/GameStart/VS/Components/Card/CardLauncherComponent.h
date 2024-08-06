@@ -57,6 +57,21 @@ public:
 };
 
 
+////发射器组件Actor
+//UCLASS()
+//class FVM_API ALauncherComponentActor : public AActor {
+//	GENERATED_BODY()
+//private:
+//	//条件
+//	UPROPERTY()
+//	FLauncherComponentCondition  LauncherComponentCondition;
+//	//发射器条件
+//	UPROPERTY()
+//	FLauncherCondition LauncherCondition;
+//};
+
+
+//发射器组件
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UCardLauncherComponent : public UActorComponent
 {

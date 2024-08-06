@@ -339,7 +339,8 @@ void AFlyItemActor::PlayAnim_Fly()
 
 void AFlyItemActor::PlayAnim_Split()
 {
-	if (this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName.IsEmpty())
+	bool bResult = this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName.Equals(TEXT("None"));
+	if (bResult)
 	{
 		this->ReturnPool();
 		return;
@@ -347,10 +348,16 @@ void AFlyItemActor::PlayAnim_Split()
 
 	//播放Split动画
 	UTrackEntry* Trac = this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName, false);
-	//函数绑定
-	Trac->AnimationComplete.AddDynamic(this, &AFlyItemActor::AnimComplete);
-	//设置轨道
-	this->SetTrackEntry(Trac);
+	if (Trac->GetTrackEntry())
+	{
+		//函数绑定
+		Trac->AnimationComplete.AddDynamic(this, &AFlyItemActor::AnimComplete);
+		//设置轨道
+		this->SetTrackEntry(Trac);
+	}
+	else {
+		this->ReturnPool();
+	}
 }
 
 void AFlyItemActor::HitEnd(UPrimitiveComponent* _UBoxComp)

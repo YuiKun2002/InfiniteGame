@@ -3,6 +3,12 @@
 
 #include "GameStart/Flipbook/GameActor/CardActor/ATK/ATKCardActorBase.h"
 
+AATKCardActorBase::AATKCardActorBase()
+{
+	this->BulletLauncherPointComp = this->CreateDefaultSubobject<USceneComponent>(TEXT("BulletLaunchPointComp"));
+	this->BulletLauncherPointComp->SetupAttachment(this->PointComp, FName(TEXT("BulletLaunchPointSocket")));
+}
+
 void AATKCardActorBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -46,6 +52,11 @@ float AATKCardActorBase::GetCurrentFristAttackDelay()
 float AATKCardActorBase::GetCurrentSecondAttackDelay()
 {
 	return this->GetSecondAttackDelay();
+}
+
+FVector AATKCardActorBase::GetBulletLauncherLocation()
+{
+	return this->GetActorLocation() + this->BulletLauncherPointComp->GetRelativeLocation();
 }
 
 FATKCardActorLineTrace& AATKCardActorBase::GetLineTracePosition()

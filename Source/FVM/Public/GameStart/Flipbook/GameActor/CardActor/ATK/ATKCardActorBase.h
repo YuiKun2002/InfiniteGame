@@ -17,13 +17,13 @@ struct FATKCardActorLineTrace {
 public:
 	//射线开始偏移(起点)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FVector TraceBeginOffset = FVector(-1.f, 35.f, -30.f);
+	FVector TraceBeginOffset = FVector(-1.f, 35.f, -30.f);
 	//射线设置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FLineTraceSetting> SourceLineTraceSettings;
+	TArray<FLineTraceSetting> SourceLineTraceSettings;
 	//射线设置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FLineTraceSetting> LineTraceSettings;
+	TArray<FLineTraceSetting> LineTraceSettings;
 };
 
 UCLASS()
@@ -31,6 +31,12 @@ class FVM_API AATKCardActorBase : public ACardActor
 {
 	GENERATED_BODY()
 public:
+	//子弹发射位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* BulletLauncherPointComp = nullptr;
+public:
+
+	AATKCardActorBase();
 
 	virtual void BeginPlay() override;
 
@@ -38,37 +44,39 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击力")
-		float GetSourceATK();
+	float GetSourceATK();
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击力")
-		float GetCurrentATK();
+	float GetCurrentATK();
 	UFUNCTION(BlueprintCallable, Category = "攻击|二段攻击力")
-		float GetCurrentSecondATK(const float& TAKRate);
+	float GetCurrentSecondATK(const float& TAKRate);
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击速度")
-		float GetCurrentAttackSpeed();
+	float GetCurrentAttackSpeed();
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击次数")
-		int32 GetCurrentAttackCount();
+	int32 GetCurrentAttackCount();
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击延迟1")
-		float GetCurrentFristAttackDelay();
+	float GetCurrentFristAttackDelay();
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击延迟2")
-		float GetCurrentSecondAttackDelay();
-
+	float GetCurrentSecondAttackDelay();
+	//获取子弹发射位置
+	UFUNCTION(BlueprintPure)
+	FVector GetBulletLauncherLocation();
 	//获取线路检测结构
 	UFUNCTION(BlueprintCallable, Category = "线路|获取检测")
-		FATKCardActorLineTrace& GetLineTracePosition();
+	FATKCardActorLineTrace& GetLineTracePosition();
 	//获取射线偏移
 	UFUNCTION()
-		const TArray<FLineTraceSetting>& GetLineTraceSetting();
+	const TArray<FLineTraceSetting>& GetLineTraceSetting();
 	//获取原射线偏移【未计算】
 	UFUNCTION()
-		const TArray<FLineTraceSetting>& GetSourceLineTraceSetting() const;
+	const TArray<FLineTraceSetting>& GetSourceLineTraceSetting() const;
 public:
 	UFUNCTION(BlueprintCallable, Category = "攻击|攻击力")
-		void SetCurrentATK(const float& CurNewATK);
+	void SetCurrentATK(const float& CurNewATK);
 public:
 	UFUNCTION(BlueprintCallable, Category = "线路|初始化检测")
-		void InitLineTracePosition(const TArray<FLineTraceSetting>& InputLineTraceSetting);
+	void InitLineTracePosition(const TArray<FLineTraceSetting>& InputLineTraceSetting);
 	UFUNCTION(BlueprintCallable, Category = "线路|更新检测")
-		void CalculateLineTracePosition(FATKCardActorLineTrace& InputATKCardActorLineTrace);
+	void CalculateLineTracePosition(FATKCardActorLineTrace& InputATKCardActorLineTrace);
 protected:
 	//攻击力
 	inline void SetATK(const float& ATKBase);
@@ -95,24 +103,24 @@ protected:
 private:
 	//卡片攻击力
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float ATK = 0.f;
+	float ATK = 0.f;
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float CurATK = 0.f;
+	float CurATK = 0.f;
 	//卡片攻击速度
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float AttackSpeed = 0.f;
+	float AttackSpeed = 0.f;
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float CurAttackSpeed = 0.f;
+	float CurAttackSpeed = 0.f;
 	//投射次数
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		int32 AttackCount = 0;
+	int32 AttackCount = 0;
 	//首次投射时间
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float FirstAttackTime = 0.f;
+	float FirstAttackTime = 0.f;
 	//每次投射间隔
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"), Category = "攻击卡片数据")
-		float AttackEveryTime = 0.f;
+	float AttackEveryTime = 0.f;
 	//线路检测
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "攻击卡片线路检测数据")
-		FATKCardActorLineTrace ATKCardActorLineTrace;
+	FATKCardActorLineTrace ATKCardActorLineTrace;
 };
