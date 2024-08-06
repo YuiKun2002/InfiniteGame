@@ -84,9 +84,19 @@ void UCardCustomAttakComponent::Spawn()
 	}
 
 	//获取对象的变换位置
-	//const FTransform& _trans = this->M_CardActor->GetActorTransform();
+	const FTransform& _trans = this->M_CardActor->GetActorTransform();
 	FTransform NewTrans;
-	NewTrans.SetLocation(this->M_CardActor->GetBulletLauncherLocation());
+	NewTrans.SetLocation(_trans.GetLocation());
+
+	/*UE_LOG(LogTemp, Error, TEXT("[%.2f %.2f %.2f],[%.2f %.2f %.2f]")
+		, this->M_CardActor->GetActorLocation().X
+		, this->M_CardActor->GetActorLocation().Y
+		, this->M_CardActor->GetActorLocation().Z
+
+		, this->M_CardActor->GetBulletLauncherLocation().X
+		, this->M_CardActor->GetBulletLauncherLocation().Y
+		, this->M_CardActor->GetBulletLauncherLocation().Z
+	);*/
 
 	//新生成的对象设置自定义拥有者(CardActor)
 	_TargetActor->SetActorTransform(NewTrans);

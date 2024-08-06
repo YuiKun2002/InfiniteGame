@@ -155,10 +155,18 @@ void UCardAttackComponent::Spawn()
 		}
 
 		//获取对象的变换位置
-		const FTransform& _trans = this->AttackCardActor->GetActorTransform();
 		FTransform NewTrans;
-		NewTrans.SetLocation(_trans.GetLocation());
+		NewTrans.SetLocation(this->AttackCardActor->GetBulletLauncherLocation());
 
+		UE_LOG(LogTemp, Error, TEXT("[%.2f %.2f %.2f],[%.2f %.2f %.2f]")
+			, this->AttackCardActor->GetActorLocation().X
+			, this->AttackCardActor->GetActorLocation().Y
+			, this->AttackCardActor->GetActorLocation().Z
+
+			, this->AttackCardActor->GetBulletLauncherLocation().X
+			, this->AttackCardActor->GetBulletLauncherLocation().Y
+			, this->AttackCardActor->GetBulletLauncherLocation().Z
+		);
 
 		//获取对象池的对象
 		//生成子弹
