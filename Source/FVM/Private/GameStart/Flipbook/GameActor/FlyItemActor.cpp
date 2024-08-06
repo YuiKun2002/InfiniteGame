@@ -580,7 +580,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
 	FString ObjPoolID
 )
 {
-
 	//获取资源管理器
 	UResourceManagerComponent* CurComp = AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent;
 
