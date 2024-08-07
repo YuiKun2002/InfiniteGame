@@ -43,9 +43,6 @@ public:
 	//死亡形态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSoftObjectPtr<UPaperFlipbook> M_MouseDeathedFlipbookAnim;
-	//是否有初始动画(被什么对象生成(生成动画))
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bEnableCreateAnim = false;
 	//被创建形态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSoftObjectPtr<UPaperFlipbook> M_MouseCreateFlipbookAnim;
@@ -287,10 +284,6 @@ public:
 	virtual void MouseDeathed() override;
 	//动画播放完毕
 	virtual void OnAnimationPlayEnd() override;
-protected:
-	//是否处于创建动画状态
-	UPROPERTY()
-		bool M_bCreatting = false;
 protected:
 	//默认模式状态
 	void ModeDefState();

@@ -23,11 +23,16 @@ ANormalMouse::ANormalMouse()
 void ANormalMouse::BeginPlay()
 {
 	Super::BeginPlay();
-	//UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->BodyComp);
 
 	//初始化碰撞网格位置
 	this->MesheComp->SetBoxExtent(FVector(20.f, 20.f, 20.f), true);
 	this->MesheComp->AddLocalOffset(FVector(0.f, 0.f, 17.f));
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		this->MesheComp->SetHiddenInGame(false);
+		this->BodyComp->SetHiddenInGame(false);
+	}
 
 	//绑定动画播放结束的委托
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
@@ -484,31 +489,9 @@ void UMouseStateDef::Init()
 {
 	Super::Init();
 
-	if (this->Get()->M_MouseResource.M_bEnableCreateAnim)
-	{
-		this->M_bCreatting = true;
-		this->M_bEnableAttakLine = false;
-		this->Get()->MoveStop();
-
-		UPaperFlipbook* Anim1 = UGameSystemFunction::LoadRes(
-			this->Get()->M_MouseResource.M_MouseCreateFlipbookAnim);
-		UPaperFlipbook* Anim2 = UGameSystemFunction::LoadRes(
-			this->Get()->M_MouseResource.M_MouseNomalFlipbookAnim);
-
-		if (Anim1 && Anim2)
-		{
-			//this->Get()->SetPlayAnimationOnce(Anim1, Anim2);
-
-			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-		}
-	}
-	else {
-		this->M_bCreatting = false;
-		this->M_bEnableAttakLine = true;
-		this->Get()->MoveStart();
-		this->ModeDefState();
-	}
+	this->M_bEnableAttakLine = true;
+	this->Get()->MoveStart();
+	this->ModeDefState();
 }
 
 bool UMouseStateDef::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType)
@@ -547,13 +530,6 @@ void UMouseStateDef::MouseDeathed()
 
 void UMouseStateDef::OnAnimationPlayEnd()
 {
-	if (this->M_bCreatting)
-	{
-		this->M_bCreatting = false;
-		this->M_bEnableAttakLine = true;
-		this->Get()->MoveStart();
-	}
-
 	Super::OnAnimationPlayEnd();
 
 	//更新动画
@@ -571,16 +547,6 @@ void UMouseStateDef::ModeDefState()
 				this->Get()->M_MouseResource.M_MouseAttackNomalFlipbookAnim), true);*/
 
 			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-		}
-		else
-		{
-			if (!this->M_bCreatting)
-			{
-				/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_MouseResource.M_MouseNomalFlipbookAnim));*/
-
-				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-			}
 		}
 	}//[当生命值小于等于总生命值的40% && 老鼠生命值大于0]
 	else if (this->Get()->GetCurrentHP() <= this->Get()->GetTotalHP() * 0.4f && this->Get()->GetCurrentHP() > 0.f)
