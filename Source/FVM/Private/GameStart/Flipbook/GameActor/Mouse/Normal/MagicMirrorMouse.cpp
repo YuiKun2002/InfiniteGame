@@ -25,7 +25,7 @@ void AMagicMirrorMouse::BeginPlay()
 	Super::BeginPlay();
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMirrorMouse::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMirrorMouse::OnAnimationPlayEnd);
 }
 
 void AMagicMirrorMouse::MouseInit()
@@ -38,7 +38,9 @@ void AMagicMirrorMouse::MouseInit()
 	this->bTake = false;
 	this->bControll = false;
 	this->fTakeDelay = 15.f - (((this->GetTotalHP() * 0.05f) > 10.f) ? 10 : this->GetTotalHP() * 0.05f);
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void AMagicMirrorMouse::Tick(float DeltaTime)
@@ -119,10 +121,14 @@ void AMagicMirrorMouse::MoveingUpdate(float DeltaTime)
 			//播放吸取动画
 			if (this->GetCurrentHP() > this->GetTotalHP() * 0.5)
 			{
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Take));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Take));
+
+				this->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 			else {
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.TakeLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.TakeLow));
+
+				this->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}
@@ -173,7 +179,9 @@ void AMagicMirrorMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//死亡动画
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death));
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 	//关闭碰撞
@@ -231,19 +239,27 @@ void AMagicMirrorMouse::UpdateState()
 	{
 		if (bAtk)
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.ATK));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.ATK));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
 		if (bAtk)
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.ATKLow));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.ATKLow));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.DefLow));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.DefLow));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }

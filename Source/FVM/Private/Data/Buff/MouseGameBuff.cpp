@@ -40,7 +40,7 @@ void UBuffMouseObject::UpdateMaterial()
 		this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Solidification/MI_SolidificationMaterial_Inst.MI_SolidificationMaterial_Inst'")
-				));
+			));
 		if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
 		{
 			if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
@@ -48,7 +48,7 @@ void UBuffMouseObject::UpdateMaterial()
 				//播放粒子特效
 				AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
 					this->GetBuffChar()->GetMouseManager()->GetSolidifBuffFxObjPoolManager()->GetObjectActor()
-					);
+				);
 				CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
 			}
 		}
@@ -61,7 +61,7 @@ void UBuffMouseObject::UpdateMaterial()
 		this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Ice/MI_IceMaterial_Inst.MI_IceMaterial_Inst'")
-				));
+			));
 		return;
 	}
 
@@ -71,7 +71,7 @@ void UBuffMouseObject::UpdateMaterial()
 		this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Ice/MI_SlowDownMaterial_Inst.MI_SlowDownMaterial_Inst'")
-				));
+			));
 		return;
 	}
 
@@ -79,13 +79,14 @@ void UBuffMouseObject::UpdateMaterial()
 	this->GetBuffChar()->SetMaterial(
 		LoadObject<UMaterialInstance>(this,
 			TEXT("MaterialInstanceConstant'/Game/Resource/BP/Martials/Mouse/MI_MouseRender.MI_MouseRender'")
-			));
+		));
 
 	//灼烧
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Burn))
 	{
-		this->GetBuffChar()->SetFlipbookColor(FVector(1.f, 0.2f, 0.f),
-			this->GetBuffChar()->GetColorOpacity());
+		this->GetBuffChar()->SetRenderColor(FLinearColor(
+			1.f, 0.2f, 0.f, this->GetBuffChar()->GetColorOpacity())
+		);
 
 		if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
 		{
@@ -94,7 +95,7 @@ void UBuffMouseObject::UpdateMaterial()
 				//播放粒子特效
 				AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
 					this->GetBuffChar()->GetMouseManager()->GetBurnBuffFxObjPoolManager()->GetObjectActor()
-					);
+				);
 				CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
 			}
 		}
@@ -105,14 +106,17 @@ void UBuffMouseObject::UpdateMaterial()
 	//加速
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Accelerate))
 	{
-		this->GetBuffChar()->SetFlipbookColor(FVector(1.f, 0.f, 0.f),
-			this->GetBuffChar()->GetColorOpacity());
+		this->GetBuffChar()->SetRenderColor(FLinearColor(
+			1.f, 0.f, 0.f, this->GetBuffChar()->GetColorOpacity())
+		);
+
 		return;
 	}
 
 	//使用默认颜色
-	this->GetBuffChar()->SetFlipbookColor(FVector(1.f),
-		this->GetBuffChar()->GetColorOpacity());
+	this->GetBuffChar()->SetRenderColor(FLinearColor(
+		1.f, 1.f, 1.f, this->GetBuffChar()->GetColorOpacity())
+	);
 }
 
 void UBuffMouseObject::UpdateTickRate()
@@ -123,7 +127,7 @@ void UBuffMouseObject::UpdateTickRate()
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Solidification) || Cur->GetBuffExistByTag(EGameBuffTag::Freeze))
 	{
 		this->SetTickRate(0.f);
-		this->GetBuffChar()->GetRenderComponent()->SetPlayRate(0);
+		this->GetBuffChar()->SetAnimationTimeScale(0, 0.f);
 		return;
 	}
 
@@ -143,7 +147,7 @@ void UBuffMouseObject::UpdateTickRate()
 	}
 
 	//设置最终移动速度
-	this->GetBuffChar()->GetRenderComponent()->SetPlayRate(Cur->GetTickRate());
+	this->GetBuffChar()->SetAnimationTimeScale(0, Cur->GetTickRate());
 }
 
 void UBuffMouseObject::BuffEnd()

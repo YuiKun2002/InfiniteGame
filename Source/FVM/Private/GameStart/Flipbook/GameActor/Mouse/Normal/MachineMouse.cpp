@@ -43,7 +43,8 @@ void AMachineMouse::MouseInit()
 	this->GetMouseManager()->ChangeMouseLineType(
 		this, this->GetMouseLine().Row, ELineType::OnGround, this->MMesheComponent, this->MBodyComponent
 	);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMachineMouse::OnAnimationPlayEnd);
+
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMachineMouse::OnAnimationPlayEnd);
 }
 
 void AMachineMouse::MoveingUpdate(float DeltaTime)
@@ -80,10 +81,15 @@ void AMachineMouse::MoveingUpdate(float DeltaTime)
 				this->bBomb = true;
 				if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 				{
-					this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle), true);
+					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle), true);
+
+					this->SetAnimation(0, TEXT("SpineTag"), true);
+
 				}
 				else {
-					this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.IdleLow), true);
+					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.IdleLow), true);
+
+					this->SetAnimation(0, TEXT("SpineTag"), true);
 				}
 			}
 		}
@@ -111,7 +117,9 @@ void AMachineMouse::MouseDeathed()
 	{
 		if (!this->GetPlayPlayBombEffAnim())
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 
@@ -123,7 +131,7 @@ void AMachineMouse::InMapMeshe(ELineType CurLineType)
 
 	if (CurLineType == ELineType::OnWater)
 	{
-		Offset = FVector(0.f,0.f,20.f);
+		Offset = FVector(0.f, 0.f, 20.f);
 	}
 	else {
 		Offset = FVector::ZeroVector;
@@ -139,7 +147,9 @@ void AMachineMouse::OnAnimationPlayEnd()
 
 	if (this->bBomb)
 	{
-		this->SetPlayAnimation(nullptr);
+		//this->SetPlayAnimation(nullptr);
+
+		this->SetEmptyAnimation(0, 0.2f);
 
 		//生成爆炸对象
 		UClass* CurBomb = UGameSystemFunction::LoadRes(this->BombClass);
@@ -169,10 +179,14 @@ void AMachineMouse::UpdateState()
 	{
 		if (this->GetCurrentHP() > this->GetTotalHP() * 0.5)
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.DefLow));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.DefLow));
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }

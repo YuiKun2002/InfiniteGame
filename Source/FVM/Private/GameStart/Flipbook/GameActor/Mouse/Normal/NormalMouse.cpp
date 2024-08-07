@@ -26,7 +26,7 @@ void ANormalMouse::BeginPlay()
 	//初始化碰撞网格位置
 	UGameSystemFunction::InitMouseMeshe(this->M_MesheComponent, this->M_BodyComponent);
 	//绑定动画播放结束的委托
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
 	//初始化状态管理器
 	this->Manager = UNormalMouseStateManager::MakeNormalMouseStateManager(this);
 
@@ -75,7 +75,7 @@ bool ANormalMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAtta
 
 void ANormalMouse::AttackedBegin()
 {
-	
+
 	Super::AttackedBegin();
 
 	if (IsValid(this->Manager))
@@ -253,9 +253,12 @@ void UNormalMouseDefenceStateManager::UpdateState(const float& HurtValue, const 
 				{
 					if (!bAttack)
 					{
-						this->NormalMouse->SetPlayAnimationOnce(
+						/*this->NormalMouse->SetPlayAnimationOnce(
 							UGameSystemFunction::LoadRes(Cur->TakeFallChar),
-							UGameSystemFunction::LoadRes(Cur->CharDef));
+							UGameSystemFunction::LoadRes(Cur->CharDef));*/
+
+						this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
+						this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 
 						if (Cur->bItemRemoveAddtionSpeed)
 						{
@@ -269,9 +272,12 @@ void UNormalMouseDefenceStateManager::UpdateState(const float& HurtValue, const 
 				else {
 					if (!bAttack)
 					{
-						this->NormalMouse->SetPlayAnimationOnce(
+						/*this->NormalMouse->SetPlayAnimationOnce(
 							UGameSystemFunction::LoadRes(Cur->TakeFallCharLow),
-							UGameSystemFunction::LoadRes(Cur->CharLow));
+							UGameSystemFunction::LoadRes(Cur->CharLow));*/
+
+						this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
+						this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 
 						if (Cur->bItemRemoveAddtionSpeed)
 						{
@@ -345,11 +351,15 @@ void UNormalMouseDefenceStateManager::SetAnim(const bool& bAtk, const bool& bTak
 		if (bTake)
 		{
 			//攻击拿[遇到攻击状态，出现掉落强行播放攻击动画]
-			this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim1), true);
+			//this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim1), true);
+
+			this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
 			//攻击无
-			this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim2), true);
+			//this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim2), true);
+
+			this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
@@ -357,11 +367,15 @@ void UNormalMouseDefenceStateManager::SetAnim(const bool& bAtk, const bool& bTak
 		if (bTake)
 		{
 			//攻击拿[没有攻击，遇到掉落]
-			this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim3));
+			//this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim3));
+
+			this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
 			//攻击无
-			this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim4));
+			//this->NormalMouse->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim4));
+
+			this->NormalMouse->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }
@@ -477,7 +491,10 @@ void UMouseStateDef::Init()
 
 		if (Anim1 && Anim2)
 		{
-			this->Get()->SetPlayAnimationOnce(Anim1, Anim2);
+			//this->Get()->SetPlayAnimationOnce(Anim1, Anim2);
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
@@ -516,8 +533,10 @@ void UMouseStateDef::MoveingBegin()
 
 void UMouseStateDef::MouseDeathed()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_MouseResource.M_MouseDeathedFlipbookAnim), true);
+	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+		this->Get()->M_MouseResource.M_MouseDeathedFlipbookAnim), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateDef::OnAnimationPlayEnd()
@@ -542,15 +561,19 @@ void UMouseStateDef::ModeDefState()
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_MouseResource.M_MouseAttackNomalFlipbookAnim), true);
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_MouseResource.M_MouseAttackNomalFlipbookAnim), true);*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else
 		{
 			if (!this->M_bCreatting)
 			{
-				this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_MouseResource.M_MouseNomalFlipbookAnim));
+				/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+					this->Get()->M_MouseResource.M_MouseNomalFlipbookAnim));*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}//[当生命值小于等于总生命值的40% && 老鼠生命值大于0]
@@ -558,15 +581,19 @@ void UMouseStateDef::ModeDefState()
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_MouseResource.M_MouseAttackResidualBloodFlipbookAnim), true);
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_MouseResource.M_MouseAttackResidualBloodFlipbookAnim), true);*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else
 		{
 			if (!this->M_bCreatting)
 			{
-				this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_MouseResource.M_MouseResidualBloodFlipbookAnim));
+				/*	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+						this->Get()->M_MouseResource.M_MouseResidualBloodFlipbookAnim));*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}
@@ -604,8 +631,10 @@ void UMouseStateModAdd::MoveingBegin()
 
 void UMouseStateModAdd::MouseDeathed()
 {
-	this->Get()->SetPlayAnimation(
-		UGameSystemFunction::LoadRes(this->Get()->M_NormalAddMouseResourceStruct.M_NomalDeathAnim), true);
+	/*this->Get()->SetPlayAnimation(
+		UGameSystemFunction::LoadRes(this->Get()->M_NormalAddMouseResourceStruct.M_NomalDeathAnim), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateModAdd::OnAnimationPlayEnd()
@@ -628,12 +657,16 @@ void UMouseStateModAdd::ModeAddState()
 
 		if (bAtk)
 		{
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadATKAnim), true);
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadATKAnim), true);*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadAnim));
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadAnim));*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 
 		return;
@@ -645,12 +678,16 @@ void UMouseStateModAdd::ModeAddState()
 		//有头盔[破损]行走
 		if (bAtk)
 		{
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadATKLowAnim), true);
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadATKLowAnim), true);*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadLowAnim));
+			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+				this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadLowAnim));*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else if (Cur <= Tot * 0.6f && Cur > Tot * 0.2f)
@@ -659,35 +696,46 @@ void UMouseStateModAdd::ModeAddState()
 		{
 			if (this->Get()->M_NormalAddMouseResourceStruct.bHeadRemove)
 			{
-				this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_NormalAddMouseResourceStruct.M_NomalATKAnim), true);
+				/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+					this->Get()->M_NormalAddMouseResourceStruct.M_NomalATKAnim), true);*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 			else {
 				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->M_NormalAddMouseResourceStruct.M_NomalAnim));
 
 				//播放攻击状态下的头盔掉落
 				this->Get()->M_NormalAddMouseResourceStruct.bHeadRemove = true;
-				this->Get()->SetPlayAnimationOnce(
+				/*this->Get()->SetPlayAnimationOnce(
 					UGameSystemFunction::LoadRes(
 						this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadATKRemoveAnim),
 					UGameSystemFunction::LoadRes(
 						this->Get()->M_NormalAddMouseResourceStruct.M_NomalATKAnim)
-				);
+				);*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 		else {
 			if (this->Get()->M_NormalAddMouseResourceStruct.bHeadRemove)
 			{
-				this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_NormalAddMouseResourceStruct.M_NomalAnim));
+				/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+					this->Get()->M_NormalAddMouseResourceStruct.M_NomalAnim));*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 			else {
 				//播放没有攻击时的头盔掉落
 				this->Get()->M_NormalAddMouseResourceStruct.bHeadRemove = true;
-				this->Get()->SetPlayAnimationOnce(
+				/*this->Get()->SetPlayAnimationOnce(
 					UGameSystemFunction::LoadRes(this->Get()->M_NormalAddMouseResourceStruct.M_NomalHeadRemoveAnim),
 					UGameSystemFunction::LoadRes(this->Get()->M_NormalAddMouseResourceStruct.M_NomalAnim)
-				);
+				);*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}
@@ -696,14 +744,20 @@ void UMouseStateModAdd::ModeAddState()
 		{
 			if (bAtk)
 			{
-				this->Get()->SetPlayAnimation(
+				/*this->Get()->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(
-						this->Get()->M_NormalAddMouseResourceStruct.M_NomalATKLowAnim), true);
+						this->Get()->M_NormalAddMouseResourceStruct.M_NomalATKLowAnim), true);*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 			else {
-				this->Get()->SetPlayAnimation(
+				/*this->Get()->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(
-						this->Get()->M_NormalAddMouseResourceStruct.M_NomalLowAnim));
+						this->Get()->M_NormalAddMouseResourceStruct.M_NomalLowAnim));*/
+
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}
@@ -780,8 +834,10 @@ void UMouseStateAddDefence::MoveingBegin()
 
 void UMouseStateAddDefence::MouseDeathed()
 {
-	this->Get()->SetPlayAnimation(
-		UGameSystemFunction::LoadRes(this->Get()->M_NormalDefenceMouseResourceStruct.Death), true);
+	/*this->Get()->SetPlayAnimation(
+		UGameSystemFunction::LoadRes(this->Get()->M_NormalDefenceMouseResourceStruct.Death), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateAddDefence::OnAnimationPlayEnd()
@@ -799,28 +855,36 @@ void UMouseStateAddDefence::OnAnimationPlayEnd()
 
 void UMouseStateBug::Init()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_NormalBugMouseResourceStruct.MDef), true);
+	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+		this->Get()->M_NormalBugMouseResourceStruct.MDef), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 
 	this->ATKCount = this->Get()->M_NormalBugMouseResourceStruct.AttackMaxCount;
 }
 
 void UMouseStateBug::AttackedBegin()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_NormalBugMouseResourceStruct.MATK), true);
+	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+		this->Get()->M_NormalBugMouseResourceStruct.MATK), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateBug::AttackedEnd()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_NormalBugMouseResourceStruct.MDef), true);
+	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+		this->Get()->M_NormalBugMouseResourceStruct.MDef), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateBug::MouseDeathed()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_NormalBugMouseResourceStruct.MDeath), true);
+	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+		this->Get()->M_NormalBugMouseResourceStruct.MDeath), true);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void UMouseStateBug::OnAnimationPlayEnd()
@@ -846,8 +910,10 @@ void UMouseStateBug::OnAnimationPlayEnd()
 		}
 	}
 	else {
-		this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-			this->Get()->M_NormalBugMouseResourceStruct.MDef), true);
+		/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+			this->Get()->M_NormalBugMouseResourceStruct.MDef), true);*/
+
+		this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 

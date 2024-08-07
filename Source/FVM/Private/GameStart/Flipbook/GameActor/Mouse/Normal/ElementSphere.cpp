@@ -13,9 +13,12 @@ void AElementSphere::MouseInit()
 {
 	Super::MouseInit();
 
-	this->SetPlayAnimationOnce(
+	/*this->SetPlayAnimationOnce(
 		UGameSystemFunction::LoadRes(this->Create), UGameSystemFunction::LoadRes(this->Rolling)
-	);
+	);*/
+
+	this->SetAnimation(0,TEXT("SpineTag"),true);
+	this->SetAnimation(0,TEXT("SpineTag"),true);
 }
 
 void AElementSphere::BeginPlay()
@@ -69,14 +72,18 @@ bool AElementSphere::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAt
 	{
 		if (this->GetCurrentHP() <= this->GetTotalHP() * 0.5)
 		{
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->RollingLow)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->Rolling)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 
@@ -127,9 +134,11 @@ void AElementSphere::MouseDeathed()
 {
 	Super::MouseDeathed();
 
-	this->SetPlayAnimation(
+	/*this->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(this->Death), true
-	);
+	);*/
+
+	this->SetAnimation(0,TEXT("SpineTag"),true);
 
 	this->ClosedBoxComponent(this->MMeshe);
 	this->ClosedBoxComponent(this->MBody);

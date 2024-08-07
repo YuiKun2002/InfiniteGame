@@ -54,9 +54,11 @@ void ABoss_AN::MouseDeathed()
 
 	this->SetCollision(false);
 
-	this->SetPlayAnimation(
+	/*this->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(this->DeathAnim), true
-	);
+	);*/
+
+	this->SetAnimation(0, TEXT("SpawnTag"), true);
 }
 
 void ABoss_AN::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime)
@@ -109,7 +111,7 @@ void UAN_Out::Init()
 				ABoss_AN* Cur = Cast<ABoss_AN>(CurM->Get());
 				Cur->SetActorScale3D(FVector(1.f));
 			}
-			);
+		);
 		this->OutTimeLine->AddCurve(
 			Cast<ABoss_AN>(this->Get())->MouseOpacityCurve, this,
 			[](UTimeLineClass* time, UObject* obj, float value) {
@@ -124,7 +126,7 @@ void UAN_Out::Init()
 				ABoss_AN* Cur = Cast<ABoss_AN>(CurM->Get());
 				Cur->UpdateBossOpacity(1.f);
 			}
-			);
+		);
 	}
 
 
@@ -159,7 +161,9 @@ void UAN_Out::Init()
 	this->RanCount = 5;
 
 	ABoss_AN* An = Cast<ABoss_AN>(this->Get());
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(An->OutAnim));
+	//this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(An->OutAnim));
+
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 }
 
 void UAN_Out::MouseTick(const float& DeltaTime) {
@@ -287,12 +291,16 @@ void UAN_Move::Init()
 {
 	if (this->Get()->GetCurrentHP() > this->Get()->GetTotalHP() * 0.5f)
 	{
-		this->Get()->SetPlayAnimation(
-			UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->MoveReadyAnim));
+		/*this->Get()->SetPlayAnimation(
+			UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->MoveReadyAnim));*/
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 	}
 	else {
-		this->Get()->SetPlayAnimation(
-			UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->MoveReadyLowAnim));
+		/*this->Get()->SetPlayAnimation(
+			UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->MoveReadyLowAnim));*/
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 	}
 
 	if (this->Get()->GetMouseLevel() == 2)
@@ -385,7 +393,7 @@ void UAN_Move::AnimPlayEnd()
 				ABoss_AN* Cur = Cast<ABoss_AN>(CurM->Get());
 				Cur->ChangeState(NewObject<UAN_Hidd>());
 			}
-			);
+		);
 
 		this->TimeLine->PlayFromStart();
 	}
@@ -394,7 +402,9 @@ void UAN_Move::AnimPlayEnd()
 void UAN_Hidd::Init()
 {
 	ABoss_AN* An = Cast<ABoss_AN>(this->Get());
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(An->OutAnim));
+	//this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(An->OutAnim));
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
+
 	bHid = false;
 	this->HidTime = 10.f;
 
@@ -412,7 +422,7 @@ void UAN_Hidd::Init()
 			Cur->InMapMeshe(ELineType::OnGround);
 			Cur->CloseInWaterTimeLine();
 		}
-		);
+	);
 
 	this->TimeLine->PlayFromStart();
 }
@@ -582,7 +592,9 @@ void UAN_Shoot::Def()
 
 void UAN_Shoot::Out()
 {
-	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->OutAnim));
+	//this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes((Cast<ABoss_AN>(this->Get()))->OutAnim));
+
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 
 	this->Get()->UpdateBossOpacity(0.f);
 	//初始化时间线
@@ -605,7 +617,7 @@ void UAN_Shoot::Out()
 			//切换状态【】
 			CurM->Get()->ChangeState(NewObject<UAN_Out>());
 		}
-		);
+	);
 	this->OutTimeLine->AddCurve(
 		Cast<ABoss_AN>(this->Get())->MouseOpacityCurve, this,
 		[](UTimeLineClass* time, UObject* obj, float value) {
@@ -620,6 +632,6 @@ void UAN_Shoot::Out()
 			ABoss_AN* Cur = Cast<ABoss_AN>(CurM->Get());
 			Cur->UpdateBossOpacity(1.f);
 		}
-		);
+	);
 	this->OutTimeLine->PlayFromStart();
 }

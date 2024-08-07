@@ -40,7 +40,7 @@ void AUndergroundMouse::BeginPlay()
 	Super::BeginPlay();
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AUndergroundMouse::AnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AUndergroundMouse::AnimationPlayEnd);
 }
 
 void AUndergroundMouse::MouseInit()
@@ -69,10 +69,14 @@ void AUndergroundMouse::MoveingUpdate(float DeltaTime)
 		if (this->GetActorLocation().Y <= -160.0)
 		{
 			//播放动画
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->MouseAnimalRes.Out),
 				UGameSystemFunction::LoadRes(this->MouseAnimalRes.Idle)
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
+			this->SetAnimation(0, TEXT("SpineTag"), true);
+
 			this->MoveStop();
 			this->bEnOut = true;
 
@@ -136,7 +140,9 @@ void AUndergroundMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);
+		/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -201,20 +207,25 @@ void AUndergroundMouse::UpdateState()
 	{
 		if (bATK)
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.ATK), true);
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.ATK), true);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Walk));
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Walk));*/
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
 		if (bATK)
 		{
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.ATKLow), true);
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.ATKLow), true);*/
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 
 		}
 		else {
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.WalkLow));
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.WalkLow));*/
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 

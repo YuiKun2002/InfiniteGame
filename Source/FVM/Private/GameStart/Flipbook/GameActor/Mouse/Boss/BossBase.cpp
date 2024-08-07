@@ -83,12 +83,12 @@ void UBossUniformState::Init()
 	this->TimeLine->AddCurve(
 		this->Get()->BossOpacityCurve, this->Get(),
 		[](UTimeLineClass* time, UObject* obj, float value) {
-			Cast<ABossBase>(obj)->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), value);
+			//Cast<ABossBase>(obj)->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), value);
 		},
 		[](UTimeLineClass* time, UObject* obj) {
 
 		}
-		);
+	);
 }
 
 void UBossUniformState::MouseTick(const float& DeltaTime)
@@ -143,7 +143,7 @@ void ABossBase::MouseInit()
 		this->M_BossHP_Progress->UpdateHPText(this->GetCurrentHP(), this->GetTotalHP());
 	}
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABossBase::BossAnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABossBase::BossAnimPlayEnd);
 
 	//广播boss生成
 	AGameMapInstance::GetGameMapInstance()->OnSpawnMouseBossDelegate.Broadcast();
@@ -161,8 +161,8 @@ void ABossBase::InitBoss(const FString& Name, const FString& BossCode)
 		this->GetWorld(),
 		LoadClass<UUI_MouseBoss_Slider>(nullptr,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/MouseRound/UI_MouseBossSlider.UI_MouseBossSlider_C'")
-			)
-		);
+		)
+	);
 
 	if (IsValid(this->M_BossHP_Progress))
 	{
@@ -442,7 +442,7 @@ int32 ABossBase::GetMouseLevel()
 void ABossBase::UpdateBossOpacity(const float& value)
 {
 	float Time = UKismetMathLibrary::Lerp(0.f, 1.f, value);
-	this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), Time);
+	//this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), Time);
 	this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Time));
 }
 
@@ -600,10 +600,15 @@ void UBossStateBase::PlayAnim(UPaperFlipbook* Anim1, UPaperFlipbook* Anim2Low)
 	{
 		if (this->Get()->GetCurrentHP() > this->Get()->GetTotalHP() * 0.5f)
 		{
-			this->Get()->GetRenderComponent()->SetPlayAnimation(Anim1);
+			//this->Get()->GetRenderComponent()->SetPlayAnimation(Anim1);
+
+			this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
+
 		}
 		else {
-			this->Get()->GetRenderComponent()->SetPlayAnimation(Anim2Low);
+			//this->Get()->GetRenderComponent()->SetPlayAnimation(Anim2Low);
+
+			this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 		}
 	}
 }

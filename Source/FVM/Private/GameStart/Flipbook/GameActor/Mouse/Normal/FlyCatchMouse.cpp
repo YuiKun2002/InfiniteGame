@@ -71,7 +71,9 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				);
 
 				//播放抓取动画
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Catch), true);
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Catch), true);
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 
 				//切换陆地形态
 				this->GetMouseManager()->ChangeMouseLineType(this,
@@ -92,7 +94,7 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				);
 
 				//绑定动画结束
-				this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
+				//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
 			}
 		}
 	}
@@ -127,7 +129,7 @@ void AFlyCatchMouse::BeginPlay()
 	}*/
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
 }
 
@@ -267,7 +269,7 @@ void AFlyCatchMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(nullptr);
+		//this->SetPlayAnimation(nullptr);
 		//this->CurCardAnim->SetAnimationClear();
 	}
 
@@ -331,9 +333,11 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 		}
 
 		//播放退场
-		this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+		//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Exit), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Exit), true);
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 
 		this->fToGroundTime = 1.f;
 		this->bExit = true;

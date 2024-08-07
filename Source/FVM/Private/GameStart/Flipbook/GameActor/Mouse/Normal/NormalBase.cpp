@@ -271,7 +271,7 @@ void ANormalBase::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime)
 		{
 			//创建冰块
 			this->IceBlock = UGameSystemFunction::CreateIceBlock(this, FVector(0.f, 0.f, -3.5f),
-				this->GetTranslucentSortPriority() + 4, CurBuffTime);
+				this->GetRenderLayer() + 4, CurBuffTime);
 		}
 	}
 }
@@ -331,10 +331,12 @@ void ANormalBase::BeginPlay()
 
 void ANormalBase::PlayBombEffAnim()
 {
-	this->SetPlayAnimation(
+	/*this->SetPlayAnimation(
 		LoadObject<UPaperFlipbook>(0,
 			TEXT("PaperFlipbook'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/Other/FB_MouseBombEff.FB_MouseBombEff'"))
-	);
+	);*/
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 
 }
 

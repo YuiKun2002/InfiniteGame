@@ -62,14 +62,18 @@ void ABoss_FL::MouseDeathed()
 
 	if (this->bBaseState)
 	{
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->AnimA_ExitLow), true
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->AnimB_Death), true
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 }
 
@@ -161,7 +165,7 @@ void UFL_BaseState::Init()
 	this->TimeLine->AddCurve(
 		this->GetA()->MouseOpacityCurve, this->Get(),
 		[](UTimeLineClass* time, UObject* obj, float value) {
-			Cast<ABoss_FL>(obj)->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), value);
+			//Cast<ABoss_FL>(obj)->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), value);
 		},
 		[](UTimeLineClass* time, UObject* obj) {
 
@@ -349,16 +353,22 @@ void UFL_CallMouse::Init()
 
 	if (this->GetA()->GetCurrentHP() > this->GetA()->GetTotalHP() * 0.5f)
 	{
-		this->GetA()->SetPlayAnimationOnce(
+		/*this->GetA()->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_InitArm),
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_UseLeftArm)
-		);
+		);*/
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 	else {
-		this->GetA()->SetPlayAnimationOnce(
+		/*this->GetA()->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_InitArmLow),
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_UseLeftArmLow)
-		);
+		);*/
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 
 	this->GetA()->DefSpawnMouse(this->GetA()->GetMouseLevel());
@@ -671,16 +681,22 @@ void UFL_KillCard::Init()
 
 	if (this->GetA()->GetCurrentHP() > this->GetA()->GetTotalHP() * 0.5f)
 	{
-		this->GetA()->SetPlayAnimationOnce(
+		/*this->GetA()->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_InitArm),
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_UseRightArm)
-		);
+		);*/
+
+		this->GetA()->SetAnimation(0, TEXT("SpawnTag"),true);
+		this->GetA()->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 	else {
-		this->GetA()->SetPlayAnimationOnce(
+		/*this->GetA()->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_InitArmLow),
 			UGameSystemFunction::LoadRes(this->GetA()->AnimA_UseRightArmLow)
-		);
+		);*/
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
 	}
 }
 
@@ -714,10 +730,13 @@ void UFL_KillCard::KillCard()
 
 void UFL_ReverseHP::Init()
 {
-	this->GetA()->SetPlayAnimationOnce(
+	/*this->GetA()->SetPlayAnimationOnce(
 		UGameSystemFunction::LoadRes(this->GetA()->AnimB_Create),
 		UGameSystemFunction::LoadRes(this->GetA()->AnimB_Use1)
-	);
+	);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
 
 	UGameSystemFunction::AddGameLog(this->GetA(),
 		FALD(TEXT("请使用【")) + FAL(TEXT("冰桶炸弹"), TEXT("c")) + FALD(TEXT("】来")) +

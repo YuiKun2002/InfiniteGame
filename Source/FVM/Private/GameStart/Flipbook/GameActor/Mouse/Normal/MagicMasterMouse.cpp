@@ -5,6 +5,8 @@
 #include "GameStart/Flipbook/Components/FlipbookBaseComponent.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/CardActor.h"
+#include "SpineSkeletonRendererComponent.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/MapMeshe.h"
 #include <Components/BoxComponent.h>
 #include <Components/SphereComponent.h>
@@ -20,7 +22,7 @@ void AMagicMasterHpAddtionBuff::Init(AMouseActor* MouseActor, TSoftObjectPtr<UPa
 		this->time = this->CTime;
 		this->InitRotation();
 		this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim));
-		this->SetRenderLayer(this->CurMouse->GetTranslucentSortPriority() + 5);
+		this->SetRenderLayer(this->CurMouse->GetRenderLayer() + 5);
 		this->SetActorLocation(this->CurMouse->GetActorLocation() + FVector(0.f, 0.f, 20.f));
 		this->SetAnimationPlayEndDestroy();
 	}
@@ -41,7 +43,7 @@ void AMagicMasterHpAddtionBuff::Tick(float DeltaTime)
 
 		if (IsValid(this->CurMouse))
 		{
-			this->SetRenderLayer(this->CurMouse->GetTranslucentSortPriority() + 5);
+			this->SetRenderLayer(this->CurMouse->GetRenderLayer() + 5);
 			this->SetActorLocation(this->CurMouse->GetActorLocation() + FVector(0.f, 0.f, 20.f));
 		}
 	}
@@ -66,7 +68,7 @@ void AMagicMasterMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMasterMouse::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMasterMouse::OnAnimationPlayEnd);
 }
 
 void AMagicMasterMouse::MouseInit()
@@ -81,7 +83,9 @@ void AMagicMasterMouse::MouseInit()
 	this->bEnableAttakLine = true;
 	this->bUse = false;
 
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
+	this->SetAnimation(0, TEXT("SpineTag"), true);
+
 	this->WepaonAnimLocation->SetPlayAnimation(nullptr);
 }
 
@@ -127,7 +131,7 @@ void AMagicMasterMouse::OnAnimationPlayEnd()
 				{
 					float CurReplyHp = Cur->GetTotalHP() * this->fReplySelfHpRate;
 					Cur->SetbIsHurt(true);
-					Cur->BeHit(Cur,CurReplyHp * -1.f, EFlyItemAttackType::Def);
+					Cur->BeHit(Cur, CurReplyHp * -1.f, EFlyItemAttackType::Def);
 					//生成加血动画
 					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>();
 					CurAnimObj->Init(Cur, this->AnimRes.AddHPAnim);
@@ -157,10 +161,14 @@ void AMagicMasterMouse::UpdateState()
 
 	if (bAtk)
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Attack));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Attack));
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -186,7 +194,10 @@ void AMagicMasterMouse::MoveingUpdate(float DeltaTime)
 		this->MoveStop();
 		this->bEnableAttakLine = false;
 		this->bUse = true;
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Use));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Use));
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
+
 		this->WepaonAnimLocation->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.UseAnim));
 		return;
 	}
@@ -195,9 +206,9 @@ void AMagicMasterMouse::MoveingUpdate(float DeltaTime)
 	this->UpdateMove(DeltaTime);
 }
 
-bool AMagicMasterMouse::BeHit(UObject* CurHitMouseObj,float HurtValue, EFlyItemAttackType AttackType)
+bool AMagicMasterMouse::BeHit(UObject* CurHitMouseObj, float HurtValue, EFlyItemAttackType AttackType)
 {
-	if (!Super::BeHit(CurHitMouseObj,HurtValue, AttackType))
+	if (!Super::BeHit(CurHitMouseObj, HurtValue, AttackType))
 	{
 		return false;
 	}
@@ -234,6 +245,8 @@ void AMagicMasterMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }

@@ -37,7 +37,9 @@ void ABoss_HLL::MouseDeathed()
 	this->ClosedBoxComponent(this->MMeshe);
 	this->ClosedBoxComponent(this->MBody);
 
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimA_Death), true);
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimA_Death), true);
+
+	this->SetAnimation(0, TEXT("SpawnTag"), true);
 }
 
 void ABoss_HLL::InMapMeshe(ELineType CurLineType)
@@ -95,7 +97,9 @@ void UHLL_CreateState::Init()
 	//设置老鼠目标位置
 	this->Get()->SetActorLocation(this->GetMesheLocation(RanRow, ConstCol));
 
-	this->GetHLL()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->GetHLL()->AnimA_Create));
+	//this->GetHLL()->SetPlayAnimation(UGameSystemFunction::LoadRes(this->GetHLL()->AnimA_Create));
+
+	this->GetHLL()->SetAnimation(0, TEXT("SpawnTag"), true);
 }
 
 void UHLL_CreateState::AnimPlayEnd()
@@ -240,7 +244,7 @@ void UHLL_FlyForwardState::PlayMove(FLine NewLine)
 			);
 			Cur->Get()->ChangeState(NewObject<UHLL_FallATKtate>());
 		}
-		);
+	);
 
 	this->Get()->SetInWaterAnimEnable(false);
 	this->Get()->ForceSetWaterAnimShow(ELineType::Sky);
@@ -433,7 +437,7 @@ void UHLL_FlyBackwardState::PlayMove(FLine NewLine)
 			);
 			Cur->Get()->ChangeState(NewObject<UHLL_FlyFalltate>());
 		}
-		);
+	);
 
 	this->Get()->SetInWaterAnimEnable(false);
 	this->Get()->ForceSetWaterAnimShow(ELineType::Sky);

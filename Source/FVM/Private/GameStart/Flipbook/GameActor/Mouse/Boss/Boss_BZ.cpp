@@ -48,10 +48,14 @@ void ABoss_BZ::MouseDeathed()
 
 	if (this->bDoubleState)
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimA_Death),true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimA_Death),true);
+
+		this->SetAnimation(0, TEXT("SpawnTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimB_Death),true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimB_Death),true);
+
+		this->SetAnimation(0, TEXT("SpawnTag"), true);
 	}
 }
 

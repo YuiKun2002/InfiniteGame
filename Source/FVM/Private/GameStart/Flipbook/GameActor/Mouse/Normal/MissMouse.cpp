@@ -26,7 +26,7 @@ void AMissMouse::MouseInit()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMissMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMissMouse::AnimPlayEnd);
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
@@ -53,7 +53,9 @@ void AMissMouse::AttackedBegin()
 	Super::AttackedBegin();
 
 	this->CurPlayAnim = UGameSystemFunction::LoadRes(MouseAnim.ATK);
-	this->SetPlayAnimation(this->CurPlayAnim);
+	//this->SetPlayAnimation(this->CurPlayAnim);
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void AMissMouse::AttackedEnd()
@@ -61,7 +63,9 @@ void AMissMouse::AttackedEnd()
 	Super::AttackedEnd();
 
 	this->CurPlayAnim = UGameSystemFunction::LoadRes(MouseAnim.Def);
-	this->SetPlayAnimation(this->CurPlayAnim);
+	//this->SetPlayAnimation(this->CurPlayAnim);
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 bool AMissMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType)
@@ -98,7 +102,9 @@ bool AMissMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttack
 				//随机播放动画
 				int32 CurIndex = UGameSystemFunction::GetRandomRange(0, this->MouseAnim.MissAction.Num() - 1);
 				this->CurPlayAnim = UGameSystemFunction::LoadRes(MouseAnim.MissAction[CurIndex]);
-				this->SetPlayAnimation(this->CurPlayAnim);
+				//this->SetPlayAnimation(this->CurPlayAnim);
+
+				this->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 
 			this->MoveStop();
@@ -122,7 +128,9 @@ void AMissMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(MouseAnim.Death), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(MouseAnim.Death), true);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -148,6 +156,8 @@ void AMissMouse::AnimPlayEnd()
 			this->CurPlayAnim = UGameSystemFunction::LoadRes(MouseAnim.Def);
 		}
 
-		this->SetPlayAnimation(this->CurPlayAnim);
+		//this->SetPlayAnimation(this->CurPlayAnim);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }

@@ -34,7 +34,7 @@ void AMatrixChildMouse::BeginPlay()
 {
 	Super::BeginPlay();
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMatrixChildMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMatrixChildMouse::AnimPlayEnd);
 }
 
 void AMatrixChildMouse::MouseInit()
@@ -45,9 +45,11 @@ void AMatrixChildMouse::MouseInit()
 	this->bAttack = false;
 	this->AttackDelay = 0.1f;
 
-	this->SetPlayAnimation(
+	/*this->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(this->Anim.OnCreate)
-	);
+	);*/
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -116,7 +118,7 @@ void AMatrixChildMouse::MouseDeathed()
 {
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	this->bAttack = false;
 
 	Super::MouseDeathed();
@@ -131,9 +133,11 @@ void AMatrixChildMouse::MouseDeathed()
 		this->PlayBombEffAnim();
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.IdleDeath), true
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -195,27 +199,35 @@ void AMatrixChildMouse::UpdateAnim()
 	{
 		if (bAtk)
 		{
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->Anim.Attack), true
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->Anim.Walk)
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
 		if (bAtk)
 		{
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->Anim.AttackLow), true
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->Anim.WalkLow)
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }
@@ -227,14 +239,18 @@ void AMatrixChildMouse::AtkBegin()
 
 	if (Cur > Tot * 0.5f)
 	{
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.Attack), true
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.AttackLow), true
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -245,13 +261,17 @@ void AMatrixChildMouse::MoveBegin()
 
 	if (Cur > Tot * 0.5f)
 	{
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.Walk)
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.WalkLow)
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }

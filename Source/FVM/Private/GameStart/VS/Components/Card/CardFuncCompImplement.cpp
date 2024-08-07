@@ -1877,7 +1877,10 @@ void UCardFunctionBurger::HitAllMouse(class UCardFunctionComponent* CardFuncComp
 			{
 				bDeathNormalMouse = true;
 				CurMouse->SetMouseDeath(true);
-				CurMouse->SetPlayAnimation(nullptr);
+				//CurMouse->SetPlayAnimation(nullptr);
+
+				CurMouse->SetEmptyAnimation(0, 0.2f);
+
 				this->bHit = true;
 				break;
 			}
@@ -1899,7 +1902,7 @@ void UCardFunctionBurger::HitAllMouse(class UCardFunctionComponent* CardFuncComp
 
 			if (CurMouse->GetCurrentHP() <= 0.f)
 			{
-				CurMouse->SetPlayAnimation(nullptr);
+				CurMouse->SetEmptyAnimation(0, 0.2f);
 				this->bHit = true;
 			}
 		}
@@ -2464,9 +2467,9 @@ void UCardFunctionElectric::SetATK()
 {
 	if (IsValid(this->CurActor))
 	{
-	/*	this->CurActor->SetPlayAnimation(
-			UGameSystemFunction::LoadRes(this->CardDataTRB.State2)
-		);*/
+		/*	this->CurActor->SetPlayAnimation(
+				UGameSystemFunction::LoadRes(this->CardDataTRB.State2)
+			);*/
 
 		this->CurActor->SetAnimation(
 			0,

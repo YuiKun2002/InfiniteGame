@@ -88,20 +88,33 @@ void ABoss_DaLiShen::UpdateState()
 	{
 		switch (this->M_EDaLiShenState)
 		{
-		case EDaLiShenState::Def:this->SetPlayAnimation(this->M_Mouse_Def); break;
-		case EDaLiShenState::Attack_2:this->SetPlayAnimation(this->M_Mouse_Attack_2); break;
-		case EDaLiShenState::Attack_1:this->SetPlayAnimation(this->M_Mouse_Attack_1); break;
-		case EDaLiShenState::Attack_3:this->SetPlayAnimation(this->M_Mouse_Attack_3); break;
+			/*case EDaLiShenState::Def:this->SetPlayAnimation(this->M_Mouse_Def); break;
+			case EDaLiShenState::Attack_2:this->SetPlayAnimation(this->M_Mouse_Attack_2); break;
+			case EDaLiShenState::Attack_1:this->SetPlayAnimation(this->M_Mouse_Attack_1); break;
+			case EDaLiShenState::Attack_3:this->SetPlayAnimation(this->M_Mouse_Attack_3); break;*/
+
+		case EDaLiShenState::Def:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_2:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_1:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_3:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+
+
 		}
 	}
 	else if (this->GetCurrentHP() <= this->GetTotalHP() * 0.5f && this->GetCurrentHP() > 0.f)
 	{
 		switch (this->M_EDaLiShenState)
 		{
-		case EDaLiShenState::Def:this->SetPlayAnimation(this->M_Mouse_DefLow); break;
-		case EDaLiShenState::Attack_2:this->SetPlayAnimation(this->M_Mouse_Attack_2Low); break;
-		case EDaLiShenState::Attack_1:this->SetPlayAnimation(this->M_Mouse_Attack_1Low); break;
-		case EDaLiShenState::Attack_3:this->SetPlayAnimation(this->M_Mouse_Attack_3Low); break;
+			/*case EDaLiShenState::Def:this->SetPlayAnimation(this->M_Mouse_DefLow); break;
+			case EDaLiShenState::Attack_2:this->SetPlayAnimation(this->M_Mouse_Attack_2Low); break;
+			case EDaLiShenState::Attack_1:this->SetPlayAnimation(this->M_Mouse_Attack_1Low); break;
+			case EDaLiShenState::Attack_3:this->SetPlayAnimation(this->M_Mouse_Attack_3Low); break;*/
+
+		case EDaLiShenState::Def:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_2:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_1:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+		case EDaLiShenState::Attack_3:this->SetAnimation(0, TEXT("SpawnTag"), true); break;
+
 		}
 	}
 }
@@ -221,10 +234,10 @@ void ABoss_DaLiShen::MouseInit()
 	this->InitBoss(TEXT("大力神"), TEXT("605"));
 
 	UGameSystemFunction::InitMouseMeshe(this->M_BoxMesh, this->M_BoxBody, FVector2D(115.f, 20.f), FVector2D(0.f, 17.f), true);
-	UGameSystemFunction::InintMouseCollisonByBox(this->M_BoxBody,FVector2D(115.f,55.f),true);
+	UGameSystemFunction::InintMouseCollisonByBox(this->M_BoxBody, FVector2D(115.f, 55.f), true);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_DaLiShen::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_DaLiShen::OnAnimationPlayEnd);
 
 	this->M_BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->M_BoxBody->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -331,7 +344,9 @@ void ABoss_DaLiShen::MouseDeathed()
 	this->M_BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->M_BoxBody->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	this->SetPlayAnimation(this->M_Mouse_Death);
+	//this->SetPlayAnimation(this->M_Mouse_Death);
+
+	this->SetAnimation(0, TEXT("SpawnTag"), true);
 
 	Super::MouseDeathed();
 }

@@ -2,7 +2,8 @@
 
 
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
-
+#include "SpineSkeletonRendererComponent.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
@@ -10,7 +11,6 @@
 #include "GameStart/VS/Components/MesheControllComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/VS/MapMeshe.h"
-
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -45,7 +45,7 @@ AMouseActor::AMouseActor()
 	this->InWaterAnim = CreateDefaultSubobject<UFlipbookBaseComponent>("InWaterAnimComp");
 
 	//设置依附
-	this->M_MousePosition->SetupAttachment(this->GetMyActor(), TEXT("MouseTargetLocationComp"));
+	this->M_MousePosition->SetupAttachment(this->GetPointComponent(), TEXT("MouseTargetLocationComp"));
 	this->InWaterAnim->SetupAttachment(this->GetRenderComponent());
 }
 
@@ -61,11 +61,21 @@ void AMouseActor::UpdateColor()
 		this->M_Proper_Condition.M_bColor = true;
 		this->M_Proper_Condition.M_bHurtColorTime = 0.2f;
 		this->M_Proper_State.CurOpacity = 0.4f;
-		this->SetFlipbookColor(FVector(
+
+		/*this->SetFlipbookColor(FVector(
 			this->GetMyActor()->GetSpriteColor().R,
 			this->GetMyActor()->GetSpriteColor().G,
 			this->GetMyActor()->GetSpriteColor().B
-		), this->M_Proper_State.CurOpacity);
+		), this->M_Proper_State.CurOpacity);*/
+
+		this->SetRenderColor(
+			FLinearColor(
+				this->GetRenderColor().R,
+				this->GetRenderColor().G,
+				this->GetRenderColor().B,
+				this->M_Proper_State.CurOpacity
+			)
+		);
 	}
 }
 
@@ -413,8 +423,11 @@ void AMouseActor::SetMouseDeath(bool _Value)
 		this->MoveStop();
 		//移除老鼠
 		this->MouseKill();
+
+		/*Spine Tag 老鼠死亡 Spine标记*/
+
 		//设置播放结束销毁
-		this->SetAnimationPlayEndDestroy();
+		//this->SetAnimationPlayEndDestroy();
 		//老鼠死亡
 		this->MouseDeathed();
 	}
@@ -931,11 +944,14 @@ void AMouseActor::Tick(float DeltaTime)
 			{
 				this->M_Proper_Condition.M_bColor = false;
 				this->M_Proper_State.CurOpacity = 1.f;
-				this->SetFlipbookColor(FVector(
-					this->GetMyActor()->GetSpriteColor().R,
-					this->GetMyActor()->GetSpriteColor().G,
-					this->GetMyActor()->GetSpriteColor().B
-				), this->M_Proper_State.CurOpacity);
+				this->SetRenderColor(
+					FLinearColor(
+						this->GetRenderColor().R,
+						this->GetRenderColor().G,
+						this->GetRenderColor().B,
+						this->M_Proper_State.CurOpacity
+					)
+				);
 			}
 		}
 	}
@@ -1034,7 +1050,10 @@ bool AMouseActor::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttac
 void AMouseActor::MouseDeathed()
 {
 	//绑定死亡动画播放结束
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	
+	/*Spine Tag 老鼠死亡 Spine标记*/
+	
 	//释放当前的所有攻击目标
 	this->SetCurrentAttackCard(nullptr);
 	//取消攻击

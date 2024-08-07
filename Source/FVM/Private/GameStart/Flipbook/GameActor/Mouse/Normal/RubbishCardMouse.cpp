@@ -90,7 +90,7 @@ void ARubbishCardMouse::BeginPlay()
 	Super::BeginPlay();
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent, FVector2D(35.f, 20.f));
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ARubbishCardMouse::AnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ARubbishCardMouse::AnimationPlayEnd);
 }
 
 void ARubbishCardMouse::MouseInit()
@@ -163,7 +163,9 @@ void ARubbishCardMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);
+		/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 	this->ClosedBoxComponent(this->MMesheComponent);
@@ -189,10 +191,13 @@ void ARubbishCardMouse::UpdateState()
 
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Def));
+		/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Def));*/
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.DefLow));
+		/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.DefLow));*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 

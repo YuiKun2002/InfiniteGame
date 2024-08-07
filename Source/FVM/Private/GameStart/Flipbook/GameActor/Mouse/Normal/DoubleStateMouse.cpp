@@ -24,7 +24,7 @@ void ADoubleStateMouse::BeginPlay()
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp,this->CollisionComp);
 
 	//绑定动画播放结束
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ADoubleStateMouse::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ADoubleStateMouse::OnAnimationPlayEnd);
 }
 
 void ADoubleStateMouse::Tick(float DeltaTime)
@@ -58,11 +58,15 @@ bool ADoubleStateMouse::BeHit(UObject* CurHitMouseObj,float _HurtValue, EFlyItem
 		if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 		{
 			//更换新动画
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.Idle));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.Idle));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
 			//更换新动画[残血]
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleLow));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleLow));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 	else
@@ -71,11 +75,15 @@ bool ADoubleStateMouse::BeHit(UObject* CurHitMouseObj,float _HurtValue, EFlyItem
 		if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 		{
 			//更换新动画
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTake));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTake));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
 			//更换新动画[残血]
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTakeLow));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTakeLow));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 
@@ -118,12 +126,16 @@ void ADoubleStateMouse::MouseDeathed()
 		if (this->bShoot)
 		{
 			//更换新动画
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleDeath));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleDeath));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else
 		{
 			//更换新动画
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTakeDeath));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleTakeDeath));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 }
@@ -153,11 +165,15 @@ void ADoubleStateMouse::OnAnimationPlayEnd()
 			if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 			{
 				//更换新动画
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.Idle));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.Idle));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				//更换新动画[残血]
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->DoubleStateResourceStruct.IdleLow));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 
 			//生成炸弹

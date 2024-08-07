@@ -24,7 +24,7 @@ void ARepairMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ARepairMouse::OnAnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ARepairMouse::OnAnimationPlayEnd);
 }
 
 void ARepairMouse::MouseInit()
@@ -84,7 +84,7 @@ void ARepairMouse::OnAnimationPlayEnd()
 				if (IsValid(Cur))
 				{
 					Cur->SetActorLocation(this->GetActorLocation());
-					Cur->Init(this->bState, this->GetTranslucentSortPriority() - 2, CurCard->GetActorLocation(), CurCard);
+					Cur->Init(this->bState, this->GetRenderLayer() - 2, CurCard->GetActorLocation(), CurCard);
 				}
 			}
 
@@ -184,23 +184,30 @@ void ARepairMouse::AttackedBegin()
 				{
 					if (bHiDefence)
 					{
-						this->SetPlayAnimation(
-							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeUse), true);
+						/*this->SetPlayAnimation(
+							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeUse), true);*/
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
 					}
 					else {
-						this->SetPlayAnimation(
-							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeLowUse), true);
+						/*this->SetPlayAnimation(
+							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeLowUse), true);*/
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
 					}
 				}
 				else {
 					if (bHiDefence)
 					{
-						this->SetPlayAnimation(
-							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeCharLowUse), true);
+						/*this->SetPlayAnimation(
+							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeCharLowUse), true);*/
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
 					}
 					else {
-						this->SetPlayAnimation(
-							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeAllLowUse), true);
+						/*this->SetPlayAnimation(
+							UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.TakeAllLowUse), true);*/
+						this->SetAnimation(0, TEXT("SpineTag"), true);
 
 					}
 				}
@@ -250,7 +257,9 @@ void ARepairMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.Death), true);
+		/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->M_NormalDefenceMouseResourceStruct.Death), true);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 	//关闭碰撞
@@ -319,18 +328,27 @@ void ARepairMouse::UpdateState(const float& HurtValue, const EFlyItemAttackType&
 				{
 					if (!bAttack)
 					{
-						this->SetPlayAnimationOnce(
+						/*this->SetPlayAnimationOnce(
 							UGameSystemFunction::LoadRes(Cur->TakeFallChar),
-							UGameSystemFunction::LoadRes(Cur->CharDef));
+							UGameSystemFunction::LoadRes(Cur->CharDef));*/
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
+
 						return;
 					}
 				}
 				else {
 					if (!bAttack)
 					{
-						this->SetPlayAnimationOnce(
+						/*this->SetPlayAnimationOnce(
 							UGameSystemFunction::LoadRes(Cur->TakeFallCharLow),
-							UGameSystemFunction::LoadRes(Cur->CharLow));
+							UGameSystemFunction::LoadRes(Cur->CharLow));*/
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
+
+						this->SetAnimation(0, TEXT("SpineTag"), true);
 
 						return;
 					}
@@ -393,11 +411,15 @@ void ARepairMouse::SetAnim(const bool& bAtk, const bool& bTake, TSoftObjectPtr<U
 		if (bTake)
 		{
 			//攻击拿[遇到攻击状态，出现掉落强行播放攻击动画]
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim1), true);
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim1), true);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
 			//攻击无
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim2), true);
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim2), true);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 	else {
@@ -405,11 +427,15 @@ void ARepairMouse::SetAnim(const bool& bAtk, const bool& bTake, TSoftObjectPtr<U
 		if (bTake)
 		{
 			//攻击拿[没有攻击，遇到掉落]
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim3));
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim3));*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
 			//攻击无
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim4));
+			/*this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim4));*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }

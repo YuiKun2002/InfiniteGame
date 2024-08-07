@@ -71,16 +71,18 @@ void AJumpStateMouse::MouseDeathed()
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 
 	if (this->GetMouseDeathByBomb())
 	{
 		this->PlayBombEffAnim();
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->JumpAnim.Death), true
-		);
+		);*/
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 
 
@@ -166,16 +168,20 @@ bool AJumpStateMouse::CheckCard(const float& DeltaTime)
 			//更具当前血量播放跳跃动画
 			if (this->GetCurrentHP() > this->GetTotalHP() * 0.6)
 			{
-				this->SetPlayAnimation(
+				/*this->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->JumpAnim.Jump)
-				);
+				);*/
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				if (this->GetCurrentHP() > 0.f)
 				{
-					this->SetPlayAnimation(
+					/*this->SetPlayAnimation(
 						UGameSystemFunction::LoadRes(this->JumpAnim.JumpLow)
-					);
+					);*/
+
+					this->SetAnimation(0,TEXT("SpineTag"),true);
 				}
 			}
 
@@ -209,21 +215,27 @@ void AJumpStateMouse::UpdateState()
 		{
 			if (this->GetbIsAttack())
 			{
-				this->SetPlayAnimation(
+				/*this->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->JumpAnim.Attack), true
-				);
+				);*/
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else
 			{
-				this->SetPlayAnimation(
+				/*this->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->JumpAnim.Walk)
-				);
+				);*/
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->JumpAnim.Idle)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 	else
@@ -232,21 +244,27 @@ void AJumpStateMouse::UpdateState()
 		{
 			if (this->GetbIsAttack())
 			{
-				this->SetPlayAnimation(
+			/*	this->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->JumpAnim.AttackLow), true
-				);
+				);*/
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else
 			{
-				this->SetPlayAnimation(
+				/*this->SetPlayAnimation(
 					UGameSystemFunction::LoadRes(this->JumpAnim.WalkLow)
-				);
+				);*/
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(this->JumpAnim.IdleLow)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 }
@@ -257,7 +275,7 @@ void AJumpStateMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AJumpStateMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AJumpStateMouse::AnimPlayEnd);
 }
 
 void AJumpStateMouse::MouseInit()
@@ -272,8 +290,10 @@ void AJumpStateMouse::MouseInit()
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
-	this->SetPlayAnimation(
+	/*this->SetPlayAnimation(
 		UGameSystemFunction::LoadRes(this->JumpAnim.Idle)
-	);
+	);*/
+
+	this->SetAnimation(0,TEXT("SpineTag"),true);
 }
 

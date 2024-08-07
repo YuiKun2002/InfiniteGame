@@ -26,7 +26,9 @@ void AFlyStateMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyStateMouse::OnAnimationPlayEnd);
+	this->SetAnimation(0,TEXT("SpineTag"),true);
+
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyStateMouse::OnAnimationPlayEnd);
 }
 
 void AFlyStateMouse::MouseInit()
@@ -145,10 +147,13 @@ void AFlyStateMouse::MoveingUpdate(float DeltaTime)
 			this->MoveStop();
 			this->DisEnableCo();
 			//掉落，走路
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Falling),
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 
@@ -173,7 +178,9 @@ void AFlyStateMouse::MouseDeathed()
 
 	if (!this->GetMouseDeathByBomb())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.IdleDeath), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.IdleDeath), true);
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 }
 
@@ -251,7 +258,9 @@ void AFlyStateMouse::OnAnimationPlayEnd()
 			this->bShoot = true;
 
 			//更换新动画
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 
 			//生成障碍物
 			AObstacleActor* CurBoxClass = this->GetWorld()->SpawnActor<AObstacleActor>(
@@ -282,27 +291,37 @@ void AFlyStateMouse::UpdateState()
 				if (this->bShoot)
 				{
 					//保持飞行[已经投掷]
-					this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+
+					this->SetAnimation(0,TEXT("SpineTag"),true);
 				}
 				else {
 					//保持飞行[未投掷]
-					this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.FlyTake));
+					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.FlyTake));
+
+					this->SetAnimation(0,TEXT("SpineTag"),true);
 				}
 			}
 			else {
 				//保持飞行[无投掷]
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Fly));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 		else {
 			if (this->GetbIsAttack())
 			{
 				//攻击
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Attack));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Attack));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				//保持走路
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 	}
@@ -316,10 +335,13 @@ void AFlyStateMouse::UpdateState()
 			this->MoveStop();
 			this->DisEnableCo();
 			//掉落，走路
-			this->SetPlayAnimationOnce(
+		/*	this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Falling),
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
 			//开始掉落并且掉落启动
@@ -331,11 +353,15 @@ void AFlyStateMouse::UpdateState()
 			if (this->GetbIsAttack())
 			{
 				//攻击
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Attack));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Attack));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				//保持走路
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 	}
@@ -349,10 +375,13 @@ void AFlyStateMouse::UpdateState()
 			this->MoveStop();
 			this->DisEnableCo();
 			//掉落，走路
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Falling),
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.WalkLow)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
 			//开始掉落并且掉落启动
@@ -364,11 +393,13 @@ void AFlyStateMouse::UpdateState()
 			if (this->GetbIsAttack())
 			{
 				//攻击
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.AttackLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.AttackLow));
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				//保持走路
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.WalkLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.WalkLow));
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 	}
@@ -382,10 +413,13 @@ void AFlyStateMouse::UpdateState()
 			this->MoveStop();
 			this->DisEnableCo();
 			//掉落，走路
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Falling),
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 		else {
 
@@ -398,11 +432,15 @@ void AFlyStateMouse::UpdateState()
 			if (this->GetbIsAttack())
 			{
 				//攻击
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.AttackLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.AttackLow));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 			else {
 				//保持走路
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.WalkLow));
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.WalkLow));
+
+				this->SetAnimation(0,TEXT("SpineTag"),true);
 			}
 		}
 	}
@@ -415,10 +453,13 @@ void AFlyStateMouse::UpdateState()
 			this->MoveStop();
 			this->DisEnableCo();
 			//掉落，走路
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Falling),
 				UGameSystemFunction::LoadRes(this->FlyStateResourceStruct.Walk)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 		}
 	}
 }

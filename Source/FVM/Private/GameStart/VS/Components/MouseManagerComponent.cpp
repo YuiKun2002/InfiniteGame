@@ -667,7 +667,7 @@ AMouseActor* UMouseSpawnManager::SpawnMouse(
 			+ FVector(0.f, 90.f, -15.f)
 		);
 		//设置旋转
-		CurNewMouse->InitRotation();
+		CurNewMouse->InitSpineShow();
 
 		//获取排序
 		int32 CurSort = AGameMapInstance::GetGameMapInstance()->
@@ -721,7 +721,7 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 		//设置坐标
 		CurNewMouse->SetActorLocation(Location);
 		//设置旋转
-		CurNewMouse->InitRotation();
+		CurNewMouse->InitSpineShow();
 		//检测网格是否有效
 		if (!AGameMapInstance::GetGameMapInstance()->
 			M_MesheControllComponent->CheckMesheIsValid(MouseLine.Row,
@@ -838,7 +838,7 @@ bool UMouseSpawnManager::MakeNewMouseByName(UDataTable* MouseDataTable, FString 
 				}
 
 				//设置旋转
-				CurNewMouse->InitRotation();
+				CurNewMouse->InitSpineShow();
 				//获取排序
 				int32 CurSort = AGameMapInstance::GetGameMapInstance()->
 					M_MesheControllComponent->

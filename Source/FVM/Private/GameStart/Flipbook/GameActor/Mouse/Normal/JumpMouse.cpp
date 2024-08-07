@@ -41,7 +41,7 @@ void AJumpMouse::MouseInit()
 
 
 	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AJumpMouse::AnimationPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AJumpMouse::AnimationPlayEnd);
 }
 
 void AJumpMouse::MoveingUpdate(float DeltaTime)
@@ -72,7 +72,9 @@ void AJumpMouse::MouseDeathed()
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Death), true);
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 
 	this->MoveStop();
@@ -130,10 +132,12 @@ void AJumpMouse::UpdateState()
 
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Jump));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.Jump));
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 	else {
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.JumpLow));
+		///this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->MouseAnimalRes.JumpLow));
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 }
 
@@ -160,7 +164,6 @@ bool AJumpMouse::CheckCard(const float& DeltaTime)
 	else {
 		this->CheckDelay = 0.2f;
 	}
-
 
 	FVector Offset = FVector(0.f, -25.f, 0.f);
 	if (this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater)
@@ -204,14 +207,18 @@ bool AJumpMouse::CheckCard(const float& DeltaTime)
 				//更具当前血量播放跳跃动画
 				if (this->GetCurrentHP() > this->GetTotalHP() * 0.6)
 				{
-					this->SetPlayAnimation(
+					/*this->SetPlayAnimation(
 						UGameSystemFunction::LoadRes(this->MouseAnimalRes.Jump), true
-					);
+					);*/
+
+					this->SetAnimation(0,TEXT("SpineTag"),true);
 				}
 				else {
-					this->SetPlayAnimation(
+					/*this->SetPlayAnimation(
 						UGameSystemFunction::LoadRes(this->MouseAnimalRes.JumpLow), true
-					);
+					);*/
+
+					this->SetAnimation(0,TEXT("SpineTag"),true);
 				}
 			}
 

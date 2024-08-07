@@ -151,7 +151,7 @@ void AEngineeringMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AEngineeringMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AEngineeringMouse::AnimPlayEnd);
 	this->Meshe = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -211,7 +211,8 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 
 void AEngineeringMouse::MouseDeathed()
 {
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+		
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->bCheck = false;
@@ -222,7 +223,9 @@ void AEngineeringMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//播放死亡动画
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 }
 
@@ -263,11 +266,15 @@ void AEngineeringMouse::AnimPlayEnd()
 	if (this->bMove)
 	{
 		this->MoveStart();
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 	else {
 		this->MoveStop();
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Wait));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Wait));
+
+		this->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 
 	if (this->bValidBullet && !this->bMove && this->bShoot)
@@ -280,10 +287,13 @@ void AEngineeringMouse::AnimPlayEnd()
 			this->bValidBullet = false;
 
 			//发射新老鼠
-			this->SetPlayAnimationOnce(
+			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->Anim.Shoot),
 				UGameSystemFunction::LoadRes(this->Anim.Wait)
-			);
+			);*/
+
+			this->SetAnimation(0,TEXT("SpineTag"),true);
+			this->SetAnimation(0,TEXT("SpineTag"),true);
 
 			if (this->bCurShoot)
 			{

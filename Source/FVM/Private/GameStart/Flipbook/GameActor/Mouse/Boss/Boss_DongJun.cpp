@@ -207,8 +207,8 @@ void ABoss_DongJun::MouseInit()
 
 	this->InitBoss(TEXT("洞君"), TEXT("T_Boss_H_0"));
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_DongJun::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_DongJun::AnimPlayEnd);
 
 	this->M_MouseDef_res = Cast<UPaperFlipbook>(this->M_MouseDef.TryLoad());
 	this->M_MouseLowDef_res = Cast<UPaperFlipbook>(this->M_MouseLowDef.TryLoad());
@@ -288,9 +288,11 @@ void ABoss_DongJun::MouseDeathed()
 	this->M_BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	//设置死亡动画
-	this->SetPlayAnimation(LoadObject<UPaperFlipbook>(0,
+	/*this->SetPlayAnimation(LoadObject<UPaperFlipbook>(0,
 		TEXT("PaperFlipbook'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/Boss/0/Anim/F_M_B_0_Death.F_M_B_0_Death'"))
-	);
+	);*/
+
+	this->SetAnimation(0, TEXT("SpawnTag"), true);
 }
 
 
@@ -397,10 +399,15 @@ void UDongJunStateBase::PlayAnim(UPaperFlipbook* Anim1, UPaperFlipbook* Anim2Low
 {
 	if (this->Get()->GetCurrentHP() > this->Get()->GetTotalHP() * 0.5f)
 	{
-		this->Get()->GetRenderComponent()->SetPlayAnimation(Anim1);
+		//this->Get()->GetRenderComponent()->SetPlayAnimation(Anim1);
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
 	}
 	else {
-		this->Get()->GetRenderComponent()->SetPlayAnimation(Anim2Low);
+		//this->Get()->GetRenderComponent()->SetPlayAnimation(Anim2Low);
+
+		this->Get()->SetAnimation(0, TEXT("SpawnTag"), true);
+
 	}
 }
 
@@ -414,12 +421,12 @@ void UDJ_Out::Init()
 	this->CurTime->AddCurve(this->Get()->MouseCurveJumpInChannel, this,
 		[](UTimeLineClass* Time, UObject* Obj, float time) {
 			float A = UKismetMathLibrary::Lerp(0.f, 1.f, time);
-			Cast<UDJ_Out>(Obj)->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), A);
+			//Cast<UDJ_Out>(Obj)->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), A);
 		},
 		[](UTimeLineClass* Time, UObject* Obj) {
-			Cast<UDJ_Out>(Obj)->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), 1);
+			//Cast<UDJ_Out>(Obj)->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), 1);
 		}
-		);
+	);
 	this->CurTime->PlayFromStart();
 
 	int32 Row = UGameSystemFunction::GetRandomRange(0,
@@ -757,7 +764,8 @@ void UDJ_Create::GenChannel(int32 Row)
 	{
 		ADJChannel* CurChannel = Cast<ADJChannel>(NewC);
 		//隐藏
-		CurChannel->SetPlayAnimation(nullptr);
+		//CurChannel->SetPlayAnimation(nullptr);
+		CurChannel->SetEmptyAnimation(0, 0.2f);
 		//初始化准备
 		CurChannel->Begin();
 		//设置管道的位置
@@ -857,13 +865,13 @@ void UDJ_JumpInChannel::Init()
 
 				Cur->Get()->SetActorLocation(UKismetMathLibrary::VLerp(Cur->CurLocation, Cur->TargetLocation, time));
 
-				Cur->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), (1.f - time));
+				//Cur->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), (1.f - time));
 
 			}, [](UTimeLineClass* TimeLine, UObject* Obj) {
 				UDJ_JumpInChannel* Cur = Cast<UDJ_JumpInChannel>(Obj);
 				Cur->JumpTime = nullptr;
-			}
-			);
+				}
+				);
 		this->JumpTime->PlayFromStart();
 		this->bInit = false;
 
@@ -1130,7 +1138,7 @@ void UDJ_Jump::LastFinish(class UTimeLineClass* time, UObject* Obj)
 			//生成爆炸资源
 			AMachineBombAnim* CurBomb = Cur->Get()->GetWorld()->SpawnActor<AMachineBombAnim>(
 				UGameSystemFunction::LoadRes(Cur->Get()->MouseBombRes)
-				);
+			);
 			CurBomb->SetActorLocation(Cur->Get()->GetActorLocation());
 			CurBomb->OnInit();
 		}
@@ -1151,7 +1159,7 @@ void UDJ_Jump::LastFinish(class UTimeLineClass* time, UObject* Obj)
 			//生成爆炸资源
 			AMachineBombAnim* CurBomb = Cur->Get()->GetWorld()->SpawnActor<AMachineBombAnim>(
 				UGameSystemFunction::LoadRes(Cur->Get()->MouseBombRes)
-				);
+			);
 			CurBomb->SetActorLocation(Cur->Get()->GetActorLocation());
 			CurBomb->OnInit();
 		}
@@ -1210,7 +1218,7 @@ void UDJ_JumpEnd::Init()
 		[](UTimeLineClass* time, UObject* Obj, float Value)
 		{
 			UDJ_JumpEnd* Cur = Cast<UDJ_JumpEnd>(Obj);
-			Cur->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(TEXT("A"), (1.f - Value));
+			//Cur->Get()->GetRenderComponent()->SetScalarParameterValueOnMaterials(TEXT("A"), (1.f - Value));
 		},
 		[](UTimeLineClass* time, UObject* Obj)
 		{
@@ -1218,7 +1226,7 @@ void UDJ_JumpEnd::Init()
 			Cur->Get()->AddActorLocalOffset(FVector(0.f, 2000.f, 0.f));
 			Cur->Get()->GetMan()->ChangeState(NewObject<UDJ_Out>());
 		}
-		);
+	);
 	this->JumpTimeLine->PlayFromStart();
 }
 

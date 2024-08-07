@@ -17,7 +17,7 @@ ABoss_LXQS::ABoss_LXQS()
 	this->CurMesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheColision"));
 	this->CurMouseColisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("MouseColision"));
 
-	this->CurMesheComp->SetupAttachment(this->GetMyActor());
+	this->CurMesheComp->SetupAttachment(this->GetPointComponent());
 	this->CurMouseColisionComp->SetupAttachment(this->CurMesheComp);
 }
 
@@ -58,8 +58,8 @@ void ABoss_LXQS::InMapMeshe(ELineType NewType)
 	}
 	else {
 		this->InWaterAnim->SetHiddenInGame(true);
-		this->GetRenderComponent()->
-			SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0);
+		/*this->GetRenderComponent()->
+			SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0);*/
 		this->M_Proper_Condition.M_CurrentInType = NewType;
 	}
 }
@@ -96,7 +96,10 @@ void ABoss_LXQS::MouseDeathed()
 	this->DisEnableCo();
 
 	//设置死亡动画
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->LXQSAnim.Death), true);
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->LXQSAnim.Death), true);
+
+	this->SetAnimation(0, SpineMouseDeath, true);
+
 }
 
 void ABoss_LXQS::Init()
@@ -107,8 +110,8 @@ void ABoss_LXQS::Init()
 	//this->DisEnableCo();
 
 	//绑定动画播放结束
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_LXQS::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ABoss_LXQS::AnimPlayEnd);
 
 	//初始化第一个状态
 	this->CurStateClass = ABoss_LXQS::MakeLXQSState<ULXQS_BeginState>(this);
@@ -247,7 +250,9 @@ void ULXQS_BeginState::Init(class ABoss_LXQS* OnwerClass)
 	Super::Init(OnwerClass);
 
 	//播放行走动画
-	this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveFront));
+	//this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveFront));
+
+	this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 
 	this->TargetRow = this->Onwer->GetMouseLine().Row;
 	//初始化位置
@@ -306,13 +311,21 @@ void ULXQS_BeginState::TimeLineFinish()
 	//播放默认状态的动画
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
-		this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+		/*this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
-		this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+		/*this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 
@@ -344,12 +357,16 @@ void ULXQS_MoveDownState::Init(class ABoss_LXQS* OnwerClass)
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveDown), true);
+		//this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveDown), true);
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveDownLow), true);
+		//this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.MoveDownLow), true);
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 
@@ -438,13 +455,19 @@ void ULXQS_MoveDownState::TimeLineFinish()
 	//播放默认状态的动画
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
-		this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+		/*this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
-		this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+		/*this->Onwer->SetPlayAnimationOnce(this->Onwer->GetRenderComponent()->GetFlipbook(),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 	this->bMoveFinish = true;
@@ -482,14 +505,18 @@ void ULXQS_ShootMissileState::Init(class ABoss_LXQS* OnwerClass)
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_1),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_1),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));*/
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_1Low),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_1Low),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));*/
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -584,14 +611,20 @@ void ULXQS_ShootBubbleState::Init(class ABoss_LXQS* OnwerClass)
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_2),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_2),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
 		//播放行走动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_2Low),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Shoot_2Low),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 
 	this->bPlay = true;
@@ -709,12 +742,16 @@ void ULXQS_ShootBubbleState::Update(const float& tick)
 					if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 					{
 						//播放行走动画
-						this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+						//this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle));
+
+						this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 					}
 					else
 					{
 						//播放行走动画
-						this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+						//this->Onwer->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow));
+
+						this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 					}
 
 					this->bPlay = false;
@@ -774,14 +811,20 @@ void ULXQS_RotationMoveState::Init(class ABoss_LXQS* OnwerClass)
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
 		//播放滚动的动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBegin),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBegin),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else
 	{
 		//播放滚动的动画
-		this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBeginLow),
-			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));
+		/*this->Onwer->SetPlayAnimationOnce(UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBeginLow),
+			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));*/
+
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+		this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -834,17 +877,22 @@ void ULXQS_RotationMoveState::AnimPlayEnd()
 			if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 			{
 				//播放滚动的动画
-				this->Onwer->SetPlayAnimationOnce(
+				/*this->Onwer->SetPlayAnimationOnce(
 					UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBegin),
 					UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove)
-				);
+				);*/
+				this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+				this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 			else
 			{
 				//播放滚动的动画
-				this->Onwer->SetPlayAnimationOnce(
+				/*this->Onwer->SetPlayAnimationOnce(
 					UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveBeginLow),
-					UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));
+					UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMove));*/
+
+				this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
+				this->Onwer->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 
 			//寻找移动目标
@@ -960,18 +1008,24 @@ void ULXQS_RotationMoveState::TimeLineFinish()
 	if (this->Onwer->GetCurrentHP() > (this->Onwer->GetTotalHP() * 0.55f))
 	{
 		//播放滚动的动画
-		this->Onwer->SetPlayAnimationOnce(
+		/*this->Onwer->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveEnd),
 			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.Idle)
-		);
+		);*/
+
+		this->Onwer->SetAnimation(0,TEXT("SpineTag"),true);
+		this->Onwer->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 	else
 	{
 		//播放滚动的动画
-		this->Onwer->SetPlayAnimationOnce(
+		/*this->Onwer->SetPlayAnimationOnce(
 			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.RotationMoveEndLow),
 			UGameSystemFunction::LoadRes(this->Onwer->LXQSAnim.IdleLow)
-		);
+		);*/
+
+		this->Onwer->SetAnimation(0,TEXT("SpineTag"),true);
+		this->Onwer->SetAnimation(0,TEXT("SpineTag"),true);
 	}
 
 	if (!this->bBack)

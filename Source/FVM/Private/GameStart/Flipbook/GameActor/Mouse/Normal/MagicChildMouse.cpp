@@ -23,7 +23,7 @@ void AMagicChildMouse::OnFlyEnd()
 	this->bFlyMove = true;
 	this->bAtk = true;
 
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
 }
 
 void AMagicChildMouse::DisEnableATK()
@@ -48,7 +48,7 @@ void AMagicChildMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicChildMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicChildMouse::AnimPlayEnd);
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
@@ -58,7 +58,10 @@ void AMagicChildMouse::MouseInit()
 	Super::MouseInit();
 
 	//播放走动动画
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
+
 	this->bAtk = true;
 }
 
@@ -78,28 +81,35 @@ void AMagicChildMouse::AttackedBegin()
 {
 	Super::AttackedBegin();
 
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Attack));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Attack));
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void AMagicChildMouse::AttackedEnd()
 {
 	Super::AttackedEnd();
 
-	this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
+	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Walk));
+
+	this->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
 void AMagicChildMouse::MouseDeathed()
 {
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	this->bAtk = false;
 
 	Super::MouseDeathed();
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Death));
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Death));
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
+
 	}
 }
 

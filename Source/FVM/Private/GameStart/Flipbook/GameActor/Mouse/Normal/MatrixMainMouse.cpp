@@ -272,7 +272,7 @@ void AMatrixMainMouse::BeginPlay()
 {
 	Super::BeginPlay();
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMatrixMainMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMatrixMainMouse::AnimPlayEnd);
 }
 
 void AMatrixMainMouse::MouseInit()
@@ -402,7 +402,7 @@ void AMatrixMainMouse::MouseDeathed()
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//解除绑定
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	this->bAttack = false;
 
 	Super::MouseDeathed();
@@ -417,9 +417,11 @@ void AMatrixMainMouse::MouseDeathed()
 		this->PlayBombEffAnim();
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.IdleDeath)
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -590,14 +592,18 @@ void AMatrixMainMouse::UpdateAnim(bool bState, const TSoftObjectPtr<UPaperFlipbo
 		//播放奔跑动画
 		if (Cur > this->GetTotalHP() * 0.5)
 		{
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(CurAnim), true
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 		else {
-			this->SetPlayAnimation(
+			/*this->SetPlayAnimation(
 				UGameSystemFunction::LoadRes(CurAnimLow), true
-			);
+			);*/
+
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }
@@ -670,14 +676,18 @@ void AMatrixMainMouse::CreateNewChild()
 	float Cur = this->GetCurrentHP();
 	if (Cur > this->GetTotalHP() * 0.5)
 	{
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.Create)
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(
+		/*this->SetPlayAnimation(
 			UGameSystemFunction::LoadRes(this->Anim.CreateLow)
-		);
+		);*/
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 
@@ -706,8 +716,8 @@ void AMatrixMainMouse::CreateChildMouse()
 		auto TCreateChild = [&](const FVector& Loca, const FLine& NewLine)->AMatrixGroupMouse* {
 			return Cast<AMatrixGroupMouse>(
 				this->CreateNewChildMouse(Loca, NewLine)
-				);
-		};
+			);
+			};
 
 		FLine CurLine = this->GetMouseLine();
 		for (const EMatrixGroupTag& CurTag : CreateTag)

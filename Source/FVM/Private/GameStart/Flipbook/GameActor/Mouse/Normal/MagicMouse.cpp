@@ -102,7 +102,9 @@ void AMagicMouse::MouseTick(const float& DeltaTime)
 			this->bMouseChild = true;
 			if (this->GetCurrentHP() > 0.f)
 			{
-				this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Create), true);
+				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Create), true);
+
+				this->SetAnimation(0, TEXT("SpineTag"), true);
 			}
 		}
 	}
@@ -114,7 +116,7 @@ void AMagicMouse::BeginPlay()
 
 	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
 
-	this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMouse::AnimPlayEnd);
+	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMouse::AnimPlayEnd);
 	this->Meshe = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -168,7 +170,7 @@ void AMagicMouse::MoveingUpdate(float DeltaTime)
 
 void AMagicMouse::MouseDeathed()
 {
-	this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
+	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->bCheck = false;
@@ -178,7 +180,10 @@ void AMagicMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//播放死亡动画
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
+
 	}
 }
 
@@ -229,8 +234,10 @@ void AMagicMouse::AnimPlayEnd()
 			this->MouseTime = this->ReadyNewMouseTime;
 			this->bCurShoot = true;
 			this->bMouseChild = false;
+
 			//发射新老鼠
-			this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Shoot), true);
+			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Shoot), true);
+			this->SetAnimation(0, TEXT("SpineTag"), true);
 
 			if (this->bCurShoot)
 			{
@@ -271,10 +278,14 @@ void AMagicMouse::AnimPlayEnd()
 
 	if (this->bMouseChild)
 	{
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 	else {
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def2), true);
+		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def2), true);
+
+		this->SetAnimation(0, TEXT("SpineTag"), true);
 	}
 }
 

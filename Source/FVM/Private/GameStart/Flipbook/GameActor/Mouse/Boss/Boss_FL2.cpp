@@ -6,10 +6,12 @@
 
 void UFLB_Create::Init()
 {
-	this->GetA()->SetPlayAnimationOnce(
+	/*this->GetA()->SetPlayAnimationOnce(
 		UGameSystemFunction::LoadRes(this->GetA()->AnimA_Out),
 		UGameSystemFunction::LoadRes(this->GetA()->AnimB_Create)
-	);
+	);*/
+
+	this->Get()->SetAnimation(0, TEXT("SpawnTag"),true);
 
 	//切换路线
 	this->GetA()->GetMouseManager()->ForceChangeLine(
