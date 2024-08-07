@@ -8,23 +8,27 @@
 #include "GameStart/VS/MapMeshe.h"
 
 #include <Components/BoxComponent.h>
+#include <Components/Capsulecomponent.h>
 
 ANormalMouse::ANormalMouse()
 {
-	this->M_MesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("NormalMouseMesheComponent"));
-	this->M_BodyComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("NormalMouseBodyComponent"));
+	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsulecomponent>(TEXT("BodyComp"));
 
 	//设置依附
-	this->M_MesheComponent->SetupAttachment(this->GetRootComponent());
-	this->M_BodyComponent->SetupAttachment(this->M_MesheComponent);
+	this->MesheComp->SetupAttachment(this->GetPointComponent());
+	this->BodyComp->SetupAttachment(this->GetPointComponent());
 }
 
 void ANormalMouse::BeginPlay()
 {
 	Super::BeginPlay();
+	//UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->BodyComp);
 
 	//初始化碰撞网格位置
-	UGameSystemFunction::InitMouseMeshe(this->M_MesheComponent, this->M_BodyComponent);
+	this->MesheComp->SetBoxExtent(FVector(20.f, 20.f, 20.f), true);
+	this->MesheComp->AddLocalOffset(FVector(0.f, 0.f, 17.f));
+
 	//绑定动画播放结束的委托
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
 	//初始化状态管理器
@@ -116,8 +120,8 @@ void ANormalMouse::MoveingBegin()
 void ANormalMouse::MouseDeathed()
 {
 	//关闭碰撞
-	this->ClosedBoxComponent(this->M_MesheComponent);
-	this->ClosedBoxComponent(this->M_BodyComponent);
+	this->ClosedBoxComponent(this->MesheComp);
+	this->ClosedBoxComponent(this->BodyComp);
 
 	Super::MouseDeathed();
 

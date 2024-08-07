@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStart/Flipbook/GameActor/Mouse/Normal/NormalBase.h"
 #include "Data/CardData/MouseDataStruct.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
+#include "GameStart/Flipbook/GameActor/Mouse/Normal/NormalBase.h"
 #include "NormalMouse.generated.h"
 
-/**
- *
- */
+class UCapsulecomponent;
+class UBoxComponent;
 
 UENUM(BlueprintType)
 enum class ENormalMouseTypeMode : uint8 {
@@ -368,6 +367,10 @@ public:
 		int32 ATKCount = 1;
 };
 
+
+/**
+ *普通陆地老鼠
+ */
 UCLASS()
 class FVM_API ANormalMouse : public ANormalBase
 {
@@ -378,10 +381,10 @@ class FVM_API ANormalMouse : public ANormalBase
 public:
 	//网格碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UBoxComponent* M_MesheComponent = nullptr;
+		UBoxComponent* MesheComp = nullptr;
 	//身体碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UBoxComponent* M_BodyComponent = nullptr;
+		UCapsulecomponent* BodyComp = nullptr;
 public:
 	//老鼠的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式")
