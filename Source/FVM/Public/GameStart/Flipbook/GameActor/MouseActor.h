@@ -28,6 +28,53 @@ class FVM_API AObstacleBase : public AGameActorFlipbookBase
 };
 
 USTRUCT(BlueprintType)
+struct FMouseDefAnimation_Anim {
+	GENERATED_USTRUCT_BODY()
+public:
+	//发呆动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> IdleAnimRes;
+	UPROPERTY()
+	FName MouseIdleAnim;
+
+	//受到伤害的发呆动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> IdleDamageAnimRes;
+	UPROPERTY()
+	FName MouseIdleDamageAnim;
+
+	//走动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> WalkAnimRes;
+	UPROPERTY()
+	FName MouseWalkAnim;
+
+	//受到伤害的走动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> WalkAnimDamageRes;
+	UPROPERTY()
+	FName MouseWalkDamageAnim;
+
+	//攻击动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> AttackAnimRes;
+	UPROPERTY()
+	FName MouseAttackAnim;
+
+	//受到伤害的攻击动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> AttackAnimDamageRes;
+	UPROPERTY()
+	FName MouseAttackDamageAnim;
+
+	//死亡动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UAssetCategoryName> DeadAnimRes;
+	UPROPERTY()
+	FName MouseDeadAnim;
+};
+
+USTRUCT(BlueprintType)
 struct FMouseProperty_HP {
 	GENERATED_USTRUCT_BODY()
 public:
@@ -172,6 +219,9 @@ public:
 	//当前z轴位置下降深度
 	UPROPERTY()
 	float fCurInWaterZ = 0.f;
+	//动画
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "默认动画属性")
+	FMouseDefAnimation_Anim M_DefAnim_Anim;
 	//血量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FMouseProperty_HP M_Proper_HP;
@@ -492,19 +542,27 @@ private:
 	AFlyItemActor* M_HitSelfFlyActor = nullptr;
 private:
 	//攻击线的延迟
+	UPROPERTY()
 	float fAttackLineDelay = 0.05f;
 	//是否启动其他线路移动
+	UPROPERTY()
 	bool bForceMoveOtherLine = false;
+	UPROPERTY()
 	bool bEnableForceMove = false;
 	//老鼠上下行的移动位置
+	UPROPERTY()
 	FVector2D MouseMoveLineScaleValue;
 	//移动时间更新
+	UPROPERTY()
 	float bMoveTime = 0.f;
 	//移动的总时间
+	UPROPERTY()
 	float bConstMoveTime = 0.5f;
 	//基础移动方向
+	UPROPERTY()
 	float fBaseMoveDirection = 1.f;
 	//是否初始化
+	UPROPERTY()
 	bool bMouseInit = false;
 private:
 	//入水的时间轴

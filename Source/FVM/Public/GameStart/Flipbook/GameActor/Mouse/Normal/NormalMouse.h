@@ -381,14 +381,14 @@ class FVM_API ANormalMouse : public ANormalBase
 public:
 	//网格碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UBoxComponent* MesheComp = nullptr;
+		class UBoxComponent* MesheComp = nullptr;
 	//身体碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCapsulecomponent* BodyComp = nullptr;
+		class UCapsuleComponent* BodyComp = nullptr;
 public:
 	//老鼠的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式")
-		ENormalMouseTypeMode M_NormalMouseTypeMode = ENormalMouseTypeMode::Def;	
+		ENormalMouseTypeMode M_NormalMouseTypeMode = ENormalMouseTypeMode::Def;
 	//老鼠的动画资源   默认模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式 | Def")
 		FNormalMouseResourceStruct M_MouseResource;

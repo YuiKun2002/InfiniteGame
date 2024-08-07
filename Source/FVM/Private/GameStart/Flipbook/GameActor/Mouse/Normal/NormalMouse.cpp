@@ -13,7 +13,7 @@
 ANormalMouse::ANormalMouse()
 {
 	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
-	this->BodyComp = CreateDefaultSubobject<UCapsulecomponent>(TEXT("BodyComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
 
 	//设置依附
 	this->MesheComp->SetupAttachment(this->GetPointComponent());
@@ -121,7 +121,9 @@ void ANormalMouse::MouseDeathed()
 {
 	//关闭碰撞
 	this->ClosedBoxComponent(this->MesheComp);
-	this->ClosedBoxComponent(this->BodyComp);
+	//this->ClosedBoxComponent(this->BodyComp);
+
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Super::MouseDeathed();
 
