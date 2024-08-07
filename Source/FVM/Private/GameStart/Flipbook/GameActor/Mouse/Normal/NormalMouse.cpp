@@ -4,7 +4,7 @@
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/NormalMouse.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/CardActor.h"
-
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/MapMeshe.h"
 
 #include <Components/BoxComponent.h>
@@ -433,6 +433,17 @@ ANormalMouse* UNormalMouseStateBase::Get()
 void UMouseStateBase::Init()
 {
 	this->M_bEnableAttakLine = true;
+
+	if (this->Get()->M_DefAnim_Anim.WalkAnimRes.Get())
+	{
+		//播放Walk动画
+		this->TrackEntry = nullptr;
+		this->TrackEntry = this->Get()->SetAnimation(
+			0,
+			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+			true
+		);
+	}
 }
 
 void UMouseStateBase::MouseTick(const float& DeltaTime)
@@ -538,6 +549,8 @@ void UMouseStateDef::OnAnimationPlayEnd()
 
 void UMouseStateDef::ModeDefState()
 {
+	return;
+
 	//更新状态[当生命值大于总生命值的40%]
 	if (this->Get()->GetCurrentHP() > this->Get()->GetTotalHP() * 0.4f)
 	{
@@ -560,13 +573,11 @@ void UMouseStateDef::ModeDefState()
 		}
 		else
 		{
-			if (!this->M_bCreatting)
-			{
-				/*	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-						this->Get()->M_MouseResource.M_MouseResidualBloodFlipbookAnim));*/
 
-				this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-			}
+			/*	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
+					this->Get()->M_MouseResource.M_MouseResidualBloodFlipbookAnim));*/
+
+			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 		}
 	}
 }

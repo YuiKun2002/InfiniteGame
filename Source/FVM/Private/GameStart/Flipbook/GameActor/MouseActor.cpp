@@ -978,10 +978,13 @@ void AMouseActor::BeginPlay()
 		this->SetActorTickEnabled(false);
 	}
 
+	//加载动画名称
+	//UGameSystemFunction::GetAssetCategoryName(this->M_DefAnim_Anim.WalkAnimRes);
+
 	//设置材质
-	this->GetRenderComponent()->SetMaterial(0, LoadObject<UMaterialInstance>(this,
+	/*this->GetRenderComponent()->SetMaterial(0, LoadObject<UMaterialInstance>(this,
 		TEXT("MaterialInstanceConstant'/Game/Resource/BP/Martials/Mouse/MI_MouseRender.MI_MouseRender'")
-	));
+	));*/
 
 	//生成buff
 	this->M_Buff = UGameBuff::MakeGameBuff(this, EGameBuffCharTag::Mouse);

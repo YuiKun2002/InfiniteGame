@@ -30,22 +30,22 @@ struct FNormalMouseResourceStruct {
 public:
 	//正常形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseNomalFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseNomalFlipbookAnim;
 	//残血形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseResidualBloodFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseResidualBloodFlipbookAnim;
 	//正常形态(Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseAttackNomalFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseAttackNomalFlipbookAnim;
 	//残血形态(Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseAttackResidualBloodFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseAttackResidualBloodFlipbookAnim;
 	//死亡形态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseDeathedFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseDeathedFlipbookAnim;
 	//被创建形态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_MouseCreateFlipbookAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_MouseCreateFlipbookAnim;
 };
 
 
@@ -56,40 +56,40 @@ struct FNormalAddMouseResourceStruct {
 public:
 	//有头盔行走
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadAnim;
 	//有头盔【损坏】行走
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadLowAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadLowAnim;
 	//有头盔攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKAnim;
 	//有头盔【损坏】攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKLowAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKLowAnim;
 	//头盔掉落行走
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadRemoveAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadRemoveAnim;
 	//头盔掉落攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKRemoveAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalHeadATKRemoveAnim;
 	//无盔行走
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalAnim;
 	//无盔低血行走
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalLowAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalLowAnim;
 	//无盔攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalATKAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalATKAnim;
 	//无盔低血攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalATKLowAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalATKLowAnim;
 	//死亡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> M_NomalDeathAnim;
+	TSoftObjectPtr<UPaperFlipbook> M_NomalDeathAnim;
 	//头盔是否已经掉落
 	UPROPERTY()
-		bool bHeadRemove = false;
+	bool bHeadRemove = false;
 };
 
 //带有一个前防御门的老鼠，一般惧怕穿透类型的防御卡
@@ -99,70 +99,70 @@ struct FNormalDefenceMouseResourceStruct {
 public:
 	//防具基础血量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float DefenceItemBaseHP = 20.f;
+	float DefenceItemBaseHP = 20.f;
 	//防具基础当前血量
 	UPROPERTY()
-		float DefenceItemCurHP = 20.f;
+	float DefenceItemCurHP = 20.f;
 	//全状态
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> Take;
+	TSoftObjectPtr<UPaperFlipbook> Take;
 	//防御残血
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeLow;
+	TSoftObjectPtr<UPaperFlipbook> TakeLow;
 	//防具正常，角色残血
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeCharLow;
+	TSoftObjectPtr<UPaperFlipbook> TakeCharLow;
 	//防具和角色残血
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeAllLow;
+	TSoftObjectPtr<UPaperFlipbook> TakeAllLow;
 	//防具掉正常落，角色
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeFallChar;
+	TSoftObjectPtr<UPaperFlipbook> TakeFallChar;
 	//防具掉落，角色残血
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeFallCharLow;
+	TSoftObjectPtr<UPaperFlipbook> TakeFallCharLow;
 	//无防具
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> CharDef;
+	TSoftObjectPtr<UPaperFlipbook> CharDef;
 	//无防具残血
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> CharLow;
+	TSoftObjectPtr<UPaperFlipbook> CharLow;
 
 	//全状态攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeAtk;
+	TSoftObjectPtr<UPaperFlipbook> TakeAtk;
 	//防具残血角色正常攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeLowAtk;
+	TSoftObjectPtr<UPaperFlipbook> TakeLowAtk;
 	//防具正常角色残血攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeCharLowAtk;
+	TSoftObjectPtr<UPaperFlipbook> TakeCharLowAtk;
 	//防具残血角色残血攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> TakeCharAllLowAtk;
+	TSoftObjectPtr<UPaperFlipbook> TakeCharAllLowAtk;
 	//无防具角色正常攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> CharAtk;
+	TSoftObjectPtr<UPaperFlipbook> CharAtk;
 	//无防具残血角色正常攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> CharLowAtk;
+	TSoftObjectPtr<UPaperFlipbook> CharLowAtk;
 
 	//死亡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> Death;
+	TSoftObjectPtr<UPaperFlipbook> Death;
 	//掉落防具后增加移动速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool bItemRemoveAddtionSpeed = false;
+	bool bItemRemoveAddtionSpeed = false;
 	//加速倍率
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float fAddtionSpeedRate = 1.2f;
+	float fAddtionSpeedRate = 1.2f;
 
 	//防御道具是否已经掉落
 	UPROPERTY()
-		bool bItemRemove = false;
+	bool bItemRemove = false;
 	//状态管理器
 	UPROPERTY()
-		class UNormalMouseDefenceStateManager* Manager = nullptr;
+	class UNormalMouseDefenceStateManager* Manager = nullptr;
 };
 
 //甲虫模式
@@ -172,16 +172,16 @@ struct FNormalBugMouseResourceStruct {
 public:
 	//默认
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> MDef;
+	TSoftObjectPtr<UPaperFlipbook> MDef;
 	//攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> MATK;
+	TSoftObjectPtr<UPaperFlipbook> MATK;
 	//死亡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> MDeath;
+	TSoftObjectPtr<UPaperFlipbook> MDeath;
 	//最大攻击次数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 AttackMaxCount = 1;
+	int32 AttackMaxCount = 1;
 };
 
 class UBoxComponent;
@@ -192,7 +192,7 @@ class FVM_API UNormalMouseStateManager : public UObject
 {
 	GENERATED_BODY()
 
-		friend class UNormalMouseStateBase;
+	friend class UNormalMouseStateBase;
 
 public:
 	static UNormalMouseStateManager* MakeNormalMouseStateManager(class ANormalMouse* NewMouseActor);
@@ -201,9 +201,9 @@ public:
 	UNormalMouseStateBase* GetState();
 private:
 	UPROPERTY()
-		class ANormalMouse* MouseActor = nullptr;
+	class ANormalMouse* MouseActor = nullptr;
 	UPROPERTY()
-		class UNormalMouseStateBase* MouseState = nullptr;
+	class UNormalMouseStateBase* MouseState = nullptr;
 };
 
 
@@ -212,7 +212,7 @@ class FVM_API UNormalMouseStateBase : public UObject
 {
 	GENERATED_BODY()
 
-		friend class UNormalMouseStateManager;
+	friend class UNormalMouseStateManager;
 
 public:
 	//初始化
@@ -236,10 +236,11 @@ public:
 	//动画播放完毕
 	virtual void OnAnimationPlayEnd();
 protected:
+	UFUNCTION()
 	ANormalMouse* Get();
 private:
 	UPROPERTY()
-		UNormalMouseStateManager* CurManager = nullptr;
+	UNormalMouseStateManager* CurManager = nullptr;
 };
 
 //默认老鼠状态
@@ -261,7 +262,10 @@ public:
 public:
 	//是否启动攻击线
 	UPROPERTY()
-		bool M_bEnableAttakLine = true;
+	bool M_bEnableAttakLine = true;
+	//当前轨道0动画
+	UPROPERTY()
+	class UTrackEntry* TrackEntry = nullptr;
 };
 
 //默认模式
@@ -357,7 +361,7 @@ public:
 	//执行buff
 	virtual void ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime);
 	UPROPERTY()
-		int32 ATKCount = 1;
+	int32 ATKCount = 1;
 };
 
 
@@ -369,37 +373,37 @@ class FVM_API ANormalMouse : public ANormalBase
 {
 	GENERATED_BODY()
 
-		friend class UNormalMouseDefenceStateManager;
+	friend class UNormalMouseDefenceStateManager;
 
 public:
 	//网格碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* MesheComp = nullptr;
+	class UBoxComponent* MesheComp = nullptr;
 	//身体碰撞组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UCapsuleComponent* BodyComp = nullptr;
+	class UCapsuleComponent* BodyComp = nullptr;
 public:
 	//老鼠的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式")
-		ENormalMouseTypeMode M_NormalMouseTypeMode = ENormalMouseTypeMode::Def;
+	ENormalMouseTypeMode M_NormalMouseTypeMode = ENormalMouseTypeMode::Def;
 	//老鼠的动画资源   默认模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式 | Def")
-		FNormalMouseResourceStruct M_MouseResource;
+	FNormalMouseResourceStruct M_MouseResource;
 	//老鼠的动画资源   装饰模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式 | Add")
-		FNormalAddMouseResourceStruct M_NormalAddMouseResourceStruct;
+	FNormalAddMouseResourceStruct M_NormalAddMouseResourceStruct;
 	//老鼠的动画资源   防具模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式 | Defence")
-		FNormalDefenceMouseResourceStruct M_NormalDefenceMouseResourceStruct;
+	FNormalDefenceMouseResourceStruct M_NormalDefenceMouseResourceStruct;
 	//老鼠的动画资源   甲虫模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式 | Bug")
-		FNormalBugMouseResourceStruct M_NormalBugMouseResourceStruct;
+	FNormalBugMouseResourceStruct M_NormalBugMouseResourceStruct;
 	//可以攻击卡片的什么类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardCollisionType M_ECardCollisionType = ECardCollisionType::E_CardActor2;
+	ECardCollisionType M_ECardCollisionType = ECardCollisionType::E_CardActor2;
 	//状态管理器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "状态管理器")
-		UNormalMouseStateManager* Manager = nullptr;
+	UNormalMouseStateManager* Manager = nullptr;
 public:
 	//构造
 	ANormalMouse();
@@ -429,14 +433,14 @@ public:
 	virtual void ExitBuff(EGameBuffTag BuffTag)	override;
 	//动画播放完毕
 	UFUNCTION()
-		void OnAnimationPlayEnd();
+	void OnAnimationPlayEnd();
 };
 
 UCLASS()
 class FVM_API UNormalMouseDefenceStateManager :public UObject {
 	GENERATED_BODY()
 
-		friend class ANormalMouse;
+	friend class ANormalMouse;
 public:
 	//创建管理器
 	static UNormalMouseDefenceStateManager* MakeNormalMouseDefenceStateManager(class ANormalMouse* CurMouse);
@@ -451,5 +455,5 @@ public:
 		TSoftObjectPtr<UPaperFlipbook> Anim3, TSoftObjectPtr<UPaperFlipbook> Anim4);
 private:
 	UPROPERTY()
-		ANormalMouse* NormalMouse = nullptr;
+	ANormalMouse* NormalMouse = nullptr;
 };
