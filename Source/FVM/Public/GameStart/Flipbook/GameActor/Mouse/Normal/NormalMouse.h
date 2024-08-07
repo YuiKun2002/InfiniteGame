@@ -266,6 +266,9 @@ public:
 	//当前轨道0动画
 	UPROPERTY()
 	class UTrackEntry* TrackEntry = nullptr;
+	//状态
+	UPROPERTY()
+	int32 State = 0;
 };
 
 //默认模式
@@ -288,6 +291,9 @@ public:
 	virtual void MouseDeathed() override;
 	//动画播放完毕
 	virtual void OnAnimationPlayEnd() override;
+	//动画播放完成
+	UFUNCTION()
+	void OnAnimationComplet(class UTrackEntry* Track);
 protected:
 	//默认模式状态
 	void ModeDefState();

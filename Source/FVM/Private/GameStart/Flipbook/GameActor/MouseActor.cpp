@@ -54,6 +54,11 @@ UMouseManagerComponent* AMouseActor::GetMouseManager()
 	return this->M_MouseManager;
 }
 
+void AMouseActor::AlienDeadAnimationCompelet(UTrackEntry* Track)
+{
+	this->Destroy();
+}
+
 void AMouseActor::UpdateColor()
 {
 	if (!this->M_Proper_Condition.M_bColor)
@@ -1054,9 +1059,9 @@ void AMouseActor::MouseDeathed()
 {
 	//绑定死亡动画播放结束
 	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	
+
 	/*Spine Tag 老鼠死亡 Spine标记*/
-	
+
 	//释放当前的所有攻击目标
 	this->SetCurrentAttackCard(nullptr);
 	//取消攻击

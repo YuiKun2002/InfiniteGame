@@ -34,44 +34,24 @@ public:
 	//发呆动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> IdleAnimRes;
-	UPROPERTY()
-	FName MouseIdleAnim;
-
 	//受到伤害的发呆动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> IdleDamageAnimRes;
-	UPROPERTY()
-	FName MouseIdleDamageAnim;
-
 	//走动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> WalkAnimRes;
-	UPROPERTY()
-	FName MouseWalkAnim;
-
 	//受到伤害的走动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> WalkAnimDamageRes;
-	UPROPERTY()
-	FName MouseWalkDamageAnim;
-
 	//攻击动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> AttackAnimRes;
-	UPROPERTY()
-	FName MouseAttackAnim;
-
 	//受到伤害的攻击动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> AttackAnimDamageRes;
-	UPROPERTY()
-	FName MouseAttackDamageAnim;
-
 	//死亡动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UAssetCategoryName> DeadAnimRes;
-	UPROPERTY()
-	FName MouseDeadAnim;
 };
 
 USTRUCT(BlueprintType)
@@ -518,9 +498,14 @@ public:
 public:
 	//构造
 	AMouseActor();
+
 	//获取老鼠管理器
 	UFUNCTION()
 	UMouseManagerComponent* GetMouseManager();
+
+	//外星人死亡销毁【请使用Spine代理】
+	UFUNCTION()
+	void AlienDeadAnimationCompelet(class UTrackEntry* Track);
 private:
 	void UpdateColor();
 private:

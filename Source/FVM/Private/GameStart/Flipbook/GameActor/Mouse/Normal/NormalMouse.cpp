@@ -443,6 +443,8 @@ void UMouseStateBase::Init()
 			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 			true
 		);
+
+		this->State = 0;
 	}
 }
 
@@ -536,7 +538,19 @@ void UMouseStateDef::MouseDeathed()
 	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
 		this->Get()->M_MouseResource.M_MouseDeathedFlipbookAnim), true);*/
 
-	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+		//this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+
+	if (this->State != 4)
+	{
+		this->TrackEntry = nullptr;
+		this->TrackEntry = this->Get()->SetAnimation(
+			0,
+			this->Get()->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+			true
+		);
+		this->TrackEntry->AnimationComplete.AddDynamic(this->Get(), &AMouseActor::AlienDeadAnimationCompelet);
+		this->State = 4;
+	}
 }
 
 void UMouseStateDef::OnAnimationPlayEnd()
@@ -547,37 +561,78 @@ void UMouseStateDef::OnAnimationPlayEnd()
 	this->ModeDefState();
 }
 
+void UMouseStateDef::OnAnimationComplet(class UTrackEntry* Track)
+{
+	this->OnAnimationPlayEnd();
+}
+
 void UMouseStateDef::ModeDefState()
 {
-	return;
-
 	//更新状态[当生命值大于总生命值的40%]
 	if (this->Get()->GetCurrentHP() > this->Get()->GetTotalHP() * 0.4f)
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_MouseResource.M_MouseAttackNomalFlipbookAnim), true);*/
+			if (this->State != 1)
+			{
+				//播放攻击动画
+				this->TrackEntry = nullptr;
+				this->TrackEntry = this->Get()->SetAnimation(
+					0,
+					this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+					true
+				);
 
-			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
+
+				this->State = 1;
+			}
+		}
+		else {
+			if (this->State != 0)
+			{
+				this->TrackEntry = nullptr;
+				this->TrackEntry = this->Get()->SetAnimation(
+					0,
+					this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+					true
+				);
+
+				this->State = 0;
+			}
 		}
 	}//[当生命值小于等于总生命值的40% && 老鼠生命值大于0]
 	else if (this->Get()->GetCurrentHP() <= this->Get()->GetTotalHP() * 0.4f && this->Get()->GetCurrentHP() > 0.f)
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-				this->Get()->M_MouseResource.M_MouseAttackResidualBloodFlipbookAnim), true);*/
+			if (this->State != 3)
+			{
+				//播放攻击动画
+				this->TrackEntry = nullptr;
+				this->TrackEntry = this->Get()->SetAnimation(
+					0,
+					this->Get()->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
+					true
+				);
 
-			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
+
+				this->State = 3;
+			}
 		}
-		else
-		{
+		else {
+			if (this->State != 2)
+			{
+				this->TrackEntry = nullptr;
+				this->TrackEntry = this->Get()->SetAnimation(
+					0,
+					this->Get()->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
+					true
+				);
 
-			/*	this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-					this->Get()->M_MouseResource.M_MouseResidualBloodFlipbookAnim));*/
-
-			this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
+				this->State = 2;
+			}
 		}
 	}
 }
