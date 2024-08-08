@@ -6,14 +6,14 @@
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 
-void UGameConfigManager::SetCurrentLoginPlayerName(FString CurPlayerName)
+void UGameConfigManager::SetCurrentLoginPlayerName(FString CurPlayerAccountName)
 {
-	this->CurrentSelectPlayerDataName = CurPlayerName;
+	this->CurrentSelectPlayerAccountName = CurPlayerAccountName;
 }
 
 FString UGameConfigManager::GetCurrentLoginPlayerName()
 {
-	return this->CurrentSelectPlayerDataName;
+	return this->CurrentSelectPlayerAccountName;
 }
 
 void UGameConfigManager::GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseData>& OutData)
