@@ -232,6 +232,12 @@ public:
 	//获取角色临时ID
 	UFUNCTION(BlueprintPure)
 	FString GetPlayerID() const;
+	//设置角色昵称
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerUserName(const FString& UserName);
+	//设置角色账户
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerUserAccount(const FString& UserAccount);
 public:
 	//获取背包道具数量(获取当前背包道具现有的总数量)
 	int32 GetBagNum(int32 _Index);

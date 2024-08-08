@@ -25,6 +25,16 @@ FString UPlayerStructManager::GetPlayerID() const
 	return this->M_PlayerTempID;
 }
 
+void UPlayerStructManager::SetPlayerUserName(const FString& UserName)
+{
+	this->M_PlayerName = UserName;
+}
+
+void UPlayerStructManager::SetPlayerUserAccount(const FString& UserAccount)
+{
+	this->M_PlayerAccount = UserAccount;
+}
+
 int32 UPlayerStructManager::GetBagNum(int32 _Index)
 {
 	switch (_Index)

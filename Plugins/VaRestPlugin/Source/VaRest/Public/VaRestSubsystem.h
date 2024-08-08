@@ -47,7 +47,7 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Easy URL processing
-
+	
 public:
 	/** Easy way to process http requests */
 	UFUNCTION(BlueprintCallable, Category = "VaRest|Utility")
