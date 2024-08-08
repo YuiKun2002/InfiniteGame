@@ -25,7 +25,7 @@ ULocalPlayerDataHandle* ULocalPlayerDataHandle::MakeLocalPlayerDataHandle(FStrin
 
 bool ULocalPlayerDataHandle::SavePlayerData_Implementation(const FString& SaveLogMsg)
 {
-	this->SaveLocalSaveGame(this->LocalData, LocalPlayerAccount + TEXT("_Server"), SaveLogMsg);
+	this->SaveLocalSaveGame(this->LocalData, LocalPlayerAccount + TEXT("_ServerCache"), SaveLogMsg);
 
 	return true;
 }
@@ -34,7 +34,7 @@ bool ULocalPlayerDataHandle::SavePlayerData_Implementation(const FString& SaveLo
 bool ULocalPlayerDataHandle::LoadPlayerData_Implementation(const FString& LoadLogMsg)
 {
 	this->LocalData = Cast<UPlayerStructManager>(
-		this->LoadLocalSaveGame(LocalPlayerAccount + TEXT("_Server"), LoadLogMsg)
+		this->LoadLocalSaveGame(LocalPlayerAccount + TEXT("_ServerCache"), LoadLogMsg)
 	);
 
 	if (IsValid(this->LocalData))
@@ -69,7 +69,7 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 
 	/*
 	//查询本地存档是否存在
-	FString LocalPlayerFileName = LocalPlayerAccount + FString(TEXT("_Server"));
+	FString LocalPlayerFileName = LocalPlayerAccount + FString(TEXT("_ServerCache"));
 	if (this->LocalFileIsExist(LocalPlayerFileName))
 	{
 		UPlayerStructManager* PlayerInstance = Cast<UPlayerStructManager>(
@@ -147,7 +147,7 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 
 bool ULocalPlayerDataHandle::RemovePlayerData_Implementation()
 {
-	return UGameplayStatics::DeleteGameInSlot(LocalPlayerAccount + FString(TEXT("_Server")), 0);
+	return UGameplayStatics::DeleteGameInSlot(LocalPlayerAccount + FString(TEXT("_ServerCache")), 0);
 }
 
 UPlayerStructManager* ULocalPlayerDataHandle::GetPlayerData_Implementation()

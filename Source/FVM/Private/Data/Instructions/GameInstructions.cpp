@@ -82,7 +82,7 @@ bool UGameInstructions::SingleIns(const TArray<FString>& Instruction)
 		return false;
 	}
 
-	if (this->GetSystem()->InstructionTest(Instruction[0], TEXT("_Server")))
+	if (this->GetSystem()->InstructionTest(Instruction[0], TEXT("_ServerCache")))
 	{
 		if (this->GetMap())
 		{
