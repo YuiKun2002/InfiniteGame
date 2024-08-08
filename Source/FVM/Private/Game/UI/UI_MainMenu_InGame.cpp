@@ -286,6 +286,7 @@ bool UUI_MainMenu_InGame::InspectPlayerData()
 		return false;
 	}
 
+	/*
 	//进行版本匹配
 	if (!CurrentPlayerIns->M_GameVersion.Equals(UFVMGameInstance::GetGameVersion()))
 	{
@@ -304,6 +305,7 @@ bool UUI_MainMenu_InGame::InspectPlayerData()
 			Widget->AddToViewport();
 		}
 	}
+	*/
 
 	//发送补偿邮件
 	UGameSystemFunction::SendVersionCompensate();

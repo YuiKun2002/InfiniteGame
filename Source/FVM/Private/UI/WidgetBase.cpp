@@ -306,12 +306,12 @@ UTexture2D* UWidgetBase::WidgetLoadTexture2D(const FString& _Path)
 	return Cast<UTexture2D>(LStreamLoad.LoadSynchronous(Path));
 }
 
-void UWidgetBase::CreateTipWidget(const FString& _Text, FVector _Color, float Alpha)
+void UWidgetBase::CreateTipWidget(const FString& _Text, FVector _Color, float Alpha,int32 ZOder)
 {
 	UUI_Tip* Tip = CreateWidget<UUI_Tip>(UFVMGameInstance::GetFVMGameInstance(), LoadClass<UUI_Tip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_Tip.BPUI_Tip_C'")));
 	Tip->SetTipText(_Text);
 	Tip->SetTextColor(_Color, Alpha);
-	Tip->AddToViewport();
+	Tip->AddToViewport(ZOder);
 }
 
 UButton* const UWidgetBase::CreateSelectTipWidget(const FString& _Content)

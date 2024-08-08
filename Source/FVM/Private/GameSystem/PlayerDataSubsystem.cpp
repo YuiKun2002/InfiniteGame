@@ -18,14 +18,14 @@ UPlayerStructManager* IPlayerDataInterface::GetPlayerData_Implementation() { ret
 ULocalPlayerDataHandle* ULocalPlayerDataHandle::MakeLocalPlayerDataHandle(FString PlayerName, int32 PlayerSex)
 {
 	ULocalPlayerDataHandle* NewHandle = NewObject<ULocalPlayerDataHandle>();
-	NewHandle->LocalPlayerName = PlayerName;
+	NewHandle->LocalPlayerAccount = PlayerName;
 	NewHandle->LocalPlayerSex = PlayerSex;
 	return NewHandle;
 }
 
 bool ULocalPlayerDataHandle::SavePlayerData_Implementation(const FString& SaveLogMsg)
 {
-	this->SaveLocalSaveGame(this->LocalData, LocalPlayerName + TEXT("P"), SaveLogMsg);
+	this->SaveLocalSaveGame(this->LocalData, LocalPlayerAccount + TEXT("_Server"), SaveLogMsg);
 
 	return true;
 }
@@ -34,7 +34,7 @@ bool ULocalPlayerDataHandle::SavePlayerData_Implementation(const FString& SaveLo
 bool ULocalPlayerDataHandle::LoadPlayerData_Implementation(const FString& LoadLogMsg)
 {
 	this->LocalData = Cast<UPlayerStructManager>(
-		this->LoadLocalSaveGame(LocalPlayerName + TEXT("P"), LoadLogMsg)
+		this->LoadLocalSaveGame(LocalPlayerAccount + TEXT("_Server"), LoadLogMsg)
 	);
 
 	if (IsValid(this->LocalData))
@@ -47,18 +47,19 @@ bool ULocalPlayerDataHandle::LoadPlayerData_Implementation(const FString& LoadLo
 
 bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 {
+	/*
 	//输入的文字是空的
-	if (LocalPlayerName.IsEmpty())
+	if (LocalPlayerAccount.IsEmpty())
 	{
 		UWidgetBase::CreateTipWidget(TEXT("名称不能为空"), FVector(0.f, 1.f, 1.f));
 		return false;
 	}
 
-	if (LocalPlayerName.Len() > 8)
+	if (LocalPlayerAccount.Len() > 8)
 	{
 		UWidgetBase::CreateTipWidget(TEXT("名字长度不能超过8位"), FVector(0.f, 1.f, 1.f));
 		return false;
-	}
+	}*/
 
 	//获取游戏数据
 	if (!UFVMGameInstance::GetFVMGameInstance())
@@ -66,8 +67,9 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 		return false;
 	}
 
+	/*
 	//查询本地存档是否存在
-	FString LocalPlayerFileName = LocalPlayerName + FString(TEXT("P"));
+	FString LocalPlayerFileName = LocalPlayerAccount + FString(TEXT("_Server"));
 	if (this->LocalFileIsExist(LocalPlayerFileName))
 	{
 		UPlayerStructManager* PlayerInstance = Cast<UPlayerStructManager>(
@@ -90,9 +92,8 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	else {
 		//创建新的角色存档
 		UPlayerStructManager* NewPlayerIns = UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->CreateEmptyPlayerInstance();
-		NewPlayerIns->M_PlayerName = LocalPlayerName;
+		NewPlayerIns->M_PlayerName = LocalPlayerAccount;
 		NewPlayerIns->M_PlayerSex = LocalPlayerSex;
-		NewPlayerIns->M_GameVersion = UFVMGameInstance::GetGameVersion();
 		//更新准备ID数量
 		NewPlayerIns->UpdateEquipID(150);
 		//设置本地游戏实例对象
@@ -115,13 +116,38 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 
 		return true;
 	}
+	*/
 
-	return false;
+	//创建新的角色存档
+	UPlayerStructManager* NewPlayerIns = UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->CreateEmptyPlayerInstance();
+	NewPlayerIns->M_PlayerAccount = LocalPlayerAccount;
+	NewPlayerIns->M_PlayerSex = 0;
+	//更新准备ID数量
+	NewPlayerIns->UpdateEquipID(150);
+	//设置本地游戏实例对象
+	this->LocalData = NewPlayerIns;
+
+	//设置角色数据实例
+	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetPlayerDataInstance(NewPlayerIns);
+	//设置本地角色句柄
+	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetLocalPlayerDataHandle(this);
+
+	//发送数据
+	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("小笼包")), 0);
+	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("小火炉")), 0);
+	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("土司面包")), 0);
+
+	//保存存档
+	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this,
+		__FUNCTION__ +
+		FString(TEXT("角色创建完成")));
+
+	return true;
 }
 
 bool ULocalPlayerDataHandle::RemovePlayerData_Implementation()
 {
-	return UGameplayStatics::DeleteGameInSlot(LocalPlayerName + FString(TEXT("P")), 0);
+	return UGameplayStatics::DeleteGameInSlot(LocalPlayerAccount + FString(TEXT("_Server")), 0);
 }
 
 UPlayerStructManager* ULocalPlayerDataHandle::GetPlayerData_Implementation()
@@ -233,11 +259,13 @@ bool UPlayerDataSubsystem::CreateNewLocalPlayerData(ULocalPlayerDataHandle* Loca
 	return false;
 }
 
-ULocalPlayerDataHandle* UPlayerDataSubsystem::LoadLocalPlayerData(FString LocalPlayerName, const FString& LoadLogMsg)
+ULocalPlayerDataHandle* UPlayerDataSubsystem::LoadLocalPlayerData(FString LocalPlayerAccountName, const FString& LoadLogMsg)
 {
-	ULocalPlayerDataHandle* NewHandle = ULocalPlayerDataHandle::MakeLocalPlayerDataHandle(LocalPlayerName, 0);
+	ULocalPlayerDataHandle* NewHandle = ULocalPlayerDataHandle::MakeLocalPlayerDataHandle(LocalPlayerAccountName, 0);
 
-	if (UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->LoadPlayerData(NewHandle, TEXT("本地加载UPlayerDataSubsystem::LoadLocalPlayerData：") + LoadLogMsg))
+	if (UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->LoadPlayerData(
+		NewHandle, TEXT("本地加载UPlayerDataSubsystem::LoadLocalPlayerData：") + LoadLogMsg)
+		)
 	{
 		return NewHandle;
 	}

@@ -90,7 +90,7 @@ public:
 	static UTexture2D* WidgetLoadTexture2D(const FString& _Path);
 	//创建一个提示
 	UFUNCTION(BlueprintCallable)
-	static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f);
+	static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f,int32 ZOder = 0);
 	//创建一个选择确认提示框
 	UFUNCTION(BlueprintCallable)
 	static UButton* const CreateSelectTipWidget(const FString& _Content);

@@ -92,22 +92,6 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FPlayerSign
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	//角色等级称号
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString M_PlayerFlag;
-	//角色加入的工会
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString M_TradeUnionName = TEXT("未加入工会");
-	//成就名称
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString M_AchievementName = TEXT("");
-};
-
-USTRUCT(BlueprintType)
 struct FDialogueShowInfor {
 	GENERATED_BODY()
 public:

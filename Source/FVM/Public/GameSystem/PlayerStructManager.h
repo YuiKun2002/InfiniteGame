@@ -69,12 +69,12 @@ class FVM_API UPlayerStructManager : public USaveGame
 	GENERATED_BODY()
 	//-----------------------------------------------角色主要处理-----------------------------------------------
 public:
-	//角色版本
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString M_GameVersion = "";
 	// 0是女生  1是男生
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 M_PlayerSex;
+	//角色账户
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_PlayerAccount = FString(TEXT("admin"));
 	//角色名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString M_PlayerName = FString(TEXT("面包干&芙蓉"));
@@ -87,9 +87,6 @@ public:
 	//角色VIP
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FPlayerVIP M_FPlayerVIP;
-	//角色称号和描述
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FPlayerSign M_FPlayerSign;
 	//背包界面中的背包容量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FPlayerBagGirdGroup M_PlayerBagGirdGroup;
