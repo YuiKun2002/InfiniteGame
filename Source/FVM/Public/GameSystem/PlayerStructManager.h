@@ -72,6 +72,9 @@ public:
 	// 0是女生  1是男生
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 M_PlayerSex;
+	//角色临时ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_PlayerTempID = FString(TEXT("00000000001"));
 	//角色账户
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString M_PlayerAccount = FString(TEXT("admin"));
@@ -222,6 +225,13 @@ public:
 	//版本补偿
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FPlayerVersionCompensate> M_GameVersionCompensate;
+public:
+	//设置角色临时ID
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerID(const FString& TempID);
+	//获取角色临时ID
+	UFUNCTION(BlueprintPure)
+	FString GetPlayerID() const;
 public:
 	//获取背包道具数量(获取当前背包道具现有的总数量)
 	int32 GetBagNum(int32 _Index);

@@ -15,6 +15,16 @@ void UPlayerUpdateClass::Update_Implementation(class UPlayerStructManager* Playe
 	UE_LOG(LogTemp, Warning, TEXT("默认角色更新类-UPlayerUpdateClass-更新"));
 }
 
+void UPlayerStructManager::SetPlayerID(const FString& TempID)
+{
+	this->M_PlayerTempID = TempID;
+}
+
+FString UPlayerStructManager::GetPlayerID() const
+{
+	return this->M_PlayerTempID;
+}
+
 int32 UPlayerStructManager::GetBagNum(int32 _Index)
 {
 	switch (_Index)
