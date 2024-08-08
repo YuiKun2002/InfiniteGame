@@ -437,11 +437,10 @@ void UMouseStateBase::Init()
 	if (this->Get()->M_DefAnim_Anim.WalkAnimRes.Get())
 	{
 		//播放Walk动画
-		this->TrackEntry = nullptr;
 		this->TrackEntry = this->Get()->SetAnimation(
+			this->TrackEntry,
 			0,
-			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-			true
+			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName()
 		);
 
 		this->State = 0;
@@ -535,18 +534,12 @@ void UMouseStateDef::MoveingBegin()
 
 void UMouseStateDef::MouseDeathed()
 {
-	/*this->Get()->SetPlayAnimation(UGameSystemFunction::LoadRes(
-		this->Get()->M_MouseResource.M_MouseDeathedFlipbookAnim), true);*/
-
-		//this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
-
 	if (this->State != 4)
 	{
-		this->TrackEntry = nullptr;
 		this->TrackEntry = this->Get()->SetAnimation(
+			this->TrackEntry,
 			0,
-			this->Get()->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-			true
+			this->Get()->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName()
 		);
 		this->TrackEntry->AnimationComplete.AddDynamic(this->Get(), &AMouseActor::AlienDeadAnimationCompelet);
 		this->State = 4;
@@ -576,11 +569,10 @@ void UMouseStateDef::ModeDefState()
 			if (this->State != 1)
 			{
 				//播放攻击动画
-				this->TrackEntry = nullptr;
 				this->TrackEntry = this->Get()->SetAnimation(
+					this->TrackEntry,
 					0,
-					this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true
+					this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName()
 				);
 
 				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
@@ -591,11 +583,10 @@ void UMouseStateDef::ModeDefState()
 		else {
 			if (this->State != 0)
 			{
-				this->TrackEntry = nullptr;
 				this->TrackEntry = this->Get()->SetAnimation(
+					this->TrackEntry,
 					0,
-					this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true
+					this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName()
 				);
 
 				this->State = 0;
@@ -609,11 +600,10 @@ void UMouseStateDef::ModeDefState()
 			if (this->State != 3)
 			{
 				//播放攻击动画
-				this->TrackEntry = nullptr;
 				this->TrackEntry = this->Get()->SetAnimation(
+					this->TrackEntry,
 					0,
-					this->Get()->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true
+					this->Get()->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName()
 				);
 
 				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
@@ -624,11 +614,10 @@ void UMouseStateDef::ModeDefState()
 		else {
 			if (this->State != 2)
 			{
-				this->TrackEntry = nullptr;
 				this->TrackEntry = this->Get()->SetAnimation(
+					this->TrackEntry,
 					0,
-					this->Get()->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true
+					this->Get()->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName()
 				);
 
 				this->State = 2;
