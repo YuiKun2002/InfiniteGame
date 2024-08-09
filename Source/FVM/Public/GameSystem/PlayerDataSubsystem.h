@@ -140,7 +140,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "角色存档子系统 | 角色")
 	UPlayerStructManager* CreateEmptyPlayerInstance();
 	//获取角色数据实例
-	UFUNCTION(BlueprintCallable, Category = "角色存档子系统 | 角色")
+	UFUNCTION(BlueprintPure, Category = "角色存档子系统 | 角色")
 	UPlayerStructManager* GetPlayerDataInstance();
 	//设置一个新的角色实例对象
 	UFUNCTION(BlueprintCallable, Category = "角色存档子系统 | 角色")
@@ -149,7 +149,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "角色存档子系统 | 角色")
 	void SetLocalPlayerDataHandle(ULocalPlayerDataHandle* NewPlayerHandle);
 	//获取一个新的本地角色数据句柄对象
-	UFUNCTION(BlueprintCallable, Category = "角色存档子系统 | 角色")
+	UFUNCTION(BlueprintPure, Category = "角色存档子系统 | 角色")
 	ULocalPlayerDataHandle* GetLocalPlayerDataHandle();
 	//--------------------------------------------------------------------------------------数据
 
