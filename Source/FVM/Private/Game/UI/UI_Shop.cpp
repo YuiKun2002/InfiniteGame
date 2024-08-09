@@ -221,9 +221,15 @@ void UUI_Shop::SelectShopTab(EShopTab _Tab)
 
 void UUI_Shop::UpdateCoinText()
 {
-	const FPlayerCoin& LCoin = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_FPlayerCoin;
-
-	this->M_Coin_Text = TEXT("金币[") + FString::FromInt(LCoin.M_Coin_0) + TEXT("]") + TEXT("礼券[") + FString::FromInt(LCoin.M_Coin_1) + TEXT("]") + TEXT("点券[") + FString::FromInt(LCoin.M_Coin_2) + TEXT("]" + TEXT("威望[") + FString::FromInt(LCoin.M_Coin_3) + TEXT("]"));
+	UPlayerStructManager* Player = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager();
+	if (IsValid(Player))
+	{
+		this->M_Coin_Text =
+			TEXT("金币[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[0].ItemName)) +
+			TEXT("]") + TEXT("礼券[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[1].ItemName)) +
+			TEXT("]") + TEXT("点券[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[2].ItemName)) +
+			TEXT("]");
+	}
 }
 
 void UUI_Shop::TransformData(const TArray<FItem_Price_Data>& _Datas, TArray<FItem_Price_Data>& _OutResult)

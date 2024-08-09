@@ -116,7 +116,7 @@ void UPlayerStructManager::SetCoin(const FString& CoinName, int32 _Num)
 
 	if (CoinName.Equals(TEXT("金币")) || CoinName.Equals(TEXT("0")))
 	{
-		if (_Num + this->M_FPlayerCoin.M_Coin_0 <= MAX_int32)
+		if (_Num + this->M_FPlayerCoin.M_Coin_0 <= MAX_int64)
 		{
 			this->M_FPlayerCoin.M_Coin_0 += _Num;
 		}
@@ -124,7 +124,7 @@ void UPlayerStructManager::SetCoin(const FString& CoinName, int32 _Num)
 
 	if (CoinName.Equals(TEXT("礼券")) || CoinName.Equals(TEXT("1")))
 	{
-		if (_Num + this->M_FPlayerCoin.M_Coin_1 <= MAX_int32)
+		if (_Num + this->M_FPlayerCoin.M_Coin_1 <= MAX_int64)
 		{
 			this->M_FPlayerCoin.M_Coin_1 += _Num;
 		}
@@ -132,22 +132,33 @@ void UPlayerStructManager::SetCoin(const FString& CoinName, int32 _Num)
 
 	if (CoinName.Equals(TEXT("点券")) || CoinName.Equals(TEXT("2")))
 	{
-		if (_Num + this->M_FPlayerCoin.M_Coin_2 <= MAX_int32)
+		if (_Num + this->M_FPlayerCoin.M_Coin_2 <= MAX_int64)
 		{
 			this->M_FPlayerCoin.M_Coin_2 += _Num;
 		}
 	}
 
-	if (CoinName.Equals(TEXT("威望")) || CoinName.Equals(TEXT("3")))
+	this->Save(__FUNCTION__ + FString(TEXT("货币设置操作")));
+}
+
+int64 UPlayerStructManager::GetCoin(const FString& CoinName)
+{
+	if (CoinName.Equals(TEXT("金币")))
 	{
-		if (_Num + this->M_FPlayerCoin.M_Coin_3 <= MAX_int32)
-		{
-			this->M_FPlayerCoin.M_Coin_3 += _Num;
-		}
+		return	this->M_FPlayerCoin.GetCoinRef(0);
 	}
 
-	//UGameSystemFunction::SaveCurrentPlayerData();
-	this->Save(__FUNCTION__ + FString(TEXT("货币设置操作")));
+	if (CoinName.Equals(TEXT("礼券")))
+	{
+		return	this->M_FPlayerCoin.GetCoinRef(1);
+	}
+
+	if (CoinName.Equals(TEXT("点券")))
+	{
+		return	this->M_FPlayerCoin.GetCoinRef(2);
+	}
+
+	return 0;
 }
 
 bool UPlayerStructManager::CheckCoin(const FString& CoinName)

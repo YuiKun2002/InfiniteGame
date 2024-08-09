@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "VaRestSubsystem.h"
 #include "UObject/NoExportTypes.h"
 #include "GameSystem/Item/ItemStruct.h"
 #include "PlayerStructBase.generated.h"
@@ -103,6 +104,21 @@ public:
 	FString DialogueTarget;
 };
 
+//角色货币(存储信息兼容后端)
+USTRUCT(BlueprintType)
+struct FPlayerCoinStringJson {
+	GENERATED_USTRUCT_BODY()
+public:
+	//金币
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_Coin_0;
+	//礼券
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_Coin_1;
+	//点券
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_Coin_2;
+};
 //角色货币(存储信息)
 USTRUCT(BlueprintType)
 struct FPlayerCoin {
@@ -111,18 +127,15 @@ public:
 	//货币分等级
 	//金币
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 M_Coin_0 = 2000;
+	int64 M_Coin_0 = 0;
 	//礼券
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 M_Coin_1 = 600;
+	int64 M_Coin_1 = 0;
 	//点券
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 M_Coin_2 = 0;
-	//威望
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 M_Coin_3 = 0;
+	int64 M_Coin_2 = 0;
 public:
-	int32& GetCoinRef(uint8 _Index)
+	int64& GetCoinRef(uint8 _Index)
 	{
 		//添加货币
 		switch (_Index)
@@ -130,12 +143,24 @@ public:
 		case 0u:return this->M_Coin_0;
 		case 1u:return this->M_Coin_1;
 		case 2u:return this->M_Coin_2;
-		case 3u:return this->M_Coin_3;
 		}
 
 		return this->M_Coin_0;
 	}
+
+	//转换适用后端的结构体
+	UFUNCTION(BlueprintPure)
+	FPlayerCoinStringJson ToStruct()
+	{
+		FPlayerCoinStringJson Temp;
+		Temp.M_Coin_0 = FString::FromInt(M_Coin_0);
+		Temp.M_Coin_1 = FString::FromInt(M_Coin_1);
+		Temp.M_Coin_2 = FString::FromInt(M_Coin_2);
+		return Temp;
+	}
 };
+
+
 
 //角色背包的格子
 USTRUCT(BlueprintType)

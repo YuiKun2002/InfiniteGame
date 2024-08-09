@@ -272,6 +272,9 @@ public:
 	//设置货币
 	UFUNCTION(BlueprintCallable)
 	void SetCoin(const FString& CoinName, int32 _Num);
+	//获取货币
+	UFUNCTION(BlueprintPure)
+	int64 GetCoin(const FString& CoinName);
 	//检查当前资源是否是货币
 	UFUNCTION(BlueprintCallable)
 	bool CheckCoin(const FString& CoinName);
@@ -389,7 +392,7 @@ struct FPlayerCoinAdd
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	static bool _Buy(int32& _Coin, const int32& _Num)
+	static bool _Buy(int64& _Coin, const int64& _Num)
 	{
 		if (_Coin < 0)
 			_Coin = 0;
@@ -400,7 +403,7 @@ public:
 		_Coin -= _Num;
 		return true;
 	}
-	static bool _Sell(int32& _Coin, const int32& _Num)
+	static bool _Sell(int64& _Coin, const int64& _Num)
 	{
 		if (_Coin < 0)
 			_Coin = 0;
@@ -421,14 +424,14 @@ public:
 public:
 	FPlayerCoinAdd() {}
 
-	static bool Buy(UPlayerStructManager* _Player, const int32& _Num, const uint8& _CoinGrade) {
+	static bool Buy(UPlayerStructManager* _Player, const int64& _Num, const uint8& _CoinGrade) {
 		if (!_Player)
 			return false;
 
 		return _Buy(_Player->M_FPlayerCoin.GetCoinRef(_CoinGrade), _Num);
 	}
 
-	static bool Sell(UPlayerStructManager* _Player, const int32& _Num, const uint8& _CoinGrade) {
+	static bool Sell(UPlayerStructManager* _Player, const int64& _Num, const uint8& _CoinGrade) {
 		if (!_Player)
 			return false;
 
