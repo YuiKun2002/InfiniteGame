@@ -47,11 +47,26 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Easy URL processing
-	
+
 public:
 	/** Easy way to process http requests */
 	UFUNCTION(BlueprintCallable, Category = "VaRest|Utility")
-	void CallURL(const FString& URL, EVaRestRequestVerb Verb, EVaRestRequestContentType ContentType, UVaRestJsonObject* VaRestJson, const FVaRestCallDelegate& Callback);
+	void CallURL(
+		const FString& URL,
+		EVaRestRequestVerb Verb,
+		EVaRestRequestContentType ContentType,
+		UVaRestJsonObject* VaRestJson,
+		const FVaRestCallDelegate& Callback);
+
+	UFUNCTION(BlueprintCallable, Category = "VaRest|Utility")
+	void CallURL_Header(
+		const FString& URL,
+		EVaRestRequestVerb Verb,
+		EVaRestRequestContentType ContentType,
+		const FString& HeaderName,
+		const FString& HeaderContent,
+		UVaRestJsonObject* VaRestJson,
+		const FVaRestCallDelegate& Callback);
 
 	/** Called when URL is processed (one for both success/unsuccess events)*/
 	void OnCallComplete(UVaRestRequestJSON* Request);

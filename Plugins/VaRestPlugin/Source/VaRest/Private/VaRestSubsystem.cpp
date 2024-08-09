@@ -57,6 +57,33 @@ void UVaRestSubsystem::CallURL(const FString& URL, EVaRestRequestVerb Verb, EVaR
 	Request->ProcessURL(URL);
 }
 
+void UVaRestSubsystem::CallURL_Header(const FString& URL, EVaRestRequestVerb Verb, EVaRestRequestContentType ContentType, const FString& HeaderName, const FString& HeaderContent, UVaRestJsonObject* VaRestJson, const FVaRestCallDelegate& Callback)
+{
+	if (VaRestJson == nullptr)
+	{
+		VaRestJson = ConstructVaRestJsonObject();
+	}
+
+	UVaRestRequestJSON* Request = ConstructVaRestRequest();
+
+	Request->SetVerb(Verb);
+	Request->SetHeader(HeaderName, HeaderContent);
+	Request->SetContentType(ContentType);
+	Request->SetRequestObject(VaRestJson);
+
+	FVaRestCallResponse Response;
+	Response.Request = Request;
+	Response.Callback = Callback;
+
+	Response.CompleteDelegateHandle = Request->OnStaticRequestComplete.AddUObject(this, &UVaRestSubsystem::OnCallComplete);
+	Response.FailDelegateHandle = Request->OnStaticRequestFail.AddUObject(this, &UVaRestSubsystem::OnCallComplete);
+
+	RequestMap.Add(Request, Response);
+
+	Request->ResetResponseData();
+	Request->ProcessURL(URL);
+}
+
 void UVaRestSubsystem::OnCallComplete(UVaRestRequestJSON* Request)
 {
 	if (!RequestMap.Contains(Request))
