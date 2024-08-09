@@ -275,6 +275,9 @@ public:
 	//获取货币
 	UFUNCTION(BlueprintPure)
 	int64 GetCoin(const FString& CoinName);
+	//请求货币
+	UFUNCTION(BlueprintPure)
+	FPlayerCoin RequestCoin(class UVaRestRequestJSON* RequestJson);
 	//检查当前资源是否是货币
 	UFUNCTION(BlueprintCallable)
 	bool CheckCoin(const FString& CoinName);

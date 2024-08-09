@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "VaRestSubsystem.h"
 #include "UObject/NoExportTypes.h"
 #include "GameSystem/Item/ItemStruct.h"
 #include "PlayerStructBase.generated.h"
@@ -146,17 +145,6 @@ public:
 		}
 
 		return this->M_Coin_0;
-	}
-
-	//转换适用后端的结构体
-	UFUNCTION(BlueprintPure)
-	FPlayerCoinStringJson ToStruct()
-	{
-		FPlayerCoinStringJson Temp;
-		Temp.M_Coin_0 = FString::FromInt(M_Coin_0);
-		Temp.M_Coin_1 = FString::FromInt(M_Coin_1);
-		Temp.M_Coin_2 = FString::FromInt(M_Coin_2);
-		return Temp;
 	}
 };
 

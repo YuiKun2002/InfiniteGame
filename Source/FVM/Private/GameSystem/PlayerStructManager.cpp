@@ -2,6 +2,7 @@
 
 
 #include "GameSystem/PlayerStructManager.h"
+#include "VaRestSubsystem.h"
 #include "Game/UI/UI_GamePrepare.h"
 #include "GameSystem/TaskSubsystem.h"
 #include "GameSystem/GameDataSubsystem.h"
@@ -159,6 +160,34 @@ int64 UPlayerStructManager::GetCoin(const FString& CoinName)
 	}
 
 	return 0;
+}
+
+FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)
+{
+	//请求对象有效
+	if (IsValid(RequestJson))
+	{
+		if (RequestJson->GetResponseCode() == 0)
+		{
+			return FPlayerCoin();
+		}
+
+		UVaRestJsonObject* JsonObject = RequestJson->GetResponseObject();
+		if (IsValid(JsonObject))
+		{
+			//货币结构
+			FPlayerCoin PlayerCoin;
+			//获取货币
+			FString Coin_0 = JsonObject->GetStringField(TEXT("coin"));
+			//转换货币
+			PlayerCoin.M_Coin_0 = FCString::Atoi64(*Coin_0);
+
+			return PlayerCoin;
+		}
+	}
+
+
+	return FPlayerCoin();
 }
 
 bool UPlayerStructManager::CheckCoin(const FString& CoinName)
