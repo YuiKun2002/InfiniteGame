@@ -178,7 +178,7 @@ FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)
 			//货币结构
 			FPlayerCoin PlayerCoin;
 			//获取货币
-			FString Coin_0 = JsonObject->GetStringField(TEXT("coin"));
+			FString Coin_0 = JsonObject->GetField(TEXT("data"))->AsObject()->GetStringField(TEXT("gold"));
 			//转换货币
 			PlayerCoin.M_Coin_0 = FCString::Atoi64(*Coin_0);
 

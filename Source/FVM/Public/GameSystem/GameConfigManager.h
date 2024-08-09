@@ -121,6 +121,12 @@ public:
 	//角色等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PlayerGrade = 1;
+	//账户
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString PlayerAccount;
+	//密码
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString PlayerPassword;
 	//角色等级路径
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString PlayerGradePath;
@@ -145,12 +151,17 @@ public:
 	//添加新的角色登陆名称
 	UFUNCTION(BlueprintCallable)
 	void AddPlayerLoginName(FString NewPlayerName, FPlayerLoginBaseData PlayerLoginData);
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentLonginAccount(const FString& NewPlayerName);
 	//移除新的角色登陆名称
 	UFUNCTION(BlueprintCallable)
 	bool RemovePlayerLoginName(FString NewPlayerName);
 	//查询当前角色名称是否在
 	UFUNCTION(BlueprintCallable)
 	bool CheckPlayerLoginNameIsValid(FString NewPlayerName);
+	//获取角色缓存
+	UFUNCTION(BlueprintPure)
+	FPlayerLoginBaseData GetPlayerLoginCacheData();
 public:
 	//上一次版本配置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameConfig")

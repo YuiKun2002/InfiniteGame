@@ -26,6 +26,11 @@ void UGameConfigManager::AddPlayerLoginName(FString NewPlayerName, FPlayerLoginB
 	this->M_LoginPlayerNames.Emplace(NewPlayerName, PlayerLoginData);
 }
 
+void UGameConfigManager::SetCurrentLonginAccount(const FString& NewPlayerName)
+{
+	this->CurrentSelectPlayerAccountName = NewPlayerName;
+}
+
 bool UGameConfigManager::RemovePlayerLoginName(FString NewPlayerName)
 {
 	if (this->M_LoginPlayerNames.Remove(NewPlayerName) != -1)
@@ -45,4 +50,15 @@ bool UGameConfigManager::CheckPlayerLoginNameIsValid(FString NewPlayerName)
 	}
 
 	return false;
+}
+
+FPlayerLoginBaseData UGameConfigManager::GetPlayerLoginCacheData()
+{
+	FPlayerLoginBaseData* Data = this->M_LoginPlayerNames.Find(this->CurrentSelectPlayerAccountName);
+	if (Data)
+	{
+		return *Data;
+	}
+
+	return FPlayerLoginBaseData();
 }
