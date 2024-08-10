@@ -17,16 +17,16 @@ struct FTargetNode {
 public:
 	//移动方向
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EShootDirection M_EShootDirection;
+	EShootDirection M_EShootDirection;
 	//移动速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_Speed = 4.f;
+	float M_Speed = 4.f;
 	//高度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_Hight = 0.f;
+	float M_Hight = 0.f;
 	//当前高度
 	UPROPERTY()
-		float M_CurrentHight = 0.f;
+	float M_CurrentHight = 0.f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -40,41 +40,41 @@ private:
 public:
 	//射击移动点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FTargetNode M_MoveNode;
+	FTargetNode M_MoveNode;
 	//节点位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_NodePosition = 0;
+	int32 M_NodePosition = 0;
 	//目标点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_Target = 0;
+	float M_Target = 0;
 	//拥有者
 	UPROPERTY(EditInstanceOnly)
-		AGameActorFlipbookBase* M_Owner = nullptr;
+	class ASpineActor* M_Owner = nullptr;
 public:
 	// Sets default values for this component's properties
 	UShootLineComponent();
 
 	//结束射击
 	UFUNCTION(BlueprintCallable)
-		void Over();
+	void Over();
 
 	//移动
 	UFUNCTION(BlueprintCallable)
-		void Move(const float& _Speed, const float& _MoveHight, float& _CurrentMoveHight);
+	void Move(const float& _Speed, const float& _MoveHight, float& _CurrentMoveHight);
 
 	//停止移动
 	UFUNCTION(BlueprintCallable)
-		void SetMoveEnabled(bool _bMove);
+	void SetMoveEnabled(bool _bMove);
 
 	//设置移动模式
 	UFUNCTION(BlueprintCallable)
-		void SetTargetNode(FTargetNode _FTargetNode);
+	void SetTargetNode(FTargetNode _FTargetNode);
 
 	//获取移动方向
 	UFUNCTION(BlueprintCallable)
-		const EShootDirection& GetMoveDirection();
+	const EShootDirection& GetMoveDirection();
 	UFUNCTION(BlueprintCallable)
-		void SetMoveDirection(const EShootDirection& _Direction);
+	void SetMoveDirection(const EShootDirection& _Direction);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

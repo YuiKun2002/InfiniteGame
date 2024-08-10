@@ -2,7 +2,7 @@
 
 
 #include "GameStart/VS/Components/Item/ShootLineComponent.h"
-#include "GameStart/Flipbook/GameActorFlipbookBase.h"
+#include "SpineActor.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 
 // Sets default values for this component's properties
@@ -81,7 +81,7 @@ void UShootLineComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->M_Owner = Cast<AGameActorFlipbookBase>(this->GetOwner());
+	this->M_Owner = Cast<ASpineActor>(this->GetOwner());
 	if (!this->M_Owner)
 	{
 		UE_LOG(LogTemp, Error, TEXT("[UShootLineComponent::BeginPlay]: 拥有者不是一个Actor"));
