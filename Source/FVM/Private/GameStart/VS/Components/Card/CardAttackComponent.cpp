@@ -157,19 +157,25 @@ void UCardAttackComponent::Spawn()
 		//获取对象的变换位置
 		FTransform NewTrans;
 		NewTrans.SetLocation(this->AttackCardActor->GetBulletLauncherLocation());
+		NewTrans.SetLocation(
+			FVector(
+				550.f,
+				NewTrans.GetLocation().Y,
+				NewTrans.GetLocation().Z
+			)
+		);
+		/*	UE_LOG(LogTemp, Error, TEXT("[%.2f %.2f %.2f],[%.2f %.2f %.2f]")
+				, this->AttackCardActor->GetActorLocation().X
+				, this->AttackCardActor->GetActorLocation().Y
+				, this->AttackCardActor->GetActorLocation().Z
 
-	/*	UE_LOG(LogTemp, Error, TEXT("[%.2f %.2f %.2f],[%.2f %.2f %.2f]")
-			, this->AttackCardActor->GetActorLocation().X
-			, this->AttackCardActor->GetActorLocation().Y
-			, this->AttackCardActor->GetActorLocation().Z
+				, this->AttackCardActor->GetBulletLauncherLocation().X
+				, this->AttackCardActor->GetBulletLauncherLocation().Y
+				, this->AttackCardActor->GetBulletLauncherLocation().Z
+			);*/
 
-			, this->AttackCardActor->GetBulletLauncherLocation().X
-			, this->AttackCardActor->GetBulletLauncherLocation().Y
-			, this->AttackCardActor->GetBulletLauncherLocation().Z
-		);*/
-
-		//获取对象池的对象
-		//生成子弹
+			//获取对象池的对象
+			//生成子弹
 		AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
 			this->Pool[this->TargetCardOtherItem.GetIndex()]->GetObjectActor()
 		);
