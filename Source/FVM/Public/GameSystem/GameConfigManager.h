@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -181,6 +181,9 @@ public:
 	//当前选择的角色存档信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameConfig")
 	FString CurrentSelectPlayerAccountName;
+	//上一次登陆的角色存档信息
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameConfig")
+	FString LastLoginPlayerAccountName;
 	//角色准备环节选择的卡片数据
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameConfig")
 	TArray<FItemCard> M_PlayerGamePrepareSelectCardData;

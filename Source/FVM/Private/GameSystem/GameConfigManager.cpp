@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GameSystem/GameConfigManager.h"
@@ -28,35 +28,50 @@ void UGameConfigManager::GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseDa
 
 void UGameConfigManager::GetPlayerLoginCache(bool& Result, FString& PlayerAccount, FString& PlayerPassword)
 {
-	FPlayerLoginBaseData Data = this->GetPlayerLoginCacheData();
+	FPlayerLoginBaseData* Data = this->M_LoginPlayerNames.Find(this->LastLoginPlayerAccountName);
 
-	if (Data.PlayerAccount.IsEmpty())
+	for (auto& Cache : this->M_LoginPlayerNames)
 	{
-		Result = false;
+		UE_LOG(LogTemp,Error,TEXT("[%s] [%s]"),*Cache.Value.PlayerAccount,*Cache.Value.PlayerPassword);
+	}
+
+	UE_LOG(LogTemp,Error,TEXT("å½“å‰è´¦æˆ·[%s]"),*this->LastLoginPlayerAccountName);
+
+	if (Data)
+	{
+		if (Data->PlayerAccount.IsEmpty())
+		{
+			Result = false;
+			return;
+		}
+
+		if (Data->PlayerPassword.IsEmpty())
+		{
+			Result = false;
+			return;
+		}
+
+		Result = true;
+		PlayerAccount = Data->PlayerAccount;
+		PlayerPassword = Data->PlayerPassword;
+
 		return;
 	}
 
-	if (Data.PlayerPassword.IsEmpty())
-	{
-		Result = false;
-		return;
-	}
-
-	Result = true;
-	PlayerAccount = Data.PlayerAccount;
-	PlayerPassword = Data.PlayerPassword;
+	Result = false;
 }
 
 void UGameConfigManager::AddPlayerLoginName(FString NewPlayerName, FPlayerLoginBaseData PlayerLoginData)
 {
-	//ÇåÀíÖ®Ç°µÄ»º´æ
+	//æ¸…ç†ä¹‹å‰çš„ç¼“å­˜
 	for (auto& Cache : this->M_LoginPlayerNames)
 	{
 		Cache.Value.PlayerAccount = TEXT("");
 		Cache.Value.PlayerPassword = TEXT("");
 	}
 
-	this->M_LoginPlayerNames.Emplace(NewPlayerName, PlayerLoginData);
+	this->LastLoginPlayerAccountName = NewPlayerName;
+	this->M_LoginPlayerNames.Emplace(this->LastLoginPlayerAccountName, PlayerLoginData);	
 }
 
 void UGameConfigManager::SetCurrentLonginAccount(const FString& NewPlayerName)
