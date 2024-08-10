@@ -11,6 +11,11 @@ void UGameConfigManager::SetCurrentLoginPlayerName(FString CurPlayerAccountName)
 	this->CurrentSelectPlayerAccountName = CurPlayerAccountName;
 }
 
+void UGameConfigManager::LoginFaild()
+{
+	this->CurrentSelectPlayerAccountName = TEXT("");
+}
+
 FString UGameConfigManager::GetCurrentLoginPlayerName()
 {
 	return this->CurrentSelectPlayerAccountName;
@@ -21,8 +26,36 @@ void UGameConfigManager::GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseDa
 	OutData = this->M_LoginPlayerNames;
 }
 
+void UGameConfigManager::GetPlayerLoginCache(bool& Result, FString& PlayerAccount, FString& PlayerPassword)
+{
+	FPlayerLoginBaseData Data = this->GetPlayerLoginCacheData();
+
+	if (Data.PlayerAccount.IsEmpty())
+	{
+		Result = false;
+		return;
+	}
+
+	if (Data.PlayerPassword.IsEmpty())
+	{
+		Result = false;
+		return;
+	}
+
+	Result = true;
+	PlayerAccount = Data.PlayerAccount;
+	PlayerPassword = Data.PlayerPassword;
+}
+
 void UGameConfigManager::AddPlayerLoginName(FString NewPlayerName, FPlayerLoginBaseData PlayerLoginData)
 {
+	//清理之前的缓存
+	for (auto& Cache : this->M_LoginPlayerNames)
+	{
+		Cache.Value.PlayerAccount = TEXT("");
+		Cache.Value.PlayerPassword = TEXT("");
+	}
+
 	this->M_LoginPlayerNames.Emplace(NewPlayerName, PlayerLoginData);
 }
 

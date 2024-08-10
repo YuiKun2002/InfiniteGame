@@ -88,10 +88,11 @@ void USpineSkeletonAnimationComponent::BeginPlay() {
 }
 
 void UTrackEntry::BeginDestroy() {
+	Super::BeginDestroy();
+
 	if (entry) {
 		entry->unLoad();
 	}
-	Super::BeginDestroy();
 }
 
 void USpineSkeletonAnimationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {

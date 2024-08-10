@@ -140,6 +140,9 @@ public:
 	//设置当前登陆游戏的角色名称
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentLoginPlayerName(FString CurPlayerAccountName);
+	//登陆失败
+	UFUNCTION(BlueprintCallable)
+	void LoginFaild();
 public:
 	//获取当前登陆游戏的角色名称
 	UFUNCTION(BlueprintCallable)
@@ -147,6 +150,8 @@ public:
 	//获取登陆角色名称列表
 	UFUNCTION(BlueprintCallable)
 	void GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseData>& OutData);
+	//获取用户名和密码
+	void GetPlayerLoginCache(bool& Result, FString& PlayerAccount, FString& PlayerPassword);
 public:
 	//添加新的角色登陆名称
 	UFUNCTION(BlueprintCallable)
