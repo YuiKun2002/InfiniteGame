@@ -151,6 +151,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseData>& OutData);
 	//获取用户名和密码
+	UFUNCTION(BlueprintCallable)
 	void GetPlayerLoginCache(bool& Result, FString& PlayerAccount, FString& PlayerPassword);
 public:
 	//添加新的角色登陆名称
