@@ -146,7 +146,7 @@ public:
 public:
 	//界面切换
 	UFUNCTION(BlueprintCallable)
-	void SelectShopTab(EShopTab Tab, const FString& URL, const FString& Json);
+	void SelectShopTab(EShopTab Tab);
 public:
 	//加载抢购区域的物品（左边）
 	UFUNCTION(BlueprintCallable)

@@ -39,6 +39,11 @@ UVaRestRequestJSON::UVaRestRequestJSON(const class FObjectInitializer& PCIP)
 	ResetData();
 }
 
+void UVaRestRequestJSON::SetRequestTag(FName Tag)
+{
+	this->GameCacheTag = Tag;
+}
+
 void UVaRestRequestJSON::SetVerb(EVaRestRequestVerb Verb)
 {
 	RequestVerb = Verb;
@@ -571,6 +576,8 @@ void UVaRestRequestJSON::OnProcessRequestComplete(FHttpRequestPtr Request, FHttp
 	// Broadcast the result events on next tick
 	OnRequestComplete.Broadcast(this);
 	OnStaticRequestComplete.Broadcast(this);
+	OnStaticRequestTagComplete.Broadcast(this->GameCacheTag, this);
+	OnStaticRequestTagFail.Broadcast(this->GameCacheTag, this);
 
 	// Finish the latent action
 	if (ContinueAction)

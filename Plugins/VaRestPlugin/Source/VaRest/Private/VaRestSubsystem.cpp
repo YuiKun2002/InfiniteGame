@@ -84,6 +84,39 @@ void UVaRestSubsystem::CallURL_Header(const FString& URL, EVaRestRequestVerb Ver
 	Request->ProcessURL(URL);
 }
 
+void UVaRestSubsystem::CallTagURL(
+	const FString& URL,
+	EVaRestRequestVerb Verb,
+	EVaRestRequestContentType ContentType,
+	FName Tag,
+	UVaRestJsonObject* VaRestJson,
+	const FVaRestCallTagDelegate& Callback)
+{
+	if (VaRestJson == nullptr)
+	{
+		VaRestJson = ConstructVaRestJsonObject();
+	}
+
+	UVaRestRequestJSON* Request = ConstructVaRestRequest();
+	Request->SetRequestTag(Tag);
+	Request->SetVerb(Verb);
+	Request->SetContentType(ContentType);
+	Request->SetRequestObject(VaRestJson);
+
+	FVaRestCallTagResponse Response;
+	Response.Tag = Tag;
+	Response.Request = Request;
+	Response.Callback = Callback;
+
+	Response.CompleteDelegateHandle = Request->OnStaticRequestTagComplete.AddUObject(this, &UVaRestSubsystem::OnCallTagComplete);
+	Response.FailDelegateHandle = Request->OnStaticRequestTagFail.AddUObject(this, &UVaRestSubsystem::OnCallTagComplete);
+
+	RequestTagMap.Add(Request, Response);
+
+	Request->ResetResponseData();
+	Request->ProcessURL(URL);
+}
+
 void UVaRestSubsystem::OnCallComplete(UVaRestRequestJSON* Request)
 {
 	if (!RequestMap.Contains(Request))
@@ -98,6 +131,22 @@ void UVaRestSubsystem::OnCallComplete(UVaRestRequestJSON* Request)
 	Response->Callback.ExecuteIfBound(Request);
 	Response->Request = nullptr;
 	RequestMap.Remove(Request);
+}
+
+void UVaRestSubsystem::OnCallTagComplete(FName Tag, UVaRestRequestJSON* Request)
+{
+	if (!RequestTagMap.Contains(Request))
+	{
+		return;
+	}
+
+	const auto Response = RequestTagMap.Find(Request);
+	Request->OnStaticRequestComplete.Remove(Response->CompleteDelegateHandle);
+	Request->OnStaticRequestFail.Remove(Response->FailDelegateHandle);
+
+	Response->Callback.ExecuteIfBound(Tag, Request);
+	Response->Request = nullptr;
+	RequestTagMap.Remove(Request);
 }
 
 UVaRestRequestJSON* UVaRestSubsystem::ConstructVaRestRequest()

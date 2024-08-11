@@ -11,7 +11,7 @@
 #include "VaRestSubsystem.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FVaRestCallDelegate, UVaRestRequestJSON*, Request);
-
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FVaRestCallTagDelegate, FName, Tag, UVaRestRequestJSON*, Request);
 USTRUCT()
 struct FVaRestCallResponse
 {
@@ -28,6 +28,30 @@ struct FVaRestCallResponse
 
 	FVaRestCallResponse()
 		: Request(nullptr)
+	{
+	}
+};
+
+USTRUCT()
+struct FVaRestCallTagResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	UVaRestRequestJSON* Request;
+
+	UPROPERTY()
+	FName Tag;
+
+	UPROPERTY()
+	FVaRestCallTagDelegate Callback;
+
+	FDelegateHandle CompleteDelegateHandle;
+	FDelegateHandle FailDelegateHandle;
+
+	FVaRestCallTagResponse()
+		: Request(nullptr)
+		, Tag(TEXT(""))
 	{
 	}
 };
@@ -68,12 +92,25 @@ public:
 		UVaRestJsonObject* VaRestJson,
 		const FVaRestCallDelegate& Callback);
 
+	UFUNCTION(BlueprintCallable, Category = "VaRest|Utility")
+	void CallTagURL(
+		const FString& URL,
+		EVaRestRequestVerb Verb,
+		EVaRestRequestContentType ContentType,
+		FName Tag,
+		UVaRestJsonObject* VaRestJson,
+		const FVaRestCallTagDelegate& Callback);
+
 	/** Called when URL is processed (one for both success/unsuccess events)*/
 	void OnCallComplete(UVaRestRequestJSON* Request);
+
+	void OnCallTagComplete(FName Tag, UVaRestRequestJSON* Request);
 
 protected:
 	UPROPERTY()
 	TMap<UVaRestRequestJSON*, FVaRestCallResponse> RequestMap;
+	UPROPERTY()
+	TMap<UVaRestRequestJSON*, FVaRestCallTagResponse> RequestTagMap;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Construction helpers

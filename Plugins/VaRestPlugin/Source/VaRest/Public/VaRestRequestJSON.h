@@ -79,6 +79,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRequestFail, class UVaRestRequest
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStaticRequestComplete, class UVaRestRequestJSON*);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStaticRequestFail, class UVaRestRequestJSON*);
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnStaticRequestTagComplete, FName, class UVaRestRequestJSON*);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnStaticRequestTagFail, FName, class UVaRestRequestJSON*);
+
 /**
  * General helper class http requests via blueprints
  */
@@ -90,6 +93,10 @@ class VAREST_API UVaRestRequestJSON : public UObject
 public:
 	//////////////////////////////////////////////////////////////////////////
 	// Construction
+
+	//设置缓存请求的Tag
+	UFUNCTION(BlueprintCallable, Category = "VaRest|Request")
+	void SetRequestTag(FName Tag);
 
 	/** Set verb to the request */
 	UFUNCTION(BlueprintCallable, Category = "VaRest|Request")
@@ -252,6 +259,12 @@ public:
 	/** Event occured when the request wasn't successfull */
 	FOnStaticRequestFail OnStaticRequestFail;
 
+	/** Event occured when the request has been completed */
+	FOnStaticRequestTagComplete OnStaticRequestTagComplete;
+
+	/** Event occured when the request wasn't successfull */
+	FOnStaticRequestTagFail OnStaticRequestTagFail;
+
 	//////////////////////////////////////////////////////////////////////////
 	// Tags
 
@@ -348,6 +361,9 @@ protected:
 
 	/** Custom verb that will be used with RequestContentType == CUSTOM */
 	FString CustomVerb;
+
+	//游戏缓存的Tag
+	FName GameCacheTag;
 
 	/** Request we're currently processing */
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();

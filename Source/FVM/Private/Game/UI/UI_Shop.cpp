@@ -3,6 +3,8 @@
 
 #include "Game/UI/UI_Shop.h"
 
+#include "VaRestSubsystem.h"
+
 #include "Game/UI/UI_PlayerInformationShow.h"
 
 #include <Components/CanvasPanel.h>
@@ -194,7 +196,7 @@ void UUI_Shop::InitDataTable()
 	this->M_UItemLoadManager_2->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Update_0"));
 }
 
-void UUI_Shop::SelectShopTab(EShopTab Tab, const FString& URL, const FString& Json)
+void UUI_Shop::SelectShopTab(EShopTab Tab)
 {
 	for (uint8 i = 0; i < M_ShopTabs.Num(); i++)
 	{
