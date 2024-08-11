@@ -40,12 +40,12 @@ class FVM_API UUI_Shop : public UWidgetBase
 private:
 	//加载器(开始界面)
 	UPROPERTY()
-		UItemLoadManager* M_UItemLoadManager_0 = nullptr;
+	UItemLoadManager* M_UItemLoadManager_0 = nullptr;
 	UPROPERTY()
-		UItemLoadManager* M_UItemLoadManager_1 = nullptr;
+	UItemLoadManager* M_UItemLoadManager_1 = nullptr;
 	//其他道具-加载器
 	UPROPERTY()
-		UItemLoadManager* M_UItemLoadManager_2 = nullptr;
+	UItemLoadManager* M_UItemLoadManager_2 = nullptr;
 private:
 	//-------------------------------------服装区【角色形象界面】----------------------------------------
 	UPROPERTY()//角色界面容器
@@ -56,82 +56,82 @@ private:
 public:
 	//创建材界面
 	UFUNCTION()
-		UWidget* WidgetCreate_Init_0(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_Init_0(UItemDataTable* _Data, int32 _Index);
 	//刷新界面
 	UFUNCTION()
-		void WidgetRefresh_Update_0(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	void WidgetRefresh_Update_0(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 
 	//创建材界面
 	UFUNCTION()
-		UWidget* WidgetCreate_Init_1(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_Init_1(UItemDataTable* _Data, int32 _Index);
 
 	//初始化商品数据
 	void InitShopGridData(UItemDataTable* _Data, UUI_ShopGrid* _UWidget);
 public:
 	//数据表数据(抢购左-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_Left;
+	TArray<FItem_Price_Data> M_ShopItemDatas_Left;
 	//数据表数据(抢购右-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_Right;
+	TArray<FItem_Price_Data> M_ShopItemDatas_Right;
 	//数据表数据(热卖-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_SellingRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_SellingRange;
 	//数据表数据(折扣-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_DiscountRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_DiscountRange;
 	//数据表数据(武器-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_WeaponRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_WeaponRange;
 	//数据表数据(防御卡-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_Cards;
+	TArray<FItem_Price_Data> M_ShopItemDatas_Cards;
 	//数据表数据(道具-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_ItemRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_ItemRange;
 	//数据表数据(妆容-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_MakeupRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_MakeupRange;
 	//数据表数据(时装-区域)
 	UPROPERTY()
-		TArray<FItem_Price_Data> M_ShopItemDatas_FashionRange;
+	TArray<FItem_Price_Data> M_ShopItemDatas_FashionRange;
 private:
 	//商城选项卡
 	UPROPERTY()
-		TArray<UButton*> M_ShopTabs;
+	TArray<UButton*> M_ShopTabs;
 	//商城选项卡默认路径
 	UPROPERTY()
-		TArray<FString> M_ShopTabsDef;
+	TArray<FString> M_ShopTabsDef;
 private:
 	//抢购区1
 	UPROPERTY()
-		UUniformGridPanel* M_SnapUp_0 = nullptr;
+	UUniformGridPanel* M_SnapUp_0 = nullptr;
 	//抢购区2
 	UPROPERTY()
-		UUniformGridPanel* M_SnapUp_1 = nullptr;
+	UUniformGridPanel* M_SnapUp_1 = nullptr;
 	//抢购区1(滑动界面)
 	UPROPERTY()
-		UScrollBox* M_SnapUp_ScrollBox_0 = nullptr;
+	UScrollBox* M_SnapUp_ScrollBox_0 = nullptr;
 	//抢购区2(滑动界面)
 	UPROPERTY()
-		UScrollBox* M_SnapUp_ScrollBox_1 = nullptr;
+	UScrollBox* M_SnapUp_ScrollBox_1 = nullptr;
 
 	//其他区域-格子
 	UPROPERTY()
-		UUniformGridPanel* M_ContentGrid_2 = nullptr;
+	UUniformGridPanel* M_ContentGrid_2 = nullptr;
 	//其他区域(滑动界面)
 	UPROPERTY()
-		UScrollBox* M_Content_ScrollBox_2 = nullptr;
+	UScrollBox* M_Content_ScrollBox_2 = nullptr;
 private:
 	//其他购买区域（集合）
 	UPROPERTY()
-		TArray<UUniformGridPanel*> M_Item_Contents;
+	TArray<UUniformGridPanel*> M_Item_Contents;
 private:
 	int32 M_ItemMoney = 0;
 	uint8 M_ItemMoneyType = 0;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Coin_Text = TEXT("金币:[0] 礼券[0] 点券[0] 威望[0]");
+	FString M_Coin_Text = TEXT("金币:[0] 礼券[0] 点券[0] 威望[0]");
 public:
 	//初始化
 	virtual bool Initialize() override;
@@ -142,57 +142,57 @@ public:
 public:
 	//数据表初始化
 	UFUNCTION(BlueprintCallable)
-		void InitDataTable();
+	void InitDataTable();
 public:
 	//界面切换
 	UFUNCTION(BlueprintCallable)
-		void SelectShopTab(EShopTab _Tab);
+	void SelectShopTab(EShopTab Tab, const FString& URL, const FString& Json);
 public:
 	//加载抢购区域的物品（左边）
 	UFUNCTION(BlueprintCallable)
-		void LoadSnapUpLeft();
+	void LoadSnapUpLeft();
 
 	//加载抢购区域的物品（右边）
 	UFUNCTION(BlueprintCallable)
-		void LoadSnapUpRight();
+	void LoadSnapUpRight();
 
 	//加载热卖区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadSellingItemRange();
+	void LoadSellingItemRange();
 
 	//加载折扣区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadDiscountItemRange();
+	void LoadDiscountItemRange();
 
 	//加载武器区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadWeaponRange();
+	void LoadWeaponRange();
 
 	//加载防御卡区域
 	UFUNCTION(BlueprintCallable)
-		void LoadCardRange();
+	void LoadCardRange();
 
 	//加载道具区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadItemRange();
+	void LoadItemRange();
 
 	//加载道具区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadMakeupRange();
+	void LoadMakeupRange();
 
 	//加载时装区域的物品
 	UFUNCTION(BlueprintCallable)
-		void LoadFashionRange();
+	void LoadFashionRange();
 public:
 	//加载角色服装显示界面
 	UFUNCTION(BlueprintCallable)
-		void ShowPlayerSuitPanel(bool _bHidden);
+	void ShowPlayerSuitPanel(bool _bHidden);
 public:
 	//加载数据表
 	UFUNCTION()
-		void LoadList();
+	void LoadList();
 
 	//关闭界面
 	UFUNCTION(BlueprintCallable)
-		void ClosePanel();
+	void ClosePanel();
 };

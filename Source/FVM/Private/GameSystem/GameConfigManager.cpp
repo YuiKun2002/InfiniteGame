@@ -13,7 +13,7 @@ void UGameConfigManager::SetCurrentLoginPlayerName(FString CurPlayerAccountName)
 
 void UGameConfigManager::LoginFaild()
 {
-	this->CurrentSelectPlayerAccountName = TEXT("");
+	this->LastLoginPlayerAccountName = TEXT("");
 }
 
 FString UGameConfigManager::GetCurrentLoginPlayerName()
@@ -29,13 +29,6 @@ void UGameConfigManager::GetLoginPlayerNameList(TMap<FString, FPlayerLoginBaseDa
 void UGameConfigManager::GetPlayerLoginCache(bool& Result, FString& PlayerAccount, FString& PlayerPassword)
 {
 	FPlayerLoginBaseData* Data = this->M_LoginPlayerNames.Find(this->LastLoginPlayerAccountName);
-
-	for (auto& Cache : this->M_LoginPlayerNames)
-	{
-		UE_LOG(LogTemp,Error,TEXT("[%s] [%s]"),*Cache.Value.PlayerAccount,*Cache.Value.PlayerPassword);
-	}
-
-	UE_LOG(LogTemp,Error,TEXT("当前账户[%s]"),*this->LastLoginPlayerAccountName);
 
 	if (Data)
 	{

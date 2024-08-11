@@ -194,15 +194,34 @@ void UUI_Shop::InitDataTable()
 	this->M_UItemLoadManager_2->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Update_0"));
 }
 
-void UUI_Shop::SelectShopTab(EShopTab _Tab)
+void UUI_Shop::SelectShopTab(EShopTab Tab, const FString& URL, const FString& Json)
 {
 	for (uint8 i = 0; i < M_ShopTabs.Num(); i++)
-		if (i != (uint8)(_Tab))
-			UWidgetBase::SetButtonStyle(this->M_ShopTabs[i], FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) + this->M_ShopTabsDef[i] + FString(TEXT("_a.")) + FString(TEXT(".")) + this->M_ShopTabsDef[i] + FString(TEXT("_a'")));
+	{
+		if (i != (uint8)(Tab))
+		{
+			UWidgetBase::SetButtonStyle(
+				this->M_ShopTabs[i],
+				FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) +
+				this->M_ShopTabsDef[i] +
+				FString(TEXT("_a.")) +
+				FString(TEXT(".")) +
+				this->M_ShopTabsDef[i] +
+				FString(TEXT("_a'"))
+			);
+		}
+	}
 
-	UWidgetBase::SetButtonStyle(this->M_ShopTabs[(uint8)(_Tab)], FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) + this->M_ShopTabsDef[(uint8)(_Tab)] + FString(TEXT(".")) + this->M_ShopTabsDef[(uint8)(_Tab)] + FString(TEXT("'")));
+	UWidgetBase::SetButtonStyle(
+		this->M_ShopTabs[(uint8)(Tab)],
+		FString(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/Shop/Tab/")) +
+		this->M_ShopTabsDef[(uint8)(Tab)] +
+		FString(TEXT(".")) +
+		this->M_ShopTabsDef[(uint8)(Tab)] +
+		FString(TEXT("'"))
+	);
 
-	switch (_Tab)
+	switch (Tab)
 	{
 	case EShopTab::ESnapUp: {
 		this->LoadSnapUpLeft();
