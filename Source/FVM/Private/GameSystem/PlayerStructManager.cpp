@@ -6,6 +6,7 @@
 #include "Game/UI/UI_GamePrepare.h"
 #include "GameSystem/TaskSubsystem.h"
 #include "GameSystem/GameDataSubsystem.h"
+#include "GameSystem/GameCacheSubsystem.h"
 #include "GameSystem/GameUserInterfaceSubsystem.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 
@@ -14,6 +15,11 @@ void IPlayerUpdateClassInterface::Update_Implementation(class UPlayerStructManag
 }
 void UPlayerUpdateClass::Update_Implementation(class UPlayerStructManager* PlayerDataIns) {
 	UE_LOG(LogTemp, Warning, TEXT("默认角色更新类-UPlayerUpdateClass-更新"));
+}
+
+void UPlayerStructManager::SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem)
+{
+	this->GameCacheSubsystem = Subsystem;
 }
 
 void UPlayerStructManager::SetPlayerID(const FString& TempID)
@@ -142,24 +148,38 @@ void UPlayerStructManager::SetCoin(const FString& CoinName, int32 _Num)
 	this->Save(__FUNCTION__ + FString(TEXT("货币设置操作")));
 }
 
-int64 UPlayerStructManager::GetCoin(const FString& CoinName)
+int64 UPlayerStructManager::GetCoinValue(int32 Type)
 {
-	if (CoinName.Equals(TEXT("金币")))
+	if (this->GameCacheSubsystem)
 	{
-		return	this->M_FPlayerCoin.GetCoinRef(0);
-	}
-
-	if (CoinName.Equals(TEXT("礼券")))
-	{
-		return	this->M_FPlayerCoin.GetCoinRef(1);
-	}
-
-	if (CoinName.Equals(TEXT("点券")))
-	{
-		return	this->M_FPlayerCoin.GetCoinRef(2);
+		UGameCache* Cache = this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_COIN_NAME);
+		if (Cache->GetResult())
+		{
+			UVaRestJsonObject* Json = Cache->GetRequestJsonObject();
+			UVaRestJsonValue* Value = Json->GetArrayField(TEXT("data"))[Type];
+			UVaRestJsonObject* JsonObj = Value->AsObject();
+			return	int64(JsonObj->GetIntegerField((TEXT("num"))));
+		}
 	}
 
 	return 0;
+}
+
+FString UPlayerStructManager::GetCoinName(int32 Type)
+{
+	if (this->GameCacheSubsystem)
+	{
+		UGameCache* Cache = this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_COIN_NAME);
+		if (Cache->GetResult())
+		{
+			UVaRestJsonObject* Json = Cache->GetRequestJsonObject();
+			UVaRestJsonValue* Value = Json->GetArrayField(TEXT("data"))[Type];
+			UVaRestJsonObject* JsonObj = Value->AsObject();
+			return	JsonObj->GetStringField(TEXT("name"));
+		}
+	}
+
+	return TEXT("无效货币");
 }
 
 FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)

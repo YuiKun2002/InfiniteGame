@@ -75,8 +75,14 @@ void UUI_Shop::InitShopGridData(UItemDataTable* _Data, UUI_ShopGrid* _UWidget)
 
 bool UUI_Shop::Initialize()
 {
-	if (!Super::Initialize())
-		return false;
+
+	Super::Initialize();
+
+	this->UpdateCoinText();
+
+	//return true;
+
+	/*
 
 	this->M_SnapUp_0 = this->GetWidgetComponent<UUniformGridPanel>(this, "Left_Items_Content");
 	this->M_SnapUp_1 = this->GetWidgetComponent<UUniformGridPanel>(this, "Right_Items_Content");
@@ -92,33 +98,43 @@ bool UUI_Shop::Initialize()
 
 
 	//------------------------------初始化--角色形象界面-------------------------
-	this->M_PlayerSuit_BoxPanel = this->GetWidgetComponent<UCanvasPanel>(this, "PlayerSuitPanel");
+	//this->M_PlayerSuit_BoxPanel = this->GetWidgetComponent<UCanvasPanel>(this, "PlayerSuitPanel");
 	//------------------------------初始化--角色形象界面-------------------------
 
-
+	*/
 	return true;
 }
 
 void UUI_Shop::InitDataTable()
 {
-	if (this->M_UUI_PlayerInformationShow)
-		return;
+	return;
 
 	//初始化界面选项卡----------------------------------------------------------------
 	for (int32 i = 0; i < 8; i++)
-		this->M_ShopTabs.Emplace(this->GetWidgetComponent<UButton>(this, FString(TEXT("_Func_")) + FString::FromInt(i) + FString(TEXT("_"))));
+		this->M_ShopTabs.Emplace(this->GetWidgetComponent<UButton>(this,
+			FString(TEXT("_Func_")) +
+			FString::FromInt(i) +
+			FString(TEXT("_"))));
 
 	//选项卡路径
-	this->M_ShopTabsDef.Append({ FString(TEXT("T_Shop_3")),FString(TEXT("T_Shop_1")) ,FString(TEXT("T_Shop_2")) ,FString(TEXT("T_Shop_6")) ,FString(TEXT("T_Shop_5")) ,FString(TEXT("T_Shop_4")) ,FString(TEXT("T_Shop_7")),FString(TEXT("T_Shop_8")) });
+	this->M_ShopTabsDef.Append({
+	FString(TEXT("T_Shop_3")),
+	FString(TEXT("T_Shop_1")) ,
+	FString(TEXT("T_Shop_2")) ,
+	FString(TEXT("T_Shop_6")) ,
+	FString(TEXT("T_Shop_5")) ,
+	FString(TEXT("T_Shop_4")) ,
+	FString(TEXT("T_Shop_7")),
+	FString(TEXT("T_Shop_8")) });
 
 	//初始化界面选项卡----------------------------------------------------------------
 
 
 
 	//初始化角色
-	this->M_UUI_PlayerInformationShow = CreateWidget<UUI_PlayerInformationShow>(this, LoadClass<UUI_PlayerInformationShow>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/BPUI_PlayerInforPanel.BPUI_PlayerInforPanel_C'")));
+	//this->M_UUI_PlayerInformationShow = CreateWidget<UUI_PlayerInformationShow>(this, LoadClass<UUI_PlayerInformationShow>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/BPUI_PlayerInforPanel.BPUI_PlayerInforPanel_C'")));
 	//this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
-	this->M_PlayerSuit_BoxPanel->AddChildToCanvas(this->M_UUI_PlayerInformationShow);
+	//this->M_PlayerSuit_BoxPanel->AddChildToCanvas(this->M_UUI_PlayerInformationShow);
 
 	//--------------------------------------------------------------左侧数据  右侧数据
 	//先存储临时数据(把需要的放在加载列表)
@@ -246,9 +262,11 @@ void UUI_Shop::UpdateCoinText()
 	if (IsValid(Player))
 	{
 		this->M_Coin_Text =
-			TEXT("金币[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[0].ItemName)) +
-			TEXT("]") + TEXT("礼券[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[1].ItemName)) +
-			TEXT("]") + TEXT("点券[") + FString::FromInt(Player->GetCoin(FPlayerCoinAdd::GetCoinNames()[2].ItemName)) +
+			Player->GetCoinName(0) + TEXT("[") + FString::FromInt(Player->GetCoinValue(0)) +
+			TEXT("]") +
+			Player->GetCoinName(1) + TEXT("[") + FString::FromInt(Player->GetCoinValue(1)) +
+			TEXT("]") +
+			Player->GetCoinName(2) + TEXT("[") + FString::FromInt(Player->GetCoinValue(2)) +
 			TEXT("]");
 	}
 }
@@ -365,13 +383,13 @@ void UUI_Shop::ShowPlayerSuitPanel(bool _bHidden)
 {
 	if (_bHidden)
 	{
-		this->M_PlayerSuit_BoxPanel->SetVisibility(ESlateVisibility::Collapsed);
+		//this->M_PlayerSuit_BoxPanel->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	else {
-		this->M_PlayerSuit_BoxPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		//this->M_PlayerSuit_BoxPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-		if (!this->M_UUI_PlayerInformationShow->GetPlayerSuitConst())
-			this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
+		//if (!this->M_UUI_PlayerInformationShow->GetPlayerSuitConst())
+		//	this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
 	}
 }
 
@@ -386,7 +404,7 @@ void UUI_Shop::LoadList()
 
 void UUI_Shop::ClosePanel()
 {
-	this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
+	//	this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
 
 	this->RemoveFromParent();
 }

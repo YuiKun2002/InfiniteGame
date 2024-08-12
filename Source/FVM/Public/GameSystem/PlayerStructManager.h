@@ -17,6 +17,8 @@
 
 #include "PlayerStructManager.generated.h"
 
+//货币请求名称
+#define PLAYER_NET_COIN_NAME FName(TEXT("Coin"))
 
 
  /**
@@ -226,6 +228,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FPlayerVersionCompensate> M_GameVersionCompensate;
 public:
+	//设置全局缓存子系统
+	UFUNCTION(BlueprintCallable)
+	void SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem);
 	//设置角色临时ID
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerID(const FString& TempID);
@@ -272,9 +277,12 @@ public:
 	//设置货币
 	UFUNCTION(BlueprintCallable)
 	void SetCoin(const FString& CoinName, int32 _Num);
-	//获取货币
+	//获取货币值
 	UFUNCTION(BlueprintPure)
-	int64 GetCoin(const FString& CoinName);
+	int64 GetCoinValue(int32 Type);
+	//获取货币名称
+	UFUNCTION(BlueprintPure)
+	FString GetCoinName(int32 Type);
 	//请求货币
 	UFUNCTION(BlueprintPure)
 	FPlayerCoin RequestCoin(class UVaRestRequestJSON* RequestJson);
@@ -387,6 +395,10 @@ public:
 		//复制新的卡片数据
 		_Arrays = Type;
 	}
+private:
+	//设置全局缓存子系统
+	UPROPERTY()
+	class UGameCacheSubsystem* GameCacheSubsystem = nullptr;
 };
 
 //货币计算

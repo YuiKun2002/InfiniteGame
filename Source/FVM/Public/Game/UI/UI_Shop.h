@@ -46,13 +46,6 @@ private:
 	//其他道具-加载器
 	UPROPERTY()
 	UItemLoadManager* M_UItemLoadManager_2 = nullptr;
-private:
-	//-------------------------------------服装区【角色形象界面】----------------------------------------
-	UPROPERTY()//角色界面容器
-		UCanvasPanel* M_PlayerSuit_BoxPanel = nullptr;
-	UPROPERTY()//角色形象界面
-		UUI_PlayerInformationShow* M_UUI_PlayerInformationShow = nullptr;
-	//-------------------------------------服装区【角色形象界面】----------------------------------------
 public:
 	//创建材界面
 	UFUNCTION()

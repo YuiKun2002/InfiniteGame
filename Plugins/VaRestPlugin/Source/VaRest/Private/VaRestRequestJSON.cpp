@@ -508,7 +508,7 @@ void UVaRestRequestJSON::OnProcessRequestComplete(FHttpRequestPtr Request, FHttp
 		// Broadcast the result event
 		OnRequestFail.Broadcast(this);
 		OnStaticRequestFail.Broadcast(this);
-
+		OnStaticRequestTagFail.Broadcast(this->GameCacheTag, this);
 		return;
 	}
 
@@ -577,7 +577,6 @@ void UVaRestRequestJSON::OnProcessRequestComplete(FHttpRequestPtr Request, FHttp
 	OnRequestComplete.Broadcast(this);
 	OnStaticRequestComplete.Broadcast(this);
 	OnStaticRequestTagComplete.Broadcast(this->GameCacheTag, this);
-	OnStaticRequestTagFail.Broadcast(this->GameCacheTag, this);
 
 	// Finish the latent action
 	if (ContinueAction)
@@ -586,7 +585,7 @@ void UVaRestRequestJSON::OnProcessRequestComplete(FHttpRequestPtr Request, FHttp
 		ContinueAction = nullptr;
 
 		K->Call(ResponseJsonObj);
-	}
+	}	
 }
 
 //////////////////////////////////////////////////////////////////////////
