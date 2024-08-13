@@ -53,13 +53,13 @@ void UUI_GiftBox::InitLoader()
 UWidget* UUI_GiftBox::WidgetCreate_Init(UItemDataTable* _Data, int32 _Index)
 {
 	UUI_TableTextBlock* TextBlock = CreateWidget<UUI_TableTextBlock>(this, LoadClass<UUI_TableTextBlock>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_TableTextBlock.BPUI_TableTextBlock_C'")));
-	TextBlock->SetText(((FItemBase*)(_Data->GetValue()))->ItemName);
+	TextBlock->SetText(((FItemBase*)(_Data->GetValue()))->ItemName.ToString());
 	return TextBlock;
 }
 
 void UUI_GiftBox::WidgetRefresh_Update(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
-	Cast<UUI_TableTextBlock>(_UWidget)->SetText(((FItemBase*)(_Data->GetValue()))->ItemName);
+	Cast<UUI_TableTextBlock>(_UWidget)->SetText(((FItemBase*)(_Data->GetValue()))->ItemName.ToString());
 }
 
 void UUI_GiftBox::SetPlayerBagEquipmentGrid(UUI_PlayerBagEquipmentGrid* _GridUI)
@@ -90,9 +90,9 @@ void UUI_GiftBox::SetGiftBoxData(const FString& _Name)
 	if (Result)
 	{
 		//设置标题
-		this->M_Title = this->M_GiftBoxData.ItemName;
+		this->M_Title = this->M_GiftBoxData.ItemName.ToString();
 		//设置内容
-		this->M_Content = this->M_GiftBoxData.ItemDescrible;
+		this->M_Content = this->M_GiftBoxData.ItemDescrible.ToString();
 		//加载列表
 		//this->ShowGiftList();
 	}
@@ -216,10 +216,10 @@ void UUI_GiftBox::AnalysisGiftBoxData()
 		{
 			float Value = (((Gift.M_GiftBox_RandomRange.M_Max - Gift.M_GiftBox_RandomRange.M_Min + 1) * 1.f) / this->M_GiftBoxData.M_FGiftBox_RandomModeDetail.M_RandomMaxNumber) * 100.0f;
 			FText _text = FText::FromString(FString::Printf(TEXT("%.3g"), Value));
-			Item.ItemName = Gift.M_ItemName + " " + _text.ToString() + "%";
+			Item.ItemName = FText::FromString(Gift.M_ItemName + " " + _text.ToString() + "%");
 		}
 		else {
-			Item.ItemName = Gift.M_ItemName + " *" + FString::FromInt(Gift.M_ItemCount);
+			Item.ItemName = FText::FromString(Gift.M_ItemName + " *" + FString::FromInt(Gift.M_ItemCount));
 		}
 
 		this->M_ItemBase.Emplace(Item);
@@ -339,10 +339,10 @@ void UUI_GiftBox::AnalysisGift(TArray<FGiftBox_Item>& Items)
 
 				for (auto TItem = LItems.CreateConstIterator(); TItem; ++TItem)
 				{
-					if ((*TItem).ItemName.Equals(TEXT("全装备礼盒")))
+					if ((*TItem).ItemName.ToString().Equals(TEXT("全装备礼盒")))
 						continue;
 
-					UGameSystemFunction::SendEquipmentToPlayerBag((*TItem).ItemName, 1, false);
+					UGameSystemFunction::SendEquipmentToPlayerBag((*TItem).ItemName.ToString(), 1, false);
 				}
 
 			}; break;
@@ -352,7 +352,7 @@ void UUI_GiftBox::AnalysisGift(TArray<FGiftBox_Item>& Items)
 
 				for (auto TItem = LItems.CreateConstIterator(); TItem; ++TItem)
 				{
-					UGameSystemFunction::SendMaterialToPlayerBag((*TItem).ItemName, 9999, false);
+					UGameSystemFunction::SendMaterialToPlayerBag((*TItem).ItemName.ToString(), 9999, false);
 				}
 			}break;
 			case EGiftBox_Item_Type::E_Coin: {
@@ -482,7 +482,7 @@ void UUI_GiftBox::CardToBag(FGiftBox_Item& Item)
 
 		// 1.f 0.2f 0.f
 		//将文字加入到列表准备一次显示
-		FString Text = TEXT("恭喜你获得:") + Card.ItemName + TEXT("*") + FString::FromInt(Item.M_ItemCount);
+		FString Text = TEXT("恭喜你获得:") + Card.ItemName.ToString() + TEXT("*") + FString::FromInt(Item.M_ItemCount);
 		this->M_TipText.Emplace(Text);
 		this->M_TipTextColor.Emplace(FVector(1.f, 0.2f, 0.f));
 	}

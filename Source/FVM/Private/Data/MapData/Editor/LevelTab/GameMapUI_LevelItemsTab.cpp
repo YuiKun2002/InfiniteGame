@@ -106,7 +106,7 @@ void UGameMapUI_LevelItemsTabButt::Show()
 						TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/LevelItems/BP_LevelItem.BP_LevelItem_C'")));
 
 
-			Cur->Init(this->CurClass, NewData.ItemName, NewData.ItemTexturePath);
+			Cur->Init(this->CurClass, NewData.ItemName.ToString(), NewData.ItemTexturePath);
 			this->CurClass->GetDataRange()->AddChildToUniformGrid(
 				Cur, i / 8, i % 8
 			);

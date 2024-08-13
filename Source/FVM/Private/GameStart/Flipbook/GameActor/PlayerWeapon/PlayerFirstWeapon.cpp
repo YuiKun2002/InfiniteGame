@@ -30,7 +30,7 @@ void APlayerFirstWeapon::InitWeaponData(UPlayerStructManager* _Player, const FSt
 	//获取基础数据(从数据库中查询具体数据)
 	for (const auto& Data : Cache->GetWeaponFirst())
 	{
-		if (Data.M_FEquipment.ItemName.Equals(_WeaponName))
+		if (Data.M_FEquipment.ItemName.ToString().Equals(_WeaponName))
 		{
 			TempData = Data.M_FEquipment;
 

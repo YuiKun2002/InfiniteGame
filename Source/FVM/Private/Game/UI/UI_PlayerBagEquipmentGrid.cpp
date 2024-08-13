@@ -80,7 +80,7 @@ void UUI_PlayerBagEquipmentGrid::AttachToBag()
 		if (this->M_EuipmentData)
 		{
 			//保存数据
-			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行背包的装备操作，名称：")) + this->M_EuipmentData->ItemName);
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行背包的装备操作，名称：")) + this->M_EuipmentData->ItemName.ToString());
 		}
 	}
 }
@@ -132,7 +132,7 @@ void UUI_PlayerBagEquipmentGrid::UsePlayerSuit()
 
 	/*---------------------------------道具名称与ID------------------------------------*/
 	//服装名称
-	FString SuitName = this->M_EuipmentData->ItemName;
+	FString SuitName = this->M_EuipmentData->ItemName.ToString();
 	//服装ID
 	int32 SuitID = this->GetItemID_EquipData();
 	/*---------------------------------道具名称与ID------------------------------------*/
@@ -223,7 +223,7 @@ void UUI_PlayerBagEquipmentGrid::Equip_Weapon(FPlayerWepaon& _LFPlayerWepaon)
 	//从角色背包搜寻武器并且标记为使用
 	for (auto& FLData : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment)
 	{
-		if (FLData.ItemName.Equals(this->M_EuipmentData->ItemName) && FLData.M_ItemID == this->M_EuipmentData->M_ItemID)
+		if (FLData.ItemName.EqualTo(this->M_EuipmentData->ItemName) && FLData.M_ItemID == this->M_EuipmentData->M_ItemID)
 		{
 			FLData.M_Used = true;
 
@@ -232,7 +232,7 @@ void UUI_PlayerBagEquipmentGrid::Equip_Weapon(FPlayerWepaon& _LFPlayerWepaon)
 			// 武器头像
 			_LFPlayerWepaon.M_WeaponHeadPath = this->M_EuipmentData->ItemTexturePath.ToString();
 			// 武器名称
-			_LFPlayerWepaon.M_WeaponName = this->M_EuipmentData->ItemName;
+			_LFPlayerWepaon.M_WeaponName = this->M_EuipmentData->ItemName.ToString();
 			//使用武器
 			_LFPlayerWepaon.M_bUse = true;
 
@@ -261,7 +261,7 @@ void UUI_PlayerBagEquipmentGrid::Equip_MainWeapon()
 	//获取基础数据(从数据库中查询具体数据)
 	for (const auto& Data : Cache->GetWeaponFirst())
 	{
-		if (Data.M_FEquipment.ItemName.Equals(this->M_EuipmentData->ItemName))
+		if (Data.M_FEquipment.ItemName.EqualTo(this->M_EuipmentData->ItemName))
 		{
 			//武器类
 			Player->M_FPlayerSuit.M_PlayerWeapons.
@@ -320,7 +320,7 @@ void UUI_PlayerBagEquipmentGrid::ShowText()
 {
 	//创建物品提示按钮
 	UUI_ItemDesTip* TipComp = CreateWidget<UUI_ItemDesTip>(this, LoadClass<UUI_ItemDesTip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemDesTip.BPUI_ItemDesTip_C'")));
-	TipComp->SetContentTitleText(this->M_EuipmentData->ItemName);
+	TipComp->SetContentTitleText(this->M_EuipmentData->ItemName.ToString());
 	TipComp->SetContentText(this->M_ItemDescribe);
 	TipComp->SetOkButtonTitleText(TEXT("了解"));
 	TipComp->SetCancelButtonTitleText(TEXT("知道了"));
@@ -332,7 +332,7 @@ void UUI_PlayerBagEquipmentGrid::ShowPlayerSuit()
 {
 	//创建物品提示按钮
 	UUI_ItemDesTip* TipComp = CreateWidget<UUI_ItemDesTip>(this, LoadClass<UUI_ItemDesTip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemDesTip.BPUI_ItemDesTip_C'")));
-	TipComp->SetContentTitleText(this->M_EuipmentData->ItemName);
+	TipComp->SetContentTitleText(this->M_EuipmentData->ItemName.ToString());
 	TipComp->SetContentText(this->M_ItemDescribe);
 	TipComp->SetOkButtonTitleText(TEXT("装备"));
 	TipComp->SetCancelButtonTitleText(TEXT("返回"));
@@ -352,10 +352,10 @@ void UUI_PlayerBagEquipmentGrid::ShowPlayerWeapon()
 
 	if (UFVMGameInstance::GetDebug())
 	{
-		TipComp->SetContentTitleText(this->M_EuipmentData->ItemName + TEXT(" ") + FString::FromInt(this->M_EuipmentData->M_ItemID));
+		TipComp->SetContentTitleText(this->M_EuipmentData->ItemName.ToString() + TEXT(" ") + FString::FromInt(this->M_EuipmentData->M_ItemID));
 	}
 	else {
-		TipComp->SetContentTitleText(this->M_EuipmentData->ItemName);
+		TipComp->SetContentTitleText(this->M_EuipmentData->ItemName.ToString());
 	}
 
 

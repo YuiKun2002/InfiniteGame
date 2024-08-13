@@ -350,7 +350,7 @@ public:
 		this->M_Suit_HP_Value = _Value.M_PlayerEq_HP_Value;
 		this->M_SuitFirstShowPath = _Value.M_PlayerEq_Path_First;
 		this->M_SuitSecondShowPath = _Value.M_PlayerEq_Path_Second;
-		this->M_SuitName = _Value.ItemName;
+		this->M_SuitName = _Value.ItemName.ToString();
 		this->M_SuitHeadPath = _Value.ItemTexturePath;
 
 		this->M_SuitFirstDefAnimPath = _Value.M_PlayerEq_Animaion_Path_First;

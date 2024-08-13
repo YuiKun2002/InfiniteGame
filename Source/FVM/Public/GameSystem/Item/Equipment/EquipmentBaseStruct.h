@@ -95,7 +95,7 @@ public:
 	{
 		//获取物品数据
 		for (TargetType& Items : _Arrays)
-			if (_Names.Equals(Items.ItemName))
+			if (_Names.Equals(Items.ItemName.ToString()))
 			{
 				_OutputData = Items;
 				_Result = true;

@@ -18,7 +18,7 @@ void ADefenceCardActor::BeginPlay()
 		this->ItemCardDefence.M_CardHP =
 			this->ItemCardDefence.M_CardHP +
 			this->ItemCardDefence.M_CardHP * this->ItemCardDefence.M_DefenceUpRate *
-			this->GetCardGrade(this->ItemCardDefence.ItemName) * this->ItemCardDefence.M_M_ECardUpGradeUpRate;
+			this->GetCardGrade(this->ItemCardDefence.ItemName.ToString()) * this->ItemCardDefence.M_M_ECardUpGradeUpRate;
 	}
 
 	this->SetCardActor(this->ItemCardDefence);

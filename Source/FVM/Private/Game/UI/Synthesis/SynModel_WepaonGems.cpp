@@ -251,7 +251,7 @@ void USynModel_WepaonGems::SetCurrentSelectWeapon(UItemDataTable* _Value, const 
 	if (this->M_CurrentSelectWeapon->GetValue() && UGameplayStatics::GetPlatformName().Equals(TEXT("Android")))
 	{
 		//设置名称
-		this->M_WeaponNameText->SetText(FText::FromString(((FEquipmentBase*)(_Value->GetValue()))->ItemName));
+		this->M_WeaponNameText->SetText(((FEquipmentBase*)(_Value->GetValue()))->ItemName);
 
 		this->M_WeaponNameText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
@@ -275,7 +275,7 @@ void USynModel_WepaonGems::SetCurrentSelectGem(UItemDataTable* _Value, const int
 	if (this->M_CurrentSelectGem->GetValue() && UGameplayStatics::GetPlatformName().Equals(TEXT("Android")))
 	{
 		//设置名称
-		this->M_GemNameText->SetText(FText::FromString(((FEquipmentBase*)(_Value->GetValue()))->ItemName));
+		this->M_GemNameText->SetText(((FEquipmentBase*)(_Value->GetValue()))->ItemName);
 
 		this->M_GemNameText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
@@ -415,7 +415,7 @@ bool USynModel_WepaonGems::EnableGemToSlot()
 			for (int32 i = 0; i < CurrentData->M_WeaponGem.Num(); i++)
 			{
 				//判断当前槽位的宝石名称是否匹配当前选择的宝石名称
-				if (CurrentData->M_WeaponGem[i].M_WepaonGemName.Equals(((FEquipmentBase*)(this->M_CurrentSelectGem->GetValue()))->ItemName))
+				if (CurrentData->M_WeaponGem[i].M_WepaonGemName.Equals(((FEquipmentBase*)(this->M_CurrentSelectGem->GetValue()))->ItemName.ToString()))
 				{
 					//名称匹配->无法加入当前宝石
 
@@ -496,7 +496,7 @@ void USynModel_WepaonGems::GemEnable()
 	//搜索材料是否存在->不存在则不用执行
 	for (auto& MData : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 	{
-		if (MData.ItemName.Equals(this->M_NeedMaterialName))
+		if (MData.ItemName.ToString().Equals(this->M_NeedMaterialName))
 		{
 			//获得槽位
 			const TArray<FSynModel_GemSlot*>& Locals = { &this->Slot_0 ,&this->Slot_1,&this->Slot_2,&this->Slot_3 };
@@ -579,7 +579,7 @@ bool USynModel_WepaonGems::GemEnableFunc(FSynModel_GemSlot& _Slot, const int32& 
 				}
 			}
 			else {
-				if (LGem->M_TargetAttachWepaonName.Equals(_WepaonData.ItemName))
+				if (LGem->M_TargetAttachWepaonName.Equals(_WepaonData.ItemName.ToString()))
 				{
 					//武器名称匹配 -> 
 				}
@@ -593,7 +593,7 @@ bool USynModel_WepaonGems::GemEnableFunc(FSynModel_GemSlot& _Slot, const int32& 
 			}
 
 			//得到(宝石)名称
-			this->M_WaitAttachGemName = ((FEquipmentBase*)(this->M_CurrentSelectGem->GetValue()))->ItemName;
+			this->M_WaitAttachGemName = ((FEquipmentBase*)(this->M_CurrentSelectGem->GetValue()))->ItemName.ToString();
 			this->M_CurrentGemSlotIndex = _Index;
 
 			//设置图片
@@ -777,7 +777,7 @@ void USynModel_WepaonGems::GemSlotUninstall(const int32& _Index)
 	//查询玩家背包
 	for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 	{
-		if (Data.ItemName.Equals(TEXT("拆卸改锥")))
+		if (Data.ItemName.ToString().Equals(TEXT("拆卸改锥")))
 		{
 			LResult = true;
 
@@ -859,18 +859,18 @@ void USynModel_WepaonGems::GemAttach()
 							Data.M_WeaponGemGrade = (
 								(FEquipmentBase*)(this->M_CurrentSelectGem->GetValue())
 								)->M_EquipmentGrade;
-							Data.M_WepaonGemName = LGem->ItemName;
+							Data.M_WepaonGemName = LGem->ItemName.ToString();
 							Data.M_WepaonGemHeadPath = LGem->ItemTexturePath.ToString();
 
 							if (UFVMGameInstance::GetDebug())
 							{
 								UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("宝石镶嵌成功：") +
-									LGem->ItemName);
+									LGem->ItemName.ToString());
 							}
 
 							//添加历史记录
 							UPlayerRecord::AddGemAttachCount();
-							UPlayerRecord::AddDayDayNewGemAttachName(LGem->ItemName);
+							UPlayerRecord::AddDayDayNewGemAttachName(LGem->ItemName.ToString());
 
 							//调用任务
 							UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);

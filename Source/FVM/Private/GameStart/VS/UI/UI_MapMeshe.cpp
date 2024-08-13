@@ -71,7 +71,7 @@ void UUI_MapMeshe::PlayCard(
 	//设置UIMapMesh
 	Card->SetUIMapMesh(this);
 	//设置UICard
-	Card->SetCardUI(_CardMComp->GetUICard(_CardData.ItemName));
+	Card->SetCardUI(_CardMComp->GetUICard(_CardData.ItemName.ToString()));
 	//产生阶段结束
 	UGameplayStatics::FinishSpawningActor(Card, Trans);
 
@@ -129,7 +129,7 @@ void UUI_MapMeshe::PlayCard(
 	if (_CardData.M_CardPriceAutoUp)
 	{
 		_CardData.M_CardPrice += _CardData.M_CardPriceUpNum;
-		UUI_Card* const UICard = _CardMComp->GetUICard(_CardData.ItemName);
+		UUI_Card* const UICard = _CardMComp->GetUICard(_CardData.ItemName.ToString());
 		if (UICard)
 		{
 			UICard->M_NeedFlame = _CardData.M_CardPrice;
@@ -143,7 +143,7 @@ void UUI_MapMeshe::PlayCard(
 		if (_CardData.M_bEnableCopy)
 		{
 			_CardMComp->M_LastSelectCardClass = _CardData.CardActorResource.TryLoadClass<ACardActor>();
-			_CardMComp->M_LastSelectCardName = _CardData.ItemName;
+			_CardMComp->M_LastSelectCardName = _CardData.ItemName.ToString();
 		}
 
 		//播放音效
@@ -513,7 +513,7 @@ FString UUI_MapMeshe::GetCardActorNameByID(const int32& _Id)
 	FItemCard Data;
 	if (AGameMapInstance::GetCardManagerComponent_Static()->GetCardDataByName(this->GetCardNameByID(_Id), Data))
 	{
-		return Data.ItemName;
+		return Data.ItemName.ToString();
 	}
 	return FString(TEXT(""));
 }
@@ -702,11 +702,11 @@ bool UUI_MapMeshe::EradicateCard(const int32& _CardLayer)
 			if (
 				CardData->M_CardPriceAutoUp
 				&&
-				AGameMapInstance::GetCardManagerComponent_Static()->GetUICard(CardData->ItemName)
+				AGameMapInstance::GetCardManagerComponent_Static()->GetUICard(CardData->ItemName.ToString())
 				)
 			{
 				AGameMapInstance::GetCardManagerComponent_Static()
-					->GetUICard(CardData->ItemName)
+					->GetUICard(CardData->ItemName.ToString())
 					->M_NeedFlame -= CardData->M_CardPriceUpNum;
 
 				CardData->M_CardPrice -= CardData->M_CardPriceUpNum;

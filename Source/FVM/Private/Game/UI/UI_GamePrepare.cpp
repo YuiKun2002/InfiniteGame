@@ -56,7 +56,7 @@ void UUI_GamePrepare::SelectCard(const FString& _CardName, const FItemCard& _Car
 	for (auto Widget : this->M_BagGrid)
 	{
 		//寻找到你当前点击的卡片
-		if (Widget->GetFItemCardData()->ItemName.Equals(_CardName))
+		if (Widget->GetFItemCardData()->ItemName.ToString().Equals(_CardName))
 		{
 			//禁用相关按钮
 			Widget->GetButton()->SetIsEnabled(false);
@@ -96,7 +96,7 @@ void UUI_GamePrepare::SetCardEnable(const TArray<FString>& _Names, bool _bEnable
 		for (auto NamePP = _Names.CreateConstIterator(); NamePP; NamePP++)
 		{
 			//寻找到你当前点击的卡片
-			if (Widget->GetFItemCardData()->ItemName.Equals(*NamePP))
+			if (Widget->GetFItemCardData()->ItemName.ToString().Equals(*NamePP))
 			{
 				//禁用相关按钮
 				if (_bEnable)
@@ -172,7 +172,7 @@ void UUI_GamePrepare::LoadCardList()
 			//查询当前创建的新卡片是否被玩家选择(如果选择了则禁用按钮功能)
 			for (auto CardDatas : this->M_CardDatas_Copy)
 			{
-				if ((CardDatas).ItemName.Equals(_CardItems_[this->M_FTimeClip.M_Count].ItemName))
+				if ((CardDatas).ItemName.EqualTo(_CardItems_[this->M_FTimeClip.M_Count].ItemName))
 				{
 					M_TempCardGrid->GetButton()->SetIsEnabled(false);
 					break;

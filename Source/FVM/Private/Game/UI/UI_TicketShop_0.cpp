@@ -79,7 +79,7 @@ void UUI_TicketShop_0::UpdateCoin()
 
 	for (const auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 	{
-		if (Data.ItemName.Equals(TEXT("生肖兑换券")))
+		if (Data.ItemName.ToString().Equals(TEXT("生肖兑换券")))
 		{
 			this->M_CoinText = FString::FromInt(Data.M_Count);
 		}

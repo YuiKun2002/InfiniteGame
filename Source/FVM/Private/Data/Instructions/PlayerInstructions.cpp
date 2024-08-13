@@ -94,7 +94,7 @@ bool UPlayerInstructions::SendEquip(const TArray<FString>& Instruction)
 			FString CurStr = FALD(TEXT("装备道具列表：")) + TEXT("\r\n");
 			for (auto& CurItem : CurEquip)
 			{
-				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName, TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
+				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName.ToString(), TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
 			}
 			this->GetSystem()->AddCurrent(
 				CurStr
@@ -112,7 +112,7 @@ bool UPlayerInstructions::SendEquip(const TArray<FString>& Instruction)
 				if (UFVMGameInstance::GetPlayerStructManager_Static()->AddEquipmentToPlayerBag(CurItem))
 				{
 					UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment.Emplace(CurItem);
-					UGameLogSubsystem::AddPlayerGetEquipmentLog(CurItem.ItemName, 1, 0);
+					UGameLogSubsystem::AddPlayerGetEquipmentLog(CurItem.ItemName.ToString(), 1, 0);
 				}
 			}
 
@@ -152,7 +152,7 @@ bool UPlayerInstructions::SendEquip(const TArray<FString>& Instruction)
 					if (UFVMGameInstance::GetPlayerStructManager_Static()->AddEquipmentToPlayerBag(NewData))
 					{
 						UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment.Emplace(NewData);
-						UGameLogSubsystem::AddPlayerGetEquipmentLog(NewData.ItemName, 1, Grade);
+						UGameLogSubsystem::AddPlayerGetEquipmentLog(NewData.ItemName.ToString(), 1, Grade);
 					}
 				}
 				return true;
@@ -208,7 +208,7 @@ bool UPlayerInstructions::SendCard(const TArray<FString>& Instruction)
 			FString CurStr = FALD(TEXT("卡片列表：")) + TEXT("\r\n");
 			for (auto& CurItem : CurEquip)
 			{
-				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName, TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
+				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName.ToString(), TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
 			}
 			this->GetSystem()->AddCurrent(
 				CurStr
@@ -233,7 +233,7 @@ bool UPlayerInstructions::SendCard(const TArray<FString>& Instruction)
 			UCardBaseStruct::GetAllCardName(CurEquip);
 			for (auto& CurItem : CurEquip)
 			{
-				UGameSystemFunction::SendCardToPlayerBag(CurItem.ItemName, LGrade);
+				UGameSystemFunction::SendCardToPlayerBag(CurItem.ItemName.ToString(), LGrade);
 			}
 		}
 	}
@@ -313,7 +313,7 @@ bool UPlayerInstructions::SendMaterial(const TArray<FString>& Instruction)
 			FString CurStr = FALD(TEXT("材料列表：")) + TEXT("\r\n");
 			for (auto& CurItem : CurEquip)
 			{
-				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName, TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
+				CurStr += FALD(TEXT("【")) + FAL(CurItem.ItemName.ToString(), TEXT("c")) + FALD(TEXT("】")) + TEXT("\r\n");
 			}
 			this->GetSystem()->AddCurrent(
 				CurStr

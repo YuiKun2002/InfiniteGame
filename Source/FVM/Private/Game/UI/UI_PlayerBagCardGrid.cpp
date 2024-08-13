@@ -75,7 +75,7 @@ FString UUI_PlayerBagCardGrid::ToString_Implementation()
 {
 	if (this->GetFItemCardData())
 	{
-		return this->GetFItemCardData()->ItemName;
+		return this->GetFItemCardData()->ItemName.ToString();
 	}
 
 	return FString();
@@ -95,8 +95,8 @@ void UUI_PlayerBagCardGrid::ShowCardDetails()
 	UUI_PlayerBagCardDetail* M_UI_PlayerBagCardDetail = CreateWidget<UUI_PlayerBagCardDetail>(this, LoadClass<UUI_PlayerBagCardDetail>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardDetail.BPUI_PlayerBagCardDetail_C'")));
 	M_UI_PlayerBagCardDetail->M_PlayerUIBag = this->M_PlayerUIBag;
 	M_UI_PlayerBagCardDetail->M_FItemCard = this->M_FItemCard;
-	M_UI_PlayerBagCardDetail->ItemName = M_FItemCard->ItemName;
-	M_UI_PlayerBagCardDetail->ItemDescrible = M_FItemCard->ItemDescrible;
+	M_UI_PlayerBagCardDetail->ItemName = M_FItemCard->ItemName.ToString();
+	M_UI_PlayerBagCardDetail->ItemDescrible = M_FItemCard->ItemDescrible.ToString();
 	M_UI_PlayerBagCardDetail->ItemDescrible_2 = M_FItemCard->ItemDescrible_2;
 	M_UI_PlayerBagCardDetail->M_CardHP = FString(TEXT("生命值:")) + FString::FormatAsNumber(M_FItemCard->M_CardHP);
 	M_UI_PlayerBagCardDetail->M_CardPrice = FString(TEXT("火苗:")) + FString::FormatAsNumber(M_FItemCard->M_CardPrice);
@@ -116,7 +116,7 @@ void UUI_PlayerBagCardGrid::SelectCurrentCard()
 			return;
 		}
 
-		UUI_GamePrepare::M_GamePrepareStatic->SelectCard(this->M_FItemCard->ItemName, *M_FItemCard);
+		UUI_GamePrepare::M_GamePrepareStatic->SelectCard(this->M_FItemCard->ItemName.ToString(), *M_FItemCard);
 		UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.Emplace(*this->M_FItemCard);
 	}
 }
@@ -132,14 +132,14 @@ void UUI_PlayerBagCardGrid::RemoveCurrentSelectCard()
 
 		for (auto FCardDataPP = UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.CreateIterator(); FCardDataPP; FCardDataPP++)
 		{
-			if (this->M_FItemCard->ItemName.Equals((*FCardDataPP).ItemName))
+			if (this->M_FItemCard->ItemName.EqualTo((*FCardDataPP).ItemName))
 			{
 				FCardDataPP.RemoveCurrent();
 				break;
 			}
 		}
 
-		TArray<FString> Names = { M_FItemCard->ItemName };
+		TArray<FString> Names = { M_FItemCard->ItemName.ToString() };
 		UUI_GamePrepare::M_GamePrepareStatic->SetCardEnable(Names, true);
 		UUI_GamePrepare::M_GamePrepareStatic->CancelCardNum();
 	}
@@ -181,13 +181,15 @@ void UUI_PlayerBagCardGrid::AddSynthesisChangeJobs()
 	CardData.UIGrideIndex = this->GetUIIndex();
 	this->GetButton()->SetIsEnabled(false);
 
-	CardData.ChangeCardName = this->CopyData.ItemName;
+	CardData.ChangeCardName = this->CopyData.ItemName.ToString();
 	CardData.ChangeCardHeadPath = this->CopyData.ItemTexturePath.ToString();
 	CardData.TargetChangeCardName = this->CopyData.M_FCardChangeJobs.M_ChangeMaterialsName;
 	CardData.TargetType = this->CopyData.M_FCardChangeJobs.M_ChangeType;
 	CardData.CardGrade = this->CopyData.M_FCardChangeJobs.M_ChangeGrade;
 	//赋值索引
-	const TMap<int32, FItemCard>& Cards = UFVMGameInstance::GetPlayerStructManager_Static()->FindCardByName(this->CopyData.ItemName);
+	const TMap<int32, FItemCard>& Cards = UFVMGameInstance::GetPlayerStructManager_Static()->FindCardByName(
+		this->CopyData.ItemName.ToString()
+	);
 	for (const auto& CurData : Cards)
 	{
 		if (CurData.Value.M_CardGrade == this->CopyData.M_CardGrade)
@@ -266,11 +268,13 @@ void UUI_PlayerBagCardGrid::AddSynthesisGoldCardUp()
 	FGoldCardUpCardType Data;
 	Data.Grid = this;
 	Data.UIGridIndex = this->GetUIIndex();
-	Data.CardName = this->CopyData.ItemName;
+	Data.CardName = this->CopyData.ItemName.ToString();
 	Data.CardHeadPath = this->CopyData.ItemTexturePath.ToString();
 	Data.CardGrade = this->CopyData.M_CardGrade;
 
-	const TMap<int32, FItemCard>& Cards = UFVMGameInstance::GetPlayerStructManager_Static()->FindCardByName(this->CopyData.ItemName);
+	const TMap<int32, FItemCard>& Cards = UFVMGameInstance::GetPlayerStructManager_Static()->FindCardByName(
+		this->CopyData.ItemName.ToString()
+	);
 	for (const auto& Card : Cards)
 	{
 		if (Card.Value.M_CardGrade == this->CopyData.M_CardGrade)

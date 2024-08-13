@@ -183,7 +183,7 @@ bool UVSManagerComponent::CreatePlayer(
 				//设置武器
 				for (const auto& Data : Cache->GetWeaponFirst())
 				{
-					if (Data.M_FEquipment.ItemName.Equals(FirstWeaponName))
+					if (Data.M_FEquipment.ItemName.ToString().Equals(FirstWeaponName))
 					{
 						PlayerIns->LoadPlayerFirstWeapon(
 							FirstWeaponName,
@@ -250,7 +250,7 @@ bool UVSManagerComponent::CreatePlayerByData(FString PlayerName, int32 Row, int3
 			//当前是否有服装装备
 			TempSuitData.M_bUse = true;
 			//服装名称
-			TempSuitData.M_SuitName = TempData.Suit.ItemName;
+			TempSuitData.M_SuitName = TempData.Suit.ItemName.ToString();
 			//服装头像路径
 			TempSuitData.M_SuitHeadPath = TempData.Suit.ItemTexturePath;
 			//服装展示图片路径1

@@ -331,7 +331,7 @@ void USynModel_GemsUpGrade::AddWeapon()
 		if (UGameplayStatics::GetPlatformName().Equals(TEXT("Android")))
 		{
 			//设置武器名称文字显示
-			this->M_GemUp_SelectWepaonText->SetText(FText::FromString(CurrentData->ItemName));
+			this->M_GemUp_SelectWepaonText->SetText(CurrentData->ItemName);
 		}
 
 		//清除数据
@@ -436,7 +436,7 @@ void USynModel_GemsUpGrade::AddGem()
 
 		//设置宝石名称文字显示
 		if (UGameplayStatics::GetPlatformName().Equals(TEXT("Android")))
-			this->M_GemUp_SelectGemText->SetText(FText::FromString(Gem->ItemName));
+			this->M_GemUp_SelectGemText->SetText(Gem->ItemName);
 
 		this->SetUpGradeGemData(-1);
 
@@ -447,7 +447,7 @@ void USynModel_GemsUpGrade::AddGem()
 		this->SearchCrystalData();
 
 		//添加水晶
-		this->AddCrystal(Gem->ItemName, Gem->M_EquipmentGrade);
+		this->AddCrystal(Gem->ItemName.ToString(), Gem->M_EquipmentGrade);
 	}
 }
 
@@ -563,12 +563,12 @@ void USynModel_GemsUpGrade::SearchCrystalData()
 
 	for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 	{
-		if (Data.M_MaterialType == EMaterialType::E_Crystal && Data.ItemName.Equals(TEXT("强化水晶")))
+		if (Data.M_MaterialType == EMaterialType::E_Crystal && Data.ItemName.ToString().Equals(TEXT("强化水晶")))
 		{
 			this->M_GU_NormalCrystal->SetValue((FTableRowBase*)(&Data));
 			LResult1 = true;
 		}
-		else if (Data.M_MaterialType == EMaterialType::E_Crystal && Data.ItemName.Equals(TEXT("高级强化水晶")))
+		else if (Data.M_MaterialType == EMaterialType::E_Crystal && Data.ItemName.ToString().Equals(TEXT("高级强化水晶")))
 		{
 			this->M_GU_AdvancedCrystal->SetValue((FTableRowBase*)(&Data));
 			LResult2 = true;
@@ -596,7 +596,9 @@ const float USynModel_GemsUpGrade::UpdateRate() const
 	if (this->M_GU_CurrentSelectClover->GetValue())
 	{
 		FCloverMaterial LClover;
-		if (UMaterialBaseStruct::GetMaterialSourceData(((FMaterialBase*)this->M_GU_CurrentSelectClover->GetValue())->ItemName, LClover, EMaterialType::E_Clover))
+		if (UMaterialBaseStruct::GetMaterialSourceData(
+			((FMaterialBase*)this->M_GU_CurrentSelectClover->GetValue())->ItemName.ToString(), LClover, EMaterialType::E_Clover)
+			)
 		{
 			ColoverRateAdd = ((LClover.M_UpGrateRate - 1.f) * BaseRate);
 		}
@@ -745,9 +747,9 @@ void USynModel_GemsUpGrade::GemUpGrade()
 			}
 
 			//添加历史记录
-			UPlayerRecord::AddDayDayNewGemAttachName(LSlot->ItemName);
+			UPlayerRecord::AddDayDayNewGemAttachName(LSlot->ItemName.ToString());
 			//添加宝石强化历史记录
-			UPlayerRecord::AddGemUpGrade(LSlot->ItemName, LSlot->M_EquipmentGrade);
+			UPlayerRecord::AddGemUpGrade(LSlot->ItemName.ToString(), LSlot->M_EquipmentGrade);
 
 			//设置强化的等级
 			this->CurUpGemGrade = LSlot->M_EquipmentGrade;

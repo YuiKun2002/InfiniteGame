@@ -111,7 +111,7 @@ void UUI_GameInformationBoxCard::ShowContent()
 					this->CardPrice += TEXT("+");
 				}
 
-				this->CardDes = CurD.ItemDescrible + TEXT("\n\r") + CurD.ItemDescrible_2;
+				this->CardDes = CurD.ItemDescrible.ToString() + TEXT("\n\r") + CurD.ItemDescrible_2;
 			}
 
 			this->CardTypeText->SetText(FText::FromString(this->CardType));
@@ -398,7 +398,7 @@ void UUI_GameInformation::ShowCard(const FString& SearchKey)
 		for (const FItemBase& Item : AllCards)
 		{
 			FGameInformationStructData Temp;
-			Temp.Name = Item.ItemName;
+			Temp.Name = Item.ItemName.ToString();
 			Temp.Img = Item.ItemTexturePath;
 			this->Cards.Emplace(Temp);
 		}

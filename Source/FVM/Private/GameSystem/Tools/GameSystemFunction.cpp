@@ -116,7 +116,7 @@ FMaterialBase* UGameSystemFunction::GetMaterialDataFromBag(TArray<FMaterialBase>
 {
 	for (FMaterialBase& Items : _Arrays)
 	{
-		if (Items.ItemName.Equals(_ItemName))
+		if (Items.ItemName.ToString().Equals(_ItemName))
 			return &Items;
 	}
 	return nullptr;
@@ -1180,7 +1180,7 @@ bool UGameSystemFunction::SendEquipmentToPlayerBag(const FString& _EquipmentName
 			//背包查询->是否有重复的->如果有则直接添加对应个数
 			for (auto& Item : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment)
 			{
-				if (_EquipmentName.Equals(Item.ItemName))
+				if (_EquipmentName.Equals(Item.ItemName.ToString()))
 				{
 					//根据类型发送背包
 					if (Item.M_IsOverlap)
@@ -1214,16 +1214,16 @@ bool UGameSystemFunction::SendEquipmentToPlayerBag(const FString& _EquipmentName
 		}
 
 		//添加装备内容
-		UGameLogSubsystem::AddPlayerGetEquipmentLog(EquipmentData.ItemName, _Count, EquipmentData.M_EquipmentGrade);
+		UGameLogSubsystem::AddPlayerGetEquipmentLog(EquipmentData.ItemName.ToString(), _Count, EquipmentData.M_EquipmentGrade);
 
 		if (_bSave)
 		{
-			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送装备：")) + EquipmentData.ItemName + TEXT("到背包"));
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送装备：")) + EquipmentData.ItemName.ToString() + TEXT("到背包"));
 		}
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备：") + EquipmentData.ItemName + TEXT("到背包"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备：") + EquipmentData.ItemName.ToString() + TEXT("到背包"));
 		}
 
 		return true;
@@ -1231,7 +1231,7 @@ bool UGameSystemFunction::SendEquipmentToPlayerBag(const FString& _EquipmentName
 
 	if (UFVMGameInstance::GetDebug())
 	{
-		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备失败：") + EquipmentData.ItemName);
+		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送装备失败：") + EquipmentData.ItemName.ToString());
 	}
 
 	return false;
@@ -1254,7 +1254,7 @@ bool UGameSystemFunction::SendMaterialToPlayerBag(const FString& _MaterialName, 
 		//背包查询->是否有重复的->如果有则直接添加对应个数
 		for (auto& Item : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 		{
-			if (_MaterialName.Equals(Item.ItemName))
+			if (_MaterialName.Equals(Item.ItemName.ToString()))
 			{
 				//个数判断
 				if (Item.M_Count + _Count > 1000000000)
@@ -1280,15 +1280,15 @@ bool UGameSystemFunction::SendMaterialToPlayerBag(const FString& _MaterialName, 
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料：") + MaterialBaseData.ItemName + TEXT("到背包"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料：") + MaterialBaseData.ItemName.ToString() + TEXT("到背包"));
 		}
 
-		UGameLogSubsystem::AddPlayerGetMaterialLog(MaterialBaseData.ItemName, _Count);
+		UGameLogSubsystem::AddPlayerGetMaterialLog(MaterialBaseData.ItemName.ToString(), _Count);
 
 		//保存数据
 		if (_bSave)
 		{
-			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送材料：")) + MaterialBaseData.ItemName + TEXT("到背包"));
+			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("发送材料：")) + MaterialBaseData.ItemName.ToString() + TEXT("到背包"));
 		}
 
 		return true;
@@ -1296,7 +1296,7 @@ bool UGameSystemFunction::SendMaterialToPlayerBag(const FString& _MaterialName, 
 
 	if (UFVMGameInstance::GetDebug())
 	{
-		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料失败：") + MaterialBaseData.ItemName);
+		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("发送材料失败：") + MaterialBaseData.ItemName.ToString());
 	}
 
 	return false;
@@ -1338,7 +1338,7 @@ int32 UGameSystemFunction::SerachPlayerEquipmentIndexByID(const FString& _ItemNa
 		//通过前进行查找
 		for (int32 I = 0; I <= LIndex; ++I)
 		{
-			if (LPlayer->M_PlayerItems_Equipment[I].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[I].ItemName))
+			if (LPlayer->M_PlayerItems_Equipment[I].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[I].ItemName.ToString()))
 			{
 				//查询成功
 				return I;
@@ -1351,7 +1351,7 @@ int32 UGameSystemFunction::SerachPlayerEquipmentIndexByID(const FString& _ItemNa
 		//通过后面进行查找
 		for (int32 I = LIndex; I < LPlayer->M_PlayerItems_Equipment.Num(); ++I)
 		{
-			if (LPlayer->M_PlayerItems_Equipment[I].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[I].ItemName))
+			if (LPlayer->M_PlayerItems_Equipment[I].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[I].ItemName.ToString()))
 			{
 				//查询成功
 				return I;
@@ -1361,7 +1361,7 @@ int32 UGameSystemFunction::SerachPlayerEquipmentIndexByID(const FString& _ItemNa
 	}
 
 	//2分的结果刚好就是当前ID
-	if (LPlayer->M_PlayerItems_Equipment[LIndex].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[LIndex].ItemName))
+	if (LPlayer->M_PlayerItems_Equipment[LIndex].M_ItemID == _EquipID && _ItemName.Equals(LPlayer->M_PlayerItems_Equipment[LIndex].ItemName.ToString()))
 	{
 		//查询成功
 		return LIndex;

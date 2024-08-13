@@ -32,18 +32,19 @@ void ARangeATKCardActor::BeginPlay()
 		this->SetCurATK(
 			this->GetATK() +
 			(this->GetATK() / 2.f) * this->ItemCardRangeATK.M_CardATKRate *
-			((float)(this->GetCardGrade(this->ItemCardRangeATK.ItemName))) *
+			((float)(this->GetCardGrade(this->ItemCardRangeATK.ItemName.ToString()))) *
 			this->ItemCardRangeATK.M_M_ECardUpGradeUpRate
 		);
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UE_LOG(LogTemp, Error, TEXT("[CardActor.cpp ACardActor::SetCardData_ATK]攻击卡片强化技能:|| [最终攻击力](%.2f) || 计算:[BaseATK (%.2f)] + [BaseATK / 2 (%.2f)] * [ATKRate (%.2f)] * [Grade (%d)] * [UpGradeRate (%.2f)]"),
+			UE_LOG(LogTemp, Error, 
+			TEXT("[CardActor.cpp ACardActor::SetCardData_ATK]攻击卡片强化技能:|| [最终攻击力](%.2f) || 计算:[BaseATK (%.2f)] + [BaseATK / 2 (%.2f)] * [ATKRate (%.2f)] * [Grade (%d)] * [UpGradeRate (%.2f)]"),
 				this->GetCurATK(),
 				this->GetATK(),
 				(this->GetATK() / 2.f),
 				this->ItemCardRangeATK.M_CardATKRate,
-				this->GetCardGrade(this->ItemCardRangeATK.ItemName),
+				this->GetCardGrade(this->ItemCardRangeATK.ItemName.ToString()),
 				this->ItemCardRangeATK.M_M_ECardUpGradeUpRate);
 		}
 	}
@@ -59,7 +60,7 @@ void ARangeATKCardActor::BeginPlay()
 		if (UFVMGameInstance::GetDebug())
 		{
 			FString Content = FString(TEXT("当前防御卡[") +
-				this->ItemCardRangeATK.ItemName + TEXT("]提升攻击速度=>") +
+				this->ItemCardRangeATK.ItemName.ToString() + TEXT("]提升攻击速度=>") +
 				FString::SanitizeFloat(this->GetCurAttackSpeed()));
 
 			UGameSystemFunction::FVMLog(__FUNCTION__, Content);

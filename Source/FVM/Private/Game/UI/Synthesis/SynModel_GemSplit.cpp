@@ -141,7 +141,7 @@ void USynModel_GemSplit::GemSplit()
 		);
 
 		//添加历史记录
-		UPlayerRecord::AddDayDayNewGemAttachName(Gem->ItemName);
+		UPlayerRecord::AddDayDayNewGemAttachName(Gem->ItemName.ToString());
 		UPlayerRecord::AddGemSplitCount();
 
 		//执行任务

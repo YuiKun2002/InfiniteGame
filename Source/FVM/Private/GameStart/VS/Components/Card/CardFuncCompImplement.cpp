@@ -53,7 +53,7 @@ bool UCardFunctionGrow::Execute(class UCardFunctionComponent* CardFuncComp) {
 	if (CurData)
 	{
 		FCardFunctionGrowImplementTRB* CurFindData = CurData->FindRow<FCardFunctionGrowImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardFuncGrow")
 		);
 		if (CurFindData)
@@ -100,7 +100,7 @@ bool UCardFunctionGrow::Update(class UCardFunctionComponent* CardFuncComp, const
 
 			float ResultTime = SourceTime -
 				SourceTime * this->CardDataTRB.GrowTimeRate *
-				CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
+				CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()) *
 				this->CardDataTRB.GrowTimeRate / SourceTime;
 
 			if (UFVMGameInstance::GetDebug())
@@ -108,7 +108,7 @@ bool UCardFunctionGrow::Update(class UCardFunctionComponent* CardFuncComp, const
 				UGameSystemFunction::FVMLog(__FUNCTION__,
 					FString(
 						TEXT("【") +
-						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName +
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString() +
 						TEXT("】生长所需时间") +
 						FString::SanitizeFloat(ResultTime)
 					));
@@ -190,7 +190,7 @@ bool UCardFunctionBombBase::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionBombImplementTRB* CurFindData = CurData->FindRow<FCardFunctionBombImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())),
 			TEXT("CardBomb")
 		);
 		if (CurFindData)
@@ -270,7 +270,9 @@ void UCardFunctionBombBase::CreateBomb(UCardFunctionComponent* CardFuncComp, boo
 					float BombATKRate = this->CardDataTRB.BombATKRate;
 					float TargetATK =
 						BombATK + BombATK * BombATKRate *
-						CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
+						CardFuncComp->GetCardActor()->GetCardGrade(
+							CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+						) *
 						0.1f;
 
 					if (bKill)
@@ -370,7 +372,9 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 				float BombATKRate = this->CardDataTRB.BombATKRate;
 				float TargetATK =
 					BombATK + BombATK * BombATKRate *
-					CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
+					CardFuncComp->GetCardActor()->GetCardGrade(
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+					) *
 					0.1f;
 
 				if (bKill)
@@ -556,7 +560,9 @@ void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncCo
 		float BombATKRate = this->CardDataTRB.BombATKRate;
 		float TargetATK =
 			BombATK + BombATK * BombATKRate *
-			CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
+			CardFuncComp->GetCardActor()->GetCardGrade(
+			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+			) *
 			0.1f;
 
 		if (bKill)
@@ -878,7 +884,7 @@ bool UCardFunctionActive::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionActiveTRB* CurFindData = CurData->FindRow<FCardFunctionActiveTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardActive")
 		);
 		if (CurFindData)
@@ -1099,7 +1105,7 @@ bool UCardFunctionProjectileATK::Execute(class UCardFunctionComponent* CardFuncC
 	if (CurData)
 	{
 		FCardFunctionProjectileATKImplementTRB* CurFindData = CurData->FindRow<FCardFunctionProjectileATKImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardProjectileATK")
 		);
 		if (CurFindData)
@@ -1216,7 +1222,7 @@ void UCardFunctionProjectileATK::AddtionATK(class UCardFunctionComponent* CardFu
 						CardDataTRB.ATKAddtion +
 						CardDataTRB.BombATKRate *
 						CardFuncComp->GetCardActor()->GetCardGrade(
-							CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName
+							CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 						)
 						* 0.1f
 						)
@@ -1257,7 +1263,7 @@ bool UCardFunctionTrigger::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionTriggerImplementTRB* CurFindData = CurData->FindRow<FCardFunctionTriggerImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardTrigger")
 		);
 		if (CurFindData)
@@ -1276,7 +1282,9 @@ bool UCardFunctionTrigger::Execute(class UCardFunctionComponent* CardFuncComp)
 			if (UFVMGameInstance::GetDebug())
 			{
 				UGameSystemFunction::FVMLog(__FUNCTION__,
-					FString(TEXT("遇到飞行物功能卡片函数执行：") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)
+					FString(TEXT("遇到飞行物功能卡片函数执行：") + 
+					CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+					)
 				);
 			}
 
@@ -1353,7 +1361,9 @@ bool UCardFunctionTrigger::OnOverlapBegin(class UCardFunctionComponent* CardFunc
 	if (UFVMGameInstance::GetDebug())
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__,
-			FString(TEXT("遇到飞行物功能卡片函数执行：") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)
+			FString(TEXT("遇到飞行物功能卡片函数执行：") +
+			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+			)
 		);
 	}
 
@@ -1387,14 +1397,16 @@ bool UCardFunctionCatBox::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionCatBoxImplementTRB* CurFindData = CurData->FindRow<FCardFunctionCatBoxImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardCatBox")
 		);
 		if (CurFindData)
 		{
 			this->CardDataTRB = *CurFindData;
 
-			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetCardData().ItemName);
+			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(
+			CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
+			);
 			//初始化血量提升
 			CardFuncComp->GetCardActor()->SetCardHP(
 				CardFuncComp->GetCardActor()->GetTotalHP() + CardGrade * 0.25f * CardFuncComp->GetCardActor()->GetTotalHP(), 0
@@ -1533,7 +1545,8 @@ bool UCardFunctionCatBox::JudgeState(class UCardFunctionComponent* CardFuncComp)
 				//给予伤害，并且进行移位换行
 				float CurATK = UGameSystemFunction::CalculateCardATK(
 					this->CardDataTRB.CatBoxAtkBase, CardDataTRB.CatBoxAtkRate,
-					CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName), CurCardData.M_M_ECardUpGradeUpRate);
+					CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
+					CurCardData.M_M_ECardUpGradeUpRate);
 
 				//设置命中老鼠
 				CurMouse->SetbIsHurt(true);
@@ -1576,7 +1589,7 @@ bool UCardFunctionBurger::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionBurgerImplementTRB* CurFindData = CurData->FindRow<FCardFunctionBurgerImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("CardCatBox")
 		);
 		if (CurFindData)
@@ -1666,7 +1679,9 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 		if (this->bHit)
 		{
 			//设置咀嚼次数
-			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetCardData().ItemName);
+			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(
+			CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
+			);
 			int32 CurEttingCount = this->CardDataTRB.EattingCount - CardGrade * 0.5f;
 			//咀嚼次数
 			this->iEattingCount = CurEttingCount <= 0 ? 1 : CurEttingCount;
@@ -1893,7 +1908,8 @@ void UCardFunctionBurger::HitAllMouse(class UCardFunctionComponent* CardFuncComp
 
 			float CurATK = UGameSystemFunction::CalculateCardATK(
 				this->CardDataTRB.AtkBase, CardDataTRB.AtkRate,
-				CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName), CurCardData.M_M_ECardUpGradeUpRate);
+				CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
+				CurCardData.M_M_ECardUpGradeUpRate);
 
 			if (CurMouse->BeHit(CardFuncComp->GetCardActor(), CurATK, EFlyItemAttackType::Def))
 			{
@@ -1931,7 +1947,7 @@ bool UCardFunctionFlourbag::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionFlourbagImplementTRB* CurFindData = CurData->FindRow<FCardFunctionFlourbagImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("Flourbag")
 		);
 		if (CurFindData)
@@ -2144,7 +2160,7 @@ void UCardFunctionFlourbag::Init(UCardFunctionComponent* CardFuncComp)
 			//设置攻击力
 			float CurATK = UGameSystemFunction::CalculateCardATK(
 				CurObj->CardDataTRB.FlourbagAtkBase, CurObj->CardDataTRB.FlourbagAtkRate,
-				CurObj->CurCardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName),
+				CurObj->CurCardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 				CurCardData.M_M_ECardUpGradeUpRate);
 
 			//生成攻击球体检测
@@ -2265,7 +2281,7 @@ bool UCardFunctionElectric::Execute(class UCardFunctionComponent* CardFuncComp)
 	if (CurData)
 	{
 		FCardFunctionElectricImplementTRB* CurFindData = CurData->FindRow<FCardFunctionElectricImplementTRB>(
-			FName(FString(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)),
+			FName(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()),
 			TEXT("Electric")
 		);
 		if (CurFindData)
@@ -2488,7 +2504,7 @@ void UCardFunctionElectric::Create(UCardFunctionComponent* CardFuncComp, FVector
 	//设置攻击力
 	float CurATK = UGameSystemFunction::CalculateCardATK(
 		this->CardDataTRB.AtkBase, this->CardDataTRB.AtkRate,
-		CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName),
+		CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 		CurCardData.M_M_ECardUpGradeUpRate);
 
 	for (const auto& CurType : this->CardDataTRB.MouseType)

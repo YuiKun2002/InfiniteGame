@@ -80,7 +80,7 @@ public:
 	{
 		//获取物品数据
 		for (auto Items = _Arrays.CreateConstIterator(); Items; ++Items)
-			if (_Names.Equals((*Items).ItemName))
+			if (_Names.Equals((*Items).ItemName.ToString()))
 			{
 				_OutputData = (*Items);
 				_Result = true;

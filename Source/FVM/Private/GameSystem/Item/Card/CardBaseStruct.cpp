@@ -27,7 +27,7 @@ void SearchCardResult(const FString& _CardName, FItemCard& OutputData, bool _Sel
 		//查询卡片
 		for (auto _Card = LocalDatas.CreateConstIterator(); _Card; ++_Card)
 		{
-			if ((*_Card)->ItemName.Equals(_CardName))
+			if ((*_Card)->ItemName.ToString().Equals(_CardName))
 			{
 				OutputData = *(*_Card);
 				_LResult = true;

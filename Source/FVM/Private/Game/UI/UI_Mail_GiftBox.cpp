@@ -138,7 +138,7 @@ void UUI_Mail_GiftBox::Show()
 	if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(this->GetMailBox()->GetMailData()->M_MailSendItemName, Data, true, EEquipment::E_Gift))
 	{
 		//设置log
-		this->M_ItemName = Data.ItemName;
+		this->M_ItemName = Data.ItemName.ToString();
 		UWidgetBase::SetImageBrush(this->M_ItemHead, Data.ItemTexturePath.ToString());
 	}
 	else {

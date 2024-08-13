@@ -36,8 +36,8 @@ void ACardActor::SetCardActor(const FItemCard& _CardData)
 {
 	this->SetCardHP(_CardData.M_CardHP, 0.f);
 	this->SetCardType(_CardData.M_ELineType, _CardData.M_CardLayer);
-	this->SetCardGrade(this->GetCardGrade(_CardData.ItemName));
-	this->M_CardProperty.M_CardName = _CardData.ItemName;
+	this->SetCardGrade(this->GetCardGrade(_CardData.ItemName.ToString()));
+	this->M_CardProperty.M_CardName = _CardData.ItemName.ToString();
 	this->M_CardProperty.M_CardDay = _CardData.M_CardDay;
 	this->M_CardProperty.M_CardID = _CardData.M_CardLayer;
 	this->M_SourceCardDataBase = _CardData;
@@ -288,7 +288,7 @@ int32 ACardActor::GetCardGrade(const FString& _Name)
 	{
 		for (auto Datas : AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->M_CardData)
 		{
-			if (Datas.ItemName.Equals(_Name))
+			if (Datas.ItemName.ToString().Equals(_Name))
 			{
 				return Datas.M_CardGrade;
 			}

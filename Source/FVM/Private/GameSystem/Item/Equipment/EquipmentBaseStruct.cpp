@@ -181,7 +181,7 @@ bool UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(const FString& _Eq
 	EquipmentTypeFactory::GetAllDatas(LItemBuffer, _bSelect, Type);
 
 	for (auto& Data : LItemBuffer)
-		if (_EquipmentName.Equals(Data->ItemName))
+		if (_EquipmentName.Equals(Data->ItemName.ToString()))
 		{
 			OutputData = Data;
 

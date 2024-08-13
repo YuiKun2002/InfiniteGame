@@ -17,11 +17,21 @@ void ASpawnCardActor::BeginPlay()
 	if (this->ItemCardSpawnData.M_ECardUpGradeType == ECardUpGradeType::E_SpawnSpeed_Up)
 	{
 		float SourceValue = this->ItemCardSpawnData.M_SpawnSpeed;
-		this->ItemCardSpawnData.M_SpawnSpeed = this->ItemCardSpawnData.M_SpawnSpeed - this->ItemCardSpawnData.M_SpawnSpeed * this->ItemCardSpawnData.M_SpawnSpeedRate * this->GetCardGrade(this->ItemCardSpawnData.ItemName) / 10.f * this->ItemCardSpawnData.M_M_ECardUpGradeUpRate;
+		this->ItemCardSpawnData.M_SpawnSpeed =
+			this->ItemCardSpawnData.M_SpawnSpeed -
+			this->ItemCardSpawnData.M_SpawnSpeed *
+			this->ItemCardSpawnData.M_SpawnSpeedRate *
+			this->GetCardGrade(this->ItemCardSpawnData.ItemName.ToString()) / 10.f *
+			this->ItemCardSpawnData.M_M_ECardUpGradeUpRate;
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UE_LOG(LogTemp, Error, TEXT("[CardActor.cpp ACardActor::SetCardData_Spawn]生产卡片强化技能: [初始时间]%.2f  [提升后的时间]%.2f"), SourceValue, this->ItemCardSpawnData.M_SpawnSpeed);
+			UE_LOG(LogTemp,
+				Error,
+				TEXT("[CardActor.cpp ACardActor::SetCardData_Spawn]生产卡片强化技能: [初始时间]%.2f  [提升后的时间]%.2f"),
+				SourceValue,
+				this->ItemCardSpawnData.M_SpawnSpeed
+			);
 		}
 	}
 
@@ -31,7 +41,12 @@ void ASpawnCardActor::BeginPlay()
 		this->ItemCardSpawnData.M_FlameNum = this->ItemCardSpawnData.M_FlameNum + this->ItemCardSpawnData.M_FlameNum * UGameSystemFunction::GetPlayerSkillBooksLv(this->ItemCardSpawnData.M_CardSkillBookName) * 0.25f;
 		if (UFVMGameInstance::GetDebug())
 		{
-			FString Content = FString(TEXT("当前防御卡[") + this->ItemCardSpawnData.ItemName + TEXT("]产量提升至=>") + FString::FromInt(this->ItemCardSpawnData.M_FlameNum));
+			FString Content =
+				FString(TEXT("当前防御卡[") +
+					this->ItemCardSpawnData.ItemName.ToString() +
+					TEXT("]产量提升至=>") +
+					FString::FromInt(this->ItemCardSpawnData.M_FlameNum));
+
 			UGameSystemFunction::FVMLog(__FUNCTION__, Content);
 		}
 	}

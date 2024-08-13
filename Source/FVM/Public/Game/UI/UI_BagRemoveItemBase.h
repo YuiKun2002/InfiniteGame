@@ -70,7 +70,9 @@ public:
 
 			if (UFVMGameInstance::GetDebug())
 			{
-				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("道具库:") + _PlayerData->M_PlayerItems_Equipment[M_ItemIndex].ItemName + (_Tag ? TEXT("标记") : TEXT("取消标记")));
+				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("道具库:") + 
+				_PlayerData->M_PlayerItems_Equipment[M_ItemIndex].ItemName.ToString() + 
+				(_Tag ? TEXT("标记") : TEXT("取消标记")));
 			}
 		}
 	}

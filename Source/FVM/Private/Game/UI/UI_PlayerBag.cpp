@@ -425,7 +425,7 @@ void UUI_PlayerBag::UseCurrentGrid(uint8 _PanelIndex, uint8 _BagNumber, int32 _P
 		//从背包中寻找背包名称并且取消使用
 		for (FEquipmentBase& Euipment : UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Equipment)
 		{
-			if (Euipment.ItemName.Equals(BagName) && Euipment.M_Used)
+			if (Euipment.ItemName.ToString().Equals(BagName) && Euipment.M_Used)
 			{
 				Euipment.M_Used = false;
 				if (_PanelIndex == 0) this->LoadItemsData();
@@ -533,7 +533,7 @@ void UUI_PlayerBag::LoadItemsDataEnd(UUI_PlayerBag* _bag)
 		//打印武器库索引
 		for (const auto& Datas : UFVMGameInstance::GetPlayerStructManager_Static()->M_FPlayerWeaponDatas)
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器名称：") + Datas.ItemName + TEXT("武器ID：") + FString::FromInt(Datas.M_ItemID));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器名称：") + Datas.ItemName.ToString() + TEXT("武器ID：") + FString::FromInt(Datas.M_ItemID));
 		}
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("---------------玩家武器数据存储(结束)---------------"));
 
@@ -541,7 +541,7 @@ void UUI_PlayerBag::LoadItemsDataEnd(UUI_PlayerBag* _bag)
 		//打印武器库索引
 		for (const auto& Datas : UFVMGameInstance::GetPlayerStructManager_Static()->M_FPlayerWeaponGemDatas)
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("宝石名称：") + Datas.ItemName + TEXT("宝石ID：") + FString::FromInt(Datas.M_ItemID));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("宝石名称：") + Datas.ItemName.ToString() + TEXT("宝石ID：") + FString::FromInt(Datas.M_ItemID));
 		}
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("---------------玩家宝石数据存储(结束)---------------"));
 	}
@@ -628,14 +628,14 @@ void UUI_PlayerBag::AddBagGrid(int32 _PanelNumber, int32 _BagNumber, TArray<FPla
 
 	for (auto Items : BagDatas)
 	{
-		if ((*(FEquipment_Bag_Data*)(Items)).M_FEquipment.ItemName.Equals(_Data->ItemName))
+		if ((*(FEquipment_Bag_Data*)(Items)).M_FEquipment.ItemName.EqualTo(_Data->ItemName))
 		{
 			_Grid[_BagNumber - 1].M_GridCount = (*(FEquipment_Bag_Data*)(Items)).M_FEquipment.M_ContentCount;
 			_Grid[_BagNumber - 1].M_GridImagePath = _Data->ItemTexturePath.ToString();
 			_Grid[_BagNumber - 1].M_PanelNumber = _PanelNumber;
 			_Grid[_BagNumber - 1].M_BagNumber = _BagNumber - 1;
 			_Grid[_BagNumber - 1].M_VectorName = this->M_BagVectorName;
-			_Grid[_BagNumber - 1].M_BagName = _Data->ItemName;
+			_Grid[_BagNumber - 1].M_BagName = _Data->ItemName.ToString();
 			break;
 		}
 	}
@@ -680,7 +680,7 @@ void UUI_PlayerBag::CloseBagPanel()
 void UUI_PlayerBag::SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Grid, UItemDataTable* _Items_, int32 _Index)
 {
 	//设置名称
-	_Grid->SetItemName(((FEquipmentBase*)(_Items_->GetValue()))->ItemName);
+	_Grid->SetItemName(((FEquipmentBase*)(_Items_->GetValue()))->ItemName.ToString());
 	//设置等级[空字符串，默认隐藏等级]
 	_Grid->SetItemGrade("");
 	//设置按钮显示图片
@@ -740,20 +740,20 @@ void UUI_PlayerBag::SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Gri
 		//如果在使用则关闭按钮
 		if (!((FEquipmentBase*)(_Items_->GetValue()))->M_Used)
 		{
-			UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible);
+			UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible.ToString());
 			UGameSystemFunction::AddString(LDescribe, TEXT("\n\n背包使用方法：(可以点击下方的背包装备栏，即可装备此背包)\n\n (如果背包栏未解锁,点击灰色的锁即可购买解锁背包栏)"));
 			UWidgetBase::ButtonDelegateBind(_Grid->GetButton(), _Grid, "ShowText");
 		}
 	}break;
 	case EEquipment::E_PlayerEquipment: {
-		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible);
+		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible.ToString());
 		UWidgetBase::ButtonDelegateBind(_Grid->GetButton(), _Grid, "ShowPlayerSuit");
 	}break;
 	case EEquipment::E_PlayerWeaponFirst:
 	case EEquipment::E_PlayerWeaponSecond:
 	case EEquipment::E_PlayerWeaponSuper:
 	{
-		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible);
+		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible.ToString());
 
 
 		if (((FEquipmentBase*)(_Items_->GetValue()))->M_EquipmentType == EEquipment::E_PlayerWeaponFirst)
@@ -795,7 +795,7 @@ void UUI_PlayerBag::SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Gri
 	}break;
 	case EEquipment::E_WeaponGem:
 	{
-		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible);
+		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible.ToString());
 		UGameSystemFunction::AddString(LDescribe, TEXT("\n\n宝石使用方法：(可以去合成屋的宝石强化进行提升宝石的等级)\n\n (或者武器开槽镶嵌中镶嵌宝石，让武器拥有宝石的能力)"));
 
 		//设置等级
@@ -805,7 +805,7 @@ void UUI_PlayerBag::SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Gri
 	}break;
 	default:
 	{
-		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible);
+		UGameSystemFunction::AddString(LDescribe, _Grid->M_EuipmentData->ItemDescrible.ToString());
 	}
 	break;
 	}

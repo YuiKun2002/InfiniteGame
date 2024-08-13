@@ -9,7 +9,7 @@ void UPlayerMaterialUpdate::Update_Implementation(UPlayerStructManager* PlayerDa
 	for (auto& Item : PlayerDataIns->M_PlayerItems_Material)
 	{
 		int32 _ItemCound = Item.M_Count;
-		UMaterialBaseStruct::SearchMaterailFromDataTable(Item.ItemName, Item, true, Item.M_MaterialType);
+		UMaterialBaseStruct::SearchMaterailFromDataTable(Item.ItemName.ToString(), Item, true, Item.M_MaterialType);
 		//更新材料个数
 		Item.M_Count = _ItemCound;
 	}

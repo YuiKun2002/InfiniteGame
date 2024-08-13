@@ -89,7 +89,7 @@ bool UUIMesheWidthOnWater::CreateCard(UUI_MapMeshe* _Meshe, UCardManagerComponen
 					}
 				}
 
-				this->CardTypeDebug(CardData.ItemName, CardData.M_ELineType);
+				this->CardTypeDebug(CardData.ItemName.ToString(), CardData.M_ELineType);
 
 				return false;
 			}
@@ -198,7 +198,7 @@ bool UUIMesheWidthOnWater::GroundCardToOnWater(FItemCard& _Card, UCardManagerCom
 		}
 	}
 
-	this->CardTypeDebug(_Card.ItemName, _Card.M_ELineType);
+	this->CardTypeDebug(_Card.ItemName.ToString(), _Card.M_ELineType);
 
 	return false;
 }

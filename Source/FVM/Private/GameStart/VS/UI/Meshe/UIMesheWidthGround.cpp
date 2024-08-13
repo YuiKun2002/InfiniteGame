@@ -62,7 +62,7 @@ bool UUIMesheWidthGround::CreateCard(UUI_MapMeshe* _Meshe, UCardManagerComponent
 				}
 
 				//打印Log
-				this->CardTypeDebug(CardData.ItemName, CardData.M_ELineType);
+				this->CardTypeDebug(CardData.ItemName.ToString(), CardData.M_ELineType);
 
 				return false;
 			});

@@ -101,7 +101,7 @@ bool UPlayerStructManager::SendCoin(const FString& CoinName, int32 _Num)
 	int32 i = 0;
 	for (const FItemBase& Data : Buffer)
 	{
-		if (Data.ItemName.Equals(CoinName))
+		if (Data.ItemName.ToString().Equals(CoinName))
 		{
 			return this->AddCoin(_Num, i);
 		}
@@ -215,7 +215,7 @@ bool UPlayerStructManager::CheckCoin(const FString& CoinName)
 	const TArray<FItemBase>& Buffer = FPlayerCoinAdd::GetCoinNames();
 	for (const FItemBase& Data : Buffer)
 	{
-		if (Data.ItemName.Equals(CoinName))
+		if (Data.ItemName.ToString().Equals(CoinName))
 		{
 			return true;
 		}
@@ -501,7 +501,7 @@ TMap<int32, FItemCard> UPlayerStructManager::FindCardByName(const FString& CardN
 
 	for (int32 i = 0; i < TargetNum; i++)
 	{
-		if (this->M_PlayerItems_Card[i].ItemName.Equals(CardName))
+		if (this->M_PlayerItems_Card[i].ItemName.ToString().Equals(CardName))
 		{
 			Temp.Emplace(i, this->M_PlayerItems_Card[i]);
 		}
@@ -517,7 +517,7 @@ int32 UPlayerStructManager::FindEquipmentByName(const FString& EquipName)
 	{
 		if (this->M_PlayerItems_Equipment[i].M_ItemID != -1)
 		{
-			if (this->M_PlayerItems_Equipment[i].ItemName.Equals(EquipName))
+			if (this->M_PlayerItems_Equipment[i].ItemName.ToString().Equals(EquipName))
 			{
 				return i;
 			}
@@ -530,7 +530,7 @@ int32 UPlayerStructManager::FindMaterialByName(const FString& MateriName)
 {
 	for (int32 i = 0; i < this->M_PlayerItems_Material.Num(); i++)
 	{
-		if (this->M_PlayerItems_Material[i].ItemName.Equals(MateriName))
+		if (this->M_PlayerItems_Material[i].ItemName.ToString().Equals(MateriName))
 		{
 			//如果是标记对象，直接为-1
 			if (this->M_PlayerItems_Material[i].bWaitRemove)
@@ -548,7 +548,7 @@ bool UPlayerStructManager::UseMaterial(const int32& Index, const FString& Materi
 {
 	bool Re = false;
 	int32 CurIndex = Index;
-	if (this->M_PlayerItems_Material[CurIndex].ItemName.Equals(MateriName))
+	if (this->M_PlayerItems_Material[CurIndex].ItemName.ToString().Equals(MateriName))
 	{
 		Re = true;
 	}
@@ -557,7 +557,7 @@ bool UPlayerStructManager::UseMaterial(const int32& Index, const FString& Materi
 		int32 i = 0;
 		for (FMaterialBase& CurMateriData : this->M_PlayerItems_Material)
 		{
-			if (CurMateriData.ItemName.Equals(MateriName))
+			if (CurMateriData.ItemName.ToString().Equals(MateriName))
 			{
 				Re = true;
 				CurIndex = i;
@@ -730,7 +730,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 	//不管是什么道具  -1 是永远不会出现在任何存储库里面的[可以直接删除]
 	if (_WeaponData.M_ItemID == -1)
 	{
-		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("当前道具ID为-1：") + _WeaponData.ItemName);
+		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("当前道具ID为-1：") + _WeaponData.ItemName.ToString());
 
 		return;
 	}
@@ -746,7 +746,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 		int32 LID = -1;
 		if (UFVMGameInstance::GetPlayerStructManager_Static()->SearchPlayerWeaponDataByID_A(_WeaponData.M_ItemID, LID) != -1)
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从武器库销毁一个道具：") + _WeaponData.ItemName);
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从武器库销毁一个道具：") + _WeaponData.ItemName.ToString());
 
 			UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_FPlayerWeaponDatas[LID].bWaitRemove = true;
 
@@ -755,7 +755,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 			);
 		}
 		else {
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从武器库销毁道具失败，不存在的道具：") + _WeaponData.ItemName);
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从武器库销毁道具失败，不存在的道具：") + _WeaponData.ItemName.ToString());
 		}
 
 	}break;
@@ -769,7 +769,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 		);
 		if (LID != -1)
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从宝石库销毁一个道具：") + _WeaponData.ItemName);
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从宝石库销毁一个道具：") + _WeaponData.ItemName.ToString());
 
 			UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_FPlayerWeaponGemDatas[LID].bWaitRemove = true;
 
@@ -778,7 +778,7 @@ void UPlayerStructManager::RemoveEquipmentFromPlayerBag(FEquipmentBase& _WeaponD
 			);
 		}
 		else {
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从宝石库销毁道具失败，不存在的道具：") + _WeaponData.ItemName);
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("从宝石库销毁道具失败，不存在的道具：") + _WeaponData.ItemName.ToString());
 		}
 
 	} break;
@@ -814,7 +814,7 @@ void UPlayerStructManager::AddPlayerWeaponData(FEquipmentBase& _WeaponData)
 	//类型添加(根据类型设置具体属性)
 	FPlayerWeaponBase PlayerWeaponBaseData;
 	FEquipmentBase* LData = nullptr;
-	if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(_WeaponData.ItemName, LData, true, _WeaponData.M_EquipmentType))
+	if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(_WeaponData.ItemName.ToString(), LData, true, _WeaponData.M_EquipmentType))
 	{
 		PlayerWeaponBaseData = *(FPlayerWeaponBase*)(LData);
 
@@ -824,7 +824,7 @@ void UPlayerStructManager::AddPlayerWeaponData(FEquipmentBase& _WeaponData)
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("将武器:") + PlayerWeaponBaseData.ItemName + TEXT("添加到武器存储库中，ID：") + FString::FromInt(PlayerWeaponBaseData.M_ItemID));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("将武器:") + PlayerWeaponBaseData.ItemName.ToString() + TEXT("添加到武器存储库中，ID：") + FString::FromInt(PlayerWeaponBaseData.M_ItemID));
 		}
 	}
 }
@@ -841,7 +841,7 @@ void UPlayerStructManager::AddPlayerWepaonGemData(FEquipmentBase& _WeaponData)
 	FWeaponGem LFWeaponGem;
 	for (auto& SourceData : Gems)
 	{
-		if ((FWeaponGem*)SourceData->ItemName.Equals(_WeaponData.ItemName))
+		if ((FWeaponGem*)SourceData->ItemName.EqualTo(_WeaponData.ItemName))
 		{
 			LFWeaponGem = *(FWeaponGem*)SourceData;
 			break;
@@ -866,7 +866,7 @@ void UPlayerStructManager::AddPlayerWepaonGemData(FEquipmentBase& _WeaponData)
 	if (UFVMGameInstance::GetDebug())
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("将道具:") +
-			LFWeaponGem.ItemName + TEXT("添加到宝石存储库中，ID：") +
+			LFWeaponGem.ItemName.ToString() + TEXT("添加到宝石存储库中，ID：") +
 			FString::FromInt(_WeaponData.M_ItemID)
 		);
 	}

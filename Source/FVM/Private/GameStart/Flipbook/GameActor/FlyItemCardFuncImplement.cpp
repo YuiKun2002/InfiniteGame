@@ -270,15 +270,19 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 
 		//当前伤害加成数值
 		float CurRate = CardData.ATK +
-			CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
+			CardFuncComp->GetCardActor()->GetCardGrade(
+			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+			) *
 			CardData.ATKRate * 0.1f;
 
 		if (UFVMGameInstance::GetDebug())
 		{
 			UGameSystemFunction::FVMLog(__FUNCTION__,
 				FString(
-					FString::FromInt(CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName)) +
-					TEXT("级【") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName +
+					FString::FromInt(CardFuncComp->GetCardActor()->GetCardGrade(
+					CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())
+					) +
+					TEXT("级【") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString() +
 					TEXT("】遇到管线类的子弹：子弹攻击力增强：") +
 					FString::SanitizeFloat(CurFlyItem->GetATK()) +
 					TEXT(" * ") +

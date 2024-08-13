@@ -466,7 +466,7 @@ bool UGameInstructions::PlayCard(FString CardName, FString CardGrade, int32 Row,
 			//查询卡片
 			for (FItemCard& CurLocal : this->GetMap()->M_CardManagerComponent->M_CardData)
 			{
-				if (CurLocal.ItemName.Equals(CurCData.ItemName))
+				if (CurLocal.ItemName.EqualTo(CurCData.ItemName))
 				{
 					bRe = true;
 					CurLocal.M_CardGrade = CurGrade;
@@ -479,7 +479,7 @@ bool UGameInstructions::PlayCard(FString CardName, FString CardGrade, int32 Row,
 				//更新UI窗口显示的等级图标
 				for (UUI_Card* CurUI : this->GetMap()->M_CardManagerComponent->M_UICard)
 				{
-					if (CurUI->GetCardName().Equals(CurCData.ItemName))
+					if (CurUI->GetCardName().Equals(CurCData.ItemName.ToString()))
 					{
 						CurUI->SetCardGrade(CurGrade);
 						break;

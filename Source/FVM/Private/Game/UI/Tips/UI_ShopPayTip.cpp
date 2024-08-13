@@ -123,7 +123,7 @@ void UUI_ShopPayTip::PayButton()
 			//货币名称
 			for (auto& Data : PlayerData->M_PlayerItems_Material)
 			{
-				if (Data.ItemName.Equals(ItemCoinName))
+				if (Data.ItemName.ToString().Equals(ItemCoinName))
 				{
 					RefData = &Data;
 					break;

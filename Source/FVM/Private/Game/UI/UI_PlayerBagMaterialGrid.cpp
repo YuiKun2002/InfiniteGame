@@ -134,11 +134,11 @@ FString UUI_PlayerBagMaterialGrid::ToString_Implementation()
 {
 	if (this->GetMaterialData())
 	{
-		return this->GetMaterialData()->ItemName;
+		return this->GetMaterialData()->ItemName.ToString();
 	}
 	else if (this->M_EquipmentBaseData)
 	{
-		return this->M_EquipmentBaseData->ItemName;
+		return this->M_EquipmentBaseData->ItemName.ToString();
 	}
 
 	return FString();
@@ -153,8 +153,8 @@ void UUI_PlayerBagMaterialGrid::ShowInformation()
 {
 	//创建物品提示按钮
 	UUI_ItemDesTip* TipComp = CreateWidget<UUI_ItemDesTip>(this, LoadClass<UUI_ItemDesTip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemDesTip.BPUI_ItemDesTip_C'")));
-	TipComp->SetContentTitleText(this->M_MaterialBaseData->ItemName);
-	TipComp->SetContentText(this->M_MaterialBaseData->ItemDescrible);
+	TipComp->SetContentTitleText(this->M_MaterialBaseData->ItemName.ToString());
+	TipComp->SetContentText(this->M_MaterialBaseData->ItemDescrible.ToString());
 	TipComp->SetOkButtonTitleText(TEXT("了解"));
 	TipComp->SetCancelButtonTitleText(TEXT("知道了"));
 	TipComp->SetItemHeadPath(this->M_MaterialBaseData->ItemTexturePath.ToString());
@@ -165,7 +165,7 @@ FMaterialBase* GetMaterialDataFromBag(TArray<FMaterialBase>& _Arrays, const FStr
 {
 	for (FMaterialBase& Items : _Arrays)
 	{
-		if (Items.ItemName.Equals(_ItemName))
+		if (Items.ItemName.ToString().Equals(_ItemName))
 			return &Items;
 	}
 	return nullptr;
@@ -185,7 +185,7 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisBlueprint()
 	//添加配方
 	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->
 		GetBlueprintData().AddNewBlueprint(
-			this->MaterialBaseCopyData.ItemName,
+			this->MaterialBaseCopyData.ItemName.ToString(),
 			this,
 			this->GetIndex(),
 			this->M_UUI_PlayerSynthesis->GetMakeCardFunction()
@@ -217,12 +217,12 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 
 	FSpicesMaterial _Spices;
 	if (!UMaterialBaseStruct::GetMaterialSourceData<FSpicesMaterial>(
-		this->MaterialBaseCopyData.ItemName,
+		this->MaterialBaseCopyData.ItemName.ToString(),
 		_Spices,
 		EMaterialType::E_Spices
 	))
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName + TEXT("]查询失败!")));
+		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]查询失败!")));
 		return;
 	}
 
@@ -233,14 +233,14 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 	FMakeCardSpicesData NewData;
 	NewData.Grid = this;
 	NewData.MakeCardGrade = _Spices.M_MakeCardGrade;
-	NewData.PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->MaterialBaseCopyData.ItemName);
-	NewData.SpicesName = this->MaterialBaseCopyData.ItemName;
+	NewData.PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->MaterialBaseCopyData.ItemName.ToString());
+	NewData.SpicesName = this->MaterialBaseCopyData.ItemName.ToString();
 	NewData.SpicesData = this->MaterialBaseCopyData;
 	CurSpicesData.SetSelectSpices(NewData);
 
 	if (NewData.PlayerBagIndex == -1)
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName + TEXT("]选择失败!")));
+		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]选择失败!")));
 		return;
 	}
 
@@ -284,12 +284,12 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 
 	FCloverMaterial _Clover;
 	if (!UMaterialBaseStruct::GetMaterialSourceData<FCloverMaterial>(
-		this->M_MaterialBaseData->ItemName,
+		this->M_MaterialBaseData->ItemName.ToString(),
 		_Clover,
 		EMaterialType::E_Clover
 	))
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->M_MaterialBaseData->ItemName + TEXT("]查询失败!")));
+		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->M_MaterialBaseData->ItemName.ToString() + TEXT("]查询失败!")));
 		return;
 	}
 
@@ -297,8 +297,8 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->SetSelectCloverUI(this);
 
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->SetSelectClover(
-		this->M_MaterialBaseData->ItemName,
-		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->M_MaterialBaseData->ItemName),
+		this->M_MaterialBaseData->ItemName.ToString(),
+		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->M_MaterialBaseData->ItemName.ToString()),
 		_Clover.M_UpGrateRate
 	);
 
@@ -481,7 +481,7 @@ void UUI_PlayerBagMaterialGrid::AddExchangeSplit_SplitSlot()
 
 void UUI_PlayerBagMaterialGrid::UseCardSkillBook()
 {
-	FString Content = FString(TEXT("是否要使用:") + FString(this->M_MaterialBaseData->ItemName) + TEXT("[使用之后可以为该防御卡提升技能经验值，一定经验值之后可以提升技能等级。]"));
+	FString Content = FString(TEXT("是否要使用:") + FString(this->M_MaterialBaseData->ItemName.ToString()) + TEXT("[使用之后可以为该防御卡提升技能经验值，一定经验值之后可以提升技能等级。]"));
 
 	//创建物品提示按钮
 	UUI_ItemDesTip* TipComp = CreateWidget<UUI_ItemDesTip>(this,
@@ -489,7 +489,7 @@ void UUI_PlayerBagMaterialGrid::UseCardSkillBook()
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemDesTip.BPUI_ItemDesTip_C'"))
 	);
 
-	TipComp->SetContentTitleText(this->M_MaterialBaseData->ItemName);
+	TipComp->SetContentTitleText(this->M_MaterialBaseData->ItemName.ToString());
 	TipComp->SetContentText(Content);
 	TipComp->SetOkButtonTitleText(TEXT("使用全部"));
 	TipComp->SetCancelButtonTitleText(TEXT("关闭"));
@@ -509,7 +509,7 @@ void UUI_PlayerBagMaterialGrid::UseSkillBook()
 
 	for (auto& Item : UFVMGameInstance::GetPlayerStructManager_Static()->M_SkillBookDatas)
 	{
-		if (Item.M_Name.Equals(this->M_MaterialBaseData->ItemDescrible))
+		if (Item.M_Name.Equals(this->M_MaterialBaseData->ItemDescrible.ToString()))
 		{
 			//获取技能书信息
 			TArray<FCardSkillBooks_Data*> Datas;
@@ -520,7 +520,7 @@ void UUI_PlayerBagMaterialGrid::UseSkillBook()
 			for (auto LItem : Datas)
 			{
 				//成功拿到数据
-				if (LItem->M_FMaterial.ItemName.Equals(this->M_MaterialBaseData->ItemName))
+				if (LItem->M_FMaterial.ItemName.EqualTo(this->M_MaterialBaseData->ItemName))
 				{
 					this->UseSkillBookData(LItem->M_FMaterial, this->M_MaterialBaseData->M_Count);
 					break;
@@ -578,7 +578,7 @@ bool UUI_PlayerBagMaterialGrid::UseSkillBookData(FCardSkillBookMaterial _Data, i
 		//清理道具
 		for (auto& Item : _MDatas)
 		{
-			if (Item.ItemName.Equals(_MB.ItemName))
+			if (Item.ItemName.EqualTo(_MB.ItemName))
 			{
 				//道具个数赋值
 				Item.M_Count = _Count;
@@ -601,7 +601,7 @@ bool UUI_PlayerBagMaterialGrid::UseSkillBookData(FCardSkillBookMaterial _Data, i
 	//等级判断
 	for (auto& BookItem : BooksData)
 	{
-		if (BookItem.M_Name.Equals(_Data.ItemDescrible))
+		if (BookItem.M_Name.Equals(_Data.ItemDescrible.ToString()))
 		{
 
 			//是否满级

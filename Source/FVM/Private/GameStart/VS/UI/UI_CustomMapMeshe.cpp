@@ -74,7 +74,7 @@ ACardActor* UUI_CustomMapMeshe::CreateCard(UCardManagerComponent* _CardMComp)
 		Card->SetUIMapMesh(CurMap->GetUIMapMeshe());
 
 		//设置UICard
-		Card->SetCardUI(_CardMComp->GetUICard(CardData.ItemName));
+		Card->SetCardUI(_CardMComp->GetUICard(CardData.ItemName.ToString()));
 
 		//设置层
 		Card->SetRenderLayer(CurMap->GetTranslucency() + CardData.M_CardLayer);

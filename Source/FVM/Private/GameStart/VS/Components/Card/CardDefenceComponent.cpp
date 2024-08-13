@@ -81,7 +81,7 @@ void UCardDefenceComponent::BeHurt(AMouseActor* CurMouseActor)
 				if (UFVMGameInstance::GetDebug())
 				{
 					UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("给攻击") +
-						CardData.ItemName + TEXT("的老鼠造成反伤：")) +
+						CardData.ItemName.ToString() + TEXT("的老鼠造成反伤：")) +
 						FString::SanitizeFloat(CardData.M_ATK *
 							CardData.M_ATK_UpRate * this->DefenceCardActor->GetTotalHP() * 0.1f / 2.f)
 					);
@@ -160,7 +160,7 @@ void UCardDefenceComponent::Death()
 					{
 						UGameSystemFunction::FVMLog(__FUNCTION__,
 							FString(TEXT("给攻击") +
-								CardData.ItemName +
+								CardData.ItemName.ToString() +
 								TEXT("的老鼠造成反伤：")) +
 							FString::SanitizeFloat(HurtValue)
 						);

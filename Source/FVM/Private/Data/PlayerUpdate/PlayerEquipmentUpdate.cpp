@@ -16,7 +16,7 @@ void UPlayerEquipmentUpdate::Update_Implementation(UPlayerStructManager* PlayerD
 		int32 _ID = Item.M_ItemID;
 
 		//搜索成功的更新
-		if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(Item.ItemName, Item))
+		if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(Item.ItemName.ToString(), Item))
 		{
 			//更新材料个数
 			Item.M_Count = _ItemCount;
@@ -29,14 +29,14 @@ void UPlayerEquipmentUpdate::Update_Implementation(UPlayerStructManager* PlayerD
 
 			if (UFVMGameInstance::GetDebug())
 			{
-				UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("装备道具：") + Item.ItemName + TEXT("ID：") + FString::FromInt(Item.M_ItemID)));
+				UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("装备道具：") + Item.ItemName.ToString() + TEXT("ID：") + FString::FromInt(Item.M_ItemID)));
 			}
 		}
 		else {
 			//未查询的 标记(判断名称是否是：煮蛋器投手)【版本降低的可以忽略】
 			if (UFVMGameInstance::GetDebug())
 			{
-				UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("当前装备道具-查询失败：") + Item.ItemName + TEXT("ID：") + FString::FromInt(_ID)));
+				UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("当前装备道具-查询失败：") + Item.ItemName.ToString() + TEXT("ID：") + FString::FromInt(_ID)));
 			}
 
 			//注销ID

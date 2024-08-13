@@ -52,7 +52,7 @@ public:
 		UCardBaseStruct::GetCardDatas<CardType>(_ECardType, CardDatas, 0);
 
 		for (auto CardDataPP = CardDatas.CreateConstIterator(); CardDataPP; ++CardDataPP)
-			if ((*CardDataPP).ItemName.Equals(_CardName))
+			if ((*CardDataPP).ItemName.ToString().Equals(_CardName))
 				return (*CardDataPP);
 
 

@@ -599,7 +599,7 @@ void UUI_PlayerSynthesis::GoldCardUp()
 			for (auto SourceCardData = Player->M_PlayerItems_Card.CreateIterator(); SourceCardData; ++SourceCardData)
 			{
 				if (
-					(*SourceCardData).ItemName.Equals((*CardPP))
+					(*SourceCardData).ItemName.ToString().Equals((*CardPP))
 					&&
 					(*SourceCardData).M_CardGrade == this->M_NeedGradeCards[CardPP.GetIndex()]
 					)
@@ -748,7 +748,7 @@ void UUI_PlayerSynthesis::LoadMaterials(const TArray<FMaterialsSerachTypeBind>& 
 		{
 			for (const FString& CurIgnoreKeyWords : IgnoreKeyWords.GetKeyWords())
 			{
-				if (CurData->ItemName.Contains(CurIgnoreKeyWords))
+				if (CurData->ItemName.ToString().Contains(CurIgnoreKeyWords))
 				{
 					continue;
 				}

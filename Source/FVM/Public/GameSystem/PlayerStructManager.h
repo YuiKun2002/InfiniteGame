@@ -434,7 +434,12 @@ public:
 	//获取货币名称
 	static TArray<FItemBase> GetCoinNames()
 	{
-		return { FItemBase(TEXT("金币")),FItemBase(TEXT("礼券")),FItemBase(TEXT("点券")),FItemBase(TEXT("威望")) };
+		return {
+		FItemBase(FText::FromString(TEXT("金币"))),
+		FItemBase(FText::FromString(TEXT("礼券"))),
+		FItemBase(FText::FromString(TEXT("点券"))),
+		FItemBase(FText::FromString(TEXT("威望")))
+		};
 	}
 public:
 	FPlayerCoinAdd() {}

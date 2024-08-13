@@ -12,7 +12,7 @@ void UUI_MapMeshe_Cloud::CreateNewCard(UCardManagerComponent* _CardMComp)
 		//获取卡片数据
 		FItemCard& CardData = _CardMComp->GetCardData(_CardMComp->M_CurrentSelectCardName);
 
-		if (CardData.ItemName.Equals(TEXT("棉花糖")))
+		if (CardData.ItemName.ToString().Equals(TEXT("棉花糖")))
 		{
 			if (IsValid(_CardMComp->GetCurrentCoolDownManager()))
 			{

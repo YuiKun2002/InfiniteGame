@@ -63,7 +63,7 @@ void UShopItemPriceStruct::AddEquipmentToPlayerBag(UPlayerStructManager* _Player
 			//先从背包查询->如果查询成功则直接添加个数
 			for (FEquipmentBase& Items : _Player->M_PlayerItems_Equipment)
 			{
-				if (Items.ItemName.Equals(_FEquipment.ItemName))
+				if (Items.ItemName.EqualTo(_FEquipment.ItemName))
 				{
 					Items.M_Count += _Count;
 					return;
@@ -104,7 +104,7 @@ void UShopItemPriceStruct::AddMaterialToPlayerBag(UPlayerStructManager* _Player,
 		//先从背包查询->如果查询成功则直接添加个数
 		for (FMaterialBase& Items : _Player->M_PlayerItems_Material)
 		{
-			if (Items.ItemName.Equals(_FMaterialBase.ItemName))
+			if (Items.ItemName.EqualTo(_FMaterialBase.ItemName))
 			{
 				Items.M_Count += _Count;
 				return;

@@ -661,10 +661,10 @@ void USynModel_CardUpgrade::CardUpgrade()
 		//添加每日当前卡片强化历史记录
 		UPlayerRecord::AddDayCardUpCount(
 			this->CardDatas[0].CardData.M_CardGrade,
-			this->CardDatas[0].CardData.ItemName
+			this->CardDatas[0].CardData.ItemName.ToString()
 		);
 
-		this->CurUpCardName = this->CardDatas[0].CardData.ItemName;
+		this->CurUpCardName = this->CardDatas[0].CardData.ItemName.ToString();
 
 		//执行任务
 		UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
@@ -705,7 +705,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 
 		//查询主卡索引
 		TMap<int32, FItemCard> CurCards = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->FindCardByName(
-			this->CardDatas[0].CardData.ItemName
+			this->CardDatas[0].CardData.ItemName.ToString()
 		);
 
 		bool bSearchResult = false;

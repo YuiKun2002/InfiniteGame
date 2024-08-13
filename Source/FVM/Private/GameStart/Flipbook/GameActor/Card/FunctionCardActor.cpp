@@ -140,7 +140,7 @@ void AFunctionCardActor::BeginPlay()
 
 		HP = this->ItemCardFunction.M_CardHP +
 			this->ItemCardFunction.M_CardHP * this->ItemCardFunction.M_M_ECardUpGradeUpRate *
-			this->GetCardGrade(this->ItemCardFunction.ItemName);
+			this->GetCardGrade(this->ItemCardFunction.ItemName.ToString());
 
 		//写入血量数据
 		this->ItemCardFunction.M_CardHP = HP;

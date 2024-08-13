@@ -57,17 +57,17 @@ bool UUIMesheWidthAll::NewCard(UUI_MapMeshe* _Meshe, UCardManagerComponent* _Car
 	}
 
 	//如果名称是空的则返回false
-	if (CardData.ItemName.Equals(TEXT("Null")))
+	if (CardData.ItemName.ToString().Equals(TEXT("Null")))
 	{
 		//全卡片搜索，重新赋值卡片数据
 		CardData = UCardDataComponent::GetCardBaseData(_CardActorName);
 		CardData.M_CardOverlap = false;
 
 		UGameSystemFunction::FVMLog(__FUNCTION__,
-			FString(TEXT("卡片：") + CardData.ItemName + TEXT("Layer:") + FString::FromInt(CardData.M_CardLayer))
+			FString(TEXT("卡片：") + CardData.ItemName.ToString() + TEXT("Layer:") + FString::FromInt(CardData.M_CardLayer))
 		);
 
-		if (CardData.ItemName.Equals(TEXT("Null")))
+		if (CardData.ItemName.ToString().Equals(TEXT("Null")))
 		{
 			if (UFVMGameInstance::GetDebug())
 			{
@@ -82,7 +82,7 @@ bool UUIMesheWidthAll::NewCard(UUI_MapMeshe* _Meshe, UCardManagerComponent* _Car
 
 	if (UFVMGameInstance::GetDebug())
 	{
-		UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("准备创建新卡片：") + CardData.ItemName));
+		UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("准备创建新卡片：") + CardData.ItemName.ToString()));
 	}
 
 	//先判断当前卡片能否自身替换
@@ -93,7 +93,7 @@ bool UUIMesheWidthAll::NewCard(UUI_MapMeshe* _Meshe, UCardManagerComponent* _Car
 		{
 			if (IsValid(Card.Value()))
 			{
-				if ((Card.Value())->GetCardData().ItemName.Equals(CardData.ItemName))
+				if ((Card.Value())->GetCardData().ItemName.EqualTo(CardData.ItemName))
 				{
 					//卡片查询成功(销毁卡片)
 					Card.Value()->KillCard();
@@ -119,7 +119,7 @@ bool UUIMesheWidthAll::NewCard(UUI_MapMeshe* _Meshe, UCardManagerComponent* _Car
 
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("当前卡片可以直接放置：") + CardData.ItemName));
+			UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("当前卡片可以直接放置：") + CardData.ItemName.ToString()));
 		}
 
 		return false;
@@ -138,7 +138,7 @@ bool UUIMesheWidthAll::CreateCard(UUI_MapMeshe* _Meshe, UCardManagerComponent* _
 
 		//获取卡片数据
 		FItemCard CardData = _CardMComp->GetCardData(_CardActorName);
-		if (CardData.ItemName.Equals(TEXT("Null")))
+		if (CardData.ItemName.ToString().Equals(TEXT("Null")))
 		{
 			//全卡片搜索，重新赋值卡片数据
 			CardData = UCardDataComponent::GetCardBaseData(_CardActorName);

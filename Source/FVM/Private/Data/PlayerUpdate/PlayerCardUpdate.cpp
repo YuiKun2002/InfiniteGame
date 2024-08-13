@@ -9,7 +9,7 @@ void UPlayerCardUpdate::Update_Implementation(UPlayerStructManager* PlayerDataIn
 	for (auto& Item : PlayerDataIns->M_PlayerItems_Card)
 	{
 		int32 _CardGrade = Item.M_CardGrade;
-		if (UCardBaseStruct::SearchCardFromDataTable(Item.ItemName, Item))
+		if (UCardBaseStruct::SearchCardFromDataTable(Item.ItemName.ToString(), Item))
 		{
 			//更新卡片等级
 			Item.M_CardGrade = _CardGrade;

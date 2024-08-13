@@ -305,7 +305,7 @@ public:
 	static Type* GetMetaByName(TArray<Type>& _Value, const FString& _Name)
 	{
 		for (auto& _Item : _Value)
-			if (_Item.ItemName.Equals(_Name))
+			if (_Item.ItemName.ToString().Equals(_Name))
 			{
 				return &_Item;
 			}

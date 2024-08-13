@@ -10,9 +10,15 @@ bool UPlayerEquipmentStruct::SearchPlayerSuitByEquipment(FString& _ItemName, EPl
 	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
 	for (const auto& Datas : Cache->GetPlayerEquipment())
 	{
-		UE_LOG(LogTemp, Error, TEXT("UPlayerStructManager::SearchPlayerSuitByEquipment: 当前物品名称：%s 目标名称：%s"), *Datas.M_FEquipment.ItemName, *_ItemName);
+		UE_LOG(LogTemp, Error,
+			TEXT("UPlayerStructManager::SearchPlayerSuitByEquipment: 当前物品名称：%s 目标名称：%s"),
+			*Datas.M_FEquipment.ItemName.ToString(),
+			*_ItemName);
 
-		if (Datas.M_FEquipment.ItemName.Equals(_ItemName) && Datas.M_FEquipment.M_PlayerEquipmentType == _EPlayerEquipmentType)
+		if (
+			Datas.M_FEquipment.ItemName.ToString().Equals(_ItemName) &&
+			Datas.M_FEquipment.M_PlayerEquipmentType == _EPlayerEquipmentType
+			)
 		{
 			OutData = Datas.M_FEquipment;
 			return true;

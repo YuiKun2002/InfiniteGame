@@ -201,7 +201,7 @@ void USynModel_GoldCardUp::SearchMaterials()
 	{
 		//赋值材料的数据
 		this->CardUpMaterialHeadPath = _Material.ItemTexturePath.ToString();
-		this->CardUpMaterialName = _Material.ItemName;
+		this->CardUpMaterialName = _Material.ItemName.ToString();
 	}
 
 	//材料在背包中的索引
@@ -388,7 +388,7 @@ void USynModel_GoldCardUp::CardUp()
 	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("金卡进化操作")));
 
 	UWidgetBase::CreateTipWidget(
-		FString(TEXT("进化成功【") + TargetData.ItemName + TEXT("】"))
+		FString(TEXT("进化成功【") + TargetData.ItemName.ToString() + TEXT("】"))
 	);
 
 	//重新加载数据

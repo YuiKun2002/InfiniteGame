@@ -38,7 +38,7 @@ void AAttackCardActor::BeginPlay()
 		this->SetCurATK(
 			this->GetATK() +
 			(this->GetATK() / 2.f) * this->ItemCardATK.M_CardATKRate *
-			((float)(this->GetCardGrade(this->ItemCardATK.ItemName))) *
+			((float)(this->GetCardGrade(this->ItemCardATK.ItemName.ToString()))) *
 			this->ItemCardATK.M_M_ECardUpGradeUpRate);
 
 		if (UFVMGameInstance::GetDebug())
@@ -49,7 +49,7 @@ void AAttackCardActor::BeginPlay()
 				this->GetCurATK(), this->GetATK(),
 				(this->GetATK() / 2.f),
 				this->ItemCardATK.M_CardATKRate,
-				this->GetCardGrade(this->ItemCardATK.ItemName),
+				this->GetCardGrade(this->ItemCardATK.ItemName.ToString()),
 				this->ItemCardATK.M_M_ECardUpGradeUpRate
 			);
 		}
@@ -70,7 +70,7 @@ void AAttackCardActor::BeginPlay()
 		if (UFVMGameInstance::GetDebug())
 		{
 			FString Content = FString(TEXT("当前防御卡[") +
-				this->ItemCardATK.ItemName + TEXT("]提升攻击速度=>") +
+				this->ItemCardATK.ItemName.ToString() + TEXT("]提升攻击速度=>") +
 				FString::SanitizeFloat(this->GetCurrentAttackSpeed()));
 
 			UGameSystemFunction::FVMLog(__FUNCTION__, Content);

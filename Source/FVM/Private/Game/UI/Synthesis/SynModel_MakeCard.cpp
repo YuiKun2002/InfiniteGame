@@ -513,7 +513,7 @@ void USynModel_MakeCard::MakeCard()
 		++CardPP
 		)
 	{
-		if ((*CardPP).ItemName.Equals(_Card.ItemName))
+		if ((*CardPP).ItemName.EqualTo(_Card.ItemName))
 		{
 			PlayIndex = CardPP.GetIndex();
 			break;
@@ -599,7 +599,7 @@ void USynModel_MakeCard::MakeCard()
 		);
 	}
 
-	this->CardName = _Card.ItemName;
+	this->CardName = _Card.ItemName.ToString();
 
 	//添加历史记录
 	UPlayerRecord::AddDayCardMakeCount(this->CardName);

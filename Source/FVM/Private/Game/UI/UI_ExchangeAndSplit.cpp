@@ -152,19 +152,19 @@ void UUI_ExchangeAndSplit::SetTicketsByTreviFountain(const TArray<FTreviFountain
 			PriceObj.M_ItemType = EItemType::E_Card;
 			FItemCard CData;
 			if (UCardBaseStruct::SearchCardFromDataTable(_Item.M_ItemName, CData))
-				PriceObj.M_ItemDescirbe = CData.ItemDescrible;
+				PriceObj.M_ItemDescirbe = CData.ItemDescrible.ToString();
 		}break;
 		case ETreviFountainItemType::TT_Equipment: {
 			PriceObj.M_ItemType = EItemType::E_Equipment;
 			FEquipmentBase EData;
 			if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(_Item.M_ItemName, EData))
-				PriceObj.M_ItemDescirbe = EData.ItemDescrible;
+				PriceObj.M_ItemDescirbe = EData.ItemDescrible.ToString();
 		}break;
 		case ETreviFountainItemType::TT_Material: {
 			PriceObj.M_ItemType = EItemType::E_MaterialItem;
 			FMaterialBase MData;
 			if (UMaterialBaseStruct::SearchMaterailFromDataTable(_Item.M_ItemName, MData))
-				PriceObj.M_ItemDescirbe = MData.ItemDescrible;
+				PriceObj.M_ItemDescirbe = MData.ItemDescrible.ToString();
 		}break;
 		}
 
@@ -351,7 +351,9 @@ void UUI_ExchangeAndSplit::SetCurrentSlipItem(const EItemType& _CurrentSelectTyp
 
 	if (IsValid(this->M_CurrentSelect) && this->M_CurrentSelect->GetValue() && this->M_CurrentSelectIndex != -1)
 	{
-		this->M_CurrentSplitCount = this->GetCurrentSplitItemCountByName(((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemName);
+		this->M_CurrentSplitCount = this->GetCurrentSplitItemCountByName(
+		((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemName.ToString()
+		);
 		this->SetSplitItemAddedRate(this->M_RandomAddedRate);
 		this->SetButtonStyle(this->M_NeedSplitCard_Butt, ((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemTexturePath.ToString(), true);
 		this->SetSplitEnable(true);
@@ -418,7 +420,7 @@ void UUI_ExchangeAndSplit::TicketPayFinishOver()
 	this->M_ResourceTicket->SetText(FText::FromString(TEXT("0")));
 	for (const auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 	{
-		if (Data.ItemName.Equals(this->NeedResourceName) && Data.M_Count > 0)
+		if (Data.ItemName.ToString().Equals(this->NeedResourceName) && Data.M_Count > 0)
 		{
 			this->M_ResourceTicket->SetText(FText::FromString(FString::FromInt(Data.M_Count)));
 			break;
@@ -521,12 +523,12 @@ void UUI_ExchangeAndSplit::InitPlayerMaterialsList()
 			for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material)
 			{
 				if (Data.M_ItemID != 0)
-					if (Data.ItemName.Contains(Keyword))
+					if (Data.ItemName.ToString().Contains(Keyword))
 					{
 						//查询排除
 						for (const auto& Keyword_Ignore : this->M_MaterialsKeywords_Ignore)
 						{
-							if (Data.ItemName.Contains(Keyword_Ignore))
+							if (Data.ItemName.ToString().Contains(Keyword_Ignore))
 							{
 								IgnoreResult = true;
 								break;
@@ -537,7 +539,7 @@ void UUI_ExchangeAndSplit::InitPlayerMaterialsList()
 						if (!IgnoreResult)
 						{
 							//检测是否可以被分解
-							if (this->GetCurrentSplitItemCountByName(Data.ItemName) != 0)
+							if (this->GetCurrentSplitItemCountByName(Data.ItemName.ToString()) != 0)
 							{
 								Data.M_ItemID = 0;
 								PlayerDatas.Emplace(&Data);
@@ -586,12 +588,12 @@ void UUI_ExchangeAndSplit::InitPlayerCardsList()
 			for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card)
 			{
 				if (Data.M_ItemID != 0)
-					if (Data.ItemName.Contains(Keyword))
+					if (Data.ItemName.ToString().Contains(Keyword))
 					{
 						//查询排除
 						for (const auto& Keyword_Ignore : this->M_CardsKeywords_Ignore)
 						{
-							if (Data.ItemName.Contains(Keyword_Ignore))
+							if (Data.ItemName.ToString().Contains(Keyword_Ignore))
 							{
 								IgnoreResult = true;
 								break;
@@ -602,7 +604,7 @@ void UUI_ExchangeAndSplit::InitPlayerCardsList()
 						if (!IgnoreResult)
 						{
 							//检测是否可以被分解
-							if (this->GetCurrentSplitItemCountByName(Data.ItemName) != 0)
+							if (this->GetCurrentSplitItemCountByName(Data.ItemName.ToString()) != 0)
 							{
 								Data.M_ItemID = 0;
 								CardDatas.Emplace(&Data);

@@ -181,7 +181,7 @@ const int32 UCardManagerComponent::GetCardFlameNum(const FString& _CardActorName
 {
 	for (auto Datas : this->M_CardData)
 	{
-		if (Datas.ItemName.Equals(_CardActorName))
+		if (Datas.ItemName.ToString().Equals(_CardActorName))
 			return Datas.M_CardPrice;
 	}
 	return 0;
@@ -191,7 +191,7 @@ FItemCard& UCardManagerComponent::GetCardData(const FString& _CardActorName)
 {
 	for (auto PP = this->M_CardData.CreateConstIterator(); PP; PP++)
 	{
-		if (PP->ItemName.Equals(_CardActorName))
+		if (PP->ItemName.ToString().Equals(_CardActorName))
 		{
 			return this->M_CardData[PP.GetIndex()];
 		}
@@ -209,7 +209,7 @@ bool UCardManagerComponent::GetCardDataByName(const FString& _CardName, FItemCar
 {
 	for (auto& Item : this->M_CardData)
 	{
-		if (_CardName.Equals(Item.ItemName))
+		if (_CardName.Equals(Item.ItemName.ToString()))
 		{
 			_CardFItemData = Item;
 			return true;
@@ -222,7 +222,7 @@ FItemCard* const UCardManagerComponent::GetCardDataByName(const FString& _CardNa
 {
 	for (auto& Item : this->M_CardData)
 	{
-		if (_CardName.Equals(Item.ItemName))
+		if (_CardName.Equals(Item.ItemName.ToString()))
 		{
 			return &Item;
 		}
@@ -283,7 +283,7 @@ void UCardManagerComponent::CancelEradicate()
 
 void UCardManagerComponent::AddCard(const FItemCard& _CardData)
 {
-	this->M_CardName.Emplace(_CardData.ItemName);
+	this->M_CardName.Emplace(_CardData.ItemName.ToString());
 
 	if (this->M_UUI_CardBar)
 	{
@@ -293,9 +293,9 @@ void UCardManagerComponent::AddCard(const FItemCard& _CardData)
 
 		CardBoxWidget->M_CardIndex = this->M_CardName.Num() - 1;
 		CardBoxWidget->M_NeedFlame = _CardData.M_CardPrice;
-		CardBoxWidget->SetCardName(_CardData.ItemName);
+		CardBoxWidget->SetCardName(_CardData.ItemName.ToString());
 		CardBoxWidget->SetCardGrade(_CardData.M_CardGrade);//设置等级
-		CardBoxWidget->M_Card_ActorName = _CardData.ItemName;//该名称不是卡片实例的名称是文件名称
+		CardBoxWidget->M_Card_ActorName = _CardData.ItemName.ToString();//该名称不是卡片实例的名称是文件名称
 		CardBoxWidget->bEnableCopy = _CardData.M_bEnableCopy;//是否可以被复制
 		CardBoxWidget->CardActorSource = _CardData.CardActorResource;//资产类
 
@@ -303,7 +303,7 @@ void UCardManagerComponent::AddCard(const FItemCard& _CardData)
 		{
 			FString LContent =
 				FString(TEXT("当前卡片[") +
-					_CardData.ItemName +
+					_CardData.ItemName.ToString() +
 					TEXT("]加入放置栏位")
 				);
 
@@ -330,7 +330,7 @@ void UCardManagerComponent::AddCard(const FItemCard& _CardData)
 			{
 				FString LContent =
 					FString(TEXT("当前卡片[") +
-						_CardData.ItemName +
+						_CardData.ItemName.ToString() +
 						TEXT("]等级提升技能：冷却速度=>") +
 						FString::SanitizeFloat(_CardClodDown)
 					);

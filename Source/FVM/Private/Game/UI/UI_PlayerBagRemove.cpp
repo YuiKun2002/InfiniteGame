@@ -52,7 +52,7 @@ UWidget* UUI_PlayerBagRemove::WidgetCreate_InitEquipment(UItemDataTable* _Data, 
 	{
 		const FEquipmentBase& Obj = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment[((FItemData_Index*)(_Data->GetValue()))->M_Index];
 		//设置道具名称
-		Widget->SetItemName(Obj.ItemName);
+		Widget->SetItemName(Obj.ItemName.ToString());
 		Widget->SetEquipment(Obj.ItemTexturePath.ToString(), Obj.M_IsOverlap, Obj.M_Count);
 		//设置界面序号和界面的索引
 		Widget->SetTagItems(this->M_FUI_PlayerBagRemove_Item_Index[L_Index].M_Index, this->M_PanelNumber);
@@ -63,7 +63,7 @@ UWidget* UUI_PlayerBagRemove::WidgetCreate_InitEquipment(UItemDataTable* _Data, 
 		//设置界面序号和界面的索引
 		Widget->SetTagItems(L_Index, this->M_PanelNumber);
 		//设置道具名称
-		Widget->SetItemName(((FEquipmentBase*)(_Data->GetValue()))->ItemName);
+		Widget->SetItemName(((FEquipmentBase*)(_Data->GetValue()))->ItemName.ToString());
 	}
 
 	//设置删除界面对象
@@ -85,7 +85,7 @@ void UUI_PlayerBagRemove::WidgetRefresh_UpdateEquipment(UItemDataTable* _Data, i
 		{
 			const FEquipmentBase& Obj = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment[((FItemData_Index*)(_Data->GetValue()))->M_Index];
 			//设置道具名称
-			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName);
+			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName.ToString());
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetEquipment(Obj.ItemTexturePath.ToString(), Obj.M_IsOverlap, Obj.M_Count);
 			//设置道具的对应索引，和界面索引
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetTagItems(this->M_FUI_PlayerBagRemove_Item_Index[L_Index].M_Index, this->M_PanelNumber);
@@ -93,7 +93,7 @@ void UUI_PlayerBagRemove::WidgetRefresh_UpdateEquipment(UItemDataTable* _Data, i
 		else {
 			const FMaterialBase& Obj = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material[((FItemData_Index*)(_Data->GetValue()))->M_Index];
 			//设置道具名称
-			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName);
+			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName.ToString());
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetEquipment(Obj.ItemTexturePath.ToString(), true, Obj.M_Count);
 			//设置道具的对应索引，和界面索引
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetTagItems(L_Index, this->M_PanelNumber);
@@ -105,7 +105,7 @@ void UUI_PlayerBagRemove::WidgetRefresh_UpdateEquipment(UItemDataTable* _Data, i
 		{
 			const FEquipmentBase& Obj = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Equipment[((FItemData_Index*)(_Data->GetValue()))->M_Index];
 			//设置道具名称
-			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName);
+			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(Obj.ItemName.ToString());
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetEquipment(Obj.ItemTexturePath.ToString(), Obj.M_IsOverlap, Obj.M_Count);
 			//设置道具的对应索引，和界面索引
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetTagItems(this->M_FUI_PlayerBagRemove_Item_Index[L_Index].M_Index, this->M_PanelNumber);
@@ -116,7 +116,7 @@ void UUI_PlayerBagRemove::WidgetRefresh_UpdateEquipment(UItemDataTable* _Data, i
 			//设置道具的对应索引，和界面索引
 			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetTagItems(L_Index, this->M_PanelNumber);
 			//设置道具名称
-			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(((FMaterialBase*)(_Data->GetValue()))->ItemName);
+			Cast<UUI_BagRemove_Equipment>(_UWidget)->SetItemName(((FMaterialBase*)(_Data->GetValue()))->ItemName.ToString());
 		}
 	}
 
@@ -129,7 +129,7 @@ UWidget* UUI_PlayerBagRemove::WidgetCreate_InitCards(UItemDataTable* _Data, int3
 	UMyUI_BagRemove_Card* Widget = CreateWidget<UMyUI_BagRemove_Card>(this, LoadClass<UMyUI_BagRemove_Card>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagItemsCardView.BP_PlayerBagItemsCardView_C'")));
 	Widget->SetUIPlayerBagRemove(this);
 	Widget->SetCard(((FItemCard*)(_Data->GetValue()))->ItemTexturePath.ToString(), ((FItemCard*)(_Data->GetValue()))->M_CardGrade);
-	Widget->SetItemName(((FItemCard*)(_Data->GetValue()))->ItemName);
+	Widget->SetItemName(((FItemCard*)(_Data->GetValue()))->ItemName.ToString());
 	Widget->SetTagItems(L_Index, this->M_PanelNumber);
 	Widget->SelectItems(false);
 	Widget->BindSelectFunc();
@@ -144,13 +144,13 @@ void UUI_PlayerBagRemove::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int32
 		const FItemCard& Obj = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card[((FItemData_Index*)(_Data->GetValue()))->M_Index];
 		//更新数据
 		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetCard(Obj.ItemTexturePath.ToString(), Obj.M_CardGrade);
-		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetItemName(Obj.ItemName);
+		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetItemName(Obj.ItemName.ToString());
 		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetTagItems(((FItemData_Index*)(_Data->GetValue()))->M_Index, this->M_PanelNumber);
 	}
 	else {
 		//更新数据
 		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetCard(((FItemCard*)(_Data->GetValue()))->ItemTexturePath.ToString(), ((FItemCard*)(_Data->GetValue()))->M_CardGrade);
-		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetItemName(((FItemCard*)(_Data->GetValue()))->ItemName);
+		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetItemName(((FItemCard*)(_Data->GetValue()))->ItemName.ToString());
 		Cast<UMyUI_BagRemove_Card>(_UWidget)->SetTagItems(L_Index, this->M_PanelNumber);
 	}
 
@@ -226,7 +226,7 @@ void UUI_PlayerBagRemove::SearchBag_Card()
 			break;
 
 		//搜索到之后存储索引
-		if (_Item.ItemName.Contains(this->M_InputItemNameBox->GetText().ToString()))
+		if (_Item.ItemName.ToString().Contains(this->M_InputItemNameBox->GetText().ToString()))
 		{
 			FItemData_Index LLItem;
 			LLItem.M_Index = L_Index;
@@ -267,7 +267,7 @@ void UUI_PlayerBagRemove::SearchBag_Equipment()
 			break;
 
 		//搜到之后只能搜索到未使用的装备对象
-		if (_Item.ItemName.Contains(this->M_InputItemNameBox->GetText().ToString()) && !_Item.M_Used)
+		if (_Item.ItemName.ToString().Contains(this->M_InputItemNameBox->GetText().ToString()) && !_Item.M_Used)
 		{
 			FItemData_Index LLItem;
 			LLItem.M_Index = L_Index;
@@ -301,7 +301,7 @@ void UUI_PlayerBagRemove::SearchBag_Materials()
 	for (const FMaterialBase& _Item : UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material)
 	{
 		//搜到之后只能搜索到未使用的装备对象
-		if (_Item.ItemName.Contains(this->M_InputItemNameBox->GetText().ToString()))
+		if (_Item.ItemName.ToString().Contains(this->M_InputItemNameBox->GetText().ToString()))
 		{
 			FItemData_Index LLItem;
 			LLItem.M_Index = L_Index;

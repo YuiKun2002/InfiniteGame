@@ -297,11 +297,13 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 				TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BPUI_MapViewCardItem.BPUI_MapViewCardItem_C'"))
 			);
 
-		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(FName(Card.ItemName), TEXT("FCardFCardpreViewHeadData"));
+		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(
+		FName(Card.ItemName.ToString()), TEXT("FCardFCardpreViewHeadData")
+		);
 		if (CurData)
 		{
 
-			NewCardItem->Init(Card.ItemName,
+			NewCardItem->Init(Card.ItemName.ToString(),
 				Card.CardActorResource, CurData->M_CardpreViewHead.CardLayer,
 				CurData->M_CardpreViewHead.CardViewAnim,
 				Card.CardActorHead
