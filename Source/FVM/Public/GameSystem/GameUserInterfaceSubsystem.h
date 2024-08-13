@@ -55,6 +55,9 @@ public:
 	//通过名称获取UI
 	UFUNCTION(BlueprintPure, Category = "获取UI")
 	UWidgetBase* GetUI(FName Name);
+	//通过名称获取UIClass对象
+	UFUNCTION(BlueprintPure, Category = "获取UI")
+	UClass* GetUIClass(FName Name);
 	//通过名称获取已经被实例化的UI
 	UFUNCTION(BlueprintPure, Category = "获取UI")
 	UWidgetBase* GetInstanceUI(FName Name);

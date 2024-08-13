@@ -25,6 +25,7 @@ class UImage;
 class UWidget;
 
 
+//角色背包
 UCLASS()
 class FVM_API UUI_PlayerBag : public UWidgetBase
 {
@@ -34,44 +35,38 @@ private:
 	FTimerLoad<UUI_PlayerBag, FEquipmentBase*> TimeLoad_PlayerBags;
 	//装备加载器
 	UPROPERTY()
-		UItemLoadManager* TimeLoad_Equipment_Manager = nullptr;
-	//防御卡加载器
-	UPROPERTY()
-		UItemLoadManager* TimeLoad_Cards_Manager = nullptr;
-	//材料加载器
-	UPROPERTY()
-		UItemLoadManager* TimeLoad_Materials_Manager = nullptr;
+	UItemLoadManager* TimeLoad_Equipment_Manager = nullptr;
 	//----------------------------------------------------------------------------------------------------
 	//技能书加载器
 	UPROPERTY()
-		UItemLoadManager* TimeLoad_CardSkillBooks_Manager = nullptr;
+	UItemLoadManager* TimeLoad_CardSkillBooks_Manager = nullptr;
 	//技能书索引存储器
 	UPROPERTY()
-		TArray<FSkillBookData> M_FItemData_Show_CardSkillBooks;
+	TArray<FSkillBookData> M_FItemData_Show_CardSkillBooks;
 	//----------------------------------------------------------------------------------------------------
 	//当前选择的界面->索引值 ->装备界面 0  卡片界面1  材料界面2
 	uint8 M_Panel_Index;
 private:
 	//道具删除界面
 	UPROPERTY()
-		TArray<UUI_PlayerBagRemove*> M_UUI_PlayerBagRemove_Panels;
+	TArray<UUI_PlayerBagRemove*> M_UUI_PlayerBagRemove_Panels;
 private:
 	//加载道具的格子
 	UPROPERTY()
-		TArray<UUniformGridPanel*> M_PlayerItemPanels;
+	TArray<UUniformGridPanel*> M_PlayerItemPanels;
 	//背包选择界面
 	UPROPERTY()
-		UCanvasPanel* M_PlayerBagSelectPanel = nullptr;
+	UCanvasPanel* M_PlayerBagSelectPanel = nullptr;
 	//背包道具内容
 	UPROPERTY()
-		UUniformGridPanel* M_PlayerBagContent = nullptr;
+	UUniformGridPanel* M_PlayerBagContent = nullptr;
 public:
 	//选项卡tab默认图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_BagTableDefImg;
+	TArray<FString> M_BagTableDefImg;
 	//选项卡tab选择图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_BagTableSelectImg;
+	TArray<FString> M_BagTableSelectImg;
 public:
 	//背包名称
 	FString M_BagVectorName;
@@ -80,59 +75,59 @@ public:
 public:
 	//背包金币文字显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Bag_Coin0_Count_Text = FString(TEXT("0"));
+	FString M_Bag_Coin0_Count_Text = FString(TEXT("0"));
 	//背包礼券文字显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Bag_Coin1_Count_Text = FString(TEXT("0"));
+	FString M_Bag_Coin1_Count_Text = FString(TEXT("0"));
 	//背包点券文字显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_Bag_Coin2_Count_Text = FString(TEXT("0"));
+	FString M_Bag_Coin2_Count_Text = FString(TEXT("0"));
 	//---------------------------------------
 		//背包格子文字总容量显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_BagTotalCount_Text_1;
+	FString M_BagTotalCount_Text_1;
 	//背包格子的文字——1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_BagCount_Text_1;
+	FString M_BagCount_Text_1;
 	//背包格子的文字——2
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_BagCount_Text_2;
+	FString M_BagCount_Text_2;
 	//背包格子的文字——3
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_BagCount_Text_3;
+	FString M_BagCount_Text_3;
 	//背包格子的文字——4
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_BagCount_Text_4;
+	FString M_BagCount_Text_4;
 
 	//背包格子的图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UImage* M_BagCountImage_1 = nullptr;
+	UImage* M_BagCountImage_1 = nullptr;
 	//背包格子的图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UImage* M_BagCountImage_2 = nullptr;
+	UImage* M_BagCountImage_2 = nullptr;
 	//背包格子的图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UImage* M_BagCountImage_3 = nullptr;
+	UImage* M_BagCountImage_3 = nullptr;
 	//背包格子的图片
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UImage* M_BagCountImage_4 = nullptr;
+	UImage* M_BagCountImage_4 = nullptr;
 
 	//背包格子的按钮
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UButton* M_BagGridButton_1 = nullptr;
+	UButton* M_BagGridButton_1 = nullptr;
 	//背包格子的按钮
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UButton* M_BagGridButton_2 = nullptr;
+	UButton* M_BagGridButton_2 = nullptr;
 	//背包格子的按钮
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UButton* M_BagGridButton_3 = nullptr;
+	UButton* M_BagGridButton_3 = nullptr;
 	//背包格子的按钮
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UButton* M_BagGridButton_4 = nullptr;
+	UButton* M_BagGridButton_4 = nullptr;
 
 	//背包物品删除按钮
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UButton* M_BagItemUniformRemoveButton = nullptr;
+	UButton* M_BagItemUniformRemoveButton = nullptr;
 
 	//------------------------------------------------------------------------------------------------------------------------
 	//   界面打开
@@ -140,35 +135,35 @@ public:
 private:
 	//技能书分类
 	UPROPERTY()
-		ESkillBookTipCategory M_CardSkillBooksCategory = ESkillBookTipCategory::S_Normal;
+	ESkillBookTipCategory M_CardSkillBooksCategory = ESkillBookTipCategory::S_Normal;
 	//按钮组
 	UPROPERTY()
-		TArray<UButton*> M_SkillBookButtons;
+	TArray<UButton*> M_SkillBookButtons;
 	//默认图片
 	UPROPERTY()
-		TArray<FString> M_SkillBookDefStyle;
+	TArray<FString> M_SkillBookDefStyle;
 	//点击图片
 	UPROPERTY()
-		TArray<FString> M_SkillBookClickStyle;
+	TArray<FString> M_SkillBookClickStyle;
 	//功能
 	UFUNCTION(BlueprintCallable)
-		void Open_SkillBooks_Normal();
+	void Open_SkillBooks_Normal();
 	UFUNCTION()
-		void Open_SkillBooks_Style0();
+	void Open_SkillBooks_Style0();
 	UFUNCTION()
-		void Open_SkillBooks_Style1();
+	void Open_SkillBooks_Style1();
 	UFUNCTION()
-		void Open_SkillBooks_Style2();
+	void Open_SkillBooks_Style2();
 	//------------------------------------------------------------------------------------------------------------------------
 	//   卡片技能书
 	//------------------------------------------------------------------------------------------------------------------------
 public:
 	//技能书滑动容器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UScrollBox* M_CardSkillBook_Scroll = nullptr;
+	UScrollBox* M_CardSkillBook_Scroll = nullptr;
 	//技能书格子
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UUniformGridPanel* M_CardSkillBook_Panel = nullptr;
+	UUniformGridPanel* M_CardSkillBook_Panel = nullptr;
 public:
 	//------------------------------------------------------------------------------------------------------------------------
 	//   角色形象开始
@@ -178,24 +173,18 @@ public:
 
 	//角色创建点位
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UCanvasPanel* M_PlayerPoint = nullptr;
+	UCanvasPanel* M_PlayerPoint = nullptr;
 
 	//角色形象界面
 	UPROPERTY()
-		UUI_PlayerInformationShow* M_PlayerInformationShow = nullptr;
+	UUI_PlayerInformationShow* M_PlayerInformationShow = nullptr;
 public:
 	UFUNCTION()
-		void RefreshPlayerSuit();
+	void RefreshPlayerSuit();
 	//------------------------------------------------------------------------------------------------------------------------	
 	//   角色形象结束
 	//------------------------------------------------------------------------------------------------------------------------
 public:
-	virtual bool Initialize() override;
-
-	//加载器初始化
-	UFUNCTION(BlueprintCallable)
-		void LoaderInit();
-
 	//设置背包格子图片以及文字
 	int32 SetBagGridStyle(int32 M_Count, const TArray<FPlayerBagGird>& _BagGrid);
 
@@ -207,31 +196,17 @@ public:
 
 	//创建装备道具界面
 	UFUNCTION()
-		UWidget* WidgetCreate_Equipment(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_Equipment(UItemDataTable* _Data, int32 _Index);
 	//刷新装备道具界面
 	UFUNCTION()
-		void WidgetRefresh_Equipment(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
-
-	//创建卡片道具界面
-	UFUNCTION()
-		UWidget* WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index);
-	//刷新卡片道具界面
-	UFUNCTION()
-		void WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
-
-	//创建材料道具界面
-	UFUNCTION()
-		UWidget* WidgetCreate_Materials(UItemDataTable* _Data, int32 _Index);
-	//刷新材料道具界面
-	UFUNCTION()
-		void WidgetRefresh_Materials(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	void WidgetRefresh_Equipment(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 
 	//创建防御卡技能书道具界面
 	UFUNCTION()
-		UWidget* WidgetCreate_CardSkillBooks(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_CardSkillBooks(UItemDataTable* _Data, int32 _Index);
 	//刷新防御卡技能书道具界面
 	UFUNCTION()
-		void WidgetRefresh_CardSkillBooks(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	void WidgetRefresh_CardSkillBooks(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 
 	//加载角色装备的背包
 	void LoadPlayerBags(UUI_PlayerBag* _Class, TArray<FEquipmentBase*>& _Items_, int32 _Index);
@@ -246,54 +221,107 @@ public:
 	void AddBagGrid(int32 _PanelNumber, int32 _BagNumber, TArray<FPlayerBagGird>& _Grid, FEquipmentBase* _Data);
 public:
 	UFUNCTION()
-		void BagGridButton_1_Func();
+	void BagGridButton_1_Func();
 	UFUNCTION()
-		void BagGridButton_2_Func();
+	void BagGridButton_2_Func();
 	UFUNCTION()
-		void BagGridButton_3_Func();
+	void BagGridButton_3_Func();
 	UFUNCTION()
-		void BagGridButton_4_Func();
+	void BagGridButton_4_Func();
 	UFUNCTION()
-		void OpenRemovePanel();
+	void OpenRemovePanel();
 	//关闭选择背包的界面
 	UFUNCTION()
-		void CloseSelectBagPanel();
+	void CloseSelectBagPanel();
 public:
 	//更新货币显示
 	UFUNCTION(BlueprintCallable)
-		void UpdateShowCoinText();
+	void UpdateShowCoinText();
 	//获取当前界面的索引
 	UFUNCTION(BlueprintCallable)
-		uint8 GetPanel_Index();
+	uint8 GetPanel_Index();
 	//加载道具界面->道具
 	UFUNCTION(BlueprintCallable)
-		void LoadItemsData();
+	void LoadItemsData();
 	//加载道具结束
 	UFUNCTION(BlueprintCallable)
-		void LoadItemsDataEnd(UUI_PlayerBag* _bag);
-	//加载卡片数据->防御卡界面
-	UFUNCTION(BlueprintCallable)
-		void LoadCardData();
-	//加载材料数据->材料界面 
-	UFUNCTION(BlueprintCallable)
-		void LoadMaterialData();
+	void LoadItemsDataEnd(UUI_PlayerBag* _bag);
 	//加载防御卡技能书选项卡(并且设置加载分类)
 	UFUNCTION(BlueprintCallable)
-		void LoadCardSkillBookTabs(ESkillBookTipCategory M_ESkillBookTipCategory);
+	void LoadCardSkillBookTabs(ESkillBookTipCategory M_ESkillBookTipCategory);
 	//加载防御卡技能书选项卡(使用默认的加载分类或者使用上一次的分类加载)
 	UFUNCTION(BlueprintCallable)
-		void LoadCardSkillBookTabs_DefCategory();
+	void LoadCardSkillBookTabs_DefCategory();
 	//更新背包容量[返回总容量]
 	UFUNCTION(BlueprintCallable)
-		int32 UpdateBagCount(uint8 _UpdatePanel, int32 Count);
+	int32 UpdateBagCount(uint8 _UpdatePanel, int32 Count);
 	//关闭界面
 	UFUNCTION(BlueprintCallable)
-		void CloseBagPanel();
+	void CloseBagPanel();
 public:
 	//设置装备属性
 	void SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Grid, UItemDataTable* _Items_, int32 _Index);
+public:
+	/************************************************************************/
+	/*                            初始化                                    */
+	/************************************************************************/
+
+	//初始化UI
+	virtual bool Initialize() override;
+
+	//加载器初始化
+	UFUNCTION(BlueprintCallable)
+	void LoaderInit();
+
+public:
+	/************************************************************************/
+	/*                            防御卡加载                                 */
+	/************************************************************************/
+	//防御卡滑动区域
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScrollBox* ScrollBox_Cards;
+	//防御卡统一格子
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UUniformGridPanel* ItemList_Cards;
+	//防御卡加载器
+	UPROPERTY()
+	UItemLoadManager* TimeLoad_Cards_Manager = nullptr;
+	//创建卡片道具界面
+	UFUNCTION()
+	UWidget* WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index);
+	//刷新卡片道具界面
+	UFUNCTION()
+	void WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 	//设置卡片属性
+	UFUNCTION()
 	void SetCardAttribute(class UUI_PlayerBagCardGrid* _TempCardGrid, UItemDataTable* _Items_, int32 _Index);
+	//加载卡片数据->防御卡界面
+	UFUNCTION(BlueprintCallable)
+	void LoadCardData();
+
+public:
+	/************************************************************************/
+	/*                            材料加载                                   */
+	/************************************************************************/
+	//材料滑动区域
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScrollBox* ScrollBox_Materials;
+	//材料统一格子
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UUniformGridPanel* ItemList_Materials;
+	//材料加载器
+	UPROPERTY()
+	UItemLoadManager* TimeLoad_Materials_Manager = nullptr;
+	//创建材料道具界面
+	UFUNCTION()
+	UWidget* WidgetCreate_Materials(UItemDataTable* _Data, int32 _Index);
+	//刷新材料道具界面
+	UFUNCTION()
+	void WidgetRefresh_Materials(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 	//设置材料属性
+	UFUNCTION()
 	void SetMaterialAttribute(class UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _Items_, int32 _Index);
+	//加载材料数据->材料界面 
+	UFUNCTION(BlueprintCallable)
+	void LoadMaterialData();
 };

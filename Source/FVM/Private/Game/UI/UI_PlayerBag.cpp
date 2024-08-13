@@ -71,8 +71,10 @@ void UUI_PlayerBag::RefreshPlayerSuit()
 
 bool UUI_PlayerBag::Initialize()
 {
-	if (!Super::Initialize())
-		return false;
+	//if (!Super::Initialize())
+	//	return false;
+
+	/*
 
 	//角色形象----------------------------------------------------------------------------------------------------
 
@@ -150,7 +152,9 @@ bool UUI_PlayerBag::Initialize()
 		//添加背包选项卡-对应图片
 		this->M_BagTableDefImg = { FString(TEXT("66")),FString(TEXT("71")) ,FString(TEXT("76")) };
 		this->M_BagTableSelectImg = { FString(TEXT("63")),FString(TEXT("69")) ,FString(TEXT("74")) };
-	}
+	}*/
+
+	Super::Initialize();
 
 	return true;
 }
@@ -209,32 +213,38 @@ void UUI_PlayerBag::Clear()
 void UUI_PlayerBag::LoaderInit()
 {
 	//装备加载器
-	this->TimeLoad_Equipment_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Equipment_Manager_T"));
-	this->TimeLoad_Equipment_Manager->InitWidget_First(this->M_PlayerItemPanels[0], Cast<UScrollBox>(this->M_PlayerItemPanels[0]->GetParent()), 0.001f);
-	this->TimeLoad_Equipment_Manager->InitRange_Second(6, 7, UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(0), 100.f, 100.f);
-	this->TimeLoad_Equipment_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Equipment"));
-	this->TimeLoad_Equipment_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Equipment"));
+	//this->TimeLoad_Equipment_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Equipment_Manager_T"));
+	//this->TimeLoad_Equipment_Manager->InitWidget_First(this->M_PlayerItemPanels[0], Cast<UScrollBox>(this->M_PlayerItemPanels[0]->GetParent()), 0.001f);
+	//this->TimeLoad_Equipment_Manager->InitRange_Second(6, 7, UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(0), 100.f, 100.f);
+	//this->TimeLoad_Equipment_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Equipment"));
+	//this->TimeLoad_Equipment_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Equipment"));
 
 	//卡片加载器
-	this->TimeLoad_Cards_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Cards_Manager_T"));
-	this->TimeLoad_Cards_Manager->InitWidget_First(this->M_PlayerItemPanels[1], Cast<UScrollBox>(this->M_PlayerItemPanels[1]->GetParent()), 0.001f);
-	this->TimeLoad_Cards_Manager->InitRange_Second(4, 6, UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(1), 120.f, 150.f);
+	/*this->TimeLoad_Cards_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Cards_Manager_T"));
+	this->TimeLoad_Cards_Manager->InitWidget_First(
+		this->M_PlayerItemPanels[1],
+		Cast<UScrollBox>(this->M_PlayerItemPanels[1]->GetParent()),
+		0.001f);
+	this->TimeLoad_Cards_Manager->InitRange_Second(4, 6,
+		9999999,
+		120.f,
+		150.f);
 	this->TimeLoad_Cards_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Cards"));
-	this->TimeLoad_Cards_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Cards"));
+	this->TimeLoad_Cards_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Cards"));*/
 
 	//材料加载器
-	this->TimeLoad_Materials_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Materials_Manager_T"));
-	this->TimeLoad_Materials_Manager->InitWidget_First(this->M_PlayerItemPanels[2], Cast<UScrollBox>(this->M_PlayerItemPanels[2]->GetParent()), 0.001f);
-	this->TimeLoad_Materials_Manager->InitRange_Second(6, 7, UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(2), 100.f, 100.f);
-	this->TimeLoad_Materials_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Materials"));
-	this->TimeLoad_Materials_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Materials"));
+	//this->TimeLoad_Materials_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Materials_Manager_T"));
+	//this->TimeLoad_Materials_Manager->InitWidget_First(this->M_PlayerItemPanels[2], Cast<UScrollBox>(this->M_PlayerItemPanels[2]->GetParent()), 0.001f);
+	//this->TimeLoad_Materials_Manager->InitRange_Second(6, 7, UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(2), 100.f, 100.f);
+	//this->TimeLoad_Materials_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Materials"));
+	//this->TimeLoad_Materials_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Materials"));
 
 	//技能书加载器
-	this->TimeLoad_CardSkillBooks_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_SkillBooks_Manager_T"));
-	this->TimeLoad_CardSkillBooks_Manager->InitWidget_First(this->M_CardSkillBook_Panel, this->M_CardSkillBook_Scroll, 0.001f);
-	this->TimeLoad_CardSkillBooks_Manager->InitRange_Second(7, 1, 999, 790.f, 100.f);
-	this->TimeLoad_CardSkillBooks_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_CardSkillBooks"));
-	this->TimeLoad_CardSkillBooks_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_CardSkillBooks"));
+	//this->TimeLoad_CardSkillBooks_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_SkillBooks_Manager_T"));
+	//this->TimeLoad_CardSkillBooks_Manager->InitWidget_First(this->M_CardSkillBook_Panel, this->M_CardSkillBook_Scroll, 0.001f);
+	//this->TimeLoad_CardSkillBooks_Manager->InitRange_Second(7, 1, 999, 790.f, 100.f);
+	//this->TimeLoad_CardSkillBooks_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_CardSkillBooks"));
+	//this->TimeLoad_CardSkillBooks_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_CardSkillBooks"));
 }
 
 UWidget* UUI_PlayerBag::WidgetCreate_Equipment(UItemDataTable* _Data, int32 _Index)
@@ -255,40 +265,7 @@ void UUI_PlayerBag::WidgetRefresh_Equipment(UItemDataTable* _Data, int32 _Index,
 	this->UpdateBagCount(0u, this->TimeLoad_Equipment_Manager->GetCount());
 }
 
-UWidget* UUI_PlayerBag::WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index)
-{
-	UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(this->GetWorld(), UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")))));
 
-	this->SetCardAttribute(M_TempCardGrid, _Data, _Index);
-
-	this->UpdateBagCount(1u, this->TimeLoad_Cards_Manager->GetCount());
-
-	return M_TempCardGrid;
-}
-
-void UUI_PlayerBag::WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
-{
-	this->SetCardAttribute(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
-
-	this->UpdateBagCount(1u, this->TimeLoad_Cards_Manager->GetCount());
-}
-
-UWidget* UUI_PlayerBag::WidgetCreate_Materials(UItemDataTable* _Data, int32 _Index)
-{
-	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->GetWorld(), UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")))));
-
-	this->SetMaterialAttribute(Grid, _Data, _Index);
-
-	this->UpdateBagCount(2u, this->TimeLoad_Materials_Manager->GetCount());
-
-	return Grid;
-}
-void UUI_PlayerBag::WidgetRefresh_Materials(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
-{
-	this->SetMaterialAttribute(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index);
-
-	this->UpdateBagCount(2u, this->TimeLoad_Materials_Manager->GetCount());
-}
 
 //创建防御卡技能书道具界面
 UWidget* UUI_PlayerBag::WidgetCreate_CardSkillBooks(UItemDataTable* _Data, int32 _Index)
@@ -335,7 +312,7 @@ void UUI_PlayerBag::LoadPlayerBags(UUI_PlayerBag* _Class, TArray<FEquipmentBase*
 			_Grid->SetItemCountText(FString::FromInt(_Items_[_Index]->M_Count), true);
 		else
 			_Grid->SetItemCountText(FString(), false);
-	};
+		};
 
 	if (_Index < _Class->M_PlayerBagContent->GetAllChildren().Num())
 	{
@@ -405,7 +382,7 @@ void UUI_PlayerBag::BagGridButton_BuyGrid(uint8 _Panel_Index, uint8 _Gird_Index,
 		this,
 		UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(
 			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/UI_BuyItem_Tip.UI_BuyItem_Tip_C'")))
-			));
+		));
 	PayPanel->M_ItemDescribe = FString(TEXT("开启格子之后,你可以装备一个背包用于扩充你的存储格子"));
 	PayPanel->M_ItemMoneyType = FString(TEXT("礼券"));
 	PayPanel->M_ItemPirceText = FString(FString::FromInt(_Price));
@@ -572,41 +549,8 @@ void UUI_PlayerBag::LoadItemsDataEnd(UUI_PlayerBag* _bag)
 	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("装备道具刷新完成")));
 }
 
-void UUI_PlayerBag::LoadCardData()
-{
-	//更新背包格子显示
-	this->Clear();
-	this->M_Panel_Index = 1;
 
-	UGameSystemFunction::WidgetSelect(this->M_PlayerItemPanels, ESlateVisibility::Visible, 1);
 
-	for (auto Panel : this->M_PlayerItemPanels[1]->GetAllChildren())
-	{
-		Panel->SetVisibility(ESlateVisibility::Collapsed);
-	}
-
-	this->TimeLoad_Cards_Manager->UpdateDatatable(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card);
-	this->TimeLoad_Cards_Manager->SetLoadItemMaxCount(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(1));
-	this->TimeLoad_Cards_Manager->ContinueRun();
-}
-
-void UUI_PlayerBag::LoadMaterialData()
-{
-	//移除所有界面
-	this->Clear();
-	this->M_Panel_Index = 2;
-
-	UGameSystemFunction::WidgetSelect(this->M_PlayerItemPanels, ESlateVisibility::Visible, 2);
-
-	for (auto Panel : this->M_PlayerItemPanels[2]->GetAllChildren())
-	{
-		Panel->SetVisibility(ESlateVisibility::Collapsed);
-	}
-
-	this->TimeLoad_Materials_Manager->UpdateDatatable(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material);
-	this->TimeLoad_Materials_Manager->SetLoadItemMaxCount(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(2));
-	this->TimeLoad_Materials_Manager->ContinueRun();
-}
 
 void UUI_PlayerBag::UpdateShowCoinText()
 {
@@ -661,7 +605,7 @@ void UUI_PlayerBag::OpenRemovePanel()
 	auto LoadWidget = [&](TArray<UUI_PlayerBagRemove*>& _UUI_PlayerBagRemove_Panels, int32 _Index) {
 		_UUI_PlayerBagRemove_Panels[_Index]->SearchBag(_Index);
 		_UUI_PlayerBagRemove_Panels[_Index]->AddToViewport();
-	};
+		};
 
 	//根据当前界面索引显示对应界面
 	switch (this->GetPanel_Index())
@@ -877,6 +821,30 @@ void UUI_PlayerBag::SetEquipmentAttribute(class UUI_PlayerBagEquipmentGrid* _Gri
 	//_Grid->PlayAnimation_1();
 }
 
+
+
+
+
+UWidget* UUI_PlayerBag::WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index)
+{
+	UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(this,
+		UGameSystemFunction::GetUserInterClassByName(UI_BAGUINAME, TEXT("Card"))
+	);
+
+	this->SetCardAttribute(M_TempCardGrid, _Data, _Index);
+
+	//this->UpdateBagCount(1u, this->TimeLoad_Cards_Manager->GetCount());
+
+	return M_TempCardGrid;
+}
+
+void UUI_PlayerBag::WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetCardAttribute(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
+
+	//this->UpdateBagCount(1u, this->TimeLoad_Cards_Manager->GetCount());
+}
+
 void UUI_PlayerBag::SetCardAttribute(UUI_PlayerBagCardGrid* _TempCardGrid, UItemDataTable* _Items_, int32 _Index)
 {
 	if (!IsValid(_TempCardGrid))
@@ -886,7 +854,6 @@ void UUI_PlayerBag::SetCardAttribute(UUI_PlayerBagCardGrid* _TempCardGrid, UItem
 	_TempCardGrid->M_CardTexturePath = ((FItemCard*)_Items_->GetValue())->ItemTexturePath.ToString();
 	_TempCardGrid->SetFItemCardData(((FItemCard*)_Items_->GetValue()));
 	_TempCardGrid->UpdateButtonTexture(FString::FromInt(((FItemCard*)_Items_->GetValue())->M_CardPrice));
-	//_TempCardGrid->PlayBeginAnim();
 
 	//如果有绑定则清楚绑定
 	if (_TempCardGrid->GetButtonClickEvent().IsBound())
@@ -900,6 +867,39 @@ void UUI_PlayerBag::SetCardAttribute(UUI_PlayerBagCardGrid* _TempCardGrid, UItem
 	_TempCardGrid->GetButtonClickEvent().Add(ClickAudio);
 }
 
+void UUI_PlayerBag::LoadCardData()
+{
+	if (!IsValid(this->TimeLoad_Cards_Manager))
+	{
+		this->TimeLoad_Cards_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Cards_Manager_T"));
+		this->TimeLoad_Cards_Manager->InitWidget_First(this->ItemList_Cards, this->ScrollBox_Cards, 0.001f);
+		this->TimeLoad_Cards_Manager->InitRange_Second(3, 7, 9999999, 260.f, 230.f);
+		this->TimeLoad_Cards_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Cards"));
+		this->TimeLoad_Cards_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Cards"));
+	}
+
+	this->TimeLoad_Cards_Manager->UpdateDatatable(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card
+	);
+	this->TimeLoad_Cards_Manager->SetLoadItemMaxCount(9999999);
+	this->TimeLoad_Cards_Manager->ContinueRun();
+}
+
+
+UWidget* UUI_PlayerBag::WidgetCreate_Materials(UItemDataTable* _Data, int32 _Index)
+{
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(
+		this, UGameSystemFunction::GetUserInterClassByName(UI_BAGUINAME, TEXT("Material"))
+	);
+
+	this->SetMaterialAttribute(Grid, _Data, _Index);
+
+	return Grid;
+}
+void UUI_PlayerBag::WidgetRefresh_Materials(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetMaterialAttribute(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index);
+}
 
 void UUI_PlayerBag::SetMaterialAttribute(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _Items_, int32 _Index)
 {
@@ -920,7 +920,7 @@ void UUI_PlayerBag::SetMaterialAttribute(UUI_PlayerBagMaterialGrid* _Grid, UItem
 		ClickAudio.BindUFunction(_LGrid, "PlayOperateAudioDef");
 		_LGrid->GetButton()->OnClicked.Add(Add);
 		_LGrid->GetButton()->OnClicked.Add(ClickAudio);
-	};
+		};
 
 	//根据材料类型添加对应界面
 	if (((FMaterialBase*)(_Items_->GetValue()))->M_MaterialType == EMaterialType::E_CardSkillBook)
@@ -930,6 +930,22 @@ void UUI_PlayerBag::SetMaterialAttribute(UUI_PlayerBagMaterialGrid* _Grid, UItem
 	else {
 		LDelegateBind(_Grid, _Grid, TEXT("ShowInformation"));
 	}
-
-	//_Grid->PlayAnimation_1();
 }
+
+void UUI_PlayerBag::LoadMaterialData()
+{
+	if (!IsValid(this->TimeLoad_Materials_Manager))
+	{
+		this->TimeLoad_Materials_Manager = NewObject<UItemLoadManager>(this, TEXT("TimeLoad_Materials_Manager_T"));
+		this->TimeLoad_Materials_Manager->InitWidget_First(this->ItemList_Materials, this->ScrollBox_Materials, 0.001f);
+		this->TimeLoad_Materials_Manager->InitRange_Second(5, 10, 99999, 180.f, 140.f);
+		this->TimeLoad_Materials_Manager->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Materials"));
+		this->TimeLoad_Materials_Manager->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Materials"));
+	}
+	this->TimeLoad_Materials_Manager->UpdateDatatable(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material
+	);
+	this->TimeLoad_Materials_Manager->SetLoadItemMaxCount(99999);
+	this->TimeLoad_Materials_Manager->ContinueRun();
+}
+

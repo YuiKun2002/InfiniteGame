@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h" 
-#include "Blueprint/UserWidget.h"
+#include "UObject/Interface.h"
 #include <Components/Button.h>
 #include <Components/SizeBox.h>
-
+#include "Blueprint/UserWidget.h"
 #include "WidgetBase.generated.h"
-
 #define F __FUNCTION__
 
 class UUI_SelectTip;
@@ -18,6 +17,41 @@ class UImage;
 class URichTextBlock;
 class UUI_Tip;
 class UCanvasPanelSlot;
+
+
+UINTERFACE(MinimalAPI, Blueprintable)
+class UWidgetsChangeInterface : public UInterface
+{
+	GENERATED_BODY()
+};
+/**
+ *选项卡切换界面的接口
+ */
+class FVM_API IWidgetsChangeInterface
+{
+	GENERATED_BODY()
+public:
+	//选择接口
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Select();
+	virtual void Select_Implementation();
+
+	//取消选择接口
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void CancelSelect();
+	virtual void CancelSelect_Implementation();
+};
+
+//界面切换结构
+USTRUCT(BlueprintType)
+struct FWidgetsChange {
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidget* TabButt = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidget* Widget = nullptr;
+};
 
 //红色
 #define COLOR_RED FVector(1.f,0.f,0.f)
@@ -90,7 +124,7 @@ public:
 	static UTexture2D* WidgetLoadTexture2D(const FString& _Path);
 	//创建一个提示
 	UFUNCTION(BlueprintCallable)
-	static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f,int32 ZOder = 0);
+	static void CreateTipWidget(const FString& _Text, FVector _Color = FVector(0.f, 1.f, 1.f), float Alpha = 1.f, int32 ZOder = 0);
 	//创建一个选择确认提示框
 	UFUNCTION(BlueprintCallable)
 	static UButton* const CreateSelectTipWidget(const FString& _Content);
@@ -115,6 +149,9 @@ public:
 	//显示标题提示文字[建议实现鼠标的移入和移出]
 	UFUNCTION(BlueprintCallable)
 	void ShowTip(bool bShowState);
+	//界面切换
+	UFUNCTION(BlueprintCallable)
+	void WidgetsChange(const TArray<FWidgetsChange>& Widgets, int32 Index, ESlateVisibility WidgetVisibility);
 public:
 	virtual bool Initialize() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

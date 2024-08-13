@@ -28,6 +28,7 @@
  */
 #define UI_GLOBALUINAME FName(TEXT("Global"))
 #define UI_WORLDMAPUINAME FName(TEXT("WorldMap"))
+#define UI_BAGUINAME FName(TEXT("Bag"))
 
 
  //可视化名字类型分类[蓝图实现，全局的宏]

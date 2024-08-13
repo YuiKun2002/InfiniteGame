@@ -1456,6 +1456,43 @@ class UWidgetBase* UGameSystemFunction::GetUserInterWidgetByName(const FName& Ca
 	return nullptr;
 }
 
+class UClass* UGameSystemFunction::GetUserInterClassByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType, FName Name)
+{
+	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
+	if (IsValid(UIStaticClass))
+	{
+		const FName& CurName = UIStaticClass->GetUserInterCategoryName(ObjectType);
+		return UIStaticClass->GetUserInterInstance(CurName)->GetUIClass(Name);
+	}
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		UGameSystemFunction::FVMLog(
+			__FUNCTION__,
+			FString(TEXT("UI子系统无效"))
+		);
+	}
+	return nullptr;
+}
+
+class UClass* UGameSystemFunction::GetUserInterClassByName(const FName& CategoryName, const FName& Name)
+{
+	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
+	if (IsValid(UIStaticClass))
+	{
+		return UIStaticClass->GetUserInterInstance(CategoryName)->GetUIClass(Name);
+	}
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		UGameSystemFunction::FVMLog(
+			__FUNCTION__,
+			FString(TEXT("UI子系统无效"))
+		);
+	}
+	return nullptr;
+}
+
 UGameUserInterfaceInstance* UGameSystemFunction::GetUserInterInstanceByName(const FName& Name)
 {
 	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();

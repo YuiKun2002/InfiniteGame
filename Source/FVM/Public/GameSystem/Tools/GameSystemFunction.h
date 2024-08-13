@@ -523,6 +523,17 @@ public:
 		const FName& CategoryName,
 		const FName& Name
 	);
+	//通过Name直接获取UI Class【使用前请确保{对象}有效】
+	UFUNCTION(BlueprintPure)
+	static class UClass* GetUserInterClassByClass(
+		TSoftClassPtr<class UAssetCategoryName> ObjectType,
+		FName Name
+	);
+	//通过Name直接获取UI Class【使用前请确保Name有效】
+	static class UClass* GetUserInterClassByName(
+		const FName& CategoryName,
+		const FName& Name
+	);
 	//通过Class获取UI实例【使用前请确保Class有效】
 	UFUNCTION(BlueprintPure)
 	static UGameUserInterfaceInstance* GetUserInterInstanceByClass(

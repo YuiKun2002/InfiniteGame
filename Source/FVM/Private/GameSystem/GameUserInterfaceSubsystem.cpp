@@ -107,6 +107,36 @@ UWidgetBase* UGameUserInterfaceInstance::GetUI(FName Name)
 	return nullptr;
 }
 
+UClass* UGameUserInterfaceInstance::GetUIClass(FName Name)
+{
+	TSoftClassPtr<UWidgetBase>* Result = this->UI.Find(Name);
+	if (Result)
+	{
+		UClass* WidClass = Result->LoadSynchronous();
+		if (IsValid(WidClass))
+		{
+			if (UFVMGameInstance::GetDebug())
+			{
+				UGameSystemFunction::FVMLog(
+					__FUNCTION__,
+					Name.ToString() + FString(TEXT("UI Class：")) + FString(TEXT("被加载！"))
+				);
+			}
+		}
+		return WidClass;
+	}
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		UGameSystemFunction::FVMLog(
+			__FUNCTION__,
+			Name.ToString() + FString(TEXT("UI：")) + FString(TEXT("资源不存在，无法被加载！"))
+		);
+	}
+
+	return nullptr;
+}
+
 UWidgetBase* UGameUserInterfaceInstance::GetInstanceUI(FName Name)
 {
 	UWidgetBase** TargetUI = this->InstanceUI.Find(Name);

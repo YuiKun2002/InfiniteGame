@@ -18,33 +18,20 @@
 #include <Components/RichTextBlock.h>
 #include <Components/CanvasPanelSlot.h>
 #include <Components/SizeBox.h>
+#include <Components/Button.h>
 
 #include "Engine/Texture2D.h"
 #include "Game/UI/Tips/UI_Tip.h"
 #include "Game/UI/Tips/UI_SelectTip.h"
 #include "Game/UI/Tips/UI_ItemTitleTip.h"
 
-/*
 
-1.这个游戏是哔哩哔哩赖小宇ly一人制作的单机版游戏-美食大战老鼠。
-
-2.这个游戏是免费游戏，作为Up的一个童年游戏，还是花了一定时间来制作的，因为是一个人做没有更多时间打磨细节希望理解
-
-3. QQ:1033082401 群1:[924537454]   群2[:978043033]
-	群3:[642884960] 群4:[1082582998] 群5:[674942175]
-
-4.最后请支持正版游戏：4399美食大战老鼠官网[https://my.4399.com/yxmsdzls/]
-*/
+void IWidgetsChangeInterface::Select_Implementation() {}
+void IWidgetsChangeInterface::CancelSelect_Implementation() {}
 
 bool UWidgetBase::Initialize()
 {
-	if (!Super::Initialize())
-		return false;
-
-
-
-
-	return true;
+	return Super::Initialize();
 }
 
 void UWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -306,7 +293,7 @@ UTexture2D* UWidgetBase::WidgetLoadTexture2D(const FString& _Path)
 	return Cast<UTexture2D>(LStreamLoad.LoadSynchronous(Path));
 }
 
-void UWidgetBase::CreateTipWidget(const FString& _Text, FVector _Color, float Alpha,int32 ZOder)
+void UWidgetBase::CreateTipWidget(const FString& _Text, FVector _Color, float Alpha, int32 ZOder)
 {
 	UUI_Tip* Tip = CreateWidget<UUI_Tip>(UFVMGameInstance::GetFVMGameInstance(), LoadClass<UUI_Tip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/BPUI_Tip.BPUI_Tip_C'")));
 	Tip->SetTipText(_Text);
@@ -385,3 +372,14 @@ void UWidgetBase::ShowTip(bool bShowState)
 	}
 }
 
+void UWidgetBase::WidgetsChange(const TArray<FWidgetsChange>& Widgets, int32 Index, ESlateVisibility WidgetVisibility)
+{
+	for (const FWidgetsChange& Widget : Widgets)
+	{
+		Cast<IWidgetsChangeInterface>(Widget.TabButt)->Execute_CancelSelect(Widget.TabButt);
+		Widget.Widget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	Cast<IWidgetsChangeInterface>(Widgets[Index].TabButt)->Execute_Select(Widgets[Index].TabButt);
+	Widgets[Index].Widget->SetVisibility(WidgetVisibility);
+}

@@ -228,15 +228,15 @@ struct FItemBase {
 	GENERATED_USTRUCT_BODY()
 public:
 	FItemBase() {}
-	FItemBase(const FString& _Name) :ItemName(_Name) {}
-	FItemBase(const FString& _Name, const FString _IDs, const FString _TPath) : ItemName(_Name), ItemDescrible(_IDs), ItemTexturePath(_TPath) {}
+	FItemBase(const FText& _Name) :ItemName(_Name) {}
+	FItemBase(const FText& _Name, const FText& _IDs, const FString _TPath) : ItemName(_Name), ItemDescrible(_IDs), ItemTexturePath(_TPath) {}
 public:
 	//道具名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemName = FString(TEXT("Null"));
+	FText ItemName;
 	//道具描述
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemDescrible = FString(TEXT("空数据"));
+	FText ItemDescrible;
 	//显示的纹理路径
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSoftObjectPath ItemTexturePath = FSoftObjectPath(FString(TEXT("Texture2D'/Game/Resource/Texture/Sprite/VS/Sprite/Card/CardBg/TCard_0.TCard_0'")));

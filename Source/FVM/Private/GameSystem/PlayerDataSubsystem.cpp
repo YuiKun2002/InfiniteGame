@@ -133,9 +133,13 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetLocalPlayerDataHandle(this);
 
 	//发送数据
-	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("小笼包")), 0);
-	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("小火炉")), 0);
-	UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("土司面包")), 0);
+	for (int32 i = 0; i < 500; i++)
+	{
+		UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("Popcorn shooter")), 0);
+	}
+	
+	//获取全部材料
+	UMaterialBaseStruct::GetAllMaterial(NewPlayerIns->M_PlayerItems_Material,9999);
 
 	//保存存档
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this,
