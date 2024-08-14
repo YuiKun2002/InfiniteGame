@@ -280,7 +280,7 @@ public:
 
 	//卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片名称")
-		FString CardActor_Name = TEXT("");
+		FText CardActor_Name;
 protected:
 	//设置卡片数据
 	void SetCardActor(const FItemCard& _CardData);

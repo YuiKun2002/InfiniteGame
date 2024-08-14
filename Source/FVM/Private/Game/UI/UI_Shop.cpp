@@ -444,7 +444,7 @@ void UUI_Shop::LoadCardRange()
 	{
 		this->M_UItemLoadManager_Cards = NewObject<UItemLoadManager>(this, TEXT("UItemLoadManager_Cards"));
 		this->M_UItemLoadManager_Cards->InitWidget_First(this->Items_Cards, this->ScrollBox_Cards, 0.001f);
-		this->M_UItemLoadManager_Cards->InitRange_Second(3, 4, 4, 450, 233);
+		this->M_UItemLoadManager_Cards->InitRange_Second(3, 4, 4, 460, 233);
 		//this->M_UItemLoadManager_Cards->SetItemMargin(FVector2D(0.f, 0.f));
 		this->M_UItemLoadManager_Cards->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Cards"));
 		this->M_UItemLoadManager_Cards->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Cards"));
