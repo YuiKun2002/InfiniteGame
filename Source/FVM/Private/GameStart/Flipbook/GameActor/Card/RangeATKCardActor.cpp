@@ -11,7 +11,7 @@ const FItemCardRangeATK& ARangeATKCardActor::GetRangeATKCardData()
 void ARangeATKCardActor::BeginPlay()
 {
 	//初始化必要数据
-	this->ItemCardRangeATK = this->GetCardDataComponent()->GetCardRangeATKData(this->CardActor_Name);
+	this->ItemCardRangeATK = this->GetCardDataComponent()->GetCardRangeATKData(this->CardActor_Name.ToString());
 
 	//设置基础攻击力
 	this->SetATK(this->ItemCardRangeATK.M_CardATKBase);

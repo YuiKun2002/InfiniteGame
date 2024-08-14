@@ -11,7 +11,7 @@ const FItemCardDefence& ADefenceCardActor::GetDefenceCardData()
 void ADefenceCardActor::BeginPlay()
 {
 	//初始化必要数据
-	this->ItemCardDefence = this->GetCardDataComponent()->GetCardDefenceData(this->CardActor_Name);
+	this->ItemCardDefence = this->GetCardDataComponent()->GetCardDefenceData(this->CardActor_Name.ToString());
 
 	if (this->ItemCardDefence.M_ECardUpGradeType == ECardUpGradeType::E_Defence_Up)
 	{

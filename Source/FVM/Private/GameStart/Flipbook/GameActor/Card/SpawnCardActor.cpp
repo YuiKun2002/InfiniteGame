@@ -11,7 +11,7 @@ const FItemCardSpawn& ASpawnCardActor::GetSpawnCardData()
 void ASpawnCardActor::BeginPlay()
 {
 	//初始化必要数据
-	this->ItemCardSpawnData = this->GetCardDataComponent()->GetCardSpawnData(this->CardActor_Name);
+	this->ItemCardSpawnData = this->GetCardDataComponent()->GetCardSpawnData(this->CardActor_Name.ToString());
 
 	//判断是否有生产速度功能
 	if (this->ItemCardSpawnData.M_ECardUpGradeType == ECardUpGradeType::E_SpawnSpeed_Up)

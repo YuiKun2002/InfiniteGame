@@ -11,7 +11,7 @@ const FItemCardATK& AAttackCardActor::GetATKCardData()
 void AAttackCardActor::BeginPlay()
 {
 	//初始化必要数据
-	this->ItemCardATK = this->GetCardDataComponent()->GetCardATKData(this->CardActor_Name);
+	this->ItemCardATK = this->GetCardDataComponent()->GetCardATKData(this->CardActor_Name.ToString());
 	this->InitLineTracePosition(this->ItemCardATK.M_LineTraceSettings);
 	this->CalculateLineTracePosition(this->GetLineTracePosition());
 
