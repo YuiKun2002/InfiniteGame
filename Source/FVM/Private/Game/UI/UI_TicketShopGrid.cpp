@@ -41,7 +41,7 @@ void UUI_TicketShopGrid::SetItemData(FItemTicketPrice& _data)
 
 void UUI_TicketShopGrid::InitBase()
 {
-	this->M_ItemNameText->SetText(FText::FromString(this->M_ItemTicketPrice_Data.M_ItemName));
+	this->M_ItemNameText->SetText(this->M_ItemTicketPrice_Data.M_ItemName);
 	this->M_TicketCountText->SetText(FText::FromString(FString::FromInt(this->M_ItemTicketPrice_Data.M_TicketCount)));
 }
 

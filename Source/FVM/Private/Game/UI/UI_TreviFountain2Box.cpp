@@ -123,7 +123,7 @@ void UUI_TreviFountain2Box::Get()
 		//抽奖极品道具显示
 		this->M_UImageEpicTip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		//更新次数
-		L_CustomItem = this->M_UUI_TreviFountain2->UpdateCustomSelectText(OutResults[0].M_ItemName);
+		L_CustomItem = this->M_UUI_TreviFountain2->UpdateCustomSelectText(OutResults[0].M_ItemName.ToString());
 	}
 
 	//触发了保底
@@ -145,7 +145,7 @@ void UUI_TreviFountain2Box::Get()
 		this->M_CurrentItemHeadPath = OutResults[0].M_ItemHeadPath.ToString();
 
 		//获取保底道具名称
-		this->M_Name = OutResults[0].M_ItemName;
+		this->M_Name = OutResults[0].M_ItemName.ToString();
 
 		this->SendItem(OutResults[0]);
 	}
@@ -174,9 +174,14 @@ void UUI_TreviFountain2Box::SendItem(const FTreviFountainItemStruct& _Item)
 
 	switch (_Item.M_ItemType)
 	{
-	case ETreviFountainItemType::TT_Equipment:LSendResult = UGameSystemFunction::SendEquipmentToPlayerBag(_Item.M_ItemName, _Item.M_ItemCount, false); break;
-	case ETreviFountainItemType::TT_Card:LSendResult = UGameSystemFunction::SendCardToPlayerBag(_Item.M_ItemName, 0); break;
-	case ETreviFountainItemType::TT_Material:LSendResult = UGameSystemFunction::SendMaterialToPlayerBag(_Item.M_ItemName, _Item.M_ItemCount, false); break;
+	case ETreviFountainItemType::TT_Equipment:LSendResult =
+		UGameSystemFunction::SendEquipmentToPlayerBag(_Item.M_ItemName.ToString(), _Item.M_ItemCount, false); break;
+
+	case ETreviFountainItemType::TT_Card:LSendResult =
+		UGameSystemFunction::SendCardToPlayerBag(_Item.M_ItemName.ToString(), 0); break;
+
+	case ETreviFountainItemType::TT_Material:LSendResult =
+		UGameSystemFunction::SendMaterialToPlayerBag(_Item.M_ItemName.ToString(), _Item.M_ItemCount, false); break;
 	}
 
 	if (!LSendResult)
@@ -185,7 +190,7 @@ void UUI_TreviFountain2Box::SendItem(const FTreviFountainItemStruct& _Item)
 		TArray<FString> Items = { FString(TEXT("金币")),FString(TEXT("礼券")),FString(TEXT("点券")),FString(TEXT("威望")) };
 		for (int32 i = 0; i < Items.Num(); i++)
 		{
-			if (_Item.M_ItemName.Equals(Items[i]))
+			if (_Item.M_ItemName.ToString().Equals(Items[i]))
 			{
 				UFVMGameInstance::GetPlayerStructManager_Static()->AddCoin(_Item.M_ItemCount, i);
 			}

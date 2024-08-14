@@ -1,40 +1,24 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "Game/UI/UI_ShopGrid.h"
-
-#include "Game/UI/Tips/UI_ShopPayTip.h"
 #include "Game/UI/UI_Shop.h"
-
-#include <Components/Button.h>
 #include <Components/Image.h>
+#include <Components/Button.h>
+#include <Components/TextBlock.h>
 #include <Components/CanvasPanel.h>
+#include "Game/UI/Tips/UI_ShopPayTip.h"
 #include <Components/CanvasPanelSlot.h>
 
 bool UUI_ShopGrid::Initialize()
 {
-	if (!Super::Initialize())
-		return false;
-
-	this->M_BuyItem_Butt = this->GetWidgetComponent<UButton>(this, "BuyItem");
-	this->M_ItemTips_Image = this->GetWidgetComponent<UImage>(this, "Item_Tips");
-	this->M_ItemHead_Image = this->GetWidgetComponent<UImage>(this, "Item_Head");
-
-
-	if (this->M_BuyItem_Butt)
-	{
-		FScriptDelegate CallFunc;
-		CallFunc.BindUFunction(this, "ShowPayPanel");
-		this->M_BuyItem_Butt->OnClicked.Add(CallFunc);
-	}
-
-	return true;
+	return Super::Initialize();
 }
 
 void UUI_ShopGrid::PlayAnimation_1()
 {
 	if (this->GetWidgetTreeOwningClass()->Animations.Num() > 0)
+	{
 		this->PlayAnimation(this->GetWidgetTreeOwningClass()->Animations[0]);
+	}
 }
 
 void UUI_ShopGrid::ShowPayPanel()
@@ -55,12 +39,12 @@ void UUI_ShopGrid::ShowPayPanel()
 
 UButton* UUI_ShopGrid::GetBuyItemButton()
 {
-	return this->M_BuyItem_Butt;
+	return this->ItemPay;
 }
 
 UImage* UUI_ShopGrid::GetItemHeadImage()
 {
-	return this->M_ItemHead_Image;
+	return this->ItemImage;
 }
 
 EItemTipsImageType UUI_ShopGrid::GetEItemTipsImageType()
@@ -92,9 +76,9 @@ void UUI_ShopGrid::SetItemTipsType(EItemTipsImageType _EItemTipsImageType)
 
 	if (_IsHave)
 	{
-		UWidgetBase::SetImageBrush(this->M_ItemTips_Image, _Texture2DPath);
+		UWidgetBase::SetImageBrush(this->ItemTips, _Texture2DPath);
 	}
 	else {
-		this->M_ItemTips_Image->SetVisibility(ESlateVisibility::Hidden);
+		this->ItemTips->SetVisibility(ESlateVisibility::Hidden);
 	}
 }

@@ -70,7 +70,7 @@ void UUI_TreviFountain_3::InitContent()
 	{
 		//创建12个奖励展示盒子并且设置属性
 		UUI_TreviFountain_3Box* Box = CreateWidget<UUI_TreviFountain_3Box>(this, LoadClass<UUI_TreviFountain_3Box>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_TreviFountain4_ItemBox.BPUI_TreviFountain4_ItemBox_C'")));
-		Box->SetItemName(this->M_FTreviFountainStructData[i].M_FTreviFountainStruct.M_ItemName);
+		Box->SetItemName(this->M_FTreviFountainStructData[i].M_FTreviFountainStruct.M_ItemName.ToString());
 		Box->SetHead(this->M_FTreviFountainStructData[i].M_FTreviFountainStruct.M_ItemHeadPath.ToString());
 		Box->SetBgStyle((uint8)(this->M_FTreviFountainStructData[i].M_FTreviFountainStruct.M_ItemQuality));
 		UCanvasPanelSlot* LSlot = this->M_ItemSlotShowPanels[i]->AddChildToCanvas(Box);
@@ -115,13 +115,25 @@ void UUI_TreviFountain_3::Get_1()
 	//发送三叶草
 	FTreviFountainItemStruct LItem;
 	LItem.M_ItemCount = 1;
-	LItem.M_ItemName = TEXT("三级四叶草");
+	LItem.M_ItemName = FText::FromString(TEXT("三级四叶草"));
 	LItem.M_ItemType = ETreviFountainItemType::TT_Material;
 	UTreviFountainStruct::SendItemToPlayerBag(LItem);
 
-	UWidgetBase::SetImageBrush(this->M_Get_1_Head, Datas[0].M_ItemHeadPath.ToString(), FVector(1.f), 1.f, true, FVector(1.f, 1.f, 0.f));
+	UWidgetBase::SetImageBrush(
+		this->M_Get_1_Head,
+		Datas[0].M_ItemHeadPath.ToString(),
+		FVector(1.f), 1.f,
+		true, FVector(1.f, 1.f, 0.f)
+	);
 
-	this->M_URichTextBlock->SetText(FText::FromString(this->AddText(Datas[0].M_ItemName + FString(TEXT("x")) + FString::FromInt(Datas[0].M_ItemCount), Datas[0].M_ItemQuality, true)));
+	this->M_URichTextBlock->SetText(
+		FText::FromString(
+			this->AddText(Datas[0].M_ItemName.ToString() +
+				FString(TEXT("x")) +
+				FString::FromInt(Datas[0].M_ItemCount
+				),
+				Datas[0].M_ItemQuality,
+				true)));
 }
 
 void UUI_TreviFountain_3::Get_t10()
@@ -153,14 +165,19 @@ void UUI_TreviFountain_3::Get_t10()
 	for (int32 i = 0; i < 10; i++)
 	{
 		UWidgetBase::SetImageBrush(this->M_Get_2_Heads[i], Datas[i].M_ItemHeadPath.ToString(), FVector(1.f), 1.f, true, FVector(1.4f, 1.4f, 0.f));
-		LResult_Content = this->AddText(Datas[i].M_ItemName + FString(TEXT("x")) + FString::FromInt(Datas[i].M_ItemCount), Datas[i].M_ItemQuality);
+		LResult_Content = this->AddText(
+			Datas[i].M_ItemName.ToString() +
+			FString(TEXT("x")) +
+			FString::FromInt(Datas[i].M_ItemCount),
+			Datas[i].M_ItemQuality
+		);
 		UTreviFountainStruct::SendItemToPlayerBag(Datas[i]);
 	}
 
 	//发送三叶草
 	FTreviFountainItemStruct LItem;
 	LItem.M_ItemCount = 10;
-	LItem.M_ItemName = TEXT("三级四叶草");
+	LItem.M_ItemName = FText::FromString(TEXT("三级四叶草"));
 	LItem.M_ItemType = ETreviFountainItemType::TT_Material;
 	UTreviFountainStruct::SendItemToPlayerBag(LItem);
 

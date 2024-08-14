@@ -20,6 +20,7 @@
 #define GLOBALASSET_CARD FName(TEXT("GlobalAsset_Card"))
 #define GLOBALASSET_MATERIAL FName(TEXT("GlobalAsset_Material"))
 #define GLOBALASSET_EQUIP FName(TEXT("GlobalAsset_Equip"))
+#define GLOBALASSET_SHOP FName(TEXT("GlobalAsset_Shop"))
 
  /*
 	 UI的分类名称
@@ -29,6 +30,7 @@
 #define UI_GLOBALUINAME FName(TEXT("Global"))
 #define UI_WORLDMAPUINAME FName(TEXT("WorldMap"))
 #define UI_BAGUINAME FName(TEXT("Bag"))
+#define UI_SHOPUINAME FName(TEXT("Shop"))
 
 
  //可视化名字类型分类[蓝图实现，全局的宏]
@@ -140,8 +142,12 @@ private:
 	TMap<FName, UGameDataAssetCache*> GameDataAssetCache;
 };
 
-
-//获取游戏数据资产缓存【模板】
+// #include "GameSystem/DataTableAssetData.h"
+// 使用前请继承 UGameDataAssetCache 并且实现加载函数
+// 使用 DataTableAssetData<T> 作为原生表格存储对象
+// 使用 TArray<T> 作为被解析的表格存储对象
+// 使用 GetDataTableSourceData<T> 获取原生数据表数据解析到TArray<T>
+// 获取游戏数据资产缓存【模板】
 template<class CacheClassType>
 CacheClassType* GetGameDataAssetCache(FName Name)
 {

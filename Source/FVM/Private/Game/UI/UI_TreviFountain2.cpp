@@ -118,7 +118,7 @@ void UUI_TreviFountain2::ContentInit(const FString& _BoxPath, const FString& _It
 		UUI_TreviFountain2BoxSelect* SelectBox = CreateWidget<UUI_TreviFountain2BoxSelect>(this, LoadClass<UUI_TreviFountain2BoxSelect>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_TreviFountain2BoxSelect.BPUI_TreviFountain2BoxSelect_C'")));
 		SelectBox->SetUI_TreviFountain2(this);
 		SelectBox->SetHead(this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i].M_ItemHeadPath.ToString());
-		SelectBox->SetItemName(this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i].M_ItemName);
+		SelectBox->SetItemName(this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i].M_ItemName.ToString());
 		this->M_CustonSelectBoxs.Emplace(SelectBox);
 		this->M_UUniformGrid_CustomSelect_Panel->AddChildToUniformGrid(SelectBox, (i) / 4, (i)-4 * ((i) / 4));
 	}
@@ -156,7 +156,9 @@ FString UUI_TreviFountain2::GetCustomSelectItem()
 	{
 		for (int32 i = 0; i < this->M_FTreviFountainRandomCategoyStruct.GetEpicPool().Num(); i++)
 		{
-			if (this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i].M_ItemName.Equals(this->M_CustonSelectItemName))
+			if (this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i].M_ItemName.ToString().Equals(
+				this->M_CustonSelectItemName
+			))
 			{
 
 				this->M_Boxs[0]->SendItem(this->M_FTreviFountainRandomCategoyStruct.GetEpicPool()[i]);

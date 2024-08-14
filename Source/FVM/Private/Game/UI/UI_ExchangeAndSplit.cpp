@@ -140,8 +140,8 @@ void UUI_ExchangeAndSplit::SetTicketsByTreviFountain(const TArray<FTreviFountain
 		  _Item.M_ItemCount,
 		  _Item.M_ItemHeadPath.ToString(),
 		  this->NeedResourceTexturePath,
-		  TEXT("重要的资源之一"),
-		  this->NeedResourceName,
+		  FText::FromString(TEXT("重要的资源之一")),
+		  FText::FromString(this->NeedResourceName),
 		  _Item.M_TransPrice,
 		  true
 		};
@@ -151,20 +151,20 @@ void UUI_ExchangeAndSplit::SetTicketsByTreviFountain(const TArray<FTreviFountain
 		case ETreviFountainItemType::TT_Card: {
 			PriceObj.M_ItemType = EItemType::E_Card;
 			FItemCard CData;
-			if (UCardBaseStruct::SearchCardFromDataTable(_Item.M_ItemName, CData))
-				PriceObj.M_ItemDescirbe = CData.ItemDescrible.ToString();
+			if (UCardBaseStruct::SearchCardFromDataTable(_Item.M_ItemName.ToString(), CData))
+				PriceObj.M_ItemDescirbe = CData.ItemDescrible;
 		}break;
 		case ETreviFountainItemType::TT_Equipment: {
 			PriceObj.M_ItemType = EItemType::E_Equipment;
 			FEquipmentBase EData;
-			if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(_Item.M_ItemName, EData))
-				PriceObj.M_ItemDescirbe = EData.ItemDescrible.ToString();
+			if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(_Item.M_ItemName.ToString(), EData))
+				PriceObj.M_ItemDescirbe = EData.ItemDescrible;
 		}break;
 		case ETreviFountainItemType::TT_Material: {
 			PriceObj.M_ItemType = EItemType::E_MaterialItem;
 			FMaterialBase MData;
-			if (UMaterialBaseStruct::SearchMaterailFromDataTable(_Item.M_ItemName, MData))
-				PriceObj.M_ItemDescirbe = MData.ItemDescrible.ToString();
+			if (UMaterialBaseStruct::SearchMaterailFromDataTable(_Item.M_ItemName.ToString(), MData))
+				PriceObj.M_ItemDescirbe = MData.ItemDescrible;
 		}break;
 		}
 
@@ -181,11 +181,11 @@ void UUI_ExchangeAndSplit::SetTicketsTransformByTreviFountain(const TArray<FTrev
 		{
 		case ETreviFountainItemType::TT_Equipment:
 		{
-			if (Data.M_ItemName.Contains(TEXT("转")) || Data.M_ItemName.Contains(TEXT("进化凭证")))
+			if (Data.M_ItemName.ToString().Contains(TEXT("转")) || Data.M_ItemName.ToString().Contains(TEXT("进化凭证")))
 			{
 				this->SetTicketsByTreviFountain(TArray{ Data }, this->M_CardChangePosition);
 			}
-			else if (Data.M_ItemName.Contains(TEXT("技能书")))
+			else if (Data.M_ItemName.ToString().Contains(TEXT("技能书")))
 			{
 				this->SetTicketsByTreviFountain(TArray{ Data }, this->M_CardBooks);
 			}
@@ -199,11 +199,11 @@ void UUI_ExchangeAndSplit::SetTicketsTransformByTreviFountain(const TArray<FTrev
 		}break;
 		case ETreviFountainItemType::TT_Material:
 		{
-			if (Data.M_ItemName.Contains(TEXT("转")) || Data.M_ItemName.Contains(TEXT("进化凭证")))
+			if (Data.M_ItemName.ToString().Contains(TEXT("转")) || Data.M_ItemName.ToString().Contains(TEXT("进化凭证")))
 			{
 				this->SetTicketsByTreviFountain(TArray{ Data }, this->M_CardChangePosition);
 			}
-			else if (Data.M_ItemName.Contains(TEXT("技能书")))
+			else if (Data.M_ItemName.ToString().Contains(TEXT("技能书")))
 			{
 				this->SetTicketsByTreviFountain(TArray{ Data }, this->M_CardBooks);
 			}
@@ -295,8 +295,12 @@ const int32 UUI_ExchangeAndSplit::GetCurrentSplitItemCountByName(const FString& 
 	All.Append(this->M_OtherItems);
 
 	for (const auto& Ldata : All)
-		if (Ldata.M_ItemName.Equals(_ItemName))
+	{
+		if (Ldata.M_ItemName.ToString().Equals(_ItemName))
+		{
 			return (int32)(Ldata.M_TicketCount / 2);
+		}
+	}
 
 	return int32(0);
 }
@@ -352,7 +356,7 @@ void UUI_ExchangeAndSplit::SetCurrentSlipItem(const EItemType& _CurrentSelectTyp
 	if (IsValid(this->M_CurrentSelect) && this->M_CurrentSelect->GetValue() && this->M_CurrentSelectIndex != -1)
 	{
 		this->M_CurrentSplitCount = this->GetCurrentSplitItemCountByName(
-		((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemName.ToString()
+			((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemName.ToString()
 		);
 		this->SetSplitItemAddedRate(this->M_RandomAddedRate);
 		this->SetButtonStyle(this->M_NeedSplitCard_Butt, ((FItemBase*)(this->M_CurrentSelect->GetValue()))->ItemTexturePath.ToString(), true);

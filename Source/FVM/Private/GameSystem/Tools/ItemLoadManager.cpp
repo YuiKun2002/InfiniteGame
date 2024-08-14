@@ -23,6 +23,10 @@ void UItemLoadManager::OnScrollRefresh(float _Value)
 
 void UItemLoadManager::OnUserScrolled(float _Value)
 {
+
+	//无惯性滑动
+	this->M_Load_Table_List->EndInertialScrolling();
+
 	//横向检测
 	if (this->M_Ccroll_Condition_bHorizontal)
 	{
@@ -118,9 +122,6 @@ int32 UItemLoadManager::GetPagetLastIndex()
 
 void UItemLoadManager::Run(float _Offset)
 {
-	//if (UFVMGameInstance::GetDebug())
-	//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("Run:清除显示数据缓冲区"));
-
 	//清除上一次存储的数据
 	this->M_ShowDatas.Empty();
 
@@ -129,16 +130,10 @@ void UItemLoadManager::Run(float _Offset)
 	//设置需要显示的数据末尾索引(如果只显示一列->那么额外增加一个最大显示)
 	this->M_LoadIndex_Last = this->GetPagetLastIndex();
 
-	//if (UFVMGameInstance::GetDebug())
-	//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("Run:设置起始索引和结束索引：") + FString::FromInt(this->M_LoadIndex_First) + TEXT("  ") + FString::FromInt(this->M_LoadIndex_Last));
-
 	//如果末尾的索引大于大于最大数量->重置末尾索引
 	if (this->M_LoadIndex_Last == this->M_Page_LoadMaxCount)
 	{
 		this->M_ConditionPage_OverData = true;
-
-	//	if (UFVMGameInstance::GetDebug())
-//			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("Run:末尾索引大于加载最大值：") + FString::FromInt(this->M_LoadIndex_Last) + TEXT("  ") + FString::FromInt(this->M_Page_LoadMaxCount) + TEXT("[设置当前页为最后一页]"));
 	}
 
 	for (int i = this->M_LoadIndex_First; i < this->M_LoadIndex_Last; i++)
@@ -150,17 +145,10 @@ void UItemLoadManager::Run(float _Offset)
 			this->M_ShowDatas.Emplace(*this->M_Item_CurrentFindData);
 
 			this->M_Item_CurrentLoadCount = i + 1;
-
-			//if (UFVMGameInstance::GetDebug())
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("Run:将当前数据添加到缓冲区：") + FString::FromInt(i));
 		}
 		else {
 			//设置显示的数据已经加载完毕
 			this->M_ConditionPage_OverData = true;
-
-			//if (UFVMGameInstance::GetDebug())
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("Run:所有数据全部显示完毕，设置当前页为最后一页"));
-
 			break;
 		}
 	}
@@ -171,21 +159,9 @@ void UItemLoadManager::Run(float _Offset)
 
 void UItemLoadManager::ContinueRun()
 {
-
-//	if (UFVMGameInstance::GetDebug())
-	//{
-		//UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("开始执行"));
-//	}
-
 	//如果数据没有加载完毕->加载数据
 	if (!this->M_ConditionPage_OverData)
 	{
-
-	//	if (UFVMGameInstance::GetDebug())
-	//	{
-		//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("数据没有加载完毕-执行列表加载(Run)"));
-	//	}
-
 		this->Run(this->M_Load_Table_List->GetScrollOffset());
 	}
 	else {
@@ -194,19 +170,9 @@ void UItemLoadManager::ContinueRun()
 			this->M_Condition_RefreshEndPage = false;
 
 			this->Run(this->M_Load_Table_List->GetScrollOffset());
-
-		//	if (UFVMGameInstance::GetDebug())
-		//	{
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("刷新数据最后一页-执行列表加载(Run)"));
-		//	}
 		}
 		else {
 			this->UpdateData(this->M_Load_Table_List->GetScrollOffset());
-
-		//	if (UFVMGameInstance::GetDebug())
-		//	{
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("直接更新数据-执行列表加载(UpdateData)"));
-		//	}
 		}
 	}
 }
@@ -220,29 +186,15 @@ void UItemLoadManager::UpdateData(float _Offset)
 		//如果有对象->那么额外创建UI->之后刷新
 		if (this->M_Load_Uniform_Grid->HasAnyChildren())
 		{
-			//if (UFVMGameInstance::GetDebug())
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("UpdateData:执行CreateItem 开始创建UI对象"));
-
 			this->CreateItem();
-
-			//if (UFVMGameInstance::GetDebug())
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("UpdateData:执行RefreshItem 开始刷新UI对象"));
-
 			this->RefreshItem(_Offset);
 		}
 		else {
-
-			//if (UFVMGameInstance::GetDebug())
-			//	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("UpdateData:执行CreateItem 开始创建UI对象"));
-
 			//如果没有对象->只需要创建
 			this->CreateItem();
 		}
 	}
 	else {
-	//	if (UFVMGameInstance::GetDebug())
-	//		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("UpdateData:执行RefreshItem 开始刷新UI对象"));
-
 		this->RefreshItem(_Offset);
 	}
 }
@@ -250,7 +202,9 @@ void UItemLoadManager::UpdateData(float _Offset)
 void UItemLoadManager::CreateItem()
 {
 	if (!this->OnCreateItem.IsBound())
+	{
 		return;
+	}
 
 	for (int32 i = this->M_Load_Uniform_Grid->GetAllChildren().Num(); i < this->M_ShowDatas.Num(); i++)
 	{
@@ -258,43 +212,47 @@ void UItemLoadManager::CreateItem()
 		UItemDataTable* LData = NewObject<UItemDataTable>();
 		LData->SetValue(this->M_ShowDatas[i]);
 
-		//if (UFVMGameInstance::GetDebug())
-	//	{
-	//		UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("执行列表创建函数(CreateItem)：") + FString::FromInt(i)));
-	//	}
-
-		//this->M_CurrentUI_Index = i;
-
 		UWidget* LWidget = this->OnCreateItem.Execute(LData, i);
 
 		if (LWidget)
 		{
 			//加入到统一格子
 			if (this->M_Ccroll_Condition_bHorizontal)
-				this->M_GridSlotBuffers.Emplace(this->M_Load_Uniform_Grid->AddChildToUniformGrid(LWidget, i % this->M_Page_CurrentColCount, i / this->M_Page_CurrentColCount));
+			{
+				this->M_GridSlotBuffers.Emplace(
+					this->M_Load_Uniform_Grid->AddChildToUniformGrid(
+						LWidget, i % this->M_Page_CurrentColCount, i / this->M_Page_CurrentColCount
+					));
+			}
 			else
-				this->M_GridSlotBuffers.Emplace(this->M_Load_Uniform_Grid->AddChildToUniformGrid(LWidget, i / this->M_Page_CurrentColCount, i % this->M_Page_CurrentColCount));
+			{
+				this->M_GridSlotBuffers.Emplace(
+					this->M_Load_Uniform_Grid->AddChildToUniformGrid(
+						LWidget, i / this->M_Page_CurrentColCount, i % this->M_Page_CurrentColCount
+					));
+			}
 		}
 	}
 
 	//加载结束
 	if (this->OnLoadEndItem.IsBound())
+	{
 		this->OnLoadEndItem.Execute();
+	}
 }
 
 void UItemLoadManager::RefreshItem(float _Offset)
 {
 	if (!this->OnRefreshItem.IsBound())
+	{
 		return;
+	}
 
 	if (this->OnBeginRefreshItem.IsBound())
 	{
 		//调用预刷新
 		this->OnBeginRefreshItem.Execute();
 	}
-
-//	if (UFVMGameInstance::GetDebug())
-//		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("RefreshItem:当前页数位置：") + FString::FromInt(this->M_Page_CurrentNum));
 
 	//将需要加载的界面透明度设置为0
 	for (int32 i = 0; i < this->M_ShowDatas.Num(); i++)
@@ -303,20 +261,14 @@ void UItemLoadManager::RefreshItem(float _Offset)
 		//执行代理(设置数据表数据)
 		UItemDataTable* LData = NewObject<UItemDataTable>();
 		LData->SetValue(this->M_ShowDatas[i]);
-
-		if (UFVMGameInstance::GetDebug())
-		{
-			//UGameSystemFunction::FVMLog(__FUNCTION__, FString(TEXT("执行列表刷新函数(ListRun)：") + FString::FromInt(this->M_LoadIndex_First + i)));
-		}
-
-		//this->M_CurrentUI_Index = i;
-
 		//执行代理函数->刷新
-		this->OnRefreshItem.Execute(LData, this->M_LoadIndex_First + i, this->M_Load_Uniform_Grid->GetChildAt(i));
-
+		this->OnRefreshItem.Execute(
+			LData,
+			this->M_LoadIndex_First + i,
+			this->M_Load_Uniform_Grid->GetChildAt(i)
+		);
 		//显示界面
-		if (this->M_Load_Uniform_Grid->GetChildAt(i)->GetVisibility() != ESlateVisibility::Visible)
-			this->M_Load_Uniform_Grid->GetChildAt(i)->SetVisibility(ESlateVisibility::Visible);
+		this->M_Load_Uniform_Grid->GetChildAt(i)->SetRenderOpacity(1);
 	}
 
 	//将其他的界面隐藏
@@ -324,13 +276,17 @@ void UItemLoadManager::RefreshItem(float _Offset)
 	{
 		for (int32 i = this->M_ShowDatas.Num(); i < this->M_Load_Uniform_Grid->GetAllChildren().Num(); i++)
 		{
-			this->M_Load_Uniform_Grid->GetChildAt(i)->SetVisibility(ESlateVisibility::Hidden);
+			//this->M_Load_Uniform_Grid->GetChildAt(i)->SetVisibility(ESlateVisibility::Hidden);
+
+			this->M_Load_Uniform_Grid->GetChildAt(i)->SetRenderOpacity(0);
 		}
 	}
 
 	//执行加载结束
 	if (this->OnLoadEndItem.IsBound())
+	{
 		this->OnLoadEndItem.Execute();
+	}
 
 	//刷新滑动区
 	if (this->OnBeginScrollRefresh.IsBound())

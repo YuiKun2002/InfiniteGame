@@ -52,37 +52,37 @@ struct FItemPrice {
 public:
 	//物品名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemName;
+	FText M_ItemName;
 	//简单的提示信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemTips;
+	FText M_ItemTips;
 	//物品的描述信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemDescirbe;
+	FText M_ItemDescirbe;
 	//物品类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EItemType M_ItemType;
+	EItemType M_ItemType;
 	//物品的价格
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_ItemPrice;
+	int32 M_ItemPrice;
 	//货币的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		uint8 M_ItemMoneyType;
+	uint8 M_ItemMoneyType;
 	//货币的类型文字
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemMoneyTypeName;
+	FText M_ItemMoneyTypeName;
 	//展示的纹理图片路径
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath M_ItemHeadTexture2DPath;
+	FSoftObjectPath M_ItemHeadTexture2DPath;
 	//售卖类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EItemTipsImageType M_ItemTipsImageType = EItemTipsImageType::E_None;
+	EItemTipsImageType M_ItemTipsImageType = EItemTipsImageType::E_None;
 	//该商品是服装类(显示试衣间)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	   bool M_IsPlayerSuit = false;
+	bool M_IsPlayerSuit = false;
 	//是否显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_IsShow = true;
+	bool M_IsShow = true;
 };
 
 //券兑换
@@ -92,31 +92,31 @@ struct FItemTicketPrice {
 public:
 	//物品名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemName;
+	FText M_ItemName;
 	//兑换的物品类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EItemType M_ItemType;
+	EItemType M_ItemType;
 	//物品获得数量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_ItemCount = 1;
+	int32 M_ItemCount = 1;
 	//物品的纹理图片路径
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath M_ItemHeadTexture2DPath;
+	FSoftObjectPath M_ItemHeadTexture2DPath;
 	//券图标的纹理图片路径(""表示没有图片显示)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FSoftObjectPath M_TicketHeadTexture2DPath = FSoftObjectPath(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/TicketShop/31.31'"));
+	FSoftObjectPath M_TicketHeadTexture2DPath = FSoftObjectPath(TEXT("Texture2D'/Game/Resource/Texture/UI/Game/TicketShop/31.31'"));
 	//物品的描述信息
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemDescirbe;
+	FText M_ItemDescirbe;
 	//券兑换名称（自动搜寻玩家背包对应道具）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_TicketName;
+	FText M_TicketName;
 	//券数量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_TicketCount = 5;
+	int32 M_TicketCount = 5;
 	//是否显示
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_IsShow = true;
+	bool M_IsShow = true;
 };
 
 //商店券物品的价格
@@ -127,7 +127,7 @@ struct FItem_TicketPrice_Data : public FTableRowBase
 public:
 	//物品结构
 	UPROPERTY(EditDefaultsOnly)
-		FItemTicketPrice M_FItemPrice;
+	FItemTicketPrice M_FItemPrice;
 };
 
 //商店物品的价格
@@ -138,7 +138,7 @@ struct FItem_Price_Data : public FTableRowBase
 public:
 	//物品结构
 	UPROPERTY(EditDefaultsOnly)
-		FItemPrice M_FItemPrice;
+	FItemPrice M_FItemPrice;
 };
 
 UCLASS()

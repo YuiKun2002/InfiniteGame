@@ -375,7 +375,7 @@ void UUI_PlayerBag::BagGridButton_BuyGrid(uint8 _Panel_Index, uint8 _Gird_Index,
 	Price.M_ItemMoneyType = 1u;
 	Price.M_ItemPrice = _Price;
 	Price.M_ItemType = EItemType::E_BagGrid;
-	Price.M_ItemMoneyTypeName = FString(TEXT("礼券"));
+	Price.M_ItemMoneyTypeName = FText::FromString(TEXT("礼券"));
 
 	//调出支付界面
 	UUI_ShopPayTip* PayPanel = CreateWidget<UUI_ShopPayTip>(
@@ -383,10 +383,10 @@ void UUI_PlayerBag::BagGridButton_BuyGrid(uint8 _Panel_Index, uint8 _Gird_Index,
 		UAssetManager::GetStreamableManager().LoadSynchronous<UClass>(
 			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/UI_BuyItem_Tip.UI_BuyItem_Tip_C'")))
 		));
-	PayPanel->M_ItemDescribe = FString(TEXT("开启格子之后,你可以装备一个背包用于扩充你的存储格子"));
-	PayPanel->M_ItemMoneyType = FString(TEXT("礼券"));
+	PayPanel->M_ItemDescribe = FText::FromString(TEXT("开启格子之后,你可以装备一个背包用于扩充你的存储格子"));
+	PayPanel->M_ItemMoneyType = FText::FromString(TEXT("礼券"));
 	PayPanel->M_ItemPirceText = FString(FString::FromInt(_Price));
-	PayPanel->M_ItemName = FString(TEXT("开启背包格子第") + FString::FromInt(_Gird_Index) + TEXT("格"));
+	PayPanel->M_ItemName = FText::FromString(TEXT("开启背包格子第") + FString::FromInt(_Gird_Index) + TEXT("格"));
 	PayPanel->M_EShopPayTipBuyType = EShopPayTipBuyType::E_DefShopBuy;
 	PayPanel->M_FItemPrice = Price;
 	//关闭输入

@@ -56,20 +56,20 @@ void UUI_ShopPayTip::PayButton()
 		switch (this->M_EShopPayTipBuyType)
 		{
 		case EShopPayTipBuyType::E_DefShopBuy: {
-			ItemName = this->M_FItemPrice.M_ItemName;
+			ItemName = this->M_FItemPrice.M_ItemName.ToString();
 			ItemPrice = this->M_FItemPrice.M_ItemPrice;
-			ItemCoinName = this->M_FItemPrice.M_ItemMoneyTypeName;
+			ItemCoinName = this->M_FItemPrice.M_ItemMoneyTypeName.ToString();
 			ItemEItemType = this->M_FItemPrice.M_ItemType;
 			FItemPriceData = this->M_FItemPrice;
 		} break;
 		case EShopPayTipBuyType::E_TicketShopBuy: {
-			ItemName = this->M_FItemTicketPrice.M_ItemName;
+			ItemName = this->M_FItemTicketPrice.M_ItemName.ToString();
 			ItemPrice = this->M_FItemTicketPrice.M_TicketCount;
-			ItemCoinName = this->M_FItemTicketPrice.M_TicketName;
+			ItemCoinName = this->M_FItemTicketPrice.M_TicketName.ToString();
 			ItemEItemType = this->M_FItemTicketPrice.M_ItemType;
 			//道具数据转换
 			{
-				FItemPriceData.M_ItemName = ItemName;
+				FItemPriceData.M_ItemName = FText::FromString(ItemName);
 				FItemPriceData.M_ItemType = ItemEItemType;
 			}
 		} break;
@@ -175,13 +175,20 @@ void UUI_ShopPayTip::PayButton()
 			//将物品添加到背包
 			default: {
 				//检查是否是货币资源
-				if (PlayerData->CheckCoin(FItemPriceData.M_ItemName))
+				if (PlayerData->CheckCoin(FItemPriceData.M_ItemName.ToString()))
 				{
-					PlayerData->SendCoin(FItemPriceData.M_ItemName, this->M_FItemTicketPrice.M_ItemCount * ItemCount);
+					PlayerData->SendCoin(
+						FItemPriceData.M_ItemName.ToString(),
+						this->M_FItemTicketPrice.M_ItemCount * ItemCount
+					);
 
 					if (UFVMGameInstance::GetDebug())
 					{
-						UE_LOG(LogTemp, Error, TEXT("支付成功，发生货币资源：【%s】，数量【%d】，购买量【%d】"), *FItemPriceData.M_ItemName, this->M_FItemTicketPrice.M_ItemCount, ItemCount);
+						UE_LOG(LogTemp, Error,
+							TEXT("支付成功，发生货币资源：【%s】，数量【%d】，购买量【%d】"),
+							*FItemPriceData.M_ItemName.ToString(),
+							this->M_FItemTicketPrice.M_ItemCount, ItemCount
+						);
 					}
 				}
 				else {
@@ -279,12 +286,12 @@ void UUI_ShopPayTip::Sure()
 	switch (this->M_EShopPayTipBuyType)
 	{
 	case EShopPayTipBuyType::E_DefShopBuy: {
-		ItemName = this->M_FItemPrice.M_ItemName;
+		ItemName = this->M_FItemPrice.M_ItemName.ToString();
 		ItemPrice = this->M_FItemPrice.M_ItemPrice;
 		ItemEItemType = this->M_FItemPrice.M_ItemType;
 	} break;
 	case EShopPayTipBuyType::E_TicketShopBuy: {
-		ItemName = this->M_FItemTicketPrice.M_ItemName;
+		ItemName = this->M_FItemTicketPrice.M_ItemName.ToString();
 		ItemPrice = this->M_FItemTicketPrice.M_TicketCount;
 		ItemEItemType = this->M_FItemTicketPrice.M_ItemType;
 	} break;

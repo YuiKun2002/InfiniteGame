@@ -74,10 +74,10 @@ public:
 private:
 	//加载列表的容器
 	UPROPERTY()
-		UScrollBox* M_Load_Table_List = nullptr;
+	UScrollBox* M_Load_Table_List = nullptr;
 	//加载列表的格子
 	UPROPERTY()
-		UUniformGridPanel* M_Load_Uniform_Grid = nullptr;
+	UUniformGridPanel* M_Load_Uniform_Grid = nullptr;
 private:
 	//指向源数据的数组指针头
 	TMap<int32, FTableRowBase*> M_SourceDatas;
@@ -87,7 +87,7 @@ private:
 private:
 	//界面网格缓冲区
 	UPROPERTY()
-		TArray<UUniformGridSlot*> M_GridSlotBuffers;
+	TArray<UUniformGridSlot*> M_GridSlotBuffers;
 private:
 	//滑动区的位移
 	FVector2D M_ScrollOffset = FVector2D(0.f);
@@ -154,7 +154,7 @@ private:
 	FRefreshScrollFunctionDelegate OnBeginScrollRefresh;
 private:
 	UFUNCTION()
-		void OnScrollRefresh(float _Value);
+	void OnScrollRefresh(float _Value);
 public:
 	//物品创建
 	FCreateFunctionDelegate OnCreateItem;
@@ -167,7 +167,7 @@ public:
 public:
 	//当用户滑动时
 	UFUNCTION()
-		void OnUserScrolled(float _Value);
+	void OnUserScrolled(float _Value);
 private:
 	//获取页面首索引
 	int32 GetPagetFirstIndex();
@@ -188,9 +188,20 @@ private:
 public:
 	/*  尽量保证调用一次  */
 	//初始化界面(格子，滑动界面，刷新物品加载时间)
-	void InitWidget_First(UUniformGridPanel* _M_Load_Uniform_Grid, UScrollBox* _M_Load_Table_List, float _LoadTime = 0.01f);
+	void InitWidget_First(
+		UUniformGridPanel* _M_Load_Uniform_Grid,
+		UScrollBox* _M_Load_Table_List,
+		float _LoadTime = 0.01f
+	);
 	//初始化加载项(行，列，最大加载数量，加载物品-宽，加载物品-高，滑动方向：false纵向  true横向)
-	bool InitRange_Second(int32 _Row, int32 _Col, int32 _LoadMax, float _TargetItem_Width, float _TargetItem_Height, bool _bMode_Horizontal = false);
+	bool InitRange_Second(
+		int32 _Row,
+		int32 _Col,
+		int32 _LoadMax,
+		float _TargetItem_Width,
+		float _TargetItem_Height,
+		bool _bMode_Horizontal = false
+	);
 public:
 	//重新设置加载的行列【在加载前使用】
 	void SetLoadRowAndCol(int32 _Row, int32 _Col);

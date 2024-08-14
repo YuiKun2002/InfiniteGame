@@ -41,7 +41,7 @@ struct FTreviFountainItemStruct
 public:
 	//物品名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_ItemName = FString(TEXT("Null"));
+		FText M_ItemName;
 	//物品的头像
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FSoftObjectPath M_ItemHeadPath;

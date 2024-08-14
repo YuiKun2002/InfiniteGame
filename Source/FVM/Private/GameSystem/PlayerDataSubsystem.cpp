@@ -132,14 +132,10 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	//设置本地角色句柄
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetLocalPlayerDataHandle(this);
 
-	//发送数据
-	for (int32 i = 0; i < 500; i++)
-	{
-		UGameSystemFunction::SendCardToPlayerBag(FString(TEXT("Popcorn shooter")), 0);
-	}
-	
+	//获取全部防御卡
+	UCardBaseStruct::GetAllCardsData(NewPlayerIns->M_PlayerItems_Card, 8);
 	//获取全部材料
-	UMaterialBaseStruct::GetAllMaterial(NewPlayerIns->M_PlayerItems_Material,9999);
+	UMaterialBaseStruct::GetAllMaterial(NewPlayerIns->M_PlayerItems_Material, 9999);
 
 	//保存存档
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this,

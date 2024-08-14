@@ -47,7 +47,7 @@ void UTreviFountainStruct::SendItemToPlayerBag(FTreviFountainItemStruct _Item)
 	{
 		for (int32 CoinIndex = 0; CoinIndex < 4; CoinIndex++)
 		{
-			if (_Item.M_ItemName.Equals(Coins[CoinIndex]))
+			if (_Item.M_ItemName.ToString().Equals(Coins[CoinIndex]))
 			{
 				if (UFVMGameInstance::GetPlayerStructManager_Static()->AddCoin(_Item.M_ItemCount, CoinIndex))
 				{
@@ -68,7 +68,7 @@ void UTreviFountainStruct::SendItemToPlayerBag(FTreviFountainItemStruct _Item)
 	{
 	case ETreviFountainItemType::TT_Equipment:
 	{
-		if (!UGameSystemFunction::SendEquipmentToPlayerBag(_Item.M_ItemName, _Item.M_ItemCount))
+		if (!UGameSystemFunction::SendEquipmentToPlayerBag(_Item.M_ItemName.ToString(), _Item.M_ItemCount))
 		{
 			if (UFVMGameInstance::GetDebug())
 				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("装备道具发送失败"));
@@ -76,7 +76,7 @@ void UTreviFountainStruct::SendItemToPlayerBag(FTreviFountainItemStruct _Item)
 	} break;
 	case ETreviFountainItemType::TT_Card:
 	{
-		if (!UGameSystemFunction::SendCardToPlayerBag(_Item.M_ItemName, 0))
+		if (!UGameSystemFunction::SendCardToPlayerBag(_Item.M_ItemName.ToString(), 0))
 		{
 			if (UFVMGameInstance::GetDebug())
 				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("卡片发送失败"));
@@ -84,7 +84,7 @@ void UTreviFountainStruct::SendItemToPlayerBag(FTreviFountainItemStruct _Item)
 	} break;
 	case ETreviFountainItemType::TT_Material:
 	{
-		if (!UGameSystemFunction::SendMaterialToPlayerBag(_Item.M_ItemName, _Item.M_ItemCount))
+		if (!UGameSystemFunction::SendMaterialToPlayerBag(_Item.M_ItemName.ToString(), _Item.M_ItemCount))
 		{
 			if (UFVMGameInstance::GetDebug())
 				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("材料道具发送失败"));

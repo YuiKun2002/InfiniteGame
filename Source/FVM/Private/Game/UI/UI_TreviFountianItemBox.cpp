@@ -41,14 +41,14 @@ void UUI_TreviFountianItemBox::ShowInformation()
 {
 	if (!UGameplayStatics::GetPlatformName().Equals("Windows"))
 	{
-		UWidgetBase::CreateTipWidget(FString(this->Data.M_ItemName));
+		UWidgetBase::CreateTipWidget(this->Data.M_ItemName.ToString());
 		UWidgetBase::PlayOperateAudio();
 	}
 }
 
 FString UUI_TreviFountianItemBox::ToString_Implementation()
 {
-	return this->Data.M_ItemName;
+	return this->Data.M_ItemName.ToString();
 }
 
 void UUI_TreviFountianItemBox::RemoveInformation()

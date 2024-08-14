@@ -1,23 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "Game/UI/UI_Shop.h"
-
 #include "VaRestSubsystem.h"
-
-#include "Game/UI/UI_PlayerInformationShow.h"
-
-#include <Components/CanvasPanel.h>
-#include <Components/UniformGridPanel.h>
-#include <Components/ScrollBox.h>
 #include <Components/Button.h>
-
+#include <Components/TextBlock.h>
+#include <Components/ScrollBox.h>
+#include <Components/CanvasPanel.h>
 #include "GameSystem/FVMGameInstance.h"
-#include "GameSystem/PlayerStructManager.h"
-
+#include <Components/UniformGridPanel.h>
 #include "Data/CardData/CardDataStruct.h"
-
 #include "GameSystem/PlayerStructManager.h"
+#include "Game/UI/UI_PlayerInformationShow.h"
 
 
 UWidget* UUI_Shop::WidgetCreate_Init_0(UItemDataTable* _Data, int32 _Index)
@@ -43,72 +35,9 @@ void UUI_Shop::WidgetRefresh_Update_0(UItemDataTable* _Data, int32 _Index, UWidg
 	this->InitShopGridData(_Data, Cast<UUI_ShopGrid>(_UWidget));
 }
 
-void UUI_Shop::InitShopGridData(UItemDataTable* _Data, UUI_ShopGrid* _UWidget)
-{
-	_UWidget->M_UUI_Shop = this;
-	_UWidget->SetItemTipsType(((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemTipsImageType);
-
-	int32 LItemPrice = ((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemPrice;
-	FItemPrice LFItemPrice = ((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice;
-
-	//更具商品的价格类型进行设置价格
-	switch (_UWidget->GetEItemTipsImageType())
-	{
-	case EItemTipsImageType::E_HalfPirce:LItemPrice = LItemPrice / 2; break;
-	case EItemTipsImageType::E_New:LItemPrice = LItemPrice * 0.85f; break;
-	}
-
-	LFItemPrice.M_ItemPrice = LItemPrice;
-
-	//设置格子的数据
-	UWidgetBase::SetImageBrush(_UWidget->GetItemHeadImage(),
-		((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemHeadTexture2DPath.ToString(),
-		FVector(1.f), 1.f, true, FVector(2.f));
-
-	_UWidget->M_ItemName = ((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemName;
-	_UWidget->M_ItemTips = ((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemTips;
-	_UWidget->M_ItemPrice = FString(FString::FromInt(LItemPrice) + ((FItem_Price_Data*)(_Data->GetValue()))->M_FItemPrice.M_ItemMoneyTypeName);
-	_UWidget->M_FItemPrice = LFItemPrice;
-
-	//_UWidget->PlayAnimation_1();
-}
-
-bool UUI_Shop::Initialize()
-{
-
-	Super::Initialize();
-
-	this->UpdateCoinText();
-
-	//return true;
-
-	/*
-
-	this->M_SnapUp_0 = this->GetWidgetComponent<UUniformGridPanel>(this, "Left_Items_Content");
-	this->M_SnapUp_1 = this->GetWidgetComponent<UUniformGridPanel>(this, "Right_Items_Content");
-
-	this->M_SnapUp_ScrollBox_0 = this->GetWidgetComponent<UScrollBox>(this, "Left_Items_Scroll");
-	this->M_SnapUp_ScrollBox_1 = this->GetWidgetComponent<UScrollBox>(this, "Right_Items_Scroll");
-
-
-	//-------------------------------------------------------界面容器
-	this->M_ContentGrid_2 = this->GetWidgetComponent<UUniformGridPanel>(this, "Items_Content");
-	this->M_Content_ScrollBox_2 = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_70");
-	//-------------------------------------------------------
-
-
-	//------------------------------初始化--角色形象界面-------------------------
-	//this->M_PlayerSuit_BoxPanel = this->GetWidgetComponent<UCanvasPanel>(this, "PlayerSuitPanel");
-	//------------------------------初始化--角色形象界面-------------------------
-
-	*/
-	return true;
-}
-
 void UUI_Shop::InitDataTable()
 {
-	return;
-
+	/*
 	//初始化界面选项卡----------------------------------------------------------------
 	for (int32 i = 0; i < 8; i++)
 		this->M_ShopTabs.Emplace(this->GetWidgetComponent<UButton>(this,
@@ -137,6 +66,8 @@ void UUI_Shop::InitDataTable()
 	//this->M_PlayerSuit_BoxPanel->AddChildToCanvas(this->M_UUI_PlayerInformationShow);
 
 	//--------------------------------------------------------------左侧数据  右侧数据
+
+
 	//先存储临时数据(把需要的放在加载列表)
 	TArray<FItem_Price_Data> TempItem;
 	UGameSystemFunction::GetDataTableRows<FItem_Price_Data>((0, TEXT("DataTable'/Game/Resource/BP/Data/ShopData/ShopItem_SnapUpLeft.ShopItem_SnapUpLeft'")), TempItem);
@@ -202,14 +133,18 @@ void UUI_Shop::InitDataTable()
 	this->M_UItemLoadManager_1->SetMainScrollTransfrom(FVector2D(50.f, 0.f));
 	this->M_UItemLoadManager_1->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Init_1"));
 	this->M_UItemLoadManager_1->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Update_0"));
+	*/
 
-	//初始化加载器
-	this->M_UItemLoadManager_2 = NewObject<UItemLoadManager>(this, TEXT("Shop_UItemLoadManager_2"));
-	this->M_UItemLoadManager_2->InitWidget_First(this->M_ContentGrid_2, this->M_Content_ScrollBox_2, 0.01f);
-	this->M_UItemLoadManager_2->InitRange_Second(4, 4, 4, 400.f, 160.f);
-	this->M_UItemLoadManager_2->SetItemMargin(FVector2D(50.f, 0.f));
-	this->M_UItemLoadManager_2->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Init_1"));
-	this->M_UItemLoadManager_2->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Update_0"));
+	//if (!IsValid(this->M_UItemLoadManager_2))
+	//{
+	//	//初始化加载器
+	//	this->M_UItemLoadManager_2 = NewObject<UItemLoadManager>(this, TEXT("Shop_UItemLoadManager_2"));
+	//	this->M_UItemLoadManager_2->InitWidget_First(this->M_ContentGrid_2, this->M_Content_ScrollBox_2, 0.01f);
+	//	this->M_UItemLoadManager_2->InitRange_Second(4, 4, 4, 400.f, 160.f);
+	//	this->M_UItemLoadManager_2->SetItemMargin(FVector2D(50.f, 0.f));
+	//	this->M_UItemLoadManager_2->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Init_1"));
+	//	this->M_UItemLoadManager_2->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Update_0"));
+	//}
 }
 
 void UUI_Shop::SelectShopTab(EShopTab Tab)
@@ -328,15 +263,6 @@ void UUI_Shop::LoadWeaponRange()
 	this->LoadList();
 }
 
-void UUI_Shop::LoadCardRange()
-{
-	//显示界面(防御卡区)
-	this->ShowPlayerSuitPanel(true);
-	this->M_UItemLoadManager_2->UpdateDatatable(this->M_ShopItemDatas_Cards);
-	this->M_UItemLoadManager_2->SetLoadItemMaxCount(this->M_ShopItemDatas_Cards.Num());
-	this->LoadList();
-}
-
 void UUI_Shop::LoadItemRange()
 {
 	//显示界面(道具区)
@@ -407,4 +333,131 @@ void UUI_Shop::ClosePanel()
 	//	this->M_UUI_PlayerInformationShow->SetPlayerSuitConst();
 
 	this->RemoveFromParent();
+}
+
+bool UUI_Shop::Initialize()
+{
+	Super::Initialize();
+
+	//更新货币显示
+	this->UpdateCoinText();
+
+	//return true;
+
+	/*
+
+	this->M_SnapUp_0 = this->GetWidgetComponent<UUniformGridPanel>(this, "Left_Items_Content");
+	this->M_SnapUp_1 = this->GetWidgetComponent<UUniformGridPanel>(this, "Right_Items_Content");
+
+	this->M_SnapUp_ScrollBox_0 = this->GetWidgetComponent<UScrollBox>(this, "Left_Items_Scroll");
+	this->M_SnapUp_ScrollBox_1 = this->GetWidgetComponent<UScrollBox>(this, "Right_Items_Scroll");
+
+
+	//-------------------------------------------------------界面容器
+	this->M_ContentGrid_2 = this->GetWidgetComponent<UUniformGridPanel>(this, "Items_Content");
+	this->M_Content_ScrollBox_2 = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_70");
+	//-------------------------------------------------------
+
+
+	//------------------------------初始化--角色形象界面-------------------------
+	//this->M_PlayerSuit_BoxPanel = this->GetWidgetComponent<UCanvasPanel>(this, "PlayerSuitPanel");
+	//------------------------------初始化--角色形象界面-------------------------
+
+	*/
+	return true;
+}
+
+
+void UUI_Shop::InitShopGridData(UItemDataTable* _Data, UUI_ShopGrid* _UWidget)
+{
+	//获取购买数据
+	FItem_Price_Data PriceData = *((FItem_Price_Data*)(_Data->GetValue()));
+	//设置商店的类
+	_UWidget->M_UUI_Shop = this;
+	//设置价格打折提示
+	_UWidget->SetItemTipsType(PriceData.M_FItemPrice.M_ItemTipsImageType);
+	//价格
+	int32 LItemPrice = PriceData.M_FItemPrice.M_ItemPrice;
+	//价格数据
+	FItemPrice LFItemPrice = PriceData.M_FItemPrice;
+
+	//更具商品的价格类型进行设置价格
+	switch (_UWidget->GetEItemTipsImageType())
+	{
+	case EItemTipsImageType::E_HalfPirce:LItemPrice = LItemPrice / 2; break;
+	case EItemTipsImageType::E_New:LItemPrice = LItemPrice * 0.85f; break;
+	}
+	//设置最终价格
+	LFItemPrice.M_ItemPrice = LItemPrice;
+	//设置数据
+	_UWidget->M_FItemPrice = LFItemPrice;
+	//设置商品文本
+	_UWidget->ItemName->SetText(PriceData.M_FItemPrice.M_ItemName);
+	//设置提示文本
+	_UWidget->M_ItemTips = PriceData.M_FItemPrice.M_ItemTips;
+	//设置价格文本
+	_UWidget->ItemPrice->SetText(
+		FText::FromString(
+			FString::FromInt(LItemPrice) + PriceData.M_FItemPrice.M_ItemMoneyTypeName.ToString()
+		));
+
+	//设置商品图片
+	UWidgetBase::SetImageBrushByTexture(
+		_UWidget->GetItemHeadImage(),
+		TSoftObjectPtr<UTexture2D>(PriceData.M_FItemPrice.M_ItemHeadTexture2DPath)
+	);
+}
+
+void UShopDataAssetCache::Unload_Implementation()
+{
+	this->CardsData.Empty();
+}
+
+TArray<FItem_Price_Data>& UShopDataAssetCache::GetCards()
+{
+	return GetDataTableSourceData(this->CardsData, this->Cards, GLOBALASSET_SHOP, TEXT("Card"));
+}
+
+UWidget* UUI_Shop::WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index)
+{
+	UUI_ShopGrid* _Grid = CreateWidget<UUI_ShopGrid>(this,
+		UGameSystemFunction::GetUserInterClassByName(UI_SHOPUINAME, TEXT("Card"))
+		//LoadClass<UUI_ShopGrid>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_Shop_Grid_Min.BPUI_Shop_Grid_Min_C'"))
+	);
+
+	this->InitShopGridData(_Data, _Grid);
+
+	return _Grid;
+}
+
+void UUI_Shop::WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->InitShopGridData(_Data, Cast<UUI_ShopGrid>(_UWidget));
+}
+
+void UUI_Shop::LoadCardRange()
+{
+	//显示界面(防御卡区)
+	//this->ShowPlayerSuitPanel(true);
+
+	if (!IsValid(this->M_UItemLoadManager_Cards))
+	{
+		this->M_UItemLoadManager_Cards = NewObject<UItemLoadManager>(this, TEXT("UItemLoadManager_Cards"));
+		this->M_UItemLoadManager_Cards->InitWidget_First(this->Items_Cards, this->ScrollBox_Cards, 0.001f);
+		this->M_UItemLoadManager_Cards->InitRange_Second(3, 4, 4, 450, 233);
+		//this->M_UItemLoadManager_Cards->SetItemMargin(FVector2D(0.f, 0.f));
+		this->M_UItemLoadManager_Cards->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_Cards"));
+		this->M_UItemLoadManager_Cards->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_Cards"));
+
+		//加载数据
+		this->ShopDataAssetCache = GetGameDataAssetCache<UShopDataAssetCache>(TEXT("ShopDataAssetCache"));
+	}
+
+	this->M_UItemLoadManager_Cards->UpdateDatatable(this->ShopDataAssetCache->GetCards());
+	this->M_UItemLoadManager_Cards->SetLoadItemMaxCount(this->ShopDataAssetCache->GetCards().Num());
+	//this->M_UItemLoadManager_Cards->SetLoadRowAndCol(4, 4);
+	//this->M_UItemLoadManager_Cards->SetMainScrollTransfrom(FVector2D(0.f, 0.f));
+	this->M_UItemLoadManager_Cards->SetCurrentPage(0);
+	this->M_UItemLoadManager_Cards->SetResetScrollBoxOffset();
+	this->M_UItemLoadManager_Cards->ContinueRun();
 }

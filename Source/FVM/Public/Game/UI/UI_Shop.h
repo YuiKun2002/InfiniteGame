@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetBase.h"
-#include "GameSystem/Tools/GameSystemFunction.h"
-#include "GameSystem/Tools/ItemLoadManager.h"
-#include "Data/ShopItemPriceStruct.h"
 #include "Game/UI/UI_ShopGrid.h"
+#include "Data/ShopItemPriceStruct.h"
+#include "GameSystem/DataTableAssetData.h"
+#include "GameSystem/Tools/ItemLoadManager.h"
+#include "GameSystem/Tools/GameSystemFunction.h"
 #include "UI_Shop.generated.h"
 
 
@@ -17,6 +18,23 @@ class UUniformGridPanel;
 class UUI_PlayerInformationShow;
 class UScrollBox;
 class UUI_ShopGrid;
+
+
+//商城物品缓存数据
+UCLASS()
+class FVM_API UShopDataAssetCache : public UGameDataAssetCache
+{
+	GENERATED_BODY()
+public:
+	TArray<FItem_Price_Data>& GetCards();
+private:
+	//卡片数据
+	DataTableAssetData<FItem_Price_Data> Cards;
+	UPROPERTY()
+	TArray<FItem_Price_Data> CardsData;
+public:
+	virtual void Unload_Implementation() override;
+};
 
 
 //商城选项卡
@@ -76,9 +94,6 @@ public:
 	//数据表数据(武器-区域)
 	UPROPERTY()
 	TArray<FItem_Price_Data> M_ShopItemDatas_WeaponRange;
-	//数据表数据(防御卡-区域)
-	UPROPERTY()
-	TArray<FItem_Price_Data> M_ShopItemDatas_Cards;
 	//数据表数据(道具-区域)
 	UPROPERTY()
 	TArray<FItem_Price_Data> M_ShopItemDatas_ItemRange;
@@ -161,10 +176,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadWeaponRange();
 
-	//加载防御卡区域
-	UFUNCTION(BlueprintCallable)
-	void LoadCardRange();
-
 	//加载道具区域的物品
 	UFUNCTION(BlueprintCallable)
 	void LoadItemRange();
@@ -188,4 +199,29 @@ public:
 	//关闭界面
 	UFUNCTION(BlueprintCallable)
 	void ClosePanel();
+public:
+	//商城缓存数据
+	UPROPERTY()
+	UShopDataAssetCache* ShopDataAssetCache = nullptr;
+	/************************************************************************/
+	/*                       防御卡加载                                      */
+	/************************************************************************/
+	//防御卡-加载器
+	UPROPERTY()
+	UItemLoadManager* M_UItemLoadManager_Cards = nullptr;
+	//创建卡片界面
+	UFUNCTION()
+	UWidget* WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index);
+	//卡片刷新
+	UFUNCTION()
+	void WidgetRefresh_Cards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	//其他区域(滑动界面)
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UScrollBox* ScrollBox_Cards;
+	//其他区域-格子
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UUniformGridPanel* Items_Cards;
+	//加载防御卡区域
+	UFUNCTION(BlueprintCallable)
+	void LoadCardRange();
 };

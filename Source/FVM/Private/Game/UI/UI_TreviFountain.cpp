@@ -370,13 +370,13 @@ void UUI_TreviFountain::ShowItemText(UUI_TreviFountain* _Class)
 		switch (_Class->M_CurrentGetItems[i].M_ItemQuality)
 		{
 		case ETreviFountainItemQualityType::TQT_Normal:
-			Content += FString(TEXT("<t_20_blue>") + _Class->M_CurrentGetItems[i].M_ItemName + TEXT("</>"));
+			Content += FString(TEXT("<t_20_blue>") + _Class->M_CurrentGetItems[i].M_ItemName.ToString() + TEXT("</>"));
 			break;
 		case ETreviFountainItemQualityType::TQT_Excellent:
-			Content += FString(TEXT("<t_20_purple>") + _Class->M_CurrentGetItems[i].M_ItemName + TEXT("</>"));
+			Content += FString(TEXT("<t_20_purple>") + _Class->M_CurrentGetItems[i].M_ItemName.ToString() + TEXT("</>"));
 			break;
 		case ETreviFountainItemQualityType::TQT_Epic:
-			Content += FString(TEXT("<t_20_gold>") + _Class->M_CurrentGetItems[i].M_ItemName + TEXT("</>"));
+			Content += FString(TEXT("<t_20_gold>") + _Class->M_CurrentGetItems[i].M_ItemName.ToString() + TEXT("</>"));
 			break;
 		}
 

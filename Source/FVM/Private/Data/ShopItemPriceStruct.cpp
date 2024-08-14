@@ -39,7 +39,7 @@ void UShopItemPriceStruct::AddPlayerBagGrid(UPlayerStructManager* _Player, const
 void UShopItemPriceStruct::AddCardToPlayerBag(UPlayerStructManager* _Player, const FItemPrice& _ItemData, int32 _Count)
 {
 	FItemCard _CardData;
-	if (UCardBaseStruct::SearchCardFromDataTable(_ItemData.M_ItemName, _CardData))
+	if (UCardBaseStruct::SearchCardFromDataTable(_ItemData.M_ItemName.ToString(), _CardData))
 	{
 		//购买的卡片一律设置为0级
 		_CardData.M_CardGrade = 0;
@@ -55,7 +55,7 @@ void UShopItemPriceStruct::AddCardToPlayerBag(UPlayerStructManager* _Player, con
 void UShopItemPriceStruct::AddEquipmentToPlayerBag(UPlayerStructManager* _Player, const FItemPrice& _ItemData, int32 _Count)
 {
 	FEquipmentBase  _FEquipment;
-	if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(_ItemData.M_ItemName, _FEquipment))
+	if (UEquipmentBaseStruct::SearchEquipmentFromDataTable(_ItemData.M_ItemName.ToString(), _FEquipment))
 	{
 		//当前道具可重叠
 		if (_FEquipment.M_IsOverlap)
@@ -99,7 +99,7 @@ void UShopItemPriceStruct::AddMaterialToPlayerBag(UPlayerStructManager* _Player,
 {
 	FMaterialBase _FMaterialBase;
 
-	if (UMaterialBaseStruct::SearchMaterailFromDataTable(_ItemData.M_ItemName, _FMaterialBase))
+	if (UMaterialBaseStruct::SearchMaterailFromDataTable(_ItemData.M_ItemName.ToString(), _FMaterialBase))
 	{
 		//先从背包查询->如果查询成功则直接添加个数
 		for (FMaterialBase& Items : _Player->M_PlayerItems_Material)
