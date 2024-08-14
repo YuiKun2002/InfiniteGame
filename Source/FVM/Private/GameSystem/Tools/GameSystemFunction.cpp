@@ -1543,6 +1543,39 @@ FName UGameSystemFunction::GetAssetCategoryName(TSoftClassPtr<UAssetCategoryName
 	return FName();
 }
 
+void UGameSystemFunction::JsonToBinary(FString Json, TArray<uint8>& Binary)
+{
+	FTCHARToUTF8 Convert(*Json);
+	TArray<uint8> output(reinterpret_cast<const uint8*>(Convert.Get()), Convert.Length());
+	Binary = output;
+}
+
+void UGameSystemFunction::BinaryToJson(const TArray<uint8>& Binary, FString& Json)
+{
+	FUTF8ToTCHAR Convert(reinterpret_cast<const char*>(Binary.GetData()), Binary.Num());
+	Json = Convert;
+}
+
+void UGameSystemFunction::BinaryToString(const TArray<uint8>& Binary, FString& BinaryString)
+{
+	BinaryString = FBase64::Encode(Binary);
+}
+
+void UGameSystemFunction::BinaryStringToBinary(FString BinaryString, TArray<uint8>& Binary)
+{
+	FBase64::Decode(BinaryString, Binary);
+}
+
+void UGameSystemFunction::SaveGameToBinary(class USaveGame* SaveGameObject, TArray<uint8>& OutSaveData)
+{
+	UGameplayStatics::SaveGameToMemory(SaveGameObject, OutSaveData);
+}
+
+void UGameSystemFunction::LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData, class USaveGame*& SaveGameObject)
+{
+	SaveGameObject = UGameplayStatics::LoadGameFromMemory(OutSaveData);
+}
+
 UGameUserInterfaceInstance* UGameSystemFunction::GetUserInterInstanceByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType)
 {
 	UGameUserInterfaceSubsystem* UIStaticClass = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();

@@ -550,6 +550,28 @@ public:
 	//获取分类名称类获取名称
 	UFUNCTION(BlueprintPure)
 	static FName GetAssetCategoryName(TSoftClassPtr<class UAssetCategoryName> ObjectType);
+
+	/************************************************************************/
+	/*                                二进制                                 */
+	/************************************************************************/
+	//将Json转换成二进制【Json字节流】
+	UFUNCTION(BlueprintPure)
+	static void JsonToBinary(FString Json, TArray<uint8>& Binary);
+	//将二进制转换成Json【Json字节流】
+	UFUNCTION(BlueprintPure)
+	static void BinaryToJson(const TArray<uint8>& Binary, FString& Json);
+	//将二进制转换成String
+	UFUNCTION(BlueprintPure)
+	static void BinaryToString(const TArray<uint8>& Binary, FString& BinaryString);
+	//将二进制字符串转换成二进制数组
+	UFUNCTION(BlueprintPure)
+	static void BinaryStringToBinary(FString BinaryString, TArray<uint8>& Binary);
+	//将SaveGame对象转换成字节流【UE格式字节流】
+	UFUNCTION(BlueprintPure)
+	static void SaveGameToBinary(class USaveGame* SaveGameObject, TArray<uint8>& OutSaveData);
+	//将成字节流转换SaveGame对象【UE格式字节流】
+	UFUNCTION(BlueprintPure)
+	static void LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData,class USaveGame*& SaveGameObject);
 };
 
 //分时加载器

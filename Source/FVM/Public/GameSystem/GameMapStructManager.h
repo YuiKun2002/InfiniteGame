@@ -104,6 +104,7 @@ public:
 		FVector2D M_FirstRowMesheLocation = FVector2D(-140.8f, 269.f);
 };
 
+//地图结构管理器
 UCLASS()
 class FVM_API UGameMapStructManager : public USaveGame
 {

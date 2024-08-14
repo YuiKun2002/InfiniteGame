@@ -11,16 +11,22 @@ bool UMouseDataStruct::SetMouseResDatas(TMap<FString, FString>& _MouseMapRes)
 {
 	//获取老鼠数据表
 	TArray<FMouse_Data*> Datas;
-	UGameSystemFunction::GetDataTableRows<FMouse_Data>(TEXT("DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'"), Datas);
+	UGameSystemFunction::GetDataTableRows<FMouse_Data>(
+		TEXT("DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'"),
+		Datas);
 
 	//默认是老鼠资源
 	FString DefResPath = FString();
 
 	//设置默认老鼠资源
 	if (Datas.Num() > 0)
+	{
 		DefResPath = Datas[0]->M_Mouse.ItemTarget_ActorFilePath.ToString();
+	}
 	else
+	{
 		return false;
+	}
 
 
 	for (auto MouseResPP = _MouseMapRes.CreateIterator(); MouseResPP; ++MouseResPP)

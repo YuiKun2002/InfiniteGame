@@ -21,7 +21,7 @@ struct FMouseBaseStruct {
 public:
 	//名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_MouseName = TEXT("平民鼠");
+		FText M_MouseName;
 	//基础速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float M_BaseSpeed = 15.f;
