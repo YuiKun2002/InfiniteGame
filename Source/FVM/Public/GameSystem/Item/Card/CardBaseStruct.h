@@ -308,6 +308,15 @@ public:
 		ECardType _CardType = ECardType::E_ATK,
 		int32 _UniformGrade = 0
 	);
+	//通过卡片ID查询所有的卡片数据表
+	UFUNCTION(BlueprintCallable)
+	static bool SearchCardFromDataTableByID(
+		int32 ID,
+		FItemCard& OutputData,
+		bool _SelectCardType = false,
+		ECardType _CardType = ECardType::E_ATK,
+		int32 _UniformGrade = 0
+	);
 	//返回所有卡片的数据
 	UFUNCTION(BlueprintCallable)
 	static void GetAllCardsData(TArray<FItemCard>& _CardDatas, int32 _UniformGrade = 0);

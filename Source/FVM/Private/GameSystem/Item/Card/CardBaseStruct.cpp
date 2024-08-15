@@ -16,7 +16,15 @@ static void SourceCardDataStructTransform(TArray<CardDataStructType>& Datas, TAr
 }
 
 //搜索卡片得到结果
-void SearchCardResult(const FString& _CardName, FItemCard& OutputData, bool _SelectCardType, ECardType _CardType, int32 _UniformGrade, bool& _LResult, const ECardType& _ConstCardType)
+void SearchCardResult(
+	const FString& _CardName,
+	FItemCard& OutputData,
+	bool _SelectCardType,
+	ECardType _CardType,
+	int32 _UniformGrade,
+	bool& _LResult,
+	const ECardType& _ConstCardType
+)
 {
 	if (!_SelectCardType || _SelectCardType && _CardType == _ConstCardType)
 	{
@@ -53,11 +61,96 @@ public:
 	int32 M_UniformGrade;
 public:
 	SpawnSearchCardManager() = delete;
-	SpawnSearchCardManager(const FString& _CardName, FItemCard& _OutputData, bool& _LResult, bool _SelectCardType, ECardType _CardType, int32 _UniformGrade) :M_CardName(_CardName), M_OutputData(_OutputData), M_LResult(_LResult), M_SelectCardType(_SelectCardType), M_CardType(_CardType), M_UniformGrade(_UniformGrade) {}
+	SpawnSearchCardManager(
+		const FString& _CardName,
+		FItemCard& _OutputData,
+		bool& _LResult,
+		bool _SelectCardType,
+		ECardType _CardType,
+		int32 _UniformGrade
+	) :M_CardName(_CardName), M_OutputData(_OutputData), M_LResult(_LResult), M_SelectCardType(_SelectCardType), M_CardType(_CardType), M_UniformGrade(_UniformGrade) {}
 public:
 	void SpawnSearch(const ECardType& _ConstCardType)
 	{
-		SearchCardResult(this->M_CardName, this->M_OutputData, this->M_SelectCardType, this->M_CardType, this->M_UniformGrade, this->M_LResult, _ConstCardType);
+		SearchCardResult(
+			this->M_CardName,
+			this->M_OutputData,
+			this->M_SelectCardType,
+			this->M_CardType,
+			this->M_UniformGrade,
+			this->M_LResult,
+			_ConstCardType
+		);
+	}
+};
+
+
+//搜索卡片得到结果
+void SearchCardResultID(
+	const int32& _CardName,
+	FItemCard& OutputData,
+	bool _SelectCardType,
+	ECardType _CardType,
+	int32 _UniformGrade,
+	bool& _LResult,
+	const ECardType& _ConstCardType
+)
+{
+	if (!_SelectCardType || _SelectCardType && _CardType == _ConstCardType)
+	{
+		TArray<FItemCard*> LocalDatas;
+
+		UCardBaseStruct::GetAllCardsByType(_ConstCardType, LocalDatas);
+
+		//查询卡片
+		for (auto _Card = LocalDatas.CreateConstIterator(); _Card; ++_Card)
+		{
+			if ((*_Card)->M_ItemID == _CardName)
+			{
+				OutputData = *(*_Card);
+				_LResult = true;
+				break;
+			}
+		}
+	}
+}
+
+class SpawnSearchCardManagerID {
+public:
+	//卡片名称
+	int32 ID;
+	//卡片返回的数据
+	FItemCard& M_OutputData;
+	//查询结果
+	bool& M_LResult;
+	//是否选择卡片类型
+	bool M_SelectCardType;
+	//卡片具体类型
+	ECardType M_CardType;
+	//卡片等级
+	int32 M_UniformGrade;
+public:
+	SpawnSearchCardManagerID() = delete;
+	SpawnSearchCardManagerID(
+		const int32& CardID,
+		FItemCard& _OutputData,
+		bool& _LResult,
+		bool _SelectCardType,
+		ECardType _CardType,
+		int32 _UniformGrade
+	) :ID(CardID), M_OutputData(_OutputData), M_LResult(_LResult), M_SelectCardType(_SelectCardType), M_CardType(_CardType), M_UniformGrade(_UniformGrade) {}
+public:
+	void SpawnSearch(const ECardType& _ConstCardType)
+	{
+		SearchCardResultID(
+			this->ID,
+			this->M_OutputData,
+			this->M_SelectCardType,
+			this->M_CardType,
+			this->M_UniformGrade,
+			this->M_LResult,
+			_ConstCardType
+		);
 	}
 };
 
@@ -149,6 +242,11 @@ bool UCardBaseStruct::SearchCardFromDataTable(const FString& _CardName, FItemCar
 			return true;
 	}
 
+	return false;
+}
+
+bool UCardBaseStruct::SearchCardFromDataTableByID(int32 ID, FItemCard& OutputData, bool _SelectCardType /*= false*/, ECardType _CardType /*= ECardType::E_ATK*/, int32 _UniformGrade /*= 0 */)
+{
 	return false;
 }
 

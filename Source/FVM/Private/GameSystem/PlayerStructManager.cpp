@@ -182,6 +182,132 @@ FString UPlayerStructManager::GetCoinName(int32 Type)
 	return TEXT("无效货币");
 }
 
+void UPlayerStructManager::GetCards(TArray<FItemCard>& Cards)
+{
+	TArray<FItemCard> CardArray;
+	if (this->GameCacheSubsystem)
+	{
+		//通过缓存数据
+		UGameCache* Cache = this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_PLAYERBAG_NAME);
+		if (Cache->GetResult())
+		{
+			//Json
+			UVaRestJsonObject* Json = Cache->GetRequestJsonObject();
+
+			//Array
+			TArray<UVaRestJsonValue*> Arrays = Json->GetArrayField(TEXT("data"));
+			for (UVaRestJsonValue*& JsonValue : Arrays)
+			{
+				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
+				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
+
+				//卡片数据
+				FItemCard CardData;
+				//查询结果
+				bool bResult;
+				switch (Type)
+				{
+				case 1: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
+					);
+				}; break;
+				case 5: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_SPAWN
+					);
+				}; break;
+				case 6: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_DEFENCE
+					);
+				}; break;
+				case 9: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_Function
+					);
+				}; break;
+				default:
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
+					);
+					break;
+				}
+
+				if (bResult)
+				{
+					CardArray.Emplace(CardData);
+				}
+			}
+		}
+	}
+
+	Cards = CardArray;
+}
+
+void UPlayerStructManager::GetMaterials(TArray<FMaterialBase>& Materials)
+{
+	TArray<FMaterialBase> MaterialArray;
+	if (this->GameCacheSubsystem)
+	{
+		//通过缓存数据
+		UGameCache* Cache = this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_PLAYERBAG_NAME);
+		if (Cache->GetResult())
+		{
+			//Json
+			UVaRestJsonObject* Json = Cache->GetRequestJsonObject();
+
+			//Array
+			TArray<UVaRestJsonValue*> Arrays = Json->GetArrayField(TEXT("data"));
+			for (UVaRestJsonValue*& JsonValue : Arrays)
+			{
+				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
+				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
+
+				//卡片数据
+				FItemCard CardData;
+				//查询结果
+				bool bResult;
+				switch (Type)
+				{
+				case 1: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
+					);
+				}; break;
+				case 5: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_SPAWN
+					);
+				}; break;
+				case 6: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_DEFENCE
+					);
+				}; break;
+				case 9: {
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_Function
+					);
+				}; break;
+				default:
+					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
+					);
+					break;
+				}
+
+				if (bResult)
+				{
+					//CardArray.Emplace(CardData);
+				}
+			}
+		}
+	}
+
+	//Cards = CardArray;
+}
+
 FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)
 {
 	//请求对象有效

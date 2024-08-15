@@ -19,6 +19,8 @@
 
 //货币请求名称
 #define PLAYER_NET_COIN_NAME FName(TEXT("Coin"))
+//角色背包请求名称
+#define PLAYER_NET_PLAYERBAG_NAME FName(TEXT("PlayerBag"))
 
 
  /**
@@ -244,6 +246,28 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerUserAccount(const FString& UserAccount);
 public:
+	/************************************************************************/
+	/*                              货币获取                                 */
+	/************************************************************************/
+	//获取货币值
+	UFUNCTION(BlueprintPure)
+	int64 GetCoinValue(int32 Type);
+	//获取货币名称
+	UFUNCTION(BlueprintPure)
+	FString GetCoinName(int32 Type);
+
+	/************************************************************************/
+	/*                              背包道具获取                             */
+	/************************************************************************/
+
+	//获取玩家已经拥有的防御卡
+	UFUNCTION(BlueprintPure)
+	void GetCards(TArray<FItemCard>& Cards);
+
+	//获取玩家已经拥有的材料
+	UFUNCTION(BlueprintPure)
+	void GetMaterials(TArray<FMaterialBase>& Materials);
+public:
 	//获取背包道具数量(获取当前背包道具现有的总数量)
 	int32 GetBagNum(int32 _Index);
 	//获取背包最大个数(150+背包拓展容量，并非道具总数量)
@@ -277,12 +301,6 @@ public:
 	//设置货币
 	UFUNCTION(BlueprintCallable)
 	void SetCoin(const FString& CoinName, int32 _Num);
-	//获取货币值
-	UFUNCTION(BlueprintPure)
-	int64 GetCoinValue(int32 Type);
-	//获取货币名称
-	UFUNCTION(BlueprintPure)
-	FString GetCoinName(int32 Type);
 	//请求货币
 	UFUNCTION(BlueprintPure)
 	FPlayerCoin RequestCoin(class UVaRestRequestJSON* RequestJson);
