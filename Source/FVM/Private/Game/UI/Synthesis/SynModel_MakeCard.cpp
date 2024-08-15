@@ -2,6 +2,7 @@
 
 
 #include "Game/UI/Synthesis/SynModel_MakeCard.h"
+#include "GameSystem/Item/Material/MaterialBaseStruct.h"
 #include "Game/UI/UI_PlayerSynthesis.h"
 #include "Game/UI/UI_PlayerBagMaterialGrid.h"
 #include "GameSystem/TaskSubsystem.h"
@@ -108,7 +109,7 @@ void FMakeCardBlueprintData::SetBlueprintMaterials(const TArray<FString>& CurMat
 			CurData,
 			_CardBlueprintM,
 			EMaterialType::E_CardSynthesisMaterial
-			))
+		))
 		{
 			UWidgetBase::CreateTipWidget(FString(TEXT("[") + CurData + TEXT("]查询失败!")));
 			continue;
@@ -137,7 +138,7 @@ void FMakeCardBlueprintData::AddNewBlueprint(const FString& BlueprintName, UUI_P
 		BlueprintName,
 		_CardBlueprint,
 		EMaterialType::E_Blueprint
-		))
+	))
 	{
 		UWidgetBase::CreateTipWidget(FString(TEXT("[") + BlueprintName + TEXT("]查询失败!")));
 		return;
@@ -206,7 +207,7 @@ void FMakeCardSpicesData::CancelSelectSpices(USynModel_MakeCard* Class)
 	);
 
 	//重新加载香料区
-	Class->LoadSpicesToMakeCard();
+	//Class->LoadSpicesToMakeCard();
 }
 
 void FMakeCardSpicesData::Use()
@@ -233,11 +234,23 @@ void USynModel_MakeCard::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 {
 	this->PlayerSynthesis = Class;
 
-	this->M_Cards_Box = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(this->PlayerSynthesis, "Cards_Box");
-	this->M_Materials_Box = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(this->PlayerSynthesis, "Materials_Box");
+	//初始化香料的加载界面
+	this->ScrollBox_Spice = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(
+		this->PlayerSynthesis, TEXT("ScrollBox_UniformMater"));
+	this->UniformGridPanel_Spice = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(
+		this->PlayerSynthesis,
+		TEXT("Items_Spice_UniformMater")
+	);
 
+	//初始化配方，配方原材料加载界面
+	this->M_Materials_Box = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(
+		this->PlayerSynthesis, TEXT("Items_Materials"));
+	this->M_UScrollBox_MakeCard_Material = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(
+		this->PlayerSynthesis, TEXT("ScrollBox_Materials"));
+
+	/*
+	this->M_Cards_Box = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(this->PlayerSynthesis, "Cards_Box");
 	this->M_UScrollBox_MakeCard = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(this->PlayerSynthesis, "MakeCard_ScrollBox");
-	this->M_UScrollBox_MakeCard_Material = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(this->PlayerSynthesis, "ScrollBox_40");
 
 	//初始化卡片制作加载器
 	this->M_UItemLoadManager_MakeCard = NewObject<UItemLoadManager>(this, TEXT("MakeCardLoad"));
@@ -245,15 +258,7 @@ void USynModel_MakeCard::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 	this->M_UItemLoadManager_MakeCard->InitRange_Second(3, 7, 800, 120.f, 150.f);
 	this->M_UItemLoadManager_MakeCard->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitMakeCard"));
 	this->M_UItemLoadManager_MakeCard->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateMakeCard"));
-
-	//初始化卡片制作-材料区域-加载器
-	this->M_UItemLoadManager_MakeCard_Materials = NewObject<UItemLoadManager>(this, TEXT("MakeCard_Material_Load"));
-	this->M_UItemLoadManager_MakeCard_Materials->InitWidget_First(this->M_Materials_Box, this->M_UScrollBox_MakeCard_Material);
-	this->M_UItemLoadManager_MakeCard_Materials->InitRange_Second(3, 7, 800, 100.f, 100.f);
-	this->M_UItemLoadManager_MakeCard_Materials->SetMainScrollTransfrom(FVector2D(0.f, 8.f));
-	this->M_UItemLoadManager_MakeCard_Materials->SetItemMargin(FVector2D(5.f, 15.f));
-	this->M_UItemLoadManager_MakeCard_Materials->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitMakeCard_Material"));
-	this->M_UItemLoadManager_MakeCard_Materials->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateMakeCard_Material"));
+	*/
 
 	//初始化格子【配方材料】
 	FMakeCardBlueprintMaterialGrid Grid1;
@@ -269,33 +274,35 @@ void USynModel_MakeCard::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_17.T_PS_17'"));
 
 	this->BlueprintMaterialGrid.Append({ Grid1,Grid2,Grid3 });
-
 	//初始化配方按钮
-	this->Blueprint_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, "Main_Material_Butt");
+	this->Blueprint_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, TEXT("Main_Material_Butt"));
 	//香料按钮
-	this->Spices_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, "Material_3_Butt");
+	this->Spices_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, TEXT("Material_3_Butt"));
 	//卡片制作按钮
-	this->MakeCard_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, "Make_Butt");
+	this->MakeCard_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, TEXT("Butt_MakeCard"));
 	this->MakeCard_Butt->OnClicked.AddDynamic(this, &USynModel_MakeCard::MakeCard);
+
 }
 
 void USynModel_MakeCard::WidgetReset()
 {
 	//取消对香料的选择
-	this->CancelSelectSpices();
+	//this->CancelSelectSpices();
 	//取消对配方的选择
-	this->CancelSelectBlueprint();
+	//this->CancelSelectBlueprint();
 	//检测
-	this->CheckMakeCard();
+	//this->CheckMakeCard();
 }
 
 void USynModel_MakeCard::WidgetResetLoadData()
 {
 	this->LoadMaterialsToMakeCard();
-	this->LoadCardsToMakeCard();
-	this->LoadSpicesToMakeCard();
+	//this->LoadCardsToMakeCard();
+
+	this->LoadSpicesToMakeCard({ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) }, FMaterialsSerachKeyWordsIgnore());
 }
 
+/*
 //创建界面-卡片制作-卡片显示区域
 UWidget* USynModel_MakeCard::WidgetCreate_InitMakeCard(UItemDataTable* _Data, int32 _Index)
 {
@@ -309,21 +316,20 @@ UWidget* USynModel_MakeCard::WidgetCreate_InitMakeCard(UItemDataTable* _Data, in
 
 	Grid->SetUIIndex(_Index);
 
-	this->SetMakeCardPanelData(Grid, _Data, _Index);
+	//this->SetMakeCardPanelData(Grid, _Data, _Index);
 
 	return Grid;
 }
-//更新界面-卡片制作-卡片显示区域
-void USynModel_MakeCard::WidgetRefresh_UpdateMakeCard(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
-{
-	this->SetMakeCardPanelData(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
-}
 
-//更新界面-卡片制作-防御卡合成配方材料显示区域【显示，一般不需要】
-void USynModel_MakeCard::WidgetRefresh_UpdateMakeCard_Material(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
-{
-	this->SetMakeCard_Material_PanelData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index);
-}
+*/
+
+//更新界面-卡片制作-卡片显示区域
+//void USynModel_MakeCard::WidgetRefresh_UpdateMakeCard(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+//{
+	//this->SetMakeCardPanelData(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
+//}
+
+/*
 //卡片制作界面-设置卡片UI界面【显示，一般不需要】
 void USynModel_MakeCard::SetMakeCardPanelData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _CardData, int32 _Index)
 {
@@ -344,15 +350,9 @@ void USynModel_MakeCard::SetMakeCardPanelData(UUI_PlayerBagCardGrid* _Grid, UIte
 	_Grid->GetButton()->OnClicked.Add(AddFunc);
 }
 
+*/
 
 
-void USynModel_MakeCard::OnLoadBlueprint(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index)
-{
-	if (this->BlueprintData.PlayerBagIndex != -1 && this->BlueprintData.UIGridIndex == _Index)
-	{
-		_Grid->GetButton()->SetIsEnabled(false);
-	}
-}
 //创建界面-卡片制作-防御卡合成配方材料显示区域
 UWidget* USynModel_MakeCard::WidgetCreate_InitMakeCard_Material(UItemDataTable* _Data, int32 _Index)
 {
@@ -369,6 +369,21 @@ UWidget* USynModel_MakeCard::WidgetCreate_InitMakeCard_Material(UItemDataTable* 
 	this->SetMakeCard_Material_PanelData(Grid, _Data, _Index);
 	return Grid;
 }
+
+//更新界面-卡片制作-防御卡合成配方材料显示区域【显示，一般不需要】
+void USynModel_MakeCard::WidgetRefresh_UpdateMakeCard_Material(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetMakeCard_Material_PanelData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index);
+}
+
+void USynModel_MakeCard::OnLoadBlueprint(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index)
+{
+	if (this->BlueprintData.PlayerBagIndex != -1 && this->BlueprintData.UIGridIndex == _Index)
+	{
+		_Grid->GetButton()->SetIsEnabled(false);
+	}
+}
+
 //卡片制作界面-设置材料配方，配方材料UI界面
 void USynModel_MakeCard::SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index)
 {
@@ -407,6 +422,23 @@ void USynModel_MakeCard::SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGri
 //加载材料-卡片制作界面（防御卡配方-配方材料-卡片制作界面）
 void USynModel_MakeCard::LoadMaterialsToMakeCard()
 {
+	if (!IsValid(this->M_UItemLoadManager_MakeCard_Materials))
+	{
+		//初始化卡片制作-材料区域-加载器
+		this->M_UItemLoadManager_MakeCard_Materials = NewObject<UItemLoadManager>(this, TEXT("MakeCard_Material_Load"));
+		this->M_UItemLoadManager_MakeCard_Materials->InitWidget_First(
+			this->M_Materials_Box,
+			this->M_UScrollBox_MakeCard_Material
+		);
+		this->M_UItemLoadManager_MakeCard_Materials->InitRange_Second(6, 7, 800, 100.f, 100.f);
+		//this->M_UItemLoadManager_MakeCard_Materials->SetMainScrollTransfrom(FVector2D(0.f, 8.f));
+		//this->M_UItemLoadManager_MakeCard_Materials->SetItemMargin(FVector2D(5.f, 15.f));
+		this->M_UItemLoadManager_MakeCard_Materials->OnCreateItem.BindUFunction(this,
+			TEXT("WidgetCreate_InitMakeCard_Material"));
+		this->M_UItemLoadManager_MakeCard_Materials->OnRefreshItem.BindUFunction(this,
+			TEXT("WidgetRefresh_UpdateMakeCard_Material"));
+	}
+
 	//材料数据
 	TArray<FMaterialBase*> Items;
 	UGameSystemFunction::GetMaterialsArrayByType
@@ -421,17 +453,149 @@ void USynModel_MakeCard::LoadMaterialsToMakeCard()
 	this->M_UItemLoadManager_MakeCard_Materials->SetLoadItemMaxCount(Items.Num());
 	this->M_UItemLoadManager_MakeCard_Materials->ContinueRun();
 }
-//加载卡片-卡片制作界面（防御卡-卡片制作界面）
-void USynModel_MakeCard::LoadCardsToMakeCard()
-{
-	this->M_UItemLoadManager_MakeCard->UpdateDatatable(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card);
-	this->M_UItemLoadManager_MakeCard->SetLoadItemMaxCount(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(1));
-	this->M_UItemLoadManager_MakeCard->ContinueRun();
-}
+////加载卡片-卡片制作界面（防御卡-卡片制作界面）
+//void USynModel_MakeCard::LoadCardsToMakeCard()
+//{
+//	this->M_UItemLoadManager_MakeCard->UpdateDatatable(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card);
+//	this->M_UItemLoadManager_MakeCard->SetLoadItemMaxCount(UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(1));
+//	this->M_UItemLoadManager_MakeCard->ContinueRun();
+//}
 //加载香料-卡片制作界面（材料区域-香料加载-卡片制作界面）
-void USynModel_MakeCard::LoadSpicesToMakeCard()
+void USynModel_MakeCard::LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeBind>& _BindFuncName, const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords)
 {
-	this->PlayerSynthesis->LoadMaterials({ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) });
+	//this->PlayerSynthesis->LoadMaterials({ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) });
+	if (!IsValid(this->ItemLoadManager_Spice))
+	{
+		this->ItemLoadManager_Spice = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Spice_Make"));
+		this->ItemLoadManager_Spice->InitWidget_First(this->UniformGridPanel_Spice, this->ScrollBox_Spice);
+		this->ItemLoadManager_Spice->InitRange_Second(1, 5, 800, 100.f, 100.f, true);
+		this->ItemLoadManager_Spice->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitMaterial"));
+		this->ItemLoadManager_Spice->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateMaterial"));
+	}
+
+	this->M_BindFunctionName_Materials.Empty();
+
+	//赋值绑定数据
+	this->M_BindFunctionName_Materials.Append(_BindFuncName);
+
+	//材料数据(获取指定的材料数据)		
+	TArray<FMaterialBase*> TempArrays;
+	//材料数据(获取指定的材料数据)		
+	TArray<FMaterialBase*> TargetArrays;
+
+	//获取类型
+	TArray<EMaterialType> Types;
+	//按照顺序添加类型
+	for (const auto& _Type : _BindFuncName)
+	{
+		Types.Emplace(_Type.M_Type);
+	}
+
+	//添加材料
+	UGameSystemFunction::GetMaterialsArrayByType(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material,
+		Types,
+		TempArrays
+	);
+
+	//排除数据
+	if (IgnoreKeyWords.GetKeyWords().Num())
+	{
+		for (FMaterialBase* CurData : TempArrays)
+		{
+			for (const FString& CurIgnoreKeyWords : IgnoreKeyWords.GetKeyWords())
+			{
+				if (CurData->ItemName.ToString().Contains(CurIgnoreKeyWords))
+				{
+					continue;
+				}
+				else
+				{
+					TargetArrays.Emplace(CurData);
+				}
+			}
+		}
+
+		this->ItemLoadManager_Spice->UpdateDatatable(TargetArrays);
+		this->ItemLoadManager_Spice->SetLoadItemMaxCount(TargetArrays.Num());
+	}
+	else {
+		this->ItemLoadManager_Spice->UpdateDatatable(TempArrays);
+		this->ItemLoadManager_Spice->SetLoadItemMaxCount(TempArrays.Num());
+	}
+
+	this->ItemLoadManager_Spice->SetCurrentPage(0);
+	this->ItemLoadManager_Spice->SetResetScrollBoxOffset();
+	this->ItemLoadManager_Spice->ContinueRun();
+}
+
+//创建-材料区域-材料UI界面
+UWidget* USynModel_MakeCard::WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index)
+{
+	TSoftClassPtr<UUI_PlayerBagMaterialGrid> LocalUIClass = Cast <UClass>(
+		UAssetManager::GetStreamableManager().LoadSynchronous(
+			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")))));
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis, LocalUIClass.Get());
+
+	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
+
+	return Grid;
+}
+//刷新-材料区域-材料UI界面
+void USynModel_MakeCard::WidgetRefresh_UpdateMaterial(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
+}
+//卡片制作界面-设置（香料，四叶草，等等）UI界面
+void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
+{
+	//设置材料索引
+	_Grid->SetIndex(_Index);
+	//设置材料按钮表示可以选择
+	_Grid->GetButton()->SetIsEnabled(true);
+	//设置材料的数量
+	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	//设置显示上限
+	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
+	//设置材料数据
+	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
+	//设置材料的外观
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+
+	if (_Grid->GetButton()->OnClicked.IsBound())
+	{
+		_Grid->GetButton()->OnClicked.Clear();
+	}
+
+	//绑定函数
+	for (auto& LBind : _BindFuncName)
+	{
+		if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
+		{
+			//设置指向合成屋的UI
+			_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
+			for (const auto& FnName : LBind.M_BindFnName)
+			{
+				//如果是空的则不绑定
+				if (FnName.IsEqual(""))
+				{
+					continue;
+				}
+
+				//绑定
+				FScriptDelegate AddFunc;
+				AddFunc.BindUFunction(_Grid, FnName);
+				_Grid->GetButton()->OnClicked.Add(AddFunc);
+			}
+
+			break;
+		}
+	}
+
+	//绑定音效
+	FScriptDelegate AddFunc;
+	AddFunc.BindUFunction(_Grid, "PlayOperateAudioDef");
+	_Grid->GetButton()->OnClicked.Add(AddFunc);
 }
 
 UButton* USynModel_MakeCard::GetSpicesButt()

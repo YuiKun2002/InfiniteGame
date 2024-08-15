@@ -440,10 +440,15 @@ void UUI_PlayerSynthesis::ShowCardGemPanel(UCanvasPanel* _UCanvasPanel, uint8 _I
 //显示卡片制作界面
 void UUI_PlayerSynthesis::ShowMakeCard()
 {
-	this->ShowCardGemPanel(this->M_MakeCardP, 0);
+	//this->ShowCardGemPanel(this->M_MakeCardP, 0);
+	if (!IsValid(this->M_USynModel_MakeCard))
+	{
+		this->M_USynModel_MakeCard = NewObject<USynModel_MakeCard>(this, TEXT("Synthesis_USynModel_MakeCard"));
+		this->M_USynModel_MakeCard->InitializeBySynthesis(this);
+	}
 	this->M_USynModel_MakeCard->WidgetReset();
 	this->M_USynModel_MakeCard->WidgetResetLoadData();
-	this->ShowDataPanel(ESlateVisibility::Collapsed, 0, 0, ESlateVisibility::Collapsed);
+	//this->ShowDataPanel(ESlateVisibility::Collapsed, 0, 0, ESlateVisibility::Collapsed);
 }
 
 void UUI_PlayerSynthesis::ShowCardUpgrade()

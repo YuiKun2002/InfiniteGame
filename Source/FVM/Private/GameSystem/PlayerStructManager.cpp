@@ -262,10 +262,16 @@ void UPlayerStructManager::GetMaterials(TArray<FMaterialBase>& Materials)
 			for (UVaRestJsonValue*& JsonValue : Arrays)
 			{
 				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
-				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
-
 				//卡片数据
 				FItemCard CardData;
+
+				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
+				if (Type == 0)
+				{
+					int32 SubType = JsonObj->GetIntegerField((TEXT("subtype")));
+				}
+
+				
 				//查询结果
 				bool bResult;
 				switch (Type)

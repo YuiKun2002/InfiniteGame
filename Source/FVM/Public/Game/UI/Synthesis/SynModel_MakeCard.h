@@ -38,10 +38,10 @@ public:
 public:
 	//背景
 	UPROPERTY()
-		UImage* Bg = nullptr;
+	UImage* Bg = nullptr;
 	//头像
 	UPROPERTY()
-		UImage* Head = nullptr;
+	UImage* Head = nullptr;
 private:
 	//背景图片地址
 	FString CurHeadPath = TEXT("");
@@ -55,16 +55,16 @@ struct FMakeCardBlueprintMaterialData {
 public:
 	//是否显示
 	UPROPERTY()
-		ESlateVisibility Visible;
+	ESlateVisibility Visible;
 	//配方材料在背包里的索引
 	UPROPERTY()
-		int32 PlayerBagIndex = -1;
+	int32 PlayerBagIndex = -1;
 	//配方材料名称
 	UPROPERTY()
-		FString BluepName;
+	FString BluepName;
 	//配方材料的头像
 	UPROPERTY()
-		FString HeadPath;
+	FString HeadPath;
 };
 
 //合成配方配置
@@ -74,32 +74,32 @@ struct FMakeCardBlueprintData {
 public:
 	//配方在背包里的索引
 	UPROPERTY()
-		int32 PlayerBagIndex = -1;
+	int32 PlayerBagIndex = -1;
 	//配方名称
 	UPROPERTY()
-		FString BluepName;
+	FString BluepName;
 	//合成的防御卡名称
 	UPROPERTY()
-		FString TargetCardName;
+	FString TargetCardName;
 	//合成的防御卡的类型
 	UPROPERTY()
-		ECardType TargetCardType;
+	ECardType TargetCardType;
 	//配方的头像
 	UPROPERTY()
-		FString HeadPath;
+	FString HeadPath;
 	//配方的UI格子 
 	UPROPERTY()
-		class UUI_PlayerBagMaterialGrid* Grid = nullptr;
+	class UUI_PlayerBagMaterialGrid* Grid = nullptr;
 	//配方的UI格子索引
 	UPROPERTY()
-		int32 UIGridIndex = -1;
+	int32 UIGridIndex = -1;
 private:
 	//合成配方的材料
 	UPROPERTY()
-		TArray<FMakeCardBlueprintMaterialData> Materials = {
-		FMakeCardBlueprintMaterialData(),
-		FMakeCardBlueprintMaterialData(),
-		FMakeCardBlueprintMaterialData()
+	TArray<FMakeCardBlueprintMaterialData> Materials = {
+	FMakeCardBlueprintMaterialData(),
+	FMakeCardBlueprintMaterialData(),
+	FMakeCardBlueprintMaterialData()
 	};
 public:
 	//显示外观，更新配方列表
@@ -122,19 +122,19 @@ struct FMakeCardSpicesData {
 public:
 	//香料的UI格子 
 	UPROPERTY()
-		class UUI_PlayerBagMaterialGrid* Grid = nullptr;
+	class UUI_PlayerBagMaterialGrid* Grid = nullptr;
 	//香料索引
 	UPROPERTY()
-		int32 PlayerBagIndex = -1;
+	int32 PlayerBagIndex = -1;
 	//香料名称
 	UPROPERTY()
-		FString SpicesName;
+	FString SpicesName;
 	//香料可以制作的防御卡等级
 	UPROPERTY()
-		int32 MakeCardGrade = 0;
+	int32 MakeCardGrade = 0;
 	//香料的基础数据
 	UPROPERTY()
-		FMaterialBase SpicesData;
+	FMaterialBase SpicesData;
 public:
 	//选择香料
 	void SetSelectSpices(FMakeCardSpicesData NewData);
@@ -153,122 +153,153 @@ class FVM_API USynModel_MakeCard : public UObject
 {
 	GENERATED_BODY()
 public:
-	void InitializeBySynthesis(UUI_PlayerSynthesis* Class);
-	void WidgetReset();
-	void WidgetResetLoadData();
 
-	//加载材料-卡片制作界面
-	UFUNCTION()
-		void LoadMaterialsToMakeCard();
-	//加载卡片-卡片制作界面
-	UFUNCTION()
-		void LoadCardsToMakeCard();
-	//加载香料-卡片制作界面
-	UFUNCTION()
-		void LoadSpicesToMakeCard();
+
+	////加载卡片-卡片制作界面
+	//UFUNCTION()
+	//	void LoadCardsToMakeCard();
+
 
 	//获取香料的按钮
 	UFUNCTION()
-		UButton* GetSpicesButt();
+	UButton* GetSpicesButt();
 	//获取香料的数据
 	UFUNCTION()
-		FMakeCardSpicesData& GetSpicesData();
+	FMakeCardSpicesData& GetSpicesData();
 	//取消香料的选择
 	UFUNCTION()
-		void CancelSelectSpices();
+	void CancelSelectSpices();
 
 	//获取当前制作的卡片名称
 	UFUNCTION()
-		FString GetCurrentCardName();
+	FString GetCurrentCardName();
 
 	//获取配方按钮
 	UFUNCTION()
-		UButton* GetBlueprintButt();
+	UButton* GetBlueprintButt();
 	//获取配方数据
 	UFUNCTION()
-		FMakeCardBlueprintData& GetBlueprintData();
+	FMakeCardBlueprintData& GetBlueprintData();
 	//取消配方的选择
 	UFUNCTION()
-		void CancelSelectBlueprint();
+	void CancelSelectBlueprint();
 	//卡片制作
 	UFUNCTION()
-		void MakeCard();
+	void MakeCard();
 	//检查制作
 	UFUNCTION()
-		void CheckMakeCard();
+	void CheckMakeCard();
 	//获取合成材料的UI格子组合
 	UFUNCTION()
-		const TArray<FMakeCardBlueprintMaterialGrid>& GetBlueprintMaterialGrid() const;
+	const TArray<FMakeCardBlueprintMaterialGrid>& GetBlueprintMaterialGrid() const;
 	//获取制作配方的按钮
 	UFUNCTION()
-		UButton* GetMakeCardButt();
+	UButton* GetMakeCardButt();
 	//获取合成屋
 	UFUNCTION()
-		UUI_PlayerSynthesis* GetPlayerSynthesis();
+	UUI_PlayerSynthesis* GetPlayerSynthesis();
 private:
 	UPROPERTY()
-		UUI_PlayerSynthesis* PlayerSynthesis = nullptr;
+	UUI_PlayerSynthesis* PlayerSynthesis = nullptr;
 	//合成材料格子
 	UPROPERTY()
-		TArray<FMakeCardBlueprintMaterialGrid> BlueprintMaterialGrid;
+	TArray<FMakeCardBlueprintMaterialGrid> BlueprintMaterialGrid;
 	//香料数据
 	UPROPERTY()
-		FMakeCardSpicesData SpicesData;
+	FMakeCardSpicesData SpicesData;
 	//配方数据
 	UPROPERTY()
-		FMakeCardBlueprintData BlueprintData;
+	FMakeCardBlueprintData BlueprintData;
 	//配方按钮
 	UPROPERTY()
-		UButton* Blueprint_Butt = nullptr;
+	UButton* Blueprint_Butt = nullptr;
 	//香料按钮
 	UPROPERTY()
-		UButton* Spices_Butt = nullptr;
+	UButton* Spices_Butt = nullptr;
 	//制作按钮
 	UPROPERTY()
-		UButton* MakeCard_Butt = nullptr;
+	UButton* MakeCard_Butt = nullptr;
 	//当前卡片制作成功的名称
 	UPROPERTY()
-		FString CardName;
-protected:
+	FString CardName;
+public:
+	void InitializeBySynthesis(UUI_PlayerSynthesis* Class);
+	void WidgetReset();
+	void WidgetResetLoadData();
+	/************************************************************************/
+	/*                          香料显示界面                                 */
+	/************************************************************************/
 	//材料显示界面
 	UPROPERTY()
-		UUniformGridPanel* M_Materials_Box = nullptr;
-	//卡片显示界面
+	UScrollBox* ScrollBox_Spice = nullptr;
+	//香料界面
 	UPROPERTY()
-		UUniformGridPanel* M_Cards_Box = nullptr;
-
-
-	//显示制作好的卡片
+	UUniformGridPanel* UniformGridPanel_Spice = nullptr;
+	//香料加载器
 	UPROPERTY()
-		UScrollBox* M_UScrollBox_MakeCard = nullptr;
+	UItemLoadManager* ItemLoadManager_Spice = nullptr;
+	//绑定函数的名称
 	UPROPERTY()
-		UItemLoadManager* M_UItemLoadManager_MakeCard = nullptr;
+	TArray<FMaterialsSerachTypeBind> M_BindFunctionName_Materials;
 	//创建材界面
 	UFUNCTION()
-		UWidget* WidgetCreate_InitMakeCard(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index);
 	//刷新界面
 	UFUNCTION()
-		void WidgetRefresh_UpdateMakeCard(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	void WidgetRefresh_UpdateMaterial(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	//设置->材料数据->四叶草-转职道具-等【材料区域的统一材料设置】
+	UFUNCTION()
+	void SetMaterialsData(
+		UUI_PlayerBagMaterialGrid* _Grid,
+		UItemDataTable* _CardData,
+		int32 _Index,
+		const TArray<FMaterialsSerachTypeBind>& _BindFuncName
+	);
+	//加载香料-卡片制作界面
+	UFUNCTION()
+	void LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeBind>& _BindFuncName, const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords);
 
+
+	/************************************************************************/
+	/*                           配方、配方原材料显示                         */
+	/************************************************************************/
 	//显示配方等
 	UPROPERTY()
-		UScrollBox* M_UScrollBox_MakeCard_Material = nullptr;
+	UUniformGridPanel* M_Materials_Box = nullptr;
 	UPROPERTY()
-		UItemLoadManager* M_UItemLoadManager_MakeCard_Materials = nullptr;
+	UScrollBox* M_UScrollBox_MakeCard_Material = nullptr;
+	UPROPERTY()
+	UItemLoadManager* M_UItemLoadManager_MakeCard_Materials = nullptr;
 	//创建材界面
 	UFUNCTION()
-		UWidget* WidgetCreate_InitMakeCard_Material(UItemDataTable* _Data, int32 _Index);
+	UWidget* WidgetCreate_InitMakeCard_Material(UItemDataTable* _Data, int32 _Index);
 	//刷新界面
 	UFUNCTION()
-		void WidgetRefresh_UpdateMakeCard_Material(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	void WidgetRefresh_UpdateMakeCard_Material(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
 	//当加载到配方时
 	UFUNCTION()
-		void OnLoadBlueprint(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
-
-	//设置制作卡片界面UI的数据
-	UFUNCTION()
-		void SetMakeCardPanelData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
+	void OnLoadBlueprint(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
 	//设置制作卡片界面-配方材料UI的数据
 	UFUNCTION()
-		void SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
+	void SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
+	//加载材料-卡片制作界面
+	UFUNCTION()
+	void LoadMaterialsToMakeCard();
+	//卡片显示界面
+	//UPROPERTY()
+	//UUniformGridPanel* M_Cards_Box = nullptr;
+	//显示制作好的卡片
+	//UPROPERTY()
+	//UScrollBox* M_UScrollBox_MakeCard = nullptr;
+	//UPROPERTY()
+	//UItemLoadManager* M_UItemLoadManager_MakeCard = nullptr;
+	//创建材界面
+	//UFUNCTION()
+	//UWidget* WidgetCreate_InitMakeCard(UItemDataTable* _Data, int32 _Index);
+	//刷新界面
+	//UFUNCTION()
+	//void WidgetRefresh_UpdateMakeCard(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	//设置制作卡片界面UI的数据
+	//UFUNCTION()
+	//void SetMakeCardPanelData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _CardData, int32 _Index);
 };
