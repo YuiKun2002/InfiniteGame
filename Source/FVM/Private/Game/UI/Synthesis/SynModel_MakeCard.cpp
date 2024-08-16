@@ -196,18 +196,17 @@ void FMakeCardSpicesData::SetSelectSpices(FMakeCardSpicesData NewData)
 void FMakeCardSpicesData::CancelSelectSpices(USynModel_MakeCard* Class)
 {
 	this->PlayerBagIndex = -1;
-
-	//解除绑定
-	Class->GetSpicesButt()->OnClicked.Clear();
-
 	//还原样式
 	UWidgetBase::SetButtonStyle(
 		Class->GetSpicesButt(),
 		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_18.T_PS_18'")
 	);
-
+	//解除绑定
+	Class->GetSpicesButt()->OnClicked.Clear();
 	//重新加载香料区
-	//Class->LoadSpicesToMakeCard();
+	Class->LoadSpicesToMakeCard(
+		{ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) }, FMaterialsSerachKeyWordsIgnore()
+	);
 }
 
 void FMakeCardSpicesData::Use()
@@ -287,11 +286,11 @@ void USynModel_MakeCard::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 void USynModel_MakeCard::WidgetReset()
 {
 	//取消对香料的选择
-	//this->CancelSelectSpices();
+	this->CancelSelectSpices();
 	//取消对配方的选择
-	//this->CancelSelectBlueprint();
+	this->CancelSelectBlueprint();
 	//检测
-	//this->CheckMakeCard();
+	this->CheckMakeCard();
 }
 
 void USynModel_MakeCard::WidgetResetLoadData()
@@ -299,7 +298,9 @@ void USynModel_MakeCard::WidgetResetLoadData()
 	this->LoadMaterialsToMakeCard();
 	//this->LoadCardsToMakeCard();
 
-	this->LoadSpicesToMakeCard({ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) }, FMaterialsSerachKeyWordsIgnore());
+	this->LoadSpicesToMakeCard(
+		{ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) }, FMaterialsSerachKeyWordsIgnore()
+	);
 }
 
 /*
@@ -634,21 +635,21 @@ void USynModel_MakeCard::MakeCard()
 	}
 
 	//查询背包空间
-	if (
+	/*if (
 		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->GetBagNum(1)
 		==
 		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->GetBagMaxCount(1))
 	{
 		UWidgetBase::CreateTipWidget(TEXT("背包空间不足"));
 		return;
-	}
+	}*/
 
-	//支付金币200
-	if (!UFVMGameInstance::GetPlayerStructManager_Static()->ReduceCoin(200, 0))
-	{
-		UWidgetBase::CreateTipWidget(TEXT("金币不足"));
-		return;
-	}
+	////支付金币200
+	//if (!UFVMGameInstance::GetPlayerStructManager_Static()->ReduceCoin(200, 0))
+	//{
+	//	UWidgetBase::CreateTipWidget(TEXT("金币不足"));
+	//	return;
+	//}
 
 	//香料
 	int32 TargetCardGrade = 0;
@@ -660,9 +661,15 @@ void USynModel_MakeCard::MakeCard()
 	//制作卡片
 	//获取制作成功的卡片数据
 	FItemCard _Card;
-	if (!UCardBaseStruct::SearchCardFromDataTable(this->BlueprintData.TargetCardName, _Card, true, this->BlueprintData.TargetCardType, TargetCardGrade))
+	if (!UCardBaseStruct::SearchCardFromDataTable(
+		this->BlueprintData.TargetCardName, _Card, true, this->BlueprintData.TargetCardType, TargetCardGrade
+	))
 	{
-		UWidgetBase::CreateTipWidget(TEXT("制作失败!"));
+		UWidgetBase::CreateTipWidget(
+			TEXT("制作失败!") + FString(TEXT("目标卡片：") + this->BlueprintData.TargetCardName) +
+			FString(TEXT("目标等级：") + FString::FromInt(TargetCardGrade))
+		);
+
 		return;
 	}
 	//赋予等级

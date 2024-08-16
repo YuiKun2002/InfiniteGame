@@ -257,7 +257,10 @@ public:
 	);
 	//加载香料-卡片制作界面
 	UFUNCTION()
-	void LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeBind>& _BindFuncName, const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords);
+	void LoadSpicesToMakeCard(
+		const TArray<FMaterialsSerachTypeBind>& _BindFuncName,
+		const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords
+	);
 
 
 	/************************************************************************/

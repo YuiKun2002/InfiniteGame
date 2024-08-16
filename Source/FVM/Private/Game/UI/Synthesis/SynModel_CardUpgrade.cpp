@@ -2,8 +2,15 @@
 
 
 #include "Game/UI/Synthesis/SynModel_CardUpgrade.h"
+#include <Components/Button.h>
+#include <Components/TextBlock.h>
+#include <Components/ScrollBox.h>
+#include <Components/CanvasPanel.h>
+#include <Components/Image.h>
+
 #include "GameSystem/TaskSubsystem.h"
 #include "Game/UI/UI_PlayerBagCardGrid.h"
+#include "Game/UI/UI_PlayerBagMaterialGrid.h"
 #include "Game/UI/UI_PlayerSynthesis.h"
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/PlayerStructManager.h"
@@ -16,6 +23,25 @@
 void USynModel_CardUpgrade::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 {
 	this->PlayerSynthesis = Class;
+
+	//初始化四叶草按钮
+	this->M_Clover_Butt = this->PlayerSynthesis->GetWidgetComponent<UButton>(this->PlayerSynthesis, TEXT("Button_3"));
+
+	//四叶草界面
+	this->ScrollBox_Clover = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(
+		this->PlayerSynthesis, TEXT("ScrollBox_UniformFloverMater")
+	);
+	this->UniformGridPanel_Clover = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(
+		this->PlayerSynthesis, TEXT("Items_Spice_UniformFloverMater")
+	);
+
+	//卡片界面
+	this->ScrollBox_Card_Uniform = this->PlayerSynthesis->GetWidgetComponent<UScrollBox>(
+		this->PlayerSynthesis, TEXT("ScrollBox_Cards")
+	);
+	this->Uniform_CardGrid = this->PlayerSynthesis->GetWidgetComponent<UUniformGridPanel>(
+		this->PlayerSynthesis, TEXT("Items_Cards")
+	);
 
 	//初始化卡槽
 	for (int32 i = 0; i < 4; i++)
@@ -34,24 +60,24 @@ void USynModel_CardUpgrade::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 	//初始化副卡1
 	this->InitWidgets(
 		this->SecondCard1_But, TEXT("Button"),
-		this->SecondCard1_GradeImg, TEXT("Image_15"),
-		this->SecondCard1_GradeText, TEXT("TextBlock_108")
+		this->SecondCard1_GradeImg, TEXT("Image_4"),
+		this->SecondCard1_GradeText, TEXT("TextBlock")
 	);
 	this->SecondCard1_But->OnClicked.AddDynamic(this, &USynModel_CardUpgrade::CancelSelectCardSecond1);
 
 	//初始化副卡2
 	this->InitWidgets(
 		this->SecondCard2_But, TEXT("Button_1"),
-		this->SecondCard2_GradeImg, TEXT("Image_109"),
-		this->SecondCard2_GradeText, TEXT("TextBlock")
+		this->SecondCard2_GradeImg, TEXT("Image_5"),
+		this->SecondCard2_GradeText, TEXT("TextBlock_1")
 	);
 	this->SecondCard2_But->OnClicked.AddDynamic(this, &USynModel_CardUpgrade::CancelSelectCardSecond2);
 
 	//初始化副卡3
 	this->InitWidgets(
 		this->SecondCard3_But, TEXT("Button_2"),
-		this->SecondCard3_GradeImg, TEXT("Image_16"),
-		this->SecondCard3_GradeText, TEXT("TextBlock_1")
+		this->SecondCard3_GradeImg, TEXT("Image_6"),
+		this->SecondCard3_GradeText, TEXT("TextBlock_6")
 	);
 	this->SecondCard3_But->OnClicked.AddDynamic(this, &USynModel_CardUpgrade::CancelSelectCardSecond3);
 
@@ -59,15 +85,15 @@ void USynModel_CardUpgrade::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 	this->M_UpGradeCard_Butt->OnClicked.AddDynamic(this, &USynModel_CardUpgrade::CardUpgrade);
 
 
-	this->UpgradePriceText = this->PlayerSynthesis->GetWidgetComponent<UTextBlock>(this->PlayerSynthesis, TEXT("Coin_Make_1"));
+	this->UpgradePriceText = this->PlayerSynthesis->GetWidgetComponent<UTextBlock>(this->PlayerSynthesis, TEXT("Coin_Upgrade"));
 	this->UpgradeRateText = this->PlayerSynthesis->GetWidgetComponent<UTextBlock>(this->PlayerSynthesis, TEXT("Rate"));
 }
 
 void USynModel_CardUpgrade::WidgetReset()
 {
 	//绑定加载器函数
-	this->PlayerSynthesis->OnCardLoad.Unbind();
-	this->PlayerSynthesis->OnCardLoad.BindUObject(this, &USynModel_CardUpgrade::OnLoadCardFunc);
+	this->OnCardLoad.Unbind();
+	this->OnCardLoad.BindUObject(this, &USynModel_CardUpgrade::OnLoadCardFunc);
 
 	//取消四叶草的选择
 	this->CancelSelectClover();
@@ -90,10 +116,10 @@ void USynModel_CardUpgrade::WidgetResetLoadData()
 	this->LoadCards();
 
 	//加载四叶草
-	this->PlayerSynthesis->LoadMaterials(
+	this->LoadCloversToMakeCard(
 		{
 		{ FMaterialsSerachTypeBind(EMaterialType::E_Clover,{"AddUpGradeCardCloverSlot"}) }
-		});
+		}, FMaterialsSerachKeyWordsIgnore());
 }
 
 void USynModel_CardUpgrade::SetSelectClover(const FString& CloverName, int32 ItemIndex, float CloverRate)
@@ -117,33 +143,33 @@ void USynModel_CardUpgrade::SetSelectCloverUI(class UUI_PlayerBagMaterialGrid* U
 	this->UICloverGrid = UIClover;
 
 	//取消四叶草按钮的所有绑定
-	this->PlayerSynthesis->GetCloverButton()->OnClicked.Clear();
-	this->PlayerSynthesis->GetCloverButton()->OnClicked.AddDynamic(
+	this->M_Clover_Butt->OnClicked.Clear();
+	this->M_Clover_Butt->OnClicked.AddDynamic(
 		this, &USynModel_CardUpgrade::CancelSelectClover);
-	this->PlayerSynthesis->GetCloverButton()->OnClicked.AddDynamic(
+	this->M_Clover_Butt->OnClicked.AddDynamic(
 		this->PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 }
 
 void USynModel_CardUpgrade::CancelSelectClover()
 {
 	//取消四叶草按钮的所有绑定
-	this->PlayerSynthesis->GetCloverButton()->OnClicked.Clear();
-	this->PlayerSynthesis->GetCloverButton()->OnClicked.AddDynamic(
+	this->M_Clover_Butt->OnClicked.Clear();
+	this->M_Clover_Butt->OnClicked.AddDynamic(
 		this->PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 	//取消四叶草的选择
 	this->SelectCloverIndex = -1;
 	//还原四叶草的显示UI
 	UWidgetBase::SetButtonStyle(
-		this->PlayerSynthesis->GetCloverButton(),
+		this->M_Clover_Butt,
 		"Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_25.T_PS_25'"
 	);
 	//更新概率
 	this->GetUpGradeRate();
 	//加载四叶草
-	this->PlayerSynthesis->LoadMaterials(
+	this->LoadCloversToMakeCard(
 		{
 		{ FMaterialsSerachTypeBind(EMaterialType::E_Clover,{"AddUpGradeCardCloverSlot"}) }
-		});
+		}, FMaterialsSerachKeyWordsIgnore());
 }
 
 int32 USynModel_CardUpgrade::GetSelectClover(FString& OutCloverName)
@@ -404,7 +430,7 @@ void USynModel_CardUpgrade::OnLoadCardFunc(class UUI_PlayerBagCardGrid* Grid, cl
 void USynModel_CardUpgrade::CancelSelectCardMain()
 {
 	this->CancelSelectCard(0, this->MainCard_But, this->MainCard_GradeImg, this->MainCard_GradeText);
-	this->PlayerSynthesis->SetInsuranceText(TEXT("0"));
+	//this->PlayerSynthesis->SetInsuranceText(TEXT("0"));
 }
 
 void USynModel_CardUpgrade::CancelSelectCardSecond1()
@@ -562,6 +588,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 		return;
 	}
 
+	/*
 	//选择保险金
 	if (this->PlayerSynthesis->GetSelectInsurance())
 	{
@@ -598,7 +625,16 @@ void USynModel_CardUpgrade::CardUpgrade()
 			UWidgetBase::CreateTipWidget(TEXT("金币不足"));
 			return;
 		}
+	}*/
+
+	/*if (UFVMGameInstance::GetPlayerStructManager_Static()->M_FPlayerCoin.M_Coin_0 >= 200)
+	{
+		UFVMGameInstance::GetPlayerStructManager_Static()->ReduceCoin(200, 0);
 	}
+	else {
+		UWidgetBase::CreateTipWidget(TEXT("金币不足"));
+		return;
+	}*/
 
 	//强化结果
 	bool UpResult = UGameSystemFunction::GetRange(this->GetUpGradeRate(), 100);
@@ -626,6 +662,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 			MarkCard(this->CardDatas, i);
 		}
 		else {
+			/*
 			//强化失败
 			//没有选择保险就会被标记
 			if (!this->PlayerSynthesis->GetSelectInsurance())
@@ -633,12 +670,17 @@ void USynModel_CardUpgrade::CardUpgrade()
 				//标记防御卡
 				MarkCard(this->CardDatas, i);
 			}
+
+			*/
+
+			//标记防御卡
+			MarkCard(this->CardDatas, i);
 		}
 	}
 
 	//更新保险金 金额[根据主卡计算]
-	this->PlayerSynthesis->SetInsuranceText(
-		FString::FromInt(this->LInsuranceCoinNum[this->CardDatas[0].CardData.M_CardGrade]));
+//	this->PlayerSynthesis->SetInsuranceText(
+//		FString::FromInt(this->LInsuranceCoinNum[this->CardDatas[0].CardData.M_CardGrade]));
 
 	//更新概率
 	this->GetUpGradeRate();
@@ -672,6 +714,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 		UWidgetBase::CreateTipWidget(TEXT("强化成功"), COLOR_Def2);
 	}
 	else {
+		/*
 		//没有选择保险
 		if (!this->PlayerSynthesis->GetSelectInsurance())
 		{
@@ -692,11 +735,29 @@ void USynModel_CardUpgrade::CardUpgrade()
 				this->CardDatas[0].PlayerBagIndex
 			];
 		}
+		*/
+
+		int32 TempLevel = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card[
+			this->CardDatas[0].PlayerBagIndex
+		].M_CardGrade;
+
+		if (TempLevel > 5)
+		{
+			//主卡等级下降
+			UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card[
+				this->CardDatas[0].PlayerBagIndex
+			].M_CardGrade -= 1;
+		}
+
+		//覆盖数据
+		this->CardDatas[0].CardData = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card[
+			this->CardDatas[0].PlayerBagIndex
+		];
 		UWidgetBase::CreateTipWidget(TEXT("不够好运,强化失败"), COLOR_Def2);
 	}
 
 	//重新查询主卡【卡片数量发生变化，索引刷新】
-	if (UpResult || !UpResult && !this->PlayerSynthesis->GetSelectInsurance())
+	if (UpResult || !UpResult) //&& !this->PlayerSynthesis->GetSelectInsurance())
 	{
 		//清空待删除的道具
 		UGameSystemFunction::ClearWaitingItems<FItemCard>(
@@ -727,7 +788,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 			//取消主卡的选择
 			this->CardDatas[0].PlayerBagIndex = -1;
 			//保险金重置
-			this->PlayerSynthesis->SetInsuranceText(TEXT("0"));
+			//this->PlayerSynthesis->SetInsuranceText(TEXT("0"));
 		}
 	}
 
@@ -749,7 +810,7 @@ void USynModel_CardUpgrade::CardUpgrade()
 	this->CheckCardUpgrade();
 
 	//更新货币显示
-	this->PlayerSynthesis->Update_CoinText();
+	//this->PlayerSynthesis->Update_CoinText();
 
 	//重新加载数据
 	this->WidgetResetLoadData();
@@ -765,18 +826,86 @@ void USynModel_CardUpgrade::InitWidgets(UButton*& CardButt, const FString& Widge
 	CardPriceText = this->PlayerSynthesis->GetWidgetComponent<UTextBlock>(this->PlayerSynthesis, WidgetName3);
 }
 
+UWidget* USynModel_CardUpgrade::WidgetCreate_InitCards(UItemDataTable* _Data, int32 _Index)
+{
+	UUI_PlayerBagCardGrid* Grid = CreateWidget<UUI_PlayerBagCardGrid>(this->PlayerSynthesis,
+		LoadClass<UUI_PlayerBagCardGrid>(0,
+			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")));
+
+	this->SetCardData(Grid, _Data, _Index);
+
+	return Grid;
+}
+
+void USynModel_CardUpgrade::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetCardData(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
+}
+
+void USynModel_CardUpgrade::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index)
+{
+	//设置纹理
+	_Grid->M_CardTexturePath = ((FItemCard*)(_Data->GetValue()))->ItemTexturePath.ToString();
+	//设置数据
+	_Grid->SetFItemCardData(((FItemCard*)(_Data->GetValue())));
+	//设置指向
+	_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
+	//启动按钮
+	_Grid->GetButton()->SetIsEnabled(true);
+
+	//设置索引
+	_Grid->SetUIIndex(_Index);
+	_Grid->SetCardIndex(_Index);
+
+	//更新文本
+	_Grid->UpdateButtonTexture(FString::FromInt(((FItemCard*)(_Data->GetValue()))->M_CardPrice));
+
+	//清理绑定
+	if (_Grid->GetButton()->OnClicked.IsBound())
+	{
+		_Grid->GetButton()->OnClicked.Clear();
+	}
+
+	this->OnCardLoad.ExecuteIfBound(_Grid, _Data, _Index);
+
+	//绑定音效
+	FScriptDelegate AddFunc_;
+	AddFunc_.BindUFunction(_Grid, "PlayOperateAudioDef");
+	_Grid->GetButton()->OnClicked.Add(AddFunc_);
+}
+
 void USynModel_CardUpgrade::LoadCards()
 {
-	//背包容量
-	int32 BagCount = UFVMGameInstance::GetFVMGameInstance()->
-		GetPlayerStructManager()->
-		M_PlayerBagGirdGroup.GetBagCount(1);
+	////背包容量
+	//int32 BagCount = UFVMGameInstance::GetFVMGameInstance()->
+	//	GetPlayerStructManager()->
+	//	M_PlayerBagGirdGroup.GetBagCount(1);
 
 	//获取卡片数据
 	TArray<FItemCard*> Datas;
-	UGameSystemFunction::GetPlayerCardDatas(Datas, BagCount);
+	UGameSystemFunction::GetPlayerCardDatas(
+		Datas,
+		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card.Num()
+	);
 
-	this->PlayerSynthesis->LoadCards(Datas, BagCount);
+	this->LoadCards(Datas, Datas.Num());
+}
+
+void USynModel_CardUpgrade::LoadCards(const TArray<FItemCard*>& CardsData, const int32& LoadCount)
+{
+	if (!IsValid(this->ItemLoadManager_Card))
+	{
+		//卡片加载器
+		this->ItemLoadManager_Card = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Card_Upgrade"));
+		this->ItemLoadManager_Card->InitWidget_First(this->Uniform_CardGrid, this->ScrollBox_Card_Uniform);
+		this->ItemLoadManager_Card->InitRange_Second(5, 5, 800, 126.f, 123.f);
+		this->ItemLoadManager_Card->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitCards"));
+		this->ItemLoadManager_Card->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateCards"));
+	}
+
+	this->ItemLoadManager_Card->UpdateDatatable(CardsData);
+	this->ItemLoadManager_Card->SetLoadItemMaxCount(LoadCount);
+	this->ItemLoadManager_Card->ContinueRun();
 }
 
 void USynModel_CardUpgrade::UpdateUpRateText(const FString& Content)
@@ -816,15 +945,151 @@ bool USynModel_CardUpgrade::AddCard(const int32 Index, FSynModelCardUpgradeData 
 		);
 		};
 
+		/*
 	//更新保险金 金额
 	if (this->CardDatas[0].PlayerBagIndex != -1)
 	{
 		this->PlayerSynthesis->SetInsuranceText(
 			FString::FromInt(this->LInsuranceCoinNum[this->CardDatas[0].CardData.M_CardGrade]));
 	}
-
+	*/
 	//更新概率
 	this->GetUpGradeRate();
 
 	return true;
+}
+
+UWidget* USynModel_CardUpgrade::WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index)
+{
+	TSoftClassPtr<UUI_PlayerBagMaterialGrid> LocalUIClass = Cast <UClass>(
+		UAssetManager::GetStreamableManager().LoadSynchronous(
+			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")))));
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis, LocalUIClass.Get());
+
+	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
+
+	return Grid;
+}
+
+void USynModel_CardUpgrade::WidgetRefresh_UpdateMaterial(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
+}
+
+void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
+{
+	//设置材料索引
+	_Grid->SetIndex(_Index);
+	//设置材料按钮表示可以选择
+	_Grid->GetButton()->SetIsEnabled(true);
+	//设置材料的数量
+	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	//设置显示上限
+	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
+	//设置材料数据
+	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
+	//设置材料的外观
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+
+	if (_Grid->GetButton()->OnClicked.IsBound())
+	{
+		_Grid->GetButton()->OnClicked.Clear();
+	}
+
+	//绑定函数
+	for (auto& LBind : _BindFuncName)
+	{
+		if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
+		{
+			//设置指向合成屋的UI
+			_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
+			for (const auto& FnName : LBind.M_BindFnName)
+			{
+				//如果是空的则不绑定
+				if (FnName.IsEqual(""))
+				{
+					continue;
+				}
+
+				//绑定
+				FScriptDelegate AddFunc;
+				AddFunc.BindUFunction(_Grid, FnName);
+				_Grid->GetButton()->OnClicked.Add(AddFunc);
+			}
+
+			break;
+		}
+	}
+
+	//绑定音效
+	FScriptDelegate AddFunc;
+	AddFunc.BindUFunction(_Grid, "PlayOperateAudioDef");
+	_Grid->GetButton()->OnClicked.Add(AddFunc);
+}
+
+void USynModel_CardUpgrade::LoadCloversToMakeCard(const TArray<FMaterialsSerachTypeBind>& _BindFuncName, const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords)
+{
+	if (!IsValid(this->ItemLoadManager_Clover))
+	{
+		this->ItemLoadManager_Clover = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Clover_Upgrade"));
+		this->ItemLoadManager_Clover->InitWidget_First(this->UniformGridPanel_Clover, this->ScrollBox_Clover);
+		this->ItemLoadManager_Clover->InitRange_Second(1, 5, 800, 100.f, 100.f, true);
+		this->ItemLoadManager_Clover->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitMaterial"));
+		this->ItemLoadManager_Clover->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateMaterial"));
+	}
+
+	this->M_BindFunctionName_Materials.Empty();
+
+	//赋值绑定数据
+	this->M_BindFunctionName_Materials.Append(_BindFuncName);
+
+	//材料数据(获取指定的材料数据)		
+	TArray<FMaterialBase*> TempArrays;
+	//材料数据(获取指定的材料数据)		
+	TArray<FMaterialBase*> TargetArrays;
+
+	//获取类型
+	TArray<EMaterialType> Types;
+	//按照顺序添加类型
+	for (const auto& _Type : _BindFuncName)
+	{
+		Types.Emplace(_Type.M_Type);
+	}
+
+	//添加材料
+	UGameSystemFunction::GetMaterialsArrayByType(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material,
+		Types,
+		TempArrays
+	);
+
+	//排除数据
+	if (IgnoreKeyWords.GetKeyWords().Num())
+	{
+		for (FMaterialBase* CurData : TempArrays)
+		{
+			for (const FString& CurIgnoreKeyWords : IgnoreKeyWords.GetKeyWords())
+			{
+				if (CurData->ItemName.ToString().Contains(CurIgnoreKeyWords))
+				{
+					continue;
+				}
+				else
+				{
+					TargetArrays.Emplace(CurData);
+				}
+			}
+		}
+
+		this->ItemLoadManager_Clover->UpdateDatatable(TargetArrays);
+		this->ItemLoadManager_Clover->SetLoadItemMaxCount(TargetArrays.Num());
+	}
+	else {
+		this->ItemLoadManager_Clover->UpdateDatatable(TempArrays);
+		this->ItemLoadManager_Clover->SetLoadItemMaxCount(TempArrays.Num());
+	}
+
+	this->ItemLoadManager_Clover->SetCurrentPage(0);
+	this->ItemLoadManager_Clover->SetResetScrollBoxOffset();
+	this->ItemLoadManager_Clover->ContinueRun();
 }

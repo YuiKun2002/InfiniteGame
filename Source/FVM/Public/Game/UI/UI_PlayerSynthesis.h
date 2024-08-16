@@ -37,6 +37,32 @@ public:
 	//当加载每一张卡时
 	FOnCardLoad OnCardLoad;
 public:
+
+	//-----------------------------------【合成屋大选项卡】宝石强化-选项卡-----------------------------------------
+	//显示制作卡片
+	UFUNCTION(BlueprintCallable)
+	void ShowMakeCard();
+	//显示强化卡片
+	UFUNCTION(BlueprintCallable)
+	void ShowCardUpgrade();
+	//显示卡片转职
+	UFUNCTION(BlueprintCallable)
+	void ShowChangeCard();
+	//显示金卡进化界面
+	UFUNCTION(BlueprintCallable)
+	void ShowGoldCardUpPanel();
+	//显示武器开槽镶嵌界面
+	UFUNCTION(BlueprintCallable)
+	void ShowWeaponGem();
+	//显示宝石强化界面
+	UFUNCTION(BlueprintCallable)
+	void ShowGemUp();
+	//显示宝石分解界面
+	UFUNCTION(BlueprintCallable)
+	void ShowGemSplit();
+	/*-------------------------------------------合成屋-界面-成员-共享的-------------------------------------------------*/
+
+
 	//选择加载宝石卡片界面
 	UFUNCTION(BlueprintCallable)
 	void Select_GemCardPanel();
@@ -262,30 +288,6 @@ public:
 	class USynModel_GemSplit* GetGemSplitFunction();
 	/*----------------------------------------宝石分解----------------------------------------*/
 
-public:
-	//-----------------------------------【合成屋大选项卡】宝石强化-选项卡-----------------------------------------
-	//显示制作卡片
-	UFUNCTION(BlueprintCallable)
-	void ShowMakeCard();
-	//显示强化卡片
-	UFUNCTION(BlueprintCallable)
-	void ShowCardUpgrade();
-	//显示卡片转职
-	UFUNCTION(BlueprintCallable)
-	void ShowChangeCard();
-	//显示金卡进化界面
-	UFUNCTION(BlueprintCallable)
-	void ShowGoldCardUpPanel();
-	//显示武器开槽镶嵌界面
-	UFUNCTION(BlueprintCallable)
-	void ShowWeaponGem();
-	//显示宝石强化界面
-	UFUNCTION(BlueprintCallable)
-	void ShowGemUp();
-	//显示宝石分解界面
-	UFUNCTION(BlueprintCallable)
-	void ShowGemSplit();
-	/*-------------------------------------------合成屋-界面-成员-共享的-------------------------------------------------*/
 private:
 	//金币文本
 	UPROPERTY()
