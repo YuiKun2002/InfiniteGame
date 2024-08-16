@@ -266,11 +266,11 @@ void UPlayerStructManager::GetMaterials(TArray<FMaterialBase>& Materials)
 				FItemCard CardData;
 
 				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
+				int32 SubType = 0;
 				if (Type == 0)
 				{
-					int32 SubType = JsonObj->GetIntegerField((TEXT("subtype")));
+					SubType = JsonObj->GetIntegerField((TEXT("subtype")));
 				}
-
 				
 				//查询结果
 				bool bResult;
