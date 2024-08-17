@@ -31,6 +31,12 @@ class FVM_API IWidgetsChangeInterface
 {
 	GENERATED_BODY()
 public:
+
+	//设置标题
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void InitTitle(const FText& Title);
+	virtual void InitTitle_Implementation(const FText& Title);
+
 	//选择接口
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Select();

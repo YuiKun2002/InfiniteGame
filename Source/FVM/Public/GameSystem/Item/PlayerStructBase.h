@@ -39,7 +39,7 @@ public:
 
 	//当前正在进入的地图UI名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString CurrentInMapUIName = TEXT("");
+	FString CurrentInMapUIName = TEXT("MainMap");
 };
 
 USTRUCT(BlueprintType)

@@ -199,44 +199,47 @@ void UPlayerStructManager::GetCards(TArray<FItemCard>& Cards)
 			for (UVaRestJsonValue*& JsonValue : Arrays)
 			{
 				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
-				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
-
-				//卡片数据
-				FItemCard CardData;
-				//查询结果
-				bool bResult;
-				switch (Type)
+				UVaRestJsonValue* Type = JsonObj->GetField((TEXT("Type")));
+				UVaRestJsonValue* SubType = JsonObj->GetField((TEXT("subType")));
+				if (Type->AsInt32() == 1)
 				{
-				case 1: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
-					);
-				}; break;
-				case 5: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_SPAWN
-					);
-				}; break;
-				case 6: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_DEFENCE
-					);
-				}; break;
-				case 9: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_Function
-					);
-				}; break;
-				default:
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
-					);
-					break;
-				}
+					//卡片数据
+					FItemCard CardData;
+					//查询结果
+					bool bResult;
+					switch (SubType->AsInt32())
+					{
+					case 2: {
+						bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), CardData, true, ECardType::E_ATK
+						);
+					}; break;
+					case 5: {
+						bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), CardData, true, ECardType::E_SPAWN
+						);
+					}; break;
+					case 6: {
+						bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), CardData, true, ECardType::E_DEFENCE
+						);
+					}; break;
+					case 9: {
+						bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), CardData, true, ECardType::E_Function
+						);
+					}; break;
+					default:
+						bResult = UCardBaseStruct::SearchCardFromDataTableByID(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), CardData, true, ECardType::E_ATK
+						);
+						break;
+					}
 
-				if (bResult)
-				{
-					CardArray.Emplace(CardData);
+					if (bResult)
+					{
+						CardArray.Emplace(CardData);
+					}
 				}
 			}
 		}
@@ -271,7 +274,7 @@ void UPlayerStructManager::GetMaterials(TArray<FMaterialBase>& Materials)
 				{
 					SubType = JsonObj->GetIntegerField((TEXT("subtype")));
 				}
-				
+
 				//查询结果
 				bool bResult;
 				switch (Type)

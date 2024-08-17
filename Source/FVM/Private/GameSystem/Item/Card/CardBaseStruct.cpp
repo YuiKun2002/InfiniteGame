@@ -247,6 +247,20 @@ bool UCardBaseStruct::SearchCardFromDataTable(const FString& _CardName, FItemCar
 
 bool UCardBaseStruct::SearchCardFromDataTableByID(int32 ID, FItemCard& OutputData, bool _SelectCardType /*= false*/, ECardType _CardType /*= ECardType::E_ATK*/, int32 _UniformGrade /*= 0 */)
 {
+	bool _Result = false;
+
+	SpawnSearchCardManagerID LocalSpawnSearchCardManagerID(ID, OutputData, _Result, _SelectCardType, _CardType, _UniformGrade);
+
+	for (uint8 LocalType = 0u; LocalType <= ((uint8)ECardType::E_Max); LocalType++)
+	{
+		if (!_Result)
+		{
+			LocalSpawnSearchCardManagerID.SpawnSearch(((const ECardType&)LocalType));
+		}
+		else
+			return true;
+	}
+
 	return false;
 }
 

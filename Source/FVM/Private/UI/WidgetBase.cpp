@@ -25,7 +25,7 @@
 #include "Game/UI/Tips/UI_SelectTip.h"
 #include "Game/UI/Tips/UI_ItemTitleTip.h"
 
-
+void IWidgetsChangeInterface::InitTitle_Implementation(const FText& Title){}
 void IWidgetsChangeInterface::Select_Implementation() {}
 void IWidgetsChangeInterface::CancelSelect_Implementation() {}
 

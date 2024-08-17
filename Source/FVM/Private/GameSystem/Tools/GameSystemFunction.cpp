@@ -277,9 +277,6 @@ void UGameSystemFunction::LoadMap()
 		FString MapPah = TEXT("");
 		switch (Player->M_PlayerInMap.CurrentInMap)
 		{
-		case EGameVsMap::VM_Main:
-			MapPah = TEXT("MainMap");
-			break;
 		case EGameVsMap::VM_Map_1:
 			MapPah = TEXT("Map1");
 			break;
@@ -294,6 +291,10 @@ void UGameSystemFunction::LoadMap()
 			break;
 		case EGameVsMap::VM_Map_5:
 			MapPah = TEXT("Map5");
+			break;
+		case EGameVsMap::VM_Main:
+		default:
+			MapPah = TEXT("MainMap");
 			break;
 		}
 
