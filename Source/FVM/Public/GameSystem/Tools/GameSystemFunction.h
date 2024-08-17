@@ -354,7 +354,7 @@ public:
 	//UI——------------------------------------------开始
 	static UUI_MainFramework* GetMainFramework()
 	{
-		return UUI_MainFramework::M_UUI_MainFrameworkStatic;
+		return nullptr;
 	}
 	//UI——------------------------------------------结束
 

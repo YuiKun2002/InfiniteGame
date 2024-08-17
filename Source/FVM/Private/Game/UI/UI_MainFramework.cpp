@@ -8,8 +8,6 @@
 
 #include <Components/Image.h>
 
-//初始静态变量
-UUI_MainFramework* UUI_MainFramework::M_UUI_MainFrameworkStatic = nullptr;
 
 bool UUI_MainFramework::Initialize()
 {
@@ -17,7 +15,7 @@ bool UUI_MainFramework::Initialize()
 		return false;
 
 	//初始化静态变量
-	UUI_MainFramework::M_UUI_MainFrameworkStatic = this;
+	//UUI_MainFramework::M_UUI_MainFrameworkStatic = this;
 
 	//this->M_MailTip = this->GetWidgetComponent<UImage>(this, TEXT("Mail_tip"));
 
@@ -27,23 +25,23 @@ bool UUI_MainFramework::Initialize()
 //资源初始化
 void UUI_MainFramework::Init()
 {
-	this->M_MailTip = this->GetWidgetComponent<UImage>(this, TEXT("Mail_tip"));
+	//this->M_MailTip = this->GetWidgetComponent<UImage>(this, TEXT("Mail_tip"));
 
-	//默认隐藏
-	if (this->M_MailTip)
-		this->M_MailTip->SetVisibility(ESlateVisibility::Hidden);
+	////默认隐藏
+	//if (this->M_MailTip)
+	//	this->M_MailTip->SetVisibility(ESlateVisibility::Hidden);
 
-	//检测玩家是否还有邮件未领取
-	for (auto Mail : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerMails)
-	{
-		if (Mail.M_MailState == 0)
-		{
-			if (IsValid(this->M_MailTip))
-			{
-				//显示提示
-				this->M_MailTip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			}
-			break;
-		}
-	}
+	////检测玩家是否还有邮件未领取
+	//for (auto Mail : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerMails)
+	//{
+	//	if (Mail.M_MailState == 0)
+	//	{
+	//		if (IsValid(this->M_MailTip))
+	//		{
+	//			//显示提示
+	//			this->M_MailTip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	//		}
+	//		break;
+	//	}
+	//}
 }

@@ -270,11 +270,12 @@ FString UGameSystemFunction::BlueprintAddLog(const FString& Content, const FStri
 
 void UGameSystemFunction::LoadMap()
 {
-	if (UPlayerStructManager* Player = UFVMGameInstance::GetPlayerStructManager_Static())
+	UPlayerStructManager* Player = UFVMGameInstance::GetPlayerStructManager_Static();
+	if (IsValid(Player))
 	{
 		UGameUserInterfaceSubsystem* UserInter = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 
-		FString MapPah = TEXT("");
+		FString MapPah = TEXT("MainMap");
 		switch (Player->M_PlayerInMap.CurrentInMap)
 		{
 		case EGameVsMap::VM_Map_1:
@@ -298,8 +299,6 @@ void UGameSystemFunction::LoadMap()
 			break;
 		}
 
-
-
 		//关闭当前进入的UI地图
 		UserInter->GetUserInterInstance(UI_WORLDMAPUINAME)->RemoveUI_ByName(FName(Player->M_PlayerInMap.CurrentInMapUIName));
 		//设置新的UI地图名称
@@ -322,7 +321,7 @@ void UGameSystemFunction::LoadLastMap()
 	{
 		UGameUserInterfaceSubsystem* UserInter = UGameUserInterfaceSubsystem::GetGameUserInterfaceSubsystemStatic();
 
-		FString MapPah = TEXT("");
+		FString MapPah = TEXT("MainMap");
 		switch (Player->M_PlayerInMap.LastInMap)
 		{
 			//美味镇不能是上一次

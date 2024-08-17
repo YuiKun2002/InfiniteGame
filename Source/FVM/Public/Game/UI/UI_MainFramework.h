@@ -16,9 +16,6 @@ UCLASS()
 class FVM_API UUI_MainFramework : public UWidgetBase
 {
 	GENERATED_BODY()
-public:
-	//静态主界面
-	static UUI_MainFramework* M_UUI_MainFrameworkStatic;
 private:
 	UPROPERTY()
 		UImage* M_MailTip = nullptr;
