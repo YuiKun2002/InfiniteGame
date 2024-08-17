@@ -33,83 +33,83 @@
 
 bool UUI_PlayerSynthesis::Initialize()
 {
-	if (!Super::Initialize())
-		return false;
+	
+	Super::Initialize();
 
-	//【卡片界面显示与隐藏，装备界面】
-	this->M_ListDataPanel = this->GetWidgetComponent<UWidget>(this, "Cards_E_Panel");
-	//保险金界面
-	this->M_InsurancePanelPanel = this->GetWidgetComponent<UWidget>(this, "CanvasPanel_7");
-	//四叶草界面
-	this->M_ColoverPanel = this->GetWidgetComponent<UWidget>(this, "CanvasPanel_6");
-	//文本
-	this->Coin0Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_0");
-	this->Coin1Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_2");
-	this->InsuranceText = this->GetWidgetComponent<UTextBlock>(this, "TextBlock_107");
-
-	/*----------------------------------------材料加载区----------------------------------------*/
-	this->M_UScrollBox_Item_Material = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_77");
-	this->M_Materials_2_BoxArr = this->GetWidgetComponent<UUniformGridPanel>(this, "UniformGridPanel_60");
-	/*----------------------------------------材料加载区----------------------------------------*/
-
-	/*----------------------------------------卡片加载器----------------------------------------*/
-	//加载卡片需要的界面
-	this->M_UScrollBox_Card_Uniform = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_1");
-	this->M_Uniform_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "Cards_Box_1");
-	/*----------------------------------------卡片加载器----------------------------------------*/
-
-	/*----------------------------------------共享功能----------------------------------------*/
-	//保险按钮
-	this->M_Insurance_Butt = this->GetWidgetComponent<UButton>(this, "Button_4");
-	//四叶草按钮
-	this->M_Clover_Butt = this->GetWidgetComponent<UButton>(this, "Button_3");
-	/*----------------------------------------共享功能----------------------------------------*/
-
-
-
-	/*----------------------------------------卡片制作----------------------------------------*/
-	this->M_MakeCard_TabButt = this->GetWidgetComponent<UButton>(this, "MakeCard_butt");
-	this->M_MakeCardP = this->GetWidgetComponent<UCanvasPanel>(this, "Make_P");
-	/*----------------------------------------卡片制作----------------------------------------*/
-
-	/*----------------------------------------卡片强化----------------------------------------*/
-	this->M_CardUpgrade_TabButt = this->GetWidgetComponent<UButton>(this, "UpCard_butt");
-	this->M_CardUpgradeP = this->GetWidgetComponent<UCanvasPanel>(this, "Up_P");
-	/*----------------------------------------卡片强化----------------------------------------*/
-
-	/*----------------------------------------卡片转职----------------------------------------*/
-	this->M_CardChange_TabButt = this->GetWidgetComponent<UButton>(this, "ChangeCard_butt");
-	this->M_CardChangeP = this->GetWidgetComponent<UCanvasPanel>(this, "Change_P");
-	/*----------------------------------------卡片转职----------------------------------------*/
-
-
-	/*----------------------------------------金卡进化----------------------------------------*/
-	this->M_GoldCardUpHead = this->GetWidgetComponent<UImage>(this, "GoldCardUpHead");
-	this->M_GoldCardUpResultHead = this->GetWidgetComponent<UImage>(this, "Image_164");
-	this->M_GoldCardUp_Butt = this->GetWidgetComponent<UButton>(this, "GoldCardUp_Butt");
-
-	this->M_GoldCardUp_TabButt = this->GetWidgetComponent<UButton>(this, "TabGoldCardUp_Butt");
-	this->M_GoldCardUpP = this->GetWidgetComponent<UCanvasPanel>(this, "MainContent_2");
-	/*----------------------------------------金卡进化----------------------------------------*/
-
-	/*----------------------------------------武器开槽镶嵌----------------------------------------*/
-	this->M_WepaonGem_TabButt = this->GetWidgetComponent<UButton>(this, "WeaponGem");
-	this->M_WepaonGemP = this->GetWidgetComponent<UCanvasPanel>(this, "WeaponGem_P");
-	/*----------------------------------------武器开槽镶嵌----------------------------------------*/
-
-	/*----------------------------------------宝石强化----------------------------------------*/
-	this->M_GemUp_TabButt = this->GetWidgetComponent<UButton>(this, "GemUp");
-	this->M_GemUpP = this->GetWidgetComponent<UCanvasPanel>(this, "GemUp_P");
-	/*----------------------------------------宝石强化----------------------------------------*/
-
-	/*----------------------------------------宝石分解----------------------------------------*/
-	this->M_GemSplit_TabButt = this->GetWidgetComponent<UButton>(this, "GemSplit");
-	this->M_GemSplitP = this->GetWidgetComponent<UCanvasPanel>(this, "GemSplit_P");
-	/*----------------------------------------宝石分解----------------------------------------*/
-
-
+	this->Coin0Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_Make");
+	this->Coin1Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_Upgrade");
 
 	return true;
+	////【卡片界面显示与隐藏，装备界面】
+	//this->M_ListDataPanel = this->GetWidgetComponent<UWidget>(this, "Cards_E_Panel");
+	////保险金界面
+	//this->M_InsurancePanelPanel = this->GetWidgetComponent<UWidget>(this, "CanvasPanel_7");
+	////四叶草界面
+	//this->M_ColoverPanel = this->GetWidgetComponent<UWidget>(this, "CanvasPanel_6");
+	////文本
+	//this->Coin0Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_0");
+	//this->Coin1Text = this->GetWidgetComponent<UTextBlock>(this, "Coin_2");
+	//this->InsuranceText = this->GetWidgetComponent<UTextBlock>(this, "TextBlock_107");
+
+	///*----------------------------------------材料加载区----------------------------------------*/
+	//this->M_UScrollBox_Item_Material = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_77");
+	//this->M_Materials_2_BoxArr = this->GetWidgetComponent<UUniformGridPanel>(this, "UniformGridPanel_60");
+	///*----------------------------------------材料加载区----------------------------------------*/
+
+	///*----------------------------------------卡片加载器----------------------------------------*/
+	////加载卡片需要的界面
+	//this->M_UScrollBox_Card_Uniform = this->GetWidgetComponent<UScrollBox>(this, "ScrollBox_1");
+	//this->M_Uniform_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "Cards_Box_1");
+	///*----------------------------------------卡片加载器----------------------------------------*/
+
+	///*----------------------------------------共享功能----------------------------------------*/
+	////保险按钮
+	//this->M_Insurance_Butt = this->GetWidgetComponent<UButton>(this, "Button_4");
+	////四叶草按钮
+	//this->M_Clover_Butt = this->GetWidgetComponent<UButton>(this, "Button_3");
+	///*----------------------------------------共享功能----------------------------------------*/
+
+
+
+	///*----------------------------------------卡片制作----------------------------------------*/
+	//this->M_MakeCard_TabButt = this->GetWidgetComponent<UButton>(this, "MakeCard_butt");
+	//this->M_MakeCardP = this->GetWidgetComponent<UCanvasPanel>(this, "Make_P");
+	///*----------------------------------------卡片制作----------------------------------------*/
+
+	///*----------------------------------------卡片强化----------------------------------------*/
+	//this->M_CardUpgrade_TabButt = this->GetWidgetComponent<UButton>(this, "UpCard_butt");
+	//this->M_CardUpgradeP = this->GetWidgetComponent<UCanvasPanel>(this, "Up_P");
+	///*----------------------------------------卡片强化----------------------------------------*/
+
+	///*----------------------------------------卡片转职----------------------------------------*/
+	//this->M_CardChange_TabButt = this->GetWidgetComponent<UButton>(this, "ChangeCard_butt");
+	//this->M_CardChangeP = this->GetWidgetComponent<UCanvasPanel>(this, "Change_P");
+	///*----------------------------------------卡片转职----------------------------------------*/
+
+
+	///*----------------------------------------金卡进化----------------------------------------*/
+	//this->M_GoldCardUpHead = this->GetWidgetComponent<UImage>(this, "GoldCardUpHead");
+	//this->M_GoldCardUpResultHead = this->GetWidgetComponent<UImage>(this, "Image_164");
+	//this->M_GoldCardUp_Butt = this->GetWidgetComponent<UButton>(this, "GoldCardUp_Butt");
+
+	//this->M_GoldCardUp_TabButt = this->GetWidgetComponent<UButton>(this, "TabGoldCardUp_Butt");
+	//this->M_GoldCardUpP = this->GetWidgetComponent<UCanvasPanel>(this, "MainContent_2");
+	///*----------------------------------------金卡进化----------------------------------------*/
+
+	///*----------------------------------------武器开槽镶嵌----------------------------------------*/
+	//this->M_WepaonGem_TabButt = this->GetWidgetComponent<UButton>(this, "WeaponGem");
+	//this->M_WepaonGemP = this->GetWidgetComponent<UCanvasPanel>(this, "WeaponGem_P");
+	///*----------------------------------------武器开槽镶嵌----------------------------------------*/
+
+	///*----------------------------------------宝石强化----------------------------------------*/
+	//this->M_GemUp_TabButt = this->GetWidgetComponent<UButton>(this, "GemUp");
+	//this->M_GemUpP = this->GetWidgetComponent<UCanvasPanel>(this, "GemUp_P");
+	///*----------------------------------------宝石强化----------------------------------------*/
+
+	///*----------------------------------------宝石分解----------------------------------------*/
+	//this->M_GemSplit_TabButt = this->GetWidgetComponent<UButton>(this, "GemSplit");
+	//this->M_GemSplitP = this->GetWidgetComponent<UCanvasPanel>(this, "GemSplit_P");
+	///*----------------------------------------宝石分解----------------------------------------*/
 }
 
 //初始化所有的加载器
@@ -132,14 +132,14 @@ void UUI_PlayerSynthesis::Loader_Init()
 	//this->M_MakeCard_TabButt->OnClicked.AddDynamic(this, &UUI_PlayerSynthesis::ShowMakeCard);
 	if (!this->M_USynModel_MakeCard)
 	{
-	//	this->M_USynModel_MakeCard = NewObject<USynModel_MakeCard>(this, TEXT("Synthesis_USynModel_MakeCard"));
-	//	this->M_USynModel_MakeCard->InitializeBySynthesis(this);
+		//	this->M_USynModel_MakeCard = NewObject<USynModel_MakeCard>(this, TEXT("Synthesis_USynModel_MakeCard"));
+		//	this->M_USynModel_MakeCard->InitializeBySynthesis(this);
 	}
 	/*----------------------------------------卡片制作----------------------------------------*/
 
 	/*----------------------------------------卡片强化----------------------------------------*/
 	//this->M_CardUpgrade_TabButt->OnClicked.AddDynamic(this, &UUI_PlayerSynthesis::ShowCardUpgrade);
-	
+
 	/*----------------------------------------卡片强化----------------------------------------*/
 
 

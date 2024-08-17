@@ -305,7 +305,7 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	this->GetButton()->SetIsEnabled(false);
 
 	//设置按钮样式
-	UWidgetBase::SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCloverButton(),
+	UWidgetBase::SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton(),
 		this->M_MaterialBaseData->ItemTexturePath.ToString()
 	);
 
@@ -313,10 +313,10 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetUpGradeRate();
 
 	//重新绑定四叶草的点击功能
-	this->M_UUI_PlayerSynthesis->GetCloverButton()->OnClicked.Clear();
-	this->M_UUI_PlayerSynthesis->GetCloverButton()->OnClicked.AddDynamic(
+	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.Clear();
+	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.AddDynamic(
 		this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction(), &USynModel_CardUpgrade::CancelSelectClover);
-	this->M_UUI_PlayerSynthesis->GetCloverButton()->OnClicked.AddDynamic(
+	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.AddDynamic(
 		this->M_UUI_PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 }
 
@@ -433,7 +433,9 @@ void UUI_PlayerBagMaterialGrid::GemUp_AddColoverRate()
 		LGemUpGrade->SetCurrentSelectClover(LData);
 
 		//设置外观
-		this->M_UUI_PlayerSynthesis->SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCloverButton(), this->M_MaterialBaseData->ItemTexturePath.ToString());
+		this->M_UUI_PlayerSynthesis->SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCloverButton(), 
+		
+		this->M_MaterialBaseData->ItemTexturePath.ToString());
 
 		//更新概率
 		LGemUpGrade->UpdateRate();

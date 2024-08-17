@@ -178,6 +178,11 @@ int32 USynModel_CardUpgrade::GetSelectClover(FString& OutCloverName)
 	return this->SelectCloverIndex;
 }
 
+UButton* USynModel_CardUpgrade::GetCloverButton()
+{
+	return this->M_Clover_Butt;
+}
+
 class UUI_PlayerBagMaterialGrid* USynModel_CardUpgrade::GetSelectCloverUI()
 {
 	return this->UICloverGrid;

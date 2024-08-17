@@ -70,6 +70,9 @@ public:
 	//获取选择的四叶草
 	UFUNCTION()
 	int32 GetSelectClover(FString& OutCloverName);
+	//获取四叶草按钮
+	UFUNCTION()
+	UButton* GetCloverButton();
 	//获取选择的四叶草UI
 	UFUNCTION()
 	class UUI_PlayerBagMaterialGrid* GetSelectCloverUI();
@@ -292,7 +295,7 @@ public:
 	/************************************************************************/
 
 	FOnCardLoad OnCardLoad;
-		//卡片界面加载器(共用于 卡片强化，1卡片转职，2金卡进化等等)
+	//卡片界面加载器(共用于 卡片强化，1卡片转职，2金卡进化等等)
 	UPROPERTY()
 	UItemLoadManager* ItemLoadManager_Card = nullptr;
 	//卡片（强化，转职，等）统一共用滑动界面
