@@ -357,16 +357,8 @@ void USynModel_MakeCard::SetMakeCardPanelData(UUI_PlayerBagCardGrid* _Grid, UIte
 //创建界面-卡片制作-防御卡合成配方材料显示区域
 UWidget* USynModel_MakeCard::WidgetCreate_InitMakeCard_Material(UItemDataTable* _Data, int32 _Index)
 {
-	TSoftClassPtr<UUI_PlayerBagMaterialGrid> LocalUIClass =
-		Cast<UClass>(
-			UAssetManager::GetStreamableManager().LoadSynchronous(
-				FSoftClassPath(
-					FString(
-						TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")
-					))
-			));
-
-	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis, LocalUIClass.Get());
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material")));
 	this->SetMakeCard_Material_PanelData(Grid, _Data, _Index);
 	return Grid;
 }
@@ -533,11 +525,9 @@ void USynModel_MakeCard::LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeB
 //创建-材料区域-材料UI界面
 UWidget* USynModel_MakeCard::WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index)
 {
-	TSoftClassPtr<UUI_PlayerBagMaterialGrid> LocalUIClass = Cast <UClass>(
-		UAssetManager::GetStreamableManager().LoadSynchronous(
-			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")))));
-	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis, LocalUIClass.Get());
-
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
+	);
 	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
 
 	return Grid;

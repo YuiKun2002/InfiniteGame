@@ -834,8 +834,7 @@ void USynModel_CardUpgrade::InitWidgets(UButton*& CardButt, const FString& Widge
 UWidget* USynModel_CardUpgrade::WidgetCreate_InitCards(UItemDataTable* _Data, int32 _Index)
 {
 	UUI_PlayerBagCardGrid* Grid = CreateWidget<UUI_PlayerBagCardGrid>(this->PlayerSynthesis,
-		LoadClass<UUI_PlayerBagCardGrid>(0,
-			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")));
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Card")));
 
 	this->SetCardData(Grid, _Data, _Index);
 
@@ -950,15 +949,15 @@ bool USynModel_CardUpgrade::AddCard(const int32 Index, FSynModelCardUpgradeData 
 		);
 		};
 
-		/*
-	//更新保险金 金额
-	if (this->CardDatas[0].PlayerBagIndex != -1)
-	{
-		this->PlayerSynthesis->SetInsuranceText(
-			FString::FromInt(this->LInsuranceCoinNum[this->CardDatas[0].CardData.M_CardGrade]));
-	}
-	*/
-	//更新概率
+	/*
+//更新保险金 金额
+if (this->CardDatas[0].PlayerBagIndex != -1)
+{
+	this->PlayerSynthesis->SetInsuranceText(
+		FString::FromInt(this->LInsuranceCoinNum[this->CardDatas[0].CardData.M_CardGrade]));
+}
+*/
+//更新概率
 	this->GetUpGradeRate();
 
 	return true;
@@ -966,10 +965,9 @@ bool USynModel_CardUpgrade::AddCard(const int32 Index, FSynModelCardUpgradeData 
 
 UWidget* USynModel_CardUpgrade::WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index)
 {
-	TSoftClassPtr<UUI_PlayerBagMaterialGrid> LocalUIClass = Cast <UClass>(
-		UAssetManager::GetStreamableManager().LoadSynchronous(
-			FSoftClassPath(FString(TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C'")))));
-	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis, LocalUIClass.Get());
+	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
+	);
 
 	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
 

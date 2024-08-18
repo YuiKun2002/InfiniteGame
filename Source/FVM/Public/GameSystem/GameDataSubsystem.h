@@ -31,6 +31,7 @@
 #define UI_WORLDMAPUINAME FName(TEXT("WorldMap"))
 #define UI_BAGUINAME FName(TEXT("Bag"))
 #define UI_SHOPUINAME FName(TEXT("Shop"))
+#define UI_LABSUINAME FName(TEXT("Labs"))
 
 
  //可视化名字类型分类[蓝图实现，全局的宏]
