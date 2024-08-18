@@ -6,6 +6,7 @@
 #include "UI/WidgetBase.h"
 #include "UObject/NoExportTypes.h"
 #include "GameSystem/Item/ItemStruct.h"
+#include "Game/UI/Synthesis/SynModel_Structures.h"
 #include "SynModel_MakeCard.generated.h"
 
 /**

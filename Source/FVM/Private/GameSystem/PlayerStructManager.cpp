@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GameSystem/PlayerStructManager.h"
@@ -182,9 +182,11 @@ FString UPlayerStructManager::GetCoinName(int32 Type)
 	return TEXT("无效货币");
 }
 
-void UPlayerStructManager::GetCards(TArray<FItemCard>& Cards)
+void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMaterialBase>& Materials)
 {
-	TArray<FItemCard> CardArray;
+	Cards.Empty();
+	Materials.Empty();
+
 	if (this->GameCacheSubsystem)
 	{
 		//通过缓存数据
@@ -200,13 +202,15 @@ void UPlayerStructManager::GetCards(TArray<FItemCard>& Cards)
 			{
 				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
 				UVaRestJsonValue* Type = JsonObj->GetField((TEXT("Type")));
-				UVaRestJsonValue* SubType = JsonObj->GetField((TEXT("subType")));
-				if (Type->AsInt32() == 1)
+				int32 TargetType = Type->AsInt32();
+				if (TargetType == 1)
 				{
 					//卡片数据
 					FItemCard CardData;
+
 					//查询结果
 					bool bResult;
+					UVaRestJsonValue* SubType = JsonObj->GetField((TEXT("subType")));
 					switch (SubType->AsInt32())
 					{
 					case 2: {
@@ -238,83 +242,58 @@ void UPlayerStructManager::GetCards(TArray<FItemCard>& Cards)
 
 					if (bResult)
 					{
-						CardArray.Emplace(CardData);
+						Cards.Emplace(CardData);
 					}
 				}
+				else if (TargetType == 2)
+				{
+					//配方材料
+					FMaterialBase Mater;
+					if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
+						FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), Mater, true, EMaterialType::E_CardSynthesisMaterial
+					))
+					{
+						Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+						Materials.Emplace(Mater);
+					}
+				}
+				else if (TargetType == 3)
+				{
+					//配方
+					FMaterialBase Mater;
+					if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
+						FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+						Mater, true, EMaterialType::E_Blueprint
+					))
+					{
+						Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+						Materials.Emplace(Mater);
+					}
+				}
+				else {
+
+				}
 			}
 		}
 	}
-
-	Cards = CardArray;
 }
 
-void UPlayerStructManager::GetMaterials(TArray<FMaterialBase>& Materials)
+void UPlayerStructManager::InitBag(const TArray<FItemCard>& Cards, const TArray<FMaterialBase>& Materials)
 {
-	TArray<FMaterialBase> MaterialArray;
-	if (this->GameCacheSubsystem)
+	this->M_PlayerItems_Card = Cards;
+	this->M_PlayerItems_Material = Materials;
+
+	for (const FItemCard& Data : this->M_PlayerItems_Card)
 	{
-		//通过缓存数据
-		UGameCache* Cache = this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_PLAYERBAG_NAME);
-		if (Cache->GetResult())
-		{
-			//Json
-			UVaRestJsonObject* Json = Cache->GetRequestJsonObject();
-
-			//Array
-			TArray<UVaRestJsonValue*> Arrays = Json->GetArrayField(TEXT("data"));
-			for (UVaRestJsonValue*& JsonValue : Arrays)
-			{
-				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
-				//卡片数据
-				FItemCard CardData;
-
-				int32 Type = JsonObj->GetIntegerField((TEXT("type")));
-				int32 SubType = 0;
-				if (Type == 0)
-				{
-					SubType = JsonObj->GetIntegerField((TEXT("subtype")));
-				}
-
-				//查询结果
-				bool bResult;
-				switch (Type)
-				{
-				case 1: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
-					);
-				}; break;
-				case 5: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_SPAWN
-					);
-				}; break;
-				case 6: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_DEFENCE
-					);
-				}; break;
-				case 9: {
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_Function
-					);
-				}; break;
-				default:
-					bResult = UCardBaseStruct::SearchCardFromDataTableByID(
-						JsonObj->GetIntegerField(TEXT("id")), CardData, true, ECardType::E_ATK
-					);
-					break;
-				}
-
-				if (bResult)
-				{
-					//CardArray.Emplace(CardData);
-				}
-			}
-		}
+		UGameSystemFunction::FVMLog(__FUNCTION__,
+			TEXT("解析到：") + Data.ItemName.ToString() + TEXT("】防御卡"));
 	}
 
-	//Cards = CardArray;
+	for (const FMaterialBase& Data : this->M_PlayerItems_Material)
+	{
+		UGameSystemFunction::FVMLog(__FUNCTION__,
+			TEXT("解析到：") + Data.ItemName.ToString() + TEXT("】材料"));
+	}
 }
 
 FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)

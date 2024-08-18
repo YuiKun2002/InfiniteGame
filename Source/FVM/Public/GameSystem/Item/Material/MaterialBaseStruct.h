@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 #pragma once
 
@@ -41,17 +41,17 @@ struct FMaterialBase : public FItemBase {
 public:
 	//数量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_Count = 0;
+	int32 M_Count = 0;
 	//材料类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		EMaterialType M_MaterialType = EMaterialType::E_Blueprint;
+	EMaterialType M_MaterialType = EMaterialType::E_Blueprint;
 };
 
 UCLASS()
 class FVM_API UMaterialBaseStruct : public UObject
 {
 	GENERATED_BODY()
-public: 
+public:
 	//源数据获取
 	static void GetSourceData(TArray<FMaterialBase*>& _Data, const EMaterialType& _Type);
 	//返回所有材料数据
@@ -61,7 +61,19 @@ public:
 public:
 	//通过名称获取材料道具
 	UFUNCTION(BlueprintCallable)
-		static bool SearchMaterailFromDataTable(const FString& _MaterailName, FMaterialBase& OutputData, bool _SelectType = false, EMaterialType _Material = EMaterialType::E_Blueprint);
+	static bool SearchMaterailFromDataTable(
+		const FString& _MaterailName,
+		FMaterialBase& OutputData,
+		bool _SelectType = false,
+		EMaterialType _Material = EMaterialType::E_Blueprint
+	);
+	UFUNCTION(BlueprintCallable)
+	static bool SearchMaterailFromDataTableByID(
+		int32 _MaterailID,
+		FMaterialBase& OutputData,
+		bool _SelectType = false,
+		EMaterialType _Material = EMaterialType::E_Blueprint
+	);
 public:
 	/*-----------------------------------------------材料-----------------------------------------------*/
 	/*-----------------------------------------------材料-----------------------------------------------*/
@@ -86,6 +98,36 @@ public:
 				_Result = true;
 				break;
 			}
+	}
+
+	//获取指定材料通过数组【在限定的(基于材料结构)数组里查询名称，匹配返回】
+	template <class TargetType>
+	void static GetMaterialArraysDataID(int32 _Names, TArray<TargetType>& _Arrays, TargetType& _OutputData, bool& _Result)
+	{
+		for (const FMaterialBase& Data : _Arrays)
+		{
+			if (_Names == Data.M_ItemID)
+			{
+				_OutputData = Data;
+				_Result = true;
+				break;
+			}
+		}
+
+		////获取物品数据
+		//for (auto Items = _Arrays.CreateConstIterator(); Items; ++Items)
+		//{
+		//	FString ItemName = (*Items).ItemName.ToString();
+		//	FString ItemID = FString::FromInt((*Items).M_ItemID);
+		//	/*if (_Names == ItemID)
+		//	{
+		//		_OutputData = (*Items);
+		//		_Result = true;
+		//		break;
+		//	}*/
+
+
+		//}
 	}
 
 	//根据类型返回数据表数据【指定一个(基于材料基础)的结构类型->根据材料的类型返回对应类型的所有数据】

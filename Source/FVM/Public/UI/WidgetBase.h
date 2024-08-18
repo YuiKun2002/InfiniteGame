@@ -113,6 +113,7 @@ public:
 		FVector _Scale = FVector(1.f, 1.f, 0.f),
 		bool _bHit = false
 	);
+	UFUNCTION(BlueprintCallable)
 	static void SetImageBrushByTexture(
 		UImage* _ImageComponent,
 		TSoftObjectPtr<UTexture2D> _ImageTexturePath,

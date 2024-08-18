@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameSystem/Item/Material/MaterialBaseStruct.h"
@@ -40,7 +40,9 @@ static void MaterialsDataStructTransform(TArray<MaterialDataStructType>& Datas, 
 {
 	for (auto& LData : Datas)
 	{
-		_OutMaterials.Emplace((*(TargetType*)(&LData.M_FMaterial)));
+		_OutMaterials.Emplace(
+			LData.M_FMaterial
+		);
 	}
 }
 
@@ -57,6 +59,30 @@ void TypeSerachResult(const FString& _MaterailName, FMaterialBase& OutputData, b
 		}
 }
 
+//通过类型搜索结果
+template<class TargetType = FMaterial_CardSynthesisBlueprint_Data>
+void TypeSerachResultID(
+	int32 _MaterailName,
+	FMaterialBase& OutputData,
+	bool _SelectType,
+	EMaterialType _Material,
+	TArray<FMaterialBase>& _Items,
+	TArray<TargetType>& _SourceArrays,
+	const EMaterialType& _MaterialConst,
+	bool& _Result
+)
+{
+	//如果没有查询成功->才可以继续查询
+	if (!_Result)
+	{
+		if (!_SelectType || _SelectType && _Material == _MaterialConst)
+		{
+			MaterialsDataStructTransform<TargetType,FMaterialBase>(_SourceArrays, _Items);
+			UMaterialBaseStruct::GetMaterialArraysDataID<FMaterialBase>(_MaterailName, _Items, OutputData, _Result);
+		}
+	}
+}
+
 //生成一个资源获取管理器【通过名称查询所有的类型直到找到数据为止】
 class SpawnTypeSerachResultManager {
 private:
@@ -70,7 +96,13 @@ private:
 	TArray<FMaterialBase> M_Items;
 public:
 	SpawnTypeSerachResultManager() = delete;
-	SpawnTypeSerachResultManager(const FString& _MaterailName, FMaterialBase& _OutputData, bool _SelectType, const EMaterialType& _Material, bool& _Result) :M_MaterailName(_MaterailName), M_OutputData(_OutputData), M_Result(_Result), M_SelectType(_SelectType), M_Material(_Material)
+	SpawnTypeSerachResultManager(
+		const FString& _MaterailName,
+		FMaterialBase& _OutputData,
+		bool _SelectType,
+		const EMaterialType& _Material,
+		bool& _Result
+	) :M_MaterailName(_MaterailName), M_OutputData(_OutputData), M_Result(_Result), M_SelectType(_SelectType), M_Material(_Material)
 	{
 
 	}
@@ -80,7 +112,55 @@ public:
 	void SpawnTypeSerach(TArray<TargetType>& _SourceArrays, const EMaterialType& _MaterialConst)
 	{
 		this->M_Items.Empty();
-		TypeSerachResult<TargetType>(this->M_MaterailName, this->M_OutputData, this->M_SelectType, this->M_Material, this->M_Items, _SourceArrays, _MaterialConst, this->M_Result);
+		TypeSerachResult<TargetType>(
+			this->M_MaterailName,
+			this->M_OutputData,
+			this->M_SelectType,
+			this->M_Material,
+			this->M_Items,
+			_SourceArrays,
+			_MaterialConst,
+			this->M_Result
+		);
+	}
+};
+
+class SpawnTypeSerachResultManagerID {
+private:
+	FMaterialBase& M_OutputData;
+	bool& M_Result;
+
+	int32 M_MaterailNameID;
+	bool M_SelectType;
+	EMaterialType M_Material;
+public:
+	SpawnTypeSerachResultManagerID() = delete;
+	SpawnTypeSerachResultManagerID(
+		int32 _MaterailName,
+		FMaterialBase& _OutputData,
+		bool _SelectType,
+		const EMaterialType& _Material
+		, bool& _Result
+	) :M_MaterailNameID(_MaterailName), M_OutputData(_OutputData), M_Result(_Result), M_SelectType(_SelectType), M_Material(_Material)
+	{
+
+	}
+public:
+	//搜寻结果
+	template<class TargetType = FMaterial_CardSynthesisBlueprint_Data>
+	void SpawnTypeSerach(TArray<TargetType>& _SourceArrays, const EMaterialType& _MaterialConst)
+	{
+		TArray<FMaterialBase> M_Items;
+		TypeSerachResultID<TargetType>(
+			this->M_MaterailNameID,
+			this->M_OutputData,
+			this->M_SelectType,
+			this->M_Material,
+			M_Items,
+			_SourceArrays,
+			_MaterialConst,
+			this->M_Result
+		);
 	}
 };
 
@@ -148,6 +228,29 @@ bool UMaterialBaseStruct::SearchMaterailFromDataTable(const FString& _MaterailNa
 	}
 
 	SpawnTypeSerachResultManager LocalSpawn(_MaterailName, OutputData, _SelectType, _Material, _Result);
+	//新建类型查询【合成配方】
+	LocalSpawn.SpawnTypeSerach(UCache->GetBlueprint(), EMaterialType::E_Blueprint);
+	//新建类型查询【合成材料】......
+	LocalSpawn.SpawnTypeSerach(UCache->GetBlueprintMater(), EMaterialType::E_CardSynthesisMaterial);
+	LocalSpawn.SpawnTypeSerach(UCache->GetChange(), EMaterialType::E_CardChangeJobMaterial);
+	LocalSpawn.SpawnTypeSerach(UCache->GetSpices(), EMaterialType::E_Spices);
+	LocalSpawn.SpawnTypeSerach(UCache->GetClover(), EMaterialType::E_Clover);
+	LocalSpawn.SpawnTypeSerach(UCache->GetSkillBook(), EMaterialType::E_CardSkillBook);
+	LocalSpawn.SpawnTypeSerach(UCache->GetTicket(), EMaterialType::E_Ticket);
+	LocalSpawn.SpawnTypeSerach(UCache->GetCrystal(), EMaterialType::E_Crystal);
+	LocalSpawn.SpawnTypeSerach(UCache->GetBit(), EMaterialType::E_Bit);
+	LocalSpawn.SpawnTypeSerach(UCache->GetLevelKey(), EMaterialType::E_LevelKey);
+
+	return _Result;
+}
+
+bool UMaterialBaseStruct::SearchMaterailFromDataTableByID(int32 _MaterailID, FMaterialBase& OutputData, bool _SelectType /*= false*/, EMaterialType _Material /*= EMaterialType::E_Blueprint */)
+{
+	bool _Result = false;
+
+	UMaterialDataAssetCache* UCache = GetGameDataAssetCache<UMaterialDataAssetCache>(GLOBALASSET_MATERIAL);
+
+	SpawnTypeSerachResultManagerID LocalSpawn(_MaterailID, OutputData, _SelectType, _Material, _Result);
 	//新建类型查询【合成配方】
 	LocalSpawn.SpawnTypeSerach(UCache->GetBlueprint(), EMaterialType::E_Blueprint);
 	//新建类型查询【合成材料】......

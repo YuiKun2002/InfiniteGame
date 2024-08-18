@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // #include "GameSystem/PlayerStructManager.h"
 
@@ -260,13 +260,12 @@ public:
 	/*                              背包道具获取                             */
 	/************************************************************************/
 
-	//获取玩家已经拥有的防御卡
+	//获取玩家背包道具
 	UFUNCTION(BlueprintPure)
-	void GetCards(TArray<FItemCard>& Cards);
-
-	//获取玩家已经拥有的材料
-	UFUNCTION(BlueprintPure)
-	void GetMaterials(TArray<FMaterialBase>& Materials);
+	void GetBagItems(TArray<FItemCard>& Cards, TArray<FMaterialBase>& Materials);
+	//初始化角色背包
+	UFUNCTION(BlueprintCallable)
+	void InitBag(const TArray<FItemCard>& Cards, const TArray<FMaterialBase>& Materials);
 public:
 	//获取背包道具数量(获取当前背包道具现有的总数量)
 	int32 GetBagNum(int32 _Index);

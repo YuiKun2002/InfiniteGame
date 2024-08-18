@@ -211,12 +211,15 @@ void UGameSystemFunction::WidgetsSelect(const TArray<UWidget*>& _Widgets, ESlate
 
 void UGameSystemFunction::FVMLog(const FString& _FuncName, const FString& _Content)
 {
-	UE_LOG(LogTemp, Error, TEXT("%s %s"), *_FuncName, *_Content);
-	if (UGameLogSubsystem::GetGameLogSubsystemStatic())
+	if (UFVMGameInstance::GetDebug())
 	{
-		UGameLogSubsystem::GetGameLogSubsystemStatic()->AddPrivate(
-			FALD(_FuncName + TEXT(" ") + _Content)
-		);
+		UE_LOG(LogTemp, Error, TEXT("%s %s"), *_FuncName, *_Content);
+		if (UGameLogSubsystem::GetGameLogSubsystemStatic())
+		{
+			UGameLogSubsystem::GetGameLogSubsystemStatic()->AddPrivate(
+				FALD(_FuncName + TEXT(" ") + _Content)
+			);
+		}
 	}
 }
 
