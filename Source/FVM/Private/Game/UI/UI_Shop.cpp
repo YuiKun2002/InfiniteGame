@@ -8,6 +8,7 @@
 #include "GameSystem/FVMGameInstance.h"
 #include <Components/UniformGridPanel.h>
 #include "Data/CardData/CardDataStruct.h"
+#include "GameSystem/GameCacheSubsystem.h"
 #include "GameSystem/PlayerStructManager.h"
 #include "Game/UI/UI_PlayerInformationShow.h"
 
@@ -415,7 +416,20 @@ void UShopDataAssetCache::Unload_Implementation()
 
 TArray<FItem_Price_Data>& UShopDataAssetCache::GetCards()
 {
-	return GetDataTableSourceData(this->CardsData, this->Cards, GLOBALASSET_SHOP, TEXT("Card"));
+	if (this->CardsData.Num())
+	{
+		return this->CardsData;
+	}
+	//解析数据
+	this->GetCache();
+
+
+	return this->CardsData;
+}
+
+UGameCache* UShopDataAssetCache::GetCache()
+{
+	return UFVMGameInstance::GetPlayerStructManager_Static()->GetShopCache();
 }
 
 UWidget* UUI_Shop::WidgetCreate_Cards(UItemDataTable* _Data, int32 _Index)

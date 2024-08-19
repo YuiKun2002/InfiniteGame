@@ -296,6 +296,15 @@ void UPlayerStructManager::InitBag(const TArray<FItemCard>& Cards, const TArray<
 	}
 }
 
+class UGameCache* UPlayerStructManager::GetShopCache()
+{
+	if (this->GameCacheSubsystem)
+	{
+		return this->GameCacheSubsystem->GetGameCache_Im(PLAYER_NET_SHOP_NAME);
+	}
+	return nullptr;
+}
+
 FPlayerCoin UPlayerStructManager::RequestCoin(UVaRestRequestJSON* RequestJson)
 {
 	//请求对象有效

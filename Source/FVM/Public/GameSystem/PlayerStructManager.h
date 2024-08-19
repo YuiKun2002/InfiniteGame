@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "GameFramework/SaveGame.h"
+#include "Data/ShopItemPriceStruct.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameSystem/Item/Task/TaskStructBase.h"
 #include "GameSystem/Item/PlayerStructBase.h"
@@ -21,6 +22,10 @@
 #define PLAYER_NET_COIN_NAME FName(TEXT("Coin"))
 //角色背包请求名称
 #define PLAYER_NET_PLAYERBAG_NAME FName(TEXT("PlayerBag"))
+//签到请求
+#define PLAYER_NET_SIGNIN_NAME FName(TEXT("Signin"))
+//商城请求名称
+#define PLAYER_NET_SHOP_NAME FName(TEXT("Shop"))
 
 
  /**
@@ -257,6 +262,11 @@ public:
 	FString GetCoinName(int32 Type);
 
 	/************************************************************************/
+	/*                              道具获获取                               */
+	/************************************************************************/
+
+
+	/************************************************************************/
 	/*                              背包道具获取                             */
 	/************************************************************************/
 
@@ -266,6 +276,13 @@ public:
 	//初始化角色背包
 	UFUNCTION(BlueprintCallable)
 	void InitBag(const TArray<FItemCard>& Cards, const TArray<FMaterialBase>& Materials);
+
+	/************************************************************************/
+	/*                              商城道具获取                             */
+	/************************************************************************/
+	//获取商城的数据
+	UFUNCTION(BlueprintPure)
+	class UGameCache* GetShopCache();
 public:
 	//获取背包道具数量(获取当前背包道具现有的总数量)
 	int32 GetBagNum(int32 _Index);

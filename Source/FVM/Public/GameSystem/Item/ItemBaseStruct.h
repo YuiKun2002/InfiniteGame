@@ -248,6 +248,26 @@ public:
 	int32 M_ItemID = -1;
 };
 
+//Key,Value资源对象
+USTRUCT(BlueprintType)
+struct FItemResourceBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//资源
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FSoftObjectPath> Resources;
+};
+
+//Key,Value资源对象
+USTRUCT(BlueprintType)
+struct FItemResourceData : public FTableRowBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//资源
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemResourceBase Resource;
+};
+
 //物品结构
 USTRUCT(BlueprintType)
 struct FItemBaseStructData : public FTableRowBase

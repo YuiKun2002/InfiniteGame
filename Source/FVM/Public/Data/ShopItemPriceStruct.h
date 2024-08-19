@@ -21,14 +21,12 @@ DECLARE_DELEGATE(FTicketPayFinishOver);
 //物品类型
 UENUM(BlueprintType)
 enum class EItemType : uint8 {
-	//卡片
-	E_Card UMETA(DisplayName = "Card"),
 	//装备
 	E_Equipment UMETA(DisplayName = "Equipment"),
+	//卡片
+	E_Card UMETA(DisplayName = "Card"),
 	//材料
 	E_MaterialItem UMETA(DisplayName = "Material_Item"),
-
-
 	//特殊的支付对象(背包格子用于扩充玩家背包放置个数)
 	E_BagGrid UMETA(DisplayName = "BagGrid"),
 };

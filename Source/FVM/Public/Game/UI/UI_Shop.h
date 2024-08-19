@@ -26,8 +26,11 @@ class FVM_API UShopDataAssetCache : public UGameDataAssetCache
 {
 	GENERATED_BODY()
 public:
+
 	TArray<FItem_Price_Data>& GetCards();
 private:
+	UGameCache* GetCache();
+
 	//卡片数据
 	DataTableAssetData<FItem_Price_Data> Cards;
 	UPROPERTY()
