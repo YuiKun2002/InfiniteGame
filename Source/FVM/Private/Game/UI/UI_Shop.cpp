@@ -421,7 +421,7 @@ TArray<FItem_Price_Data>& UShopDataAssetCache::GetCards()
 		return this->CardsData;
 	}
 	//解析数据
-	this->GetCache();
+
 
 
 	return this->CardsData;

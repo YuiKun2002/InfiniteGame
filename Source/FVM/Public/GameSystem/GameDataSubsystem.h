@@ -21,6 +21,8 @@
 #define GLOBALASSET_MATERIAL FName(TEXT("GlobalAsset_Material"))
 #define GLOBALASSET_EQUIP FName(TEXT("GlobalAsset_Equip"))
 #define GLOBALASSET_SHOP FName(TEXT("GlobalAsset_Shop"))
+#define GLOBALASSET_TEXTURE_RESOURCE FName(TEXT("GlobalAsset_Texture_Resource"))
+#define GLOBALASSET_CARD_RESOURCE FName(TEXT("GlobalAsset_Card_Resource"))
 
  /*
 	 UI的分类名称

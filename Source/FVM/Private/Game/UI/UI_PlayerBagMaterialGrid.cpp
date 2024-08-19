@@ -182,19 +182,29 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisBlueprint()
 		}
 	}
 
-	//添加配方
-	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->
-		GetBlueprintData().AddNewBlueprint(
-			this->MaterialBaseCopyData.ItemName.ToString(),
-			this,
-			this->GetIndex(),
-			this->M_UUI_PlayerSynthesis->GetMakeCardFunction()
-		);
-
 	//禁用当前按钮
 	this->GetButton()->SetIsEnabled(false);
-	//检测制作
-	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->CheckMakeCard();
+
+	//this->MaterialBaseCopyData;
+
+	//请求数据
+	this->M_UUI_PlayerSynthesis->OnSelectCardBlueprintDataRequest(
+		this->M_UUI_PlayerSynthesis->GetMakeCardFunction(),
+		this->MaterialBaseCopyData,
+		this,
+		this->GetIndex()
+	);
+
+	////添加配方
+	//this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->
+	//	GetBlueprintData().AddNewBlueprint(
+	//		this->MaterialBaseCopyData.ItemName.ToString(),
+	//		this,
+	//		this->GetIndex(),
+	//		this->M_UUI_PlayerSynthesis->GetMakeCardFunction()
+	//	);
+	////检测制作
+	//this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->CheckMakeCard();
 }
 
 void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
@@ -433,9 +443,9 @@ void UUI_PlayerBagMaterialGrid::GemUp_AddColoverRate()
 		LGemUpGrade->SetCurrentSelectClover(LData);
 
 		//设置外观
-		this->M_UUI_PlayerSynthesis->SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCloverButton(), 
-		
-		this->M_MaterialBaseData->ItemTexturePath.ToString());
+		this->M_UUI_PlayerSynthesis->SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCloverButton(),
+
+			this->M_MaterialBaseData->ItemTexturePath.ToString());
 
 		//更新概率
 		LGemUpGrade->UpdateRate();

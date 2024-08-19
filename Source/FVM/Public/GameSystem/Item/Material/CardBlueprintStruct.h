@@ -15,13 +15,13 @@ struct FCardBlueprint : public FMaterialBase {
 public:
 	//需要的材料道具名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FString> M_Materials = {};
+	TArray<FString> M_Materials = {};
 	//合成的卡片类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ECardType M_SynthesisType = ECardType::E_ATK;
+	ECardType M_SynthesisType = ECardType::E_ATK;
 	//合成的卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_SynthesisCardName = "";
+	FString M_SynthesisCardName;
 };
 
 UCLASS()

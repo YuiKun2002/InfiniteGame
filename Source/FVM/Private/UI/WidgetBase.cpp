@@ -25,7 +25,7 @@
 #include "Game/UI/Tips/UI_SelectTip.h"
 #include "Game/UI/Tips/UI_ItemTitleTip.h"
 
-void IWidgetsChangeInterface::InitTitle_Implementation(const FText& Title){}
+void IWidgetsChangeInterface::InitTitle_Implementation(const FText& Title) {}
 void IWidgetsChangeInterface::Select_Implementation() {}
 void IWidgetsChangeInterface::CancelSelect_Implementation() {}
 
@@ -103,7 +103,20 @@ void UWidgetBase::SetButtonStyle(UButton* _ButtonComponent, FString _ButtonTextu
 	if (_ButtonTexturePath.Equals(""))
 	{
 		if (UFVMGameInstance::GetDebug())
+		{
 			UE_LOG(LogTemp, Error, TEXT("UWidgetBase::SetButtonStyle：纹理路径无效"));
+		}
+
+		FSlateBrush _Normal, _Hovered, _Pressed;
+		UTexture2D* Obj = nullptr;
+		FButtonStyle _Style = _ButtonComponent->WidgetStyle;
+		_Style.SetNormal(_Normal);
+		_Style.SetHovered(_Hovered);
+		_Style.SetPressed(_Pressed);
+		_Hovered.SetResourceObject(Obj);
+		_Pressed.SetResourceObject(Obj);
+		_Normal.SetResourceObject(Obj);
+		_ButtonComponent->SetStyle(_Style);
 		return;
 	}
 

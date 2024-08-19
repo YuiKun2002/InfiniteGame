@@ -39,9 +39,33 @@ public:
 public:
 
 	//-----------------------------------【合成屋大选项卡】宝石强化-选项卡-----------------------------------------
+
+
+	/************************************************************************/
+	/*                              卡片制作                                 */
+	/************************************************************************/
+
 	//显示制作卡片
 	UFUNCTION(BlueprintCallable)
 	void ShowMakeCard();
+
+	//请求配方数据{点击配方的时候请求}
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelectCardBlueprintDataRequest(
+		USynModel_MakeCard* MakeCardIns,
+		FMaterialBase Data,
+		UUI_PlayerBagMaterialGrid* Grid,
+		int32 Index
+	);
+
+	//卡片制作
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelectMakeCardRequest(const FString& composeId,const FString& prescriptionId);
+
+	/************************************************************************/
+	/*                              卡片强化                                 */
+	/************************************************************************/
+
 	//显示强化卡片
 	UFUNCTION(BlueprintCallable)
 	void ShowCardUpgrade();

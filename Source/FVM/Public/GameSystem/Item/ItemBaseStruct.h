@@ -9,6 +9,7 @@
 #include "GameStart/VS/MapBaseType.h"
 #include "Engine/StreamableManager.h"
 #include "GameSystem/GameDataSubsystem.h"
+#include "GameSystem/DataTableAssetData.h"
 #include "Engine/Classes/Engine/DataTable.h"
 #include "ItemBaseStruct.generated.h"
 
@@ -306,6 +307,28 @@ TArray<Type>& GetDataTableSourceData(
 	return InData;
 }
 
+
+class UGameDataAssetCache;
+UCLASS()
+class FVM_API UItemBaseDataAssetCache : public  UGameDataAssetCache
+{
+	GENERATED_BODY()
+private:
+	//纹理资源
+	UPROPERTY()
+	TArray<FItemResourceData> TextureDatas;
+	UPROPERTY()
+	TSet<int32> TextureRanges;
+private:
+	//数据表加载器
+	DataTableAssetData<FItemResourceData> SourceDatas;
+	void GetResource(int32 ID,TSet<int32>& Ranges,TArray<FItemResourceData>& Datas, FItemResourceBase& Data);
+public:
+	//纹理资源
+	UFUNCTION()
+	void GetTextureResource(int32 ID, FItemResourceBase& Data);
+};
+
 UCLASS()
 class FVM_API UItemBaseStruct : public UObject
 {
@@ -315,6 +338,12 @@ public:
 	//static TSharedPtr<FStreamableHandle> M_Globle_StreamableHandle;
 	//全局静态物品基础对象
 	//static UItemBaseStruct* M_Globle_UItemBaseStruct_Ptr;
+
+
+	//获取资源信息
+	UFUNCTION(BlueprintPure)
+	static bool GetTextureResource(int32 ID, FSoftObjectPath& SoftObjectPath);
+
 public:
 	//资源加载
 	//UFUNCTION()

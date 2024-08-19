@@ -19,8 +19,6 @@ enum class ECardType : uint8 {
 	E_SPAWN UMETA(Display = "Spawn_Type"),
 	//防御型
 	E_DEFENCE UMETA(Display = "Defence_Type"),
-	//辅助型
-	E_Aid UMETA(Display = "Aid_Type"),
 	//功能型
 	E_Function UMETA(Display = "Function_Type"),
 	//范围攻击型

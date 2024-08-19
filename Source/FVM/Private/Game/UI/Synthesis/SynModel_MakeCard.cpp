@@ -19,10 +19,13 @@ void FMakeCardBlueprintData::ShowStyle(USynModel_MakeCard* Class)
 	//配方的显示
 	if (this->PlayerBagIndex == -1)
 	{
-		UWidgetBase::SetButtonStyle(
+		/*UWidgetBase::SetButtonStyle(
 			Class->GetBlueprintButt(),
-			TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_16.T_PS_16'")
-		);
+			TEXT("")
+		);*/
+
+		Class->GetBlueprintButt()->SetVisibility(ESlateVisibility::Collapsed);
+
 		for (const auto& BMGrid : Class->GetBlueprintMaterialGrid())
 		{
 			BMGrid.Reset();
@@ -30,7 +33,7 @@ void FMakeCardBlueprintData::ShowStyle(USynModel_MakeCard* Class)
 		return;
 	}
 	else {
-
+		Class->GetBlueprintButt()->SetVisibility(ESlateVisibility::Visible);
 		//设置外观
 		UWidgetBase::SetButtonStyle(
 			Class->GetBlueprintButt(),
@@ -103,23 +106,18 @@ void FMakeCardBlueprintData::SetBlueprintMaterials(const TArray<FString>& CurMat
 			break;
 		}
 
-		//原始数据
-		FCardBlueprintMaterial _CardBlueprintM;
-		if (!UMaterialBaseStruct::GetMaterialSourceData<FCardBlueprintMaterial>(
-			CurData,
-			_CardBlueprintM,
-			EMaterialType::E_CardSynthesisMaterial
-		))
-		{
-			UWidgetBase::CreateTipWidget(FString(TEXT("[") + CurData + TEXT("]查询失败!")));
-			continue;
-		}
-
 		//设置材料数据
 		this->Materials[i].BluepName = CurData;
-		this->Materials[i].HeadPath = _CardBlueprintM.ItemTexturePath.ToString();
+
+		FSoftObjectPath ImgPath;
+		UItemBaseStruct::GetTextureResource(
+			FCString::Atoi(*CurData),
+			ImgPath
+		);
+		this->Materials[i].HeadPath = ImgPath.ToString();
+
 		this->Materials[i].Visible = ESlateVisibility::SelfHitTestInvisible;
-		this->Materials[i].PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(CurData);
+		this->Materials[i].PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByID(FCString::Atoi(*CurData));
 
 		i++;
 	}
@@ -130,29 +128,49 @@ const TArray<FMakeCardBlueprintMaterialData>& FMakeCardBlueprintData::GetBluepri
 	return this->Materials;
 }
 
-void FMakeCardBlueprintData::AddNewBlueprint(const FString& BlueprintName, UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, USynModel_MakeCard* BClass)
+void FMakeCardBlueprintData::AddNewBlueprint(const FCardBlueprint& BlueprintData, UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, USynModel_MakeCard* BClass)
 {
-	//原始数据
-	FCardBlueprint _CardBlueprint;
-	if (!UMaterialBaseStruct::GetMaterialSourceData<FCardBlueprint>(
-		BlueprintName,
-		_CardBlueprint,
-		EMaterialType::E_Blueprint
-	))
+	////原始数据
+	//FCardBlueprint _CardBlueprint;
+	//if (!UMaterialBaseStruct::GetMaterialSourceData<FCardBlueprint>(
+	//	BlueprintName,
+	//	_CardBlueprint,
+	//	EMaterialType::E_Blueprint
+	//))
+	//{
+	//	UWidgetBase::CreateTipWidget(FString(TEXT("[") + BlueprintName + TEXT("]查询失败!")));
+	//	return;
+	//}
+
+	this->Bp = BlueprintData;
+
+	TArray<FString> IDs;
+	for (const FString& D : BlueprintData.M_Materials)
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + BlueprintName + TEXT("]查询失败!")));
-		return;
+		if (!D.Equals(TEXT("")))
+		{
+			IDs.Emplace(D);
+		}
 	}
 
-	//设置必要数据
-	this->BluepName = BlueprintName;
 	this->Grid = BGrid;
 	this->UIGridIndex = BUIGridIndex;
-	this->HeadPath = _CardBlueprint.ItemTexturePath.ToString();
-	this->TargetCardName = _CardBlueprint.M_SynthesisCardName;
-	this->TargetCardType = _CardBlueprint.M_SynthesisType;
-	this->PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(BlueprintName);
-	this->SetBlueprintMaterials(_CardBlueprint.M_Materials);
+
+
+
+	this->TargetCardName = BlueprintData.M_SynthesisCardName;
+	this->TargetCardType = BlueprintData.M_SynthesisType;
+
+	//图片
+	this->HeadPath = BlueprintData.ItemTexturePath.ToString();
+	//设置必要数据【当前配方的ID】
+	this->BluepName = FString::FromInt(BlueprintData.M_ItemID);
+	//需要合成的目标卡片
+	this->TargetCardID = FString::FromInt(BlueprintData.M_ItemID);
+	//设置配方的ID，从背包得到位置，检索玩家背包是否存在配方
+	this->PlayerBagIndex = UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByID(BlueprintData.M_ItemID);
+	//设置消耗材料的ID
+	this->SetBlueprintMaterials(IDs);
 
 	//刷新外观
 	this->ShowStyle(BClass);
@@ -624,6 +642,12 @@ void USynModel_MakeCard::MakeCard()
 		return;
 	}
 
+	this->PlayerSynthesis->OnSelectMakeCardRequest(
+		TEXT("-1")
+		,
+		FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
+	);
+
 	//查询背包空间
 	/*if (
 		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->GetBagNum(1)
@@ -641,141 +665,141 @@ void USynModel_MakeCard::MakeCard()
 	//	return;
 	//}
 
-	//香料
-	int32 TargetCardGrade = 0;
-	if (this->SpicesData.PlayerBagIndex != -1)
-	{
-		TargetCardGrade = this->SpicesData.MakeCardGrade;
-	}
+	////香料
+	//int32 TargetCardGrade = 0;
+	//if (this->SpicesData.PlayerBagIndex != -1)
+	//{
+	//	TargetCardGrade = this->SpicesData.MakeCardGrade;
+	//}
 
-	//制作卡片
-	//获取制作成功的卡片数据
-	FItemCard _Card;
-	if (!UCardBaseStruct::SearchCardFromDataTable(
-		this->BlueprintData.TargetCardName, _Card, true, this->BlueprintData.TargetCardType, TargetCardGrade
-	))
-	{
-		UWidgetBase::CreateTipWidget(
-			TEXT("制作失败!") + FString(TEXT("目标卡片：") + this->BlueprintData.TargetCardName) +
-			FString(TEXT("目标等级：") + FString::FromInt(TargetCardGrade))
-		);
+	////制作卡片
+	////获取制作成功的卡片数据
+	//FItemCard _Card;
+	//if (!UCardBaseStruct::SearchCardFromDataTable(
+	//	this->BlueprintData.TargetCardName, _Card, true, this->BlueprintData.TargetCardType, TargetCardGrade
+	//))
+	//{
+	//	UWidgetBase::CreateTipWidget(
+	//		TEXT("制作失败!") + FString(TEXT("目标卡片：") + this->BlueprintData.TargetCardName) +
+	//		FString(TEXT("目标等级：") + FString::FromInt(TargetCardGrade))
+	//	);
 
-		return;
-	}
-	//赋予等级
-	_Card.M_CardGrade = TargetCardGrade;
+	//	return;
+	//}
+	////赋予等级
+	//_Card.M_CardGrade = TargetCardGrade;
 
-	//添加到背包【末尾或者已经存在的卡片后面】
-	int32 PlayIndex = -1;
-	for (
-		auto CardPP = UFVMGameInstance::GetFVMGameInstance()->
-		GetPlayerStructManager()->M_PlayerItems_Card.CreateConstIterator();
-		CardPP;
-		++CardPP
-		)
-	{
-		if ((*CardPP).ItemName.EqualTo(_Card.ItemName))
-		{
-			PlayIndex = CardPP.GetIndex();
-			break;
-		}
-	}
+	////添加到背包【末尾或者已经存在的卡片后面】
+	//int32 PlayIndex = -1;
+	//for (
+	//	auto CardPP = UFVMGameInstance::GetFVMGameInstance()->
+	//	GetPlayerStructManager()->M_PlayerItems_Card.CreateConstIterator();
+	//	CardPP;
+	//	++CardPP
+	//	)
+	//{
+	//	if ((*CardPP).ItemName.EqualTo(_Card.ItemName))
+	//	{
+	//		PlayIndex = CardPP.GetIndex();
+	//		break;
+	//	}
+	//}
 
-	if (PlayIndex == -1)
-	{
-		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card.Emplace(_Card);
-	}
-	else
-	{
-		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->
-			M_PlayerItems_Card.EmplaceAt(PlayIndex, _Card);
-	}
-
-
-
-	//消耗香料
-	if (this->SpicesData.PlayerBagIndex != -1)
-	{
-		UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-			this->SpicesData.PlayerBagIndex,
-			this->SpicesData.SpicesName,
-			5, false
-		);
-	}
-
-	//消耗材料
-	for (const auto& CurMaterial : this->BlueprintData.GetBlueprintMaterials())
-	{
-		if (CurMaterial.PlayerBagIndex != -1)
-		{
-			UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-				CurMaterial.PlayerBagIndex,
-				CurMaterial.BluepName,
-				1, false
-			);
-		}
-	}
-
-	//消耗配方【并且保持数据】
-	UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-		this->BlueprintData.PlayerBagIndex,
-		this->BlueprintData.BluepName,
-		1, true
-	);
+	//if (PlayIndex == -1)
+	//{
+	//	UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card.Emplace(_Card);
+	//}
+	//else
+	//{
+	//	UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->
+	//		M_PlayerItems_Card.EmplaceAt(PlayIndex, _Card);
+	//}
 
 
-	//查询香料是否存在【重新选择或者取消】
-	this->SpicesData.PlayerBagIndex =
-		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->SpicesData.SpicesName);
-	if (
-		//香料无效
-		this->SpicesData.PlayerBagIndex == -1
-		||
-		//香料数量不足
-		(this->SpicesData.PlayerBagIndex != -1
-			&&
-			UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material[this->SpicesData.PlayerBagIndex].M_Count < 5
-			))
-	{
-		//取消对香料的选择
-		this->CancelSelectSpices();
-	}
+
+	////消耗香料
+	//if (this->SpicesData.PlayerBagIndex != -1)
+	//{
+	//	UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
+	//		this->SpicesData.PlayerBagIndex,
+	//		this->SpicesData.SpicesName,
+	//		5, false
+	//	);
+	//}
+
+	////消耗材料
+	//for (const auto& CurMaterial : this->BlueprintData.GetBlueprintMaterials())
+	//{
+	//	if (CurMaterial.PlayerBagIndex != -1)
+	//	{
+	//		UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
+	//			CurMaterial.PlayerBagIndex,
+	//			CurMaterial.BluepName,
+	//			1, false
+	//		);
+	//	}
+	//}
+
+	////消耗配方【并且保持数据】
+	//UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
+	//	this->BlueprintData.PlayerBagIndex,
+	//	this->BlueprintData.BluepName,
+	//	1, true
+	//);
 
 
-	//查询配方【重新选择或者取消】
-	this->BlueprintData.PlayerBagIndex =
-		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->BlueprintData.BluepName);
-	//不存在则取消选择
-	if (this->BlueprintData.PlayerBagIndex == -1)
-	{
-		this->CancelSelectBlueprint();
-	}
-	else {
-		//重新添加配方
-		this->BlueprintData.AddNewBlueprint(
-			this->BlueprintData.BluepName,
-			this->BlueprintData.Grid,
-			this->BlueprintData.UIGridIndex,
-			this
-		);
-	}
-
-	this->CardName = _Card.ItemName.ToString();
-
-	//添加历史记录
-	UPlayerRecord::AddDayCardMakeCount(this->CardName);
-
-	//执行任务
-	UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
+	////查询香料是否存在【重新选择或者取消】
+	//this->SpicesData.PlayerBagIndex =
+	//	UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->SpicesData.SpicesName);
+	//if (
+	//	//香料无效
+	//	this->SpicesData.PlayerBagIndex == -1
+	//	||
+	//	//香料数量不足
+	//	(this->SpicesData.PlayerBagIndex != -1
+	//		&&
+	//		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material[this->SpicesData.PlayerBagIndex].M_Count < 5
+	//		))
+	//{
+	//	//取消对香料的选择
+	//	this->CancelSelectSpices();
+	//}
 
 
-	UWidgetBase::CreateTipWidget(TEXT("制作成功!"));
+	////查询配方【重新选择或者取消】
+	//this->BlueprintData.PlayerBagIndex =
+	//	UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->BlueprintData.BluepName);
+	////不存在则取消选择
+	//if (this->BlueprintData.PlayerBagIndex == -1)
+	//{
+	//	this->CancelSelectBlueprint();
+	//}
+	//else {
+	//	//重新添加配方
+	//	this->BlueprintData.AddNewBlueprint(
+	//		this->BlueprintData.Bp,
+	//		this->BlueprintData.Grid,
+	//		this->BlueprintData.UIGridIndex,
+	//		this
+	//	);
+	//}
+
+	//this->CardName = _Card.ItemName.ToString();
+
+	////添加历史记录
+	//UPlayerRecord::AddDayCardMakeCount(this->CardName);
+
+	////执行任务
+	//UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
+
+
+	//UWidgetBase::CreateTipWidget(TEXT("制作成功!"));
 
 
 	//检测制作
-	this->CheckMakeCard();
+	//this->CheckMakeCard();
 	//重新加载列表
-	this->WidgetResetLoadData();
+	//this->WidgetResetLoadData();
 }
 
 void USynModel_MakeCard::CheckMakeCard()
@@ -827,6 +851,11 @@ UButton* USynModel_MakeCard::GetBlueprintButt()
 FMakeCardBlueprintData& USynModel_MakeCard::GetBlueprintData()
 {
 	return this->BlueprintData;
+}
+
+void USynModel_MakeCard::AddNewBlueprint(const FCardBlueprint& LBlueprintData, UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, USynModel_MakeCard* BClass)
+{
+	this->GetBlueprintData().AddNewBlueprint(LBlueprintData, BGrid, BUIGridIndex, this);
 }
 
 UUI_PlayerSynthesis* USynModel_MakeCard::GetPlayerSynthesis()

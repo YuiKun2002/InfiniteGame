@@ -203,13 +203,34 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 				UVaRestJsonObject* JsonObj = JsonValue->AsObject();
 				UVaRestJsonValue* Type = JsonObj->GetField((TEXT("Type")));
 				int32 TargetType = Type->AsInt32();
+
+				//类型
 				if (TargetType == 1)
 				{
 					//卡片数据
 					FItemCard CardData;
+					//图片查询结果
+					bool bResult = UItemBaseStruct::GetTextureResource(
+						FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+						CardData.ItemTexturePath
+					);
+					if (bResult)
+					{
+						//解析Json数据
 
-					//查询结果
-					bool bResult;
+						//设置名称
+						CardData.ItemName = FText::FromString(JsonObj->GetStringField(TEXT("name")));
+						//设置ID
+						CardData.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
+						//设置等级
+						CardData.M_CardGrade = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemLevel")));
+						//设置卡片类型
+						UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
+						CardData.M_ECardType = ECardType(uint8(subType->AsInt32()));
+						//添加
+						Cards.Emplace(CardData);
+					}
+					/*bool bResult;
 					UVaRestJsonValue* SubType = JsonObj->GetField((TEXT("subType")));
 					switch (SubType->AsInt32())
 					{
@@ -242,36 +263,85 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 
 					if (bResult)
 					{
-						Cards.Emplace(CardData);
-					}
-				}
-				else if (TargetType == 2)
-				{
-					//配方材料
-					FMaterialBase Mater;
-					if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
-						FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), Mater, true, EMaterialType::E_CardSynthesisMaterial
-					))
-					{
-						Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
-						Materials.Emplace(Mater);
-					}
-				}
-				else if (TargetType == 3)
-				{
-					//配方
-					FMaterialBase Mater;
-					if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
-						FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
-						Mater, true, EMaterialType::E_Blueprint
-					))
-					{
-						Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
-						Materials.Emplace(Mater);
-					}
-				}
-				else {
 
+					}*/
+				}
+				//else if (TargetType == 2)
+				//{
+				//	//配方材料
+				//	FMaterialBase Mater;
+				//	//图片查询结果
+				//	bool bResult = UItemBaseStruct::GetTextureResource(
+				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+				//		Mater.ItemTexturePath
+				//	);
+				//	if (bResult)
+				//	{
+				//		Cards.Emplace(Mater);
+				//	}
+				//	/*if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
+				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), Mater, true, EMaterialType::E_CardSynthesisMaterial
+				//	))
+				//	{
+				//		Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+				//		Materials.Emplace(Mater);
+				//	}*/
+				//}
+				//else if (TargetType == 3)
+				//{
+				//	//配方
+				//	FMaterialBase Mater;
+				//	if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
+				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+				//		Mater, true, EMaterialType::E_Blueprint
+				//	))
+				//	{
+				//		Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+				//		Materials.Emplace(Mater);
+				//	}
+				//}
+				else {
+					switch (TargetType)
+					{
+					case 2:
+					case 3:
+					{
+						//材料
+						FMaterialBase Mater;
+						//图片查询结果
+						bool bResult = UItemBaseStruct::GetTextureResource(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+							Mater.ItemTexturePath
+						);
+						if (bResult)
+						{
+							//解析Json数据
+
+							//设置名称
+							Mater.ItemName = FText::FromString(JsonObj->GetStringField(TEXT("name")));
+							//设置数量
+							Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+							//设置ID
+							Mater.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
+							//设置材料类型
+							EMaterialType MaterialsType = EMaterialType::E_Blueprint;
+							switch (TargetType)
+							{
+							case 2:MaterialsType = EMaterialType::E_CardSynthesisMaterial; break;
+							default:
+								MaterialsType = EMaterialType::E_Blueprint;
+								break;
+							}
+							//设置材料类型
+							Mater.M_MaterialType = MaterialsType;
+							//新增材料
+							Materials.Emplace(Mater);
+						}
+					}
+					break;
+					default:
+						break;
+					}
 				}
 			}
 		}
@@ -661,6 +731,18 @@ int32 UPlayerStructManager::FindMaterialByName(const FString& MateriName)
 				return -1;
 			}
 
+			return i;
+		}
+	}
+	return -1;
+}
+
+int32 UPlayerStructManager::FindMaterialByID(const int32& MateriID)
+{
+	for (int32 i = 0; i < this->M_PlayerItems_Material.Num(); i++)
+	{
+		if (this->M_PlayerItems_Material[i].M_ItemID == MateriID)
+		{
 			return i;
 		}
 	}

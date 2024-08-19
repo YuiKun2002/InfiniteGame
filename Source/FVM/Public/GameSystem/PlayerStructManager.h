@@ -26,6 +26,9 @@
 #define PLAYER_NET_SIGNIN_NAME FName(TEXT("Signin"))
 //商城请求名称
 #define PLAYER_NET_SHOP_NAME FName(TEXT("Shop"))
+//配方的请求名称
+#define PLAYER_NET_MATERIALBLUEPRINT_NAME FName(TEXT("MaterialBlueprint"))
+
 
 
  /**
@@ -346,6 +349,8 @@ public:
 	//通过名称查询材料
 	UFUNCTION()
 	int32 FindMaterialByName(const FString& MateriName);
+	//通过ID查询材料
+	int32 FindMaterialByID(const int32& MateriID);
 	/*---------------------------------索引查询---------------------------------*/
 
 	/*---------------------------------道具操作---------------------------------*/

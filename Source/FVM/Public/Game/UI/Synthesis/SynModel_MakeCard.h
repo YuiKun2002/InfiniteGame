@@ -73,6 +73,8 @@ USTRUCT()
 struct FMakeCardBlueprintData {
 	GENERATED_USTRUCT_BODY()
 public:
+	//配方完整数据包
+	FCardBlueprint Bp;
 	//配方在背包里的索引
 	UPROPERTY()
 	int32 PlayerBagIndex = -1;
@@ -85,6 +87,9 @@ public:
 	//合成的防御卡的类型
 	UPROPERTY()
 	ECardType TargetCardType;
+	//合成的防御卡的ID
+	UPROPERTY()
+	FString TargetCardID;
 	//配方的头像
 	UPROPERTY()
 	FString HeadPath;
@@ -112,7 +117,7 @@ public:
 	//获取配方
 	const TArray<FMakeCardBlueprintMaterialData>& GetBlueprintMaterials();
 	//添加配方
-	void AddNewBlueprint(const FString& BlueprintName, class UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, class USynModel_MakeCard* BClass);
+	void AddNewBlueprint(const FCardBlueprint& BlueprintData, class UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, class USynModel_MakeCard* BClass);
 };
 
 
@@ -181,6 +186,14 @@ public:
 	//获取配方数据
 	UFUNCTION()
 	FMakeCardBlueprintData& GetBlueprintData();
+	//添加新配方
+	UFUNCTION(BlueprintCallable)
+	void AddNewBlueprint(
+		const FCardBlueprint& LBlueprintData,
+		UUI_PlayerBagMaterialGrid* BGrid,
+		int32 BUIGridIndex,
+		USynModel_MakeCard* BClass
+	);
 	//取消配方的选择
 	UFUNCTION()
 	void CancelSelectBlueprint();
@@ -188,7 +201,7 @@ public:
 	UFUNCTION()
 	void MakeCard();
 	//检查制作
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void CheckMakeCard();
 	//获取合成材料的UI格子组合
 	UFUNCTION()
