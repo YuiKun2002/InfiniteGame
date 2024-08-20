@@ -60,7 +60,7 @@ public:
 
 	//卡片制作
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectMakeCardRequest(const FString& composeId,const FString& prescriptionId);
+	void OnSelectMakeCardRequest(USynModel_MakeCard* MakeCardIns,const FString& composeId,const FString& prescriptionId);
 
 	/************************************************************************/
 	/*                              卡片强化                                 */

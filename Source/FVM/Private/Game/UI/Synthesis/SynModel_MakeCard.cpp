@@ -147,11 +147,19 @@ void FMakeCardBlueprintData::AddNewBlueprint(const FCardBlueprint& BlueprintData
 	TArray<FString> IDs;
 	for (const FString& D : BlueprintData.M_Materials)
 	{
-		if (!D.Equals(TEXT("")))
+		if (!D.IsEmpty())
 		{
 			IDs.Emplace(D);
 		}
 	}
+
+
+	//配方出错
+	if (IDs.Num() < 2)
+	{
+		return;
+	}
+
 
 	this->Grid = BGrid;
 	this->UIGridIndex = BUIGridIndex;
@@ -214,6 +222,7 @@ void FMakeCardSpicesData::SetSelectSpices(FMakeCardSpicesData NewData)
 void FMakeCardSpicesData::CancelSelectSpices(USynModel_MakeCard* Class)
 {
 	this->PlayerBagIndex = -1;
+
 	//还原样式
 	UWidgetBase::SetButtonStyle(
 		Class->GetSpicesButt(),
@@ -401,22 +410,22 @@ void USynModel_MakeCard::SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGri
 	//启用按钮
 	_Grid->GetButton()->SetIsEnabled(true);
 	//设置材料数据
-	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
+	_Grid->SetMaterialData(ConstCastSharedPtr<FMaterialBase>(_CardData->GetValuePtr()));
 	//设置材料索引
 	_Grid->SetIndex(_Index);
 	//设置材料个数
-	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	int32 CurCount = _Grid->GetMaterialData()->M_Count;
 	//设置显示个数
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
 	//设置材料按钮
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Grid->GetMaterialData()->ItemTexturePath.ToString());
 	//清除材料的事件绑定并且恢复选择状态
 	if (_Grid->GetButton()->OnClicked.IsBound())
 	{
 		_Grid->GetButton()->OnClicked.Clear();
 	}
 	//绑定事件(卡片制作材料（配方）)
-	if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == EMaterialType::E_Blueprint)
+	if (_Grid->GetMaterialData()->M_MaterialType == EMaterialType::E_Blueprint)
 	{
 		_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 		this->OnLoadBlueprint(_Grid, _CardData, _Index);
@@ -563,13 +572,13 @@ void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIte
 	//设置材料按钮表示可以选择
 	_Grid->GetButton()->SetIsEnabled(true);
 	//设置材料的数量
-	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	int32 CurCount = _Grid->GetMaterialData()->M_Count;
 	//设置显示上限
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
 	//设置材料数据
-	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
+	_Grid->SetMaterialData(ConstCastSharedPtr<FMaterialBase>(_CardData->GetValuePtr()));
 	//设置材料的外观
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(),_Grid->GetMaterialData()->ItemTexturePath.ToString());
 
 	if (_Grid->GetButton()->OnClicked.IsBound())
 	{
@@ -579,7 +588,7 @@ void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIte
 	//绑定函数
 	for (auto& LBind : _BindFuncName)
 	{
-		if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
+		if (_Grid->GetMaterialData()->M_MaterialType == LBind.M_Type)
 		{
 			//设置指向合成屋的UI
 			_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
@@ -642,11 +651,30 @@ void USynModel_MakeCard::MakeCard()
 		return;
 	}
 
-	this->PlayerSynthesis->OnSelectMakeCardRequest(
-		TEXT("-1")
-		,
-		FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
-	);
+	////香料
+	//int32 TargetCardGrade = 0;
+	//if (this->SpicesData.PlayerBagIndex != -1)
+	//{
+	//	TargetCardGrade = this->SpicesData.MakeCardGrade;
+	//}
+
+	if (this->SpicesData.PlayerBagIndex == -1)
+	{
+		this->PlayerSynthesis->OnSelectMakeCardRequest(
+			this,
+			TEXT("-1"),
+			FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
+		);
+	}
+	else {
+		this->PlayerSynthesis->OnSelectMakeCardRequest(
+			this,
+			FString::FromInt(this->SpicesData.SpicesData.M_ItemID),
+			FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
+		);
+	}
+
+
 
 	//查询背包空间
 	/*if (
@@ -766,23 +794,7 @@ void USynModel_MakeCard::MakeCard()
 	//}
 
 
-	////查询配方【重新选择或者取消】
-	//this->BlueprintData.PlayerBagIndex =
-	//	UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->BlueprintData.BluepName);
-	////不存在则取消选择
-	//if (this->BlueprintData.PlayerBagIndex == -1)
-	//{
-	//	this->CancelSelectBlueprint();
-	//}
-	//else {
-	//	//重新添加配方
-	//	this->BlueprintData.AddNewBlueprint(
-	//		this->BlueprintData.Bp,
-	//		this->BlueprintData.Grid,
-	//		this->BlueprintData.UIGridIndex,
-	//		this
-	//	);
-	//}
+
 
 	//this->CardName = _Card.ItemName.ToString();
 
@@ -800,6 +812,62 @@ void USynModel_MakeCard::MakeCard()
 	//this->CheckMakeCard();
 	//重新加载列表
 	//this->WidgetResetLoadData();
+}
+
+bool USynModel_MakeCard::CheckBlueprint()
+{
+	//查询配方【重新选择或者取消】
+	this->BlueprintData.PlayerBagIndex =
+		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByID(this->BlueprintData.Bp.M_ItemID);
+	//不存在则取消选择
+	if (this->BlueprintData.PlayerBagIndex == -1)
+	{
+		this->CancelSelectBlueprint();
+
+		return false;
+	}
+	else {
+		////重新添加配方
+		//this->BlueprintData.AddNewBlueprint(
+		//	this->BlueprintData.Bp,
+		//	this->BlueprintData.Grid,
+		//	this->BlueprintData.UIGridIndex,
+		//	this
+		//);
+
+		this->PlayerSynthesis->OnSelectCardBlueprintDataRequest(
+			this,
+			this->BlueprintData.Bp,
+			this->BlueprintData.Grid,
+			this->BlueprintData.UIGridIndex
+		);
+
+		return true;
+	}
+
+	return false;
+}
+
+void USynModel_MakeCard::CheckSpices()
+{
+	//查询香料是否存在【重新选择或者取消】
+	this->SpicesData.PlayerBagIndex =
+		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByID(this->SpicesData.SpicesData.M_ItemID);
+	if (
+		//香料无效
+		this->SpicesData.PlayerBagIndex == -1
+		||
+		//香料数量不足
+		(this->SpicesData.PlayerBagIndex != -1
+			&&
+			UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material[
+				this->SpicesData.PlayerBagIndex
+			].M_Count < 5
+			))
+	{
+		//取消对香料的选择
+		this->CancelSelectSpices();
+	}
 }
 
 void USynModel_MakeCard::CheckMakeCard()

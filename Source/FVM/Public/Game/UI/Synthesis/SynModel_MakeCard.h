@@ -154,7 +154,7 @@ public:
 	int32 GetMakeCardGrade();
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class FVM_API USynModel_MakeCard : public UObject
 {
 	GENERATED_BODY()
@@ -195,11 +195,17 @@ public:
 		USynModel_MakeCard* BClass
 	);
 	//取消配方的选择
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void CancelSelectBlueprint();
 	//卡片制作
 	UFUNCTION()
 	void MakeCard();
+	//检查配方
+	UFUNCTION(BlueprintCallable)
+	bool CheckBlueprint();
+	//检查圣水
+	UFUNCTION(BlueprintCallable)
+	void CheckSpices();
 	//检查制作
 	UFUNCTION(BlueprintCallable)
 	void CheckMakeCard();
@@ -239,6 +245,7 @@ private:
 public:
 	void InitializeBySynthesis(UUI_PlayerSynthesis* Class);
 	void WidgetReset();
+	UFUNCTION(BlueprintCallable)
 	void WidgetResetLoadData();
 	/************************************************************************/
 	/*                          香料显示界面                                 */

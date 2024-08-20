@@ -223,7 +223,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						//设置ID
 						CardData.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
 						//设置等级
-						CardData.M_CardGrade = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemLevel")));
+						CardData.M_CardGrade = JsonObj->GetIntegerField(TEXT("itemLevel"));
 						//设置卡片类型
 						UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
 						CardData.M_ECardType = ECardType(uint8(subType->AsInt32()));
@@ -303,8 +303,10 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 				else {
 					switch (TargetType)
 					{
-					case 2:
-					case 3:
+					case 2://材料
+					case 3://配方
+					case 4://圣水
+					case 5://陨石
 					{
 						//材料
 						FMaterialBase Mater;
@@ -328,6 +330,8 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 							switch (TargetType)
 							{
 							case 2:MaterialsType = EMaterialType::E_CardSynthesisMaterial; break;
+							case 4:MaterialsType = EMaterialType::E_Spices; break;
+							case 5:MaterialsType = EMaterialType::E_Clover; break;
 							default:
 								MaterialsType = EMaterialType::E_Blueprint;
 								break;
