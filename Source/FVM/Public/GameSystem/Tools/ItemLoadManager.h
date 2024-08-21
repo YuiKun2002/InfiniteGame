@@ -81,7 +81,6 @@ private:
 private:
 	//指向源数据的数组指针头
 	TMap<int32, FTableRowBase*> M_SourceDatas;
-
 	//当前展示数据缓冲区
 	TArray<FTableRowBase*> M_ShowDatas;
 private:
@@ -257,19 +256,19 @@ public:
 
 		int32 i = 0;
 		int32 LDataNum = this->M_SourceDatas.Num();
-		FTableRowBase** LData = nullptr;
+		FTableRowBase** Ptr;
 		for (auto& Item : _SourceItems)
 		{
 			if (i < LDataNum)
 			{
-				LData = this->M_SourceDatas.Find(i);
-				if (LData)
+				Ptr = this->M_SourceDatas.Find(i);
+				if (Ptr)
 				{
-					(*LData) = ((FTableRowBase*)(&Item));
+					(*Ptr) = (FTableRowBase*)(&Item);
 				}
 			}
 			else {
-				this->M_SourceDatas.Emplace(i, ((FTableRowBase*)(&Item)));
+				this->M_SourceDatas.Emplace(i, (FTableRowBase*)(&Item));
 			}
 
 			i++;
@@ -284,19 +283,24 @@ public:
 
 		int32 i = 0;
 		int32 LDataNum = this->M_SourceDatas.Num();
-		FTableRowBase** LData = nullptr;
-		for (auto& Item : _SourceItems)
+		FTableRowBase** Ptr;
+		for (FTableRowType* Item : _SourceItems)
 		{
 			if (i < LDataNum)
 			{
-				LData = this->M_SourceDatas.Find(i);
-				if (LData)
+				Ptr = this->M_SourceDatas.Find(i);
+				if (Ptr)
 				{
-					(*LData) = ((FTableRowBase*)(Item));
+					//FTableRowType TypeDataPtr = *Item;
+					(*Ptr) = (FTableRowBase*)(Item);
 				}
 			}
 			else {
-				this->M_SourceDatas.Emplace(i, ((FTableRowBase*)(Item)));
+
+				//FTableRowType TypeDataPtr = *Item;
+				this->M_SourceDatas.Emplace(i,
+					(FTableRowBase*)(Item)
+				);
 			}
 			i++;
 		}

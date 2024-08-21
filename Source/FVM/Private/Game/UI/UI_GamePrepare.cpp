@@ -69,7 +69,7 @@ void UUI_GamePrepare::SelectCard(const FString& _CardName, const FItemCard& _Car
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")
 			));
 
-	M_TempCardGrid->SetFItemCardData(const_cast<FItemCard*>(&_CardData));
+	M_TempCardGrid->SetFItemCardData(_CardData);
 	M_TempCardGrid->M_CardTexturePath = _CardData.ItemTexturePath.ToString();
 	M_TempCardGrid->UpdateButtonTexture(FString::FormatAsNumber(_CardData.M_CardPrice));
 	M_TempCardGrid->PlayBeginAnim();
@@ -165,7 +165,7 @@ void UUI_GamePrepare::LoadCardList()
 			}
 
 			M_TempCardGrid->M_CardTexturePath = _CardItems_[this->M_FTimeClip.M_Count].ItemTexturePath.ToString();
-			M_TempCardGrid->SetFItemCardData(&_CardItems_[this->M_FTimeClip.M_Count]);
+			M_TempCardGrid->SetFItemCardData(_CardItems_[this->M_FTimeClip.M_Count]);
 			M_TempCardGrid->UpdateButtonTexture(FString::FormatAsNumber(_CardItems_[this->M_FTimeClip.M_Count].M_CardPrice));
 			M_TempCardGrid->PlayBeginAnim();
 

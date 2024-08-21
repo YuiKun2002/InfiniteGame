@@ -138,11 +138,11 @@ void UItemLoadManager::Run(float _Offset)
 
 	for (int i = this->M_LoadIndex_First; i < this->M_LoadIndex_Last; i++)
 	{
-		this->M_Item_CurrentFindData = this->M_SourceDatas.Find(i);
+		FTableRowBase** Ptr = this->M_SourceDatas.Find(i);
 
-		if (this->M_Item_CurrentFindData)
+		if (Ptr)
 		{
-			this->M_ShowDatas.Emplace(*this->M_Item_CurrentFindData);
+			this->M_ShowDatas.Emplace((*Ptr));
 
 			this->M_Item_CurrentLoadCount = i + 1;
 		}

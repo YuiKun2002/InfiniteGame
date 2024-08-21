@@ -254,14 +254,14 @@ void UUI_PlayerSynthesis::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIt
 	_Grid->SetIndex(_Index);
 	//设置材料按钮表示可以选择
 	_Grid->GetButton()->SetIsEnabled(true);
+	//设置材料数据
+	_Grid->SetMaterialData((_CardData->GetTransValue<FMaterialBase>()));
 	//设置材料的数量
-	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	int32 CurCount = _Grid->GetMaterialData()->M_Count;
 	//设置显示上限
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
-	//设置材料数据
-	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
 	//设置材料的外观
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Grid->GetMaterialData()->ItemTexturePath.ToString());
 
 	//判断当前道具类型(是否被玩家选中)
 	//switch (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType)
@@ -325,10 +325,10 @@ void UUI_PlayerSynthesis::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int32
 //设置卡片UI的数据（需要加载卡片的所有界面-不包括卡片制作界面）
 void UUI_PlayerSynthesis::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index)
 {
-	//设置纹理
-	_Grid->M_CardTexturePath = ((FItemCard*)(_Data->GetValue()))->ItemTexturePath.ToString();
 	//设置数据
-	_Grid->SetFItemCardData(((FItemCard*)(_Data->GetValue())));
+	_Grid->SetFItemCardData(_Data->GetTransValue<FItemCard>());
+	//设置纹理
+	_Grid->M_CardTexturePath = _Grid->GetFItemCardData()->ItemTexturePath.ToString();
 	//设置指向
 	_Grid->SetUI_PlayerSynthesis(this);
 	//启动按钮
@@ -339,7 +339,7 @@ void UUI_PlayerSynthesis::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTab
 	_Grid->SetCardIndex(_Index);
 
 	//更新文本
-	_Grid->UpdateButtonTexture(FString::FromInt(((FItemCard*)(_Data->GetValue()))->M_CardPrice));
+	_Grid->UpdateButtonTexture(FString::FromInt(_Grid->GetFItemCardData()->M_CardPrice));
 
 	//清理绑定
 	if (_Grid->GetButton()->OnClicked.IsBound())

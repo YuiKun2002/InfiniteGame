@@ -19,7 +19,7 @@ struct FItemData_Index : public FTableRowBase
 public:
 	//物品索引
 	UPROPERTY(EditDefaultsOnly)
-		int32 M_Index;
+	int32 M_Index;
 };
 
 UCLASS()
@@ -27,10 +27,19 @@ class FVM_API UItemDataTable : public UObject
 {
 	GENERATED_BODY()
 private:
-	FTableRowBase* M_Value = nullptr;
+	FTableRowBase* ValuePtr;
 public:
 	//设置数据
 	void SetValue(FTableRowBase* _Value);
 	//获取数据
 	FTableRowBase* GetValue();
+	//获取转换数据
+	template<class Type>
+	Type GetTransValue();
 };
+
+template<class Type>
+Type UItemDataTable::GetTransValue()
+{
+	return *((Type*)ValuePtr);
+}

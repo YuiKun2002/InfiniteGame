@@ -247,6 +247,9 @@ public:
 	//物品ID号(可以不用设置)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 M_ItemID = -1;
+	//背包ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString BagID;
 };
 
 //Key,Value资源对象

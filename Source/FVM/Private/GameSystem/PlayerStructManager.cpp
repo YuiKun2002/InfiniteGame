@@ -222,6 +222,8 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						CardData.ItemName = FText::FromString(JsonObj->GetStringField(TEXT("name")));
 						//设置ID
 						CardData.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
+						//设置BagID
+						CardData.BagID = JsonObj->GetStringField(TEXT("packageId"));
 						//设置等级
 						CardData.M_CardGrade = JsonObj->GetIntegerField(TEXT("itemLevel"));
 						//设置卡片类型
@@ -325,6 +327,8 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 							Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
 							//设置ID
 							Mater.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
+							//设置BagID
+							Mater.BagID = JsonObj->GetStringField(TEXT("packageId"));
 							//设置材料类型
 							EMaterialType MaterialsType = EMaterialType::E_Blueprint;
 							switch (TargetType)
@@ -360,13 +364,27 @@ void UPlayerStructManager::InitBag(const TArray<FItemCard>& Cards, const TArray<
 	for (const FItemCard& Data : this->M_PlayerItems_Card)
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__,
-			TEXT("解析到：") + Data.ItemName.ToString() + TEXT("】防御卡"));
+			TEXT("解析到：") +
+			Data.ItemName.ToString() +
+			TEXT("】防御卡") +
+			TEXT("ID：") +
+			FString::FromInt(Data.M_ItemID) +
+			TEXT("  BagID：") +
+			Data.BagID
+		);
 	}
 
 	for (const FMaterialBase& Data : this->M_PlayerItems_Material)
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__,
-			TEXT("解析到：") + Data.ItemName.ToString() + TEXT("】材料"));
+			TEXT("解析到：") +
+			Data.ItemName.ToString() +
+			TEXT("】材料") +
+			TEXT("ID：") +
+			FString::FromInt(Data.M_ItemID) +
+			TEXT("  BagID：") +
+			Data.BagID
+		);
 	}
 }
 

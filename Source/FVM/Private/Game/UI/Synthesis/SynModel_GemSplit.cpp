@@ -161,7 +161,7 @@ void USynModel_GemSplit::SetEquipmentData(UItemDataTable* _Data, int32 _Index, U
 	//界面
 	UUI_PlayerBagMaterialGrid* const LocalGrid = Cast<UUI_PlayerBagMaterialGrid>(_UWidget);
 	//数据
-	FEquipmentBase* const LocalData = ((FEquipmentBase*)(_Data->GetValue()));
+	FEquipmentBase const LocalData = _Data->GetTransValue<FEquipmentBase>();
 	//按钮
 	UButton* const LocalButton = LocalGrid->GetButton();
 
@@ -172,14 +172,14 @@ void USynModel_GemSplit::SetEquipmentData(UItemDataTable* _Data, int32 _Index, U
 	LocalGrid->SetItemGrade(TEXT(""));
 
 	LocalButton->SetIsEnabled(true);
-	this->M_SynUi->SetButtonStyle(LocalButton, LocalData->ItemTexturePath.ToString());
+	this->M_SynUi->SetButtonStyle(LocalButton, LocalData.ItemTexturePath.ToString());
 
-	switch (LocalData->M_EquipmentType)
+	switch (LocalData.M_EquipmentType)
 	{
 	case EEquipment::E_WeaponGem:
 	{
 		LocalGrid->UpdateMaterialsShowCount(TEXT("宝石"));
-		LocalGrid->SetItemGrade(UGameSystemFunction::GetItemGradePath(LocalData->M_EquipmentGrade));
+		LocalGrid->SetItemGrade(UGameSystemFunction::GetItemGradePath(LocalData.M_EquipmentGrade));
 
 		if (this->M_GS_CurrentSelectGemIndex != -1)
 			if (_Index == this->M_GS_CurrentSelectGemIndex)
@@ -194,7 +194,7 @@ void USynModel_GemSplit::SetEquipmentData(UItemDataTable* _Data, int32 _Index, U
 	//移除绑定
 	LocalGrid->GetButton()->OnClicked.Clear();
 
-	switch (LocalData->M_EquipmentType)
+	switch (LocalData.M_EquipmentType)
 	{
 	case EEquipment::E_WeaponGem:
 	{

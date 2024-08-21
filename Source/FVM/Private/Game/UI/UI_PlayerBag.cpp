@@ -849,11 +849,11 @@ void UUI_PlayerBag::SetCardAttribute(UUI_PlayerBagCardGrid* _TempCardGrid, UItem
 {
 	if (!IsValid(_TempCardGrid))
 		return;
-
+	FItemCard const ItemData = _Items_->GetTransValue<FItemCard>();
 	_TempCardGrid->M_PlayerUIBag = this;
-	_TempCardGrid->M_CardTexturePath = ((FItemCard*)_Items_->GetValue())->ItemTexturePath.ToString();
-	_TempCardGrid->SetFItemCardData(((FItemCard*)_Items_->GetValue()));
-	_TempCardGrid->UpdateButtonTexture(FString::FromInt(((FItemCard*)_Items_->GetValue())->M_CardPrice));
+	_TempCardGrid->M_CardTexturePath = ItemData.ItemTexturePath.ToString();
+	_TempCardGrid->SetFItemCardData(ItemData);
+	_TempCardGrid->UpdateButtonTexture(FString::FromInt(ItemData.M_CardPrice));
 
 	//如果有绑定则清楚绑定
 	if (_TempCardGrid->GetButtonClickEvent().IsBound())
@@ -903,13 +903,13 @@ void UUI_PlayerBag::WidgetRefresh_Materials(UItemDataTable* _Data, int32 _Index,
 
 void UUI_PlayerBag::SetMaterialAttribute(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _Items_, int32 _Index)
 {
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_Items_->GetValue()))->ItemTexturePath.ToString());
-	int32 CurCount = ((FMaterialBase*)(_Items_->GetValue()))->M_Count;
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Items_->GetTransValue<FMaterialBase>().ItemTexturePath.ToString());
+	int32 CurCount = _Items_->GetTransValue<FMaterialBase>().M_Count;
 	_Grid->UpdateMaterialsShowCount(FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
 
 	auto LDelegateBind = [&](UUI_PlayerBagMaterialGrid* _LGrid, UObject* DelegateClass, const FString& _DelegateFuncName) {
 		//赋值数据
-		_LGrid->SetMaterialData(((FMaterialBase*)(_Items_->GetValue())));
+		_LGrid->SetMaterialData(_Items_->GetTransValue<FMaterialBase>());
 		_LGrid->SetUI_PlayerBag(this);
 
 		if (_LGrid->GetButton()->OnClicked.IsBound())

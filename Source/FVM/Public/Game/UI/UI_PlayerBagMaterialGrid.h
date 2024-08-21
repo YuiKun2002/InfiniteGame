@@ -32,10 +32,9 @@ private:
 	UWidget* M_Other_UI = nullptr;
 private:
 	//物品数据(指向玩家背包里面的数据)
-	FMaterialBase* M_MaterialBaseData;
+	UPROPERTY()
 	FMaterialBase MaterialBaseCopyData;
-
-	FEquipmentBase* M_EquipmentBaseData;
+	UPROPERTY()
 	FEquipmentBase EquipmentBaseCopyData;
 private:
 	//索引(可以是UI索引可以是物品数据索引)
@@ -64,8 +63,8 @@ public:
 	//设置任意UI的指向
 	void SetUI_Other(UWidget* _Other_UI);
 	//设置物品基本数据
-	void SetMaterialData(FMaterialBase* _Data);
-	void SetEquipmentBase(FEquipmentBase* _Data);
+	void SetMaterialData(FMaterialBase _Data);
+	void SetEquipmentBase(FEquipmentBase _Data);
 
 	//设置物品等级
 	UFUNCTION(BlueprintCallable)

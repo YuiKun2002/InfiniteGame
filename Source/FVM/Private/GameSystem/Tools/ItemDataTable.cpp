@@ -5,10 +5,10 @@
 
 void UItemDataTable::SetValue(FTableRowBase* _Value)
 {
-	this->M_Value = _Value;
+	this->ValuePtr = _Value;
 }
 
 FTableRowBase* UItemDataTable::GetValue()
 {
-	return this->M_Value;
+	return this->ValuePtr;
 }

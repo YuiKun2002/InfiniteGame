@@ -199,8 +199,8 @@ void FMakeCardBlueprintMaterialGrid::SetImgHead(const FString& HeadPath, const F
 void FMakeCardBlueprintMaterialGrid::Reset() const
 {
 	this->Bg->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	this->Head->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	UWidgetBase::SetImageBrush(this->Head, this->CurHeadPath);
+	this->Head->SetVisibility(ESlateVisibility::Collapsed);
+	//UWidgetBase::SetImageBrush(this->Head, this->CurHeadPath);
 }
 
 void FMakeCardBlueprintMaterialGrid::Hidden() const
@@ -224,10 +224,11 @@ void FMakeCardSpicesData::CancelSelectSpices(USynModel_MakeCard* Class)
 	this->PlayerBagIndex = -1;
 
 	//还原样式
-	UWidgetBase::SetButtonStyle(
+	/*UWidgetBase::SetButtonStyle(
 		Class->GetSpicesButt(),
 		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_18.T_PS_18'")
-	);
+	);*/
+	Class->GetSpicesButt()->SetVisibility(ESlateVisibility::Collapsed);
 	//解除绑定
 	Class->GetSpicesButt()->OnClicked.Clear();
 	//重新加载香料区
@@ -289,15 +290,15 @@ void USynModel_MakeCard::InitializeBySynthesis(UUI_PlayerSynthesis* Class)
 	//初始化格子【配方材料】
 	FMakeCardBlueprintMaterialGrid Grid1;
 	Grid1.Init(this->PlayerSynthesis, TEXT("Image_1"), TEXT("Material_0"),
-		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_17.T_PS_17'"));
+		TEXT(""));
 
 	FMakeCardBlueprintMaterialGrid Grid2;
 	Grid2.Init(this->PlayerSynthesis, TEXT("Image_2"), TEXT("Material_2"),
-		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_17.T_PS_17'"));
+		TEXT(""));
 
 	FMakeCardBlueprintMaterialGrid Grid3;
 	Grid3.Init(this->PlayerSynthesis, TEXT("Image"), TEXT("Material_1"),
-		TEXT("Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_17.T_PS_17'"));
+		TEXT(""));
 
 	this->BlueprintMaterialGrid.Append({ Grid1,Grid2,Grid3 });
 	//初始化配方按钮
@@ -410,7 +411,7 @@ void USynModel_MakeCard::SetMakeCard_Material_PanelData(UUI_PlayerBagMaterialGri
 	//启用按钮
 	_Grid->GetButton()->SetIsEnabled(true);
 	//设置材料数据
-	_Grid->SetMaterialData(ConstCastSharedPtr<FMaterialBase>(_CardData->GetValuePtr()));
+	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
 	//设置材料索引
 	_Grid->SetIndex(_Index);
 	//设置材料个数
@@ -576,7 +577,7 @@ void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIte
 	//设置显示上限
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
 	//设置材料数据
-	_Grid->SetMaterialData(ConstCastSharedPtr<FMaterialBase>(_CardData->GetValuePtr()));
+	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
 	//设置材料的外观
 	UWidgetBase::SetButtonStyle(_Grid->GetButton(),_Grid->GetMaterialData()->ItemTexturePath.ToString());
 

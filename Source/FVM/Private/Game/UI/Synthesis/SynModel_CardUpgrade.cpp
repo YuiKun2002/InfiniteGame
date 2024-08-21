@@ -848,10 +848,10 @@ void USynModel_CardUpgrade::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int
 
 void USynModel_CardUpgrade::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index)
 {
-	//设置纹理
-	_Grid->M_CardTexturePath = ((FItemCard*)(_Data->GetValue()))->ItemTexturePath.ToString();
 	//设置数据
-	_Grid->SetFItemCardData(((FItemCard*)(_Data->GetValue())));
+	_Grid->SetFItemCardData(_Data->GetTransValue<FItemCard>());
+	//设置纹理
+	_Grid->M_CardTexturePath = _Grid->GetFItemCardData()->ItemTexturePath.ToString();
 	//设置指向
 	_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 	//启动按钮
@@ -862,7 +862,7 @@ void USynModel_CardUpgrade::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataT
 	_Grid->SetCardIndex(_Index);
 
 	//更新文本
-	_Grid->UpdateButtonTexture(FString::FromInt(((FItemCard*)(_Data->GetValue()))->M_CardPrice));
+	_Grid->UpdateButtonTexture(FString::FromInt(_Grid->GetFItemCardData()->M_CardPrice));
 
 	//清理绑定
 	if (_Grid->GetButton()->OnClicked.IsBound())
@@ -985,14 +985,14 @@ void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, U
 	_Grid->SetIndex(_Index);
 	//设置材料按钮表示可以选择
 	_Grid->GetButton()->SetIsEnabled(true);
+	//设置材料数据
+	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
 	//设置材料的数量
-	int32 CurCount = ((FMaterialBase*)(_CardData->GetValue()))->M_Count;
+	int32 CurCount = _Grid->GetMaterialData()->M_Count;
 	//设置显示上限
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
-	//设置材料数据
-	_Grid->SetMaterialData(((FMaterialBase*)(_CardData->GetValue())));
 	//设置材料的外观
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(), ((FMaterialBase*)(_CardData->GetValue()))->ItemTexturePath.ToString());
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Grid->GetMaterialData()->ItemTexturePath.ToString());
 
 	if (_Grid->GetButton()->OnClicked.IsBound())
 	{

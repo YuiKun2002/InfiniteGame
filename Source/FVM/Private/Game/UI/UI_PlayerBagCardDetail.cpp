@@ -40,14 +40,14 @@ void UUI_PlayerBagCardDetail::CreateTip()
 
 void UUI_PlayerBagCardDetail::RemoveCurrent()
 {
-	for (auto PP = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card.CreateIterator(); PP; PP++)
+	/*for (auto PP = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card.CreateIterator(); PP; PP++)
 	{
 		if (&(*PP) == M_FItemCard)
 		{
 			PP.RemoveCurrent();
 			break;
 		}
-	}
+	}*/
 
 	//保存数据
 	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("进行卡片移出")));

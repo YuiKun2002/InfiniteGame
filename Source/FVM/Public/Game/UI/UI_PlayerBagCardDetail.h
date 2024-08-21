@@ -45,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString ItemDescrible_2;
 public:
-	FItemCard* M_FItemCard = nullptr;
+	FItemCard M_FItemCard;
 	//ui背包
 	UUI_PlayerBag* M_PlayerUIBag = nullptr;
 private:

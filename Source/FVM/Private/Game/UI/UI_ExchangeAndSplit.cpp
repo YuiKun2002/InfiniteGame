@@ -72,12 +72,12 @@ void UUI_ExchangeAndSplit::WidgetRefresh_SplitMaterialUpdate(UItemDataTable* _Da
 void UUI_ExchangeAndSplit::SetSplitMaterials(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
 	UUI_PlayerBagMaterialGrid* const Grid = Cast<UUI_PlayerBagMaterialGrid>(_UWidget);
-	FMaterialBase* const Data = (FMaterialBase*)_Data->GetValue();
+	FMaterialBase const Data = _Data->GetTransValue<FMaterialBase>();
 
 	Grid->SetMaterialData(Data);
 	Grid->SetIndex(_Index);
-	Grid->UpdateMaterialsShowCount(FString::FromInt(Data->M_Count > 9999 ? 9999 : Data->M_Count));
-	this->SetButtonStyle(Grid->GetButton(), Data->ItemTexturePath.ToString());
+	Grid->UpdateMaterialsShowCount(FString::FromInt(Data.M_Count > 9999 ? 9999 : Data.M_Count));
+	this->SetButtonStyle(Grid->GetButton(), Data.ItemTexturePath.ToString());
 	Grid->GetButton()->SetIsEnabled(true);
 
 	if (this->M_CurrentSelectType == EItemType::E_MaterialItem)
@@ -113,12 +113,12 @@ void UUI_ExchangeAndSplit::WidgetRefresh_CardUpdate(UItemDataTable* _Data, int32
 void UUI_ExchangeAndSplit::SetSplitCards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
 	UUI_PlayerBagCardGrid* const Grid = Cast<UUI_PlayerBagCardGrid>(_UWidget);
-	FItemCard* const Data = (FItemCard*)_Data->GetValue();
+	FItemCard const Data = _Data->GetTransValue<FItemCard>();
 
 	Grid->SetFItemCardData(Data);
 	Grid->SetUIIndex(_Index);
-	Grid->UpdateButtonTexture(FString::FromInt(Data->M_CardPrice));
-	this->SetButtonStyle(Grid->GetButton(), Data->ItemTexturePath.ToString());
+	Grid->UpdateButtonTexture(FString::FromInt(Data.M_CardPrice));
+	this->SetButtonStyle(Grid->GetButton(), Data.ItemTexturePath.ToString());
 	Grid->GetButton()->SetIsEnabled(true);
 
 	if (this->M_CurrentSelectType == EItemType::E_Card)

@@ -30,10 +30,9 @@ FOnButtonClickedEvent& UUI_PlayerBagCardGrid::GetButtonClickEvent()
 	return this->M_CardButton->OnClicked;
 }
 
-void UUI_PlayerBagCardGrid::SetFItemCardData(FItemCard* const _FItemCardData)
+void UUI_PlayerBagCardGrid::SetFItemCardData(FItemCard _FItemCardData)
 {
-	this->M_FItemCard = _FItemCardData;
-	this->CopyData = *_FItemCardData;
+	this->CopyData = _FItemCardData;
 }
 
 void UUI_PlayerBagCardGrid::SetUI_PlayerSynthesis(UUI_PlayerSynthesis* const _PlayerSynthesis)
@@ -68,7 +67,7 @@ int32 UUI_PlayerBagCardGrid::GetUIIndex()
 
 FItemCard* const UUI_PlayerBagCardGrid::GetFItemCardData()
 {
-	return this->M_FItemCard;
+	return &this->CopyData;
 }
 
 FString UUI_PlayerBagCardGrid::ToString_Implementation()
@@ -94,15 +93,15 @@ void UUI_PlayerBagCardGrid::ShowCardDetails()
 	//细节界面
 	UUI_PlayerBagCardDetail* M_UI_PlayerBagCardDetail = CreateWidget<UUI_PlayerBagCardDetail>(this, LoadClass<UUI_PlayerBagCardDetail>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardDetail.BPUI_PlayerBagCardDetail_C'")));
 	M_UI_PlayerBagCardDetail->M_PlayerUIBag = this->M_PlayerUIBag;
-	M_UI_PlayerBagCardDetail->M_FItemCard = this->M_FItemCard;
-	M_UI_PlayerBagCardDetail->ItemName = M_FItemCard->ItemName.ToString();
-	M_UI_PlayerBagCardDetail->ItemDescrible = M_FItemCard->ItemDescrible.ToString();
-	M_UI_PlayerBagCardDetail->ItemDescrible_2 = M_FItemCard->ItemDescrible_2;
-	M_UI_PlayerBagCardDetail->M_CardHP = FString(TEXT("生命值:")) + FString::FormatAsNumber(M_FItemCard->M_CardHP);
-	M_UI_PlayerBagCardDetail->M_CardPrice = FString(TEXT("火苗:")) + FString::FormatAsNumber(M_FItemCard->M_CardPrice);
-	M_UI_PlayerBagCardDetail->M_IsChange = M_FItemCard->M_FCardChangeJobs.M_IsChange ? FString(TEXT("转职:可以转职")) : FString(TEXT("转职:不可转职"));
-	M_UI_PlayerBagCardDetail->M_ChangeMaterialsName = FString(TEXT("转职对象:")) + M_FItemCard->M_FCardChangeJobs.M_ChangeMaterialsName;
-	M_UI_PlayerBagCardDetail->M_CardColdDown = FString(TEXT("冷却时间:")) + FString::SanitizeFloat(M_FItemCard->M_CardColdDown, 2);
+	M_UI_PlayerBagCardDetail->M_FItemCard = this->CopyData;
+	M_UI_PlayerBagCardDetail->ItemName = this->CopyData.ItemName.ToString();
+	M_UI_PlayerBagCardDetail->ItemDescrible = this->CopyData.ItemDescrible.ToString();
+	M_UI_PlayerBagCardDetail->ItemDescrible_2 = this->CopyData.ItemDescrible_2;
+	M_UI_PlayerBagCardDetail->M_CardHP = FString(TEXT("生命值:")) + FString::FormatAsNumber(this->CopyData.M_CardHP);
+	M_UI_PlayerBagCardDetail->M_CardPrice = FString(TEXT("火苗:")) + FString::FormatAsNumber(this->CopyData.M_CardPrice);
+	M_UI_PlayerBagCardDetail->M_IsChange = this->CopyData.M_FCardChangeJobs.M_IsChange ? FString(TEXT("转职:可以转职")) : FString(TEXT("转职:不可转职"));
+	M_UI_PlayerBagCardDetail->M_ChangeMaterialsName = FString(TEXT("转职对象:")) + this->CopyData.M_FCardChangeJobs.M_ChangeMaterialsName;
+	M_UI_PlayerBagCardDetail->M_CardColdDown = FString(TEXT("冷却时间:")) + FString::SanitizeFloat(this->CopyData.M_CardColdDown, 2);
 	M_UI_PlayerBagCardDetail->AddToViewport();
 }
 
@@ -116,8 +115,8 @@ void UUI_PlayerBagCardGrid::SelectCurrentCard()
 			return;
 		}
 
-		UUI_GamePrepare::M_GamePrepareStatic->SelectCard(this->M_FItemCard->ItemName.ToString(), *M_FItemCard);
-		UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.Emplace(*this->M_FItemCard);
+		UUI_GamePrepare::M_GamePrepareStatic->SelectCard(this->CopyData.ItemName.ToString(), this->CopyData);
+		UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.Emplace(this->CopyData);
 	}
 }
 
@@ -132,14 +131,14 @@ void UUI_PlayerBagCardGrid::RemoveCurrentSelectCard()
 
 		for (auto FCardDataPP = UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.CreateIterator(); FCardDataPP; FCardDataPP++)
 		{
-			if (this->M_FItemCard->ItemName.EqualTo((*FCardDataPP).ItemName))
+			if (this->CopyData.ItemName.EqualTo((*FCardDataPP).ItemName))
 			{
 				FCardDataPP.RemoveCurrent();
 				break;
 			}
 		}
 
-		TArray<FString> Names = { M_FItemCard->ItemName.ToString() };
+		TArray<FString> Names = { this->CopyData.ItemName.ToString() };
 		UUI_GamePrepare::M_GamePrepareStatic->SetCardEnable(Names, true);
 		UUI_GamePrepare::M_GamePrepareStatic->CancelCardNum();
 	}
@@ -463,7 +462,7 @@ void UUI_PlayerBagCardGrid::AddExchangeSplit_SplitSlot()
 			}
 
 			UItemDataTable* Data = NewObject<UItemDataTable>(this);
-			Data->SetValue((FTableRowBase*)(this->M_FItemCard));
+			Data->SetValue((FTableRowBase*)(&this->CopyData));
 			LExUI->SetCurrentSlipItem(EItemType::E_Card, this->GetUIIndex(), Data, this->GetButton());
 			this->GetButton()->SetIsEnabled(false);
 		}
@@ -473,10 +472,16 @@ void UUI_PlayerBagCardGrid::AddExchangeSplit_SplitSlot()
 void UUI_PlayerBagCardGrid::UpdateButtonTexture(const FString& _Price)
 {
 	//等级资源
-	if (this->M_FItemCard->M_CardGrade != 0)
+	if (this->CopyData.M_CardGrade != 0)
 	{
 		FSlateBrush GradeBrush;
-		GradeBrush.SetResourceObject(UAssetManager::GetStreamableManager().LoadSynchronous(FSoftObjectPath(FString(TEXT("Texture2D'/Game/Resource/Texture/CardGrade/")) + FString::FromInt(this->M_FItemCard->M_CardGrade) + (".") + FString::FromInt(this->M_FItemCard->M_CardGrade) + ("'"))));
+		GradeBrush.SetResourceObject(
+			UAssetManager::GetStreamableManager().LoadSynchronous(
+				FSoftObjectPath(
+					FString(TEXT("Texture2D'/Game/Resource/Texture/CardGrade/")) +
+					FString::FromInt(this->CopyData.M_CardGrade) + (".") +
+					FString::FromInt(this->CopyData.M_CardGrade) + ("'"))
+			));
 		GradeBrush.DrawAs = ESlateBrushDrawType::Image;
 		this->M_CardGradeImage->SetBrush(GradeBrush);
 	}
@@ -495,10 +500,10 @@ void UUI_PlayerBagCardGrid::UpdateButtonTexture(const FString& _Price)
 	Style.SetPressed(Brush);
 
 	this->M_CardButton->SetStyle(Style);
-	this->M_CardPriceText = M_FItemCard->M_CardPriceAutoUp ? FText::FromString(_Price + "+") : FText::FromString(_Price);
+	this->M_CardPriceText = this->CopyData.M_CardPriceAutoUp ? FText::FromString(_Price + "+") : FText::FromString(_Price);
 
 	//如果卡片等级为0则不显示
-	if (this->M_FItemCard->M_CardGrade != 0)
+	if (this->CopyData.M_CardGrade != 0)
 	{
 		this->M_CardGradeImage->SetVisibility(ESlateVisibility::Visible);
 	}
