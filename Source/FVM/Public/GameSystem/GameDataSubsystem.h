@@ -29,10 +29,15 @@
 
 	 如果需要修改，请修改【数据表DT_GameUserInterface】【蓝图实现BP_xxxx_CateName】【C++的UI宏名称】
  */
+ //全局UI集合
 #define UI_GLOBALUINAME FName(TEXT("Global"))
+//地图UI集合
 #define UI_WORLDMAPUINAME FName(TEXT("WorldMap"))
+//背包UI集合
 #define UI_BAGUINAME FName(TEXT("Bag"))
+//商城UI集合
 #define UI_SHOPUINAME FName(TEXT("Shop"))
+//实验室UI集合
 #define UI_LABSUINAME FName(TEXT("Labs"))
 
 

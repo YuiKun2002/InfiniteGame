@@ -26,15 +26,21 @@ class FVM_API UShopDataAssetCache : public UGameDataAssetCache
 {
 	GENERATED_BODY()
 public:
-
+	//初始化
+	void InitCache();
+	//获取卡片
 	TArray<FItem_Price_Data>& GetCards();
 private:
+	UFUNCTION()
 	UGameCache* GetCache();
-
-	//卡片数据
-	DataTableAssetData<FItem_Price_Data> Cards;
+	UPROPERTY()
+	bool bInit = false;
+	//卡片
 	UPROPERTY()
 	TArray<FItem_Price_Data> CardsData;
+	//材料
+	UPROPERTY()
+	TArray<FItem_Price_Data> MaterialsData;
 public:
 	virtual void Unload_Implementation() override;
 };

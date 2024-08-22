@@ -414,16 +414,87 @@ void UShopDataAssetCache::Unload_Implementation()
 	this->CardsData.Empty();
 }
 
+
+void UShopDataAssetCache::InitCache()
+{
+	if (this->bInit)
+	{
+		return;
+	}
+	this->bInit = true;
+
+	//获取缓存
+	UGameCache* CacheIns = this->GetCache();
+	if (!IsValid(CacheIns))
+	{
+		return;
+	}
+
+	if (!IsValid(CacheIns->GetRequestJsonObject()))
+	{
+		return;
+	}
+
+	//获取数据
+	TArray<UVaRestJsonValue*> Values = CacheIns->GetRequestJsonObject()->GetArrayField(TEXT("data"));
+
+	for (UVaRestJsonValue*& Value : Values)
+	{
+		UVaRestJsonObject* ObjIns = Value->AsObject();
+		if (IsValid(ObjIns))
+		{
+			//如果没有上架则不需要解析
+			if (ObjIns->GetIntegerField(TEXT("isShow")) != 0)
+			{
+				continue;
+			}
+
+			FItem_Price_Data Data;
+			//货币类型
+			Data.M_FItemPrice.M_ItemMoneyType = FCString::Atoi(*ObjIns->GetStringField(TEXT("currencyId")));
+			//物品名称
+			Data.M_FItemPrice.M_ItemName = FText::FromString(ObjIns->GetStringField(TEXT("name")));
+			//物品价格
+			Data.M_FItemPrice.M_ItemPrice = ObjIns->GetIntegerField(TEXT("price"));
+			//物品数量
+			Data.M_FItemPrice.M_ItemNums = ObjIns->GetIntegerField(TEXT("num"));
+			//物品的描述
+			//Data.M_FItemPrice.M_ItemDescirbe = FText::FromString(ObjIns->GetStringField(TEXT("itemDescribe")));
+			//物品ID
+			Data.M_FItemPrice.M_ItemID = ObjIns->GetStringField(TEXT("id"));
+			//物品头像
+			UItemBaseStruct::GetTextureResource(
+				FCString::Atoi(*Data.M_FItemPrice.M_ItemID),
+				Data.M_FItemPrice.M_ItemHeadTexture2DPath
+			);
+			//物品类型
+			int32 Type = ObjIns->GetIntegerField(TEXT("type"));
+			switch (Type)
+			{
+			case 0:; break;
+			case 2:
+			case 3:
+			{
+				Data.M_FItemPrice.M_ItemType = EItemType::E_MaterialItem;
+				this->MaterialsData.Emplace(Data);
+			}
+			break;
+			default: {
+				Data.M_FItemPrice.M_ItemType = EItemType::E_Card;
+				this->CardsData.Emplace(Data);
+			}break;
+			}
+
+			UGameSystemFunction::FVMLog(__FUNCTION__,
+				FString(Data.M_FItemPrice.M_ItemName.ToString() + TEXT("：上架！"))
+			);
+		}
+	}
+}
+
+
 TArray<FItem_Price_Data>& UShopDataAssetCache::GetCards()
 {
-	if (this->CardsData.Num())
-	{
-		return this->CardsData;
-	}
-	//解析数据
-
-
-
 	return this->CardsData;
 }
 
@@ -465,6 +536,7 @@ void UUI_Shop::LoadCardRange()
 
 		//加载数据
 		this->ShopDataAssetCache = GetGameDataAssetCache<UShopDataAssetCache>(TEXT("ShopDataAssetCache"));
+		this->ShopDataAssetCache->InitCache();
 	}
 
 	this->M_UItemLoadManager_Cards->UpdateDatatable(this->ShopDataAssetCache->GetCards());

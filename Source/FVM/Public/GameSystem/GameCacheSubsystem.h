@@ -89,6 +89,9 @@ public:
 	//请求缓存子系统
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UGameCacheSubsystem* GameCacheSubsystem = nullptr;
+	//是否保存
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSaveCache = true;
 public:
 	//初始化
 	UFUNCTION(BlueprintImplementableEvent)
@@ -150,7 +153,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameCacheRequestAction")
 	static UGameAsyncRequest* GameAsyncRequest(
 		FString URL,
-		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask
+		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask,
+		bool bSaveCache = true
 	);
 
 	virtual void AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request) override;
@@ -168,7 +172,8 @@ public:
 	static UGameAsyncJsonRequest* GameAsyncJsonRequest(
 		FString URL,
 		FString Json,
-		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask
+		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask,
+		bool bSaveCache = true
 	);
 
 	virtual void AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request) override;
@@ -194,7 +199,7 @@ public:
 	);
 
 	UFUNCTION(BlueprintCallable)
-	void RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave);
+	UGameCache* RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave);
 
 	//标签
 	UFUNCTION(BlueprintPure)

@@ -63,6 +63,12 @@ public:
 	//物品的价格
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 M_ItemPrice;
+	//物品数量
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 M_ItemNums;
+	//物品ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_ItemID;
 	//货币的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 M_ItemMoneyType;

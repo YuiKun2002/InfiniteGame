@@ -2,8 +2,8 @@
 
 
 #include "GameSystem/GameCacheSubsystem.h"
-#include "Kismet/GameplayStatics.h"
 #include "GameSystem/GameDataSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 void UGameCache::SetRequestTag(FName curTag)
 {
@@ -93,7 +93,7 @@ bool UGameCacheSubsystem::Request(
 	return false;
 }
 
-void UGameCacheSubsystem::RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave)
+UGameCache* UGameCacheSubsystem::RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave)
 {
 	UGameCache* NewCache = NewObject<UGameCache>();
 	NewCache->SetRequestTag(Tag);
@@ -102,9 +102,10 @@ void UGameCacheSubsystem::RequestComplet(FName Tag, UVaRestRequestJSON* Request,
 	NewCache->SetRequestJsonObject(Request->GetResponseObject());
 	if (bSave)
 	{
-		NewCache->SaveGameCache();
+		this->GameCache.Emplace(Tag, NewCache);
 	}
-	this->GameCache.Emplace(Tag, NewCache);
+
+	return NewCache;
 }
 
 UGameCache* UGameCacheSubsystem::GetGameCache(TSubclassOf<class UAssetCategoryName> Tag)
@@ -189,6 +190,7 @@ UGameCacheAsyncRequest* UGameCacheAsyncRequest::GameCacheAsyncRequest(FString UR
 	Re->Task = RequestTask.GetDefaultObject();
 	Re->Task->URL = URL;
 	Re->Task->Json.Empty();
+	Re->Task->bSaveCache = true;
 	Re->Task->Init();
 	Re->Task->AddToRoot();
 	Re->AddToRoot();
@@ -210,12 +212,13 @@ void UGameCacheAsyncRequest::Activate()
 	);
 }
 
-UGameAsyncRequest* UGameAsyncRequest::GameAsyncRequest(FString URL, TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask)
+UGameAsyncRequest* UGameAsyncRequest::GameAsyncRequest(FString URL, TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask, bool bSaveCache)
 {
 	UGameAsyncRequest* Re = NewObject<UGameAsyncRequest>();
 	Re->Task = RequestTask.GetDefaultObject();
 	Re->Task->URL = URL;
 	Re->Task->Json.Empty();
+	Re->Task->bSaveCache = bSaveCache;
 	Re->Task->Init();
 	Re->Task->AddToRoot();
 	Re->AddToRoot();
@@ -237,8 +240,8 @@ void UGameAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* R
 		case 200:
 		{
 			UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
-			this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, false);
-			UGameCache* CacheObject = this->Task->GameCacheSubsystem->GetGameCache_Im(Tag);
+			//获取缓存
+			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, this->Task->bSaveCache);
 			if (IsValid(CacheObject))
 			{
 				this->RequestComplet.Broadcast();
@@ -290,13 +293,15 @@ void UGameAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* R
 UGameAsyncJsonRequest* UGameAsyncJsonRequest::GameAsyncJsonRequest(
 	FString URL,
 	FString Json,
-	TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask
+	TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask,
+	bool bSaveCache
 )
 {
 	UGameAsyncJsonRequest* Re = NewObject<UGameAsyncJsonRequest>();
 	Re->Task = RequestTask.GetDefaultObject();
 	Re->Task->URL = URL;
 	Re->Task->Json = Json;
+	Re->Task->bSaveCache = bSaveCache;
 	Re->Task->Init();
 	Re->Task->AddToRoot();
 	Re->AddToRoot();
