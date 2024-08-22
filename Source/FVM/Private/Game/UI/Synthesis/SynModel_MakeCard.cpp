@@ -451,7 +451,7 @@ void USynModel_MakeCard::LoadMaterialsToMakeCard()
 			this->M_Materials_Box,
 			this->M_UScrollBox_MakeCard_Material
 		);
-		this->M_UItemLoadManager_MakeCard_Materials->InitRange_Second(6, 7, 800, 100.f, 100.f);
+		this->M_UItemLoadManager_MakeCard_Materials->InitRange_Second(5, 5, 800, 132.f, 132.f);
 		//this->M_UItemLoadManager_MakeCard_Materials->SetMainScrollTransfrom(FVector2D(0.f, 8.f));
 		//this->M_UItemLoadManager_MakeCard_Materials->SetItemMargin(FVector2D(5.f, 15.f));
 		this->M_UItemLoadManager_MakeCard_Materials->OnCreateItem.BindUFunction(this,
@@ -489,7 +489,7 @@ void USynModel_MakeCard::LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeB
 	{
 		this->ItemLoadManager_Spice = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Spice_Make"));
 		this->ItemLoadManager_Spice->InitWidget_First(this->UniformGridPanel_Spice, this->ScrollBox_Spice);
-		this->ItemLoadManager_Spice->InitRange_Second(1, 5, 800, 100.f, 100.f, true);
+		this->ItemLoadManager_Spice->InitRange_Second(1, 4, 800, 142.f, 132.f, true);
 		this->ItemLoadManager_Spice->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitMaterial"));
 		this->ItemLoadManager_Spice->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateMaterial"));
 	}

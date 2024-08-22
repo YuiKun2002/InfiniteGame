@@ -34,6 +34,9 @@ public:
 	//对应背包中的索引
 	UPROPERTY()
 	int32 PlayerBagIndex = -1;
+	//第二ID
+	UPROPERTY()
+	int32 PlayerUIID = -1;
 	//当前卡片的数据
 	UPROPERTY()
 	FItemCard CardData;
@@ -44,7 +47,7 @@ DECLARE_DELEGATE_ThreeParams(FOnCardLoad, UUI_PlayerBagCardGrid* Grid, UItemData
 /**
  * 卡片强化
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FVM_API USynModel_CardUpgrade : public UObject
 {
 	GENERATED_BODY()
@@ -59,7 +62,7 @@ public:
 
 	//选择四叶草
 	UFUNCTION()
-	void SetSelectClover(const FString& CloverName, int32 ItemIndex, float CloverRate);
+	void SetSelectClover(FMaterialBase CopyData, float CloverRate);
 	//选择四叶草的UI
 	UFUNCTION()
 	void SetSelectCloverUI(class UUI_PlayerBagMaterialGrid* UIClover);
@@ -126,7 +129,9 @@ protected:
 	//卡片强化
 	UFUNCTION()
 	void CardUpgrade();
-
+	//重新加载
+	UFUNCTION(BlueprintCallable)
+	void ReLoadCardUpgrade(bool Result);
 private:
 	UPROPERTY()
 	UUI_PlayerSynthesis* PlayerSynthesis = nullptr;
@@ -231,6 +236,8 @@ private:
 	//四叶草概率
 	UPROPERTY()
 	float SelectCloverRate = 0.f;
+	UPROPERTY()
+	FMaterialBase CloverData;
 
 	//四叶草的格子
 	UPROPERTY()

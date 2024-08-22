@@ -149,7 +149,8 @@ void UUI_PlayerBagCardGrid::AddUpGradeFunc()
 	if (IsValid(this->M_UI_PlayerSynthesis->GetCardUpgradeFunction()))
 	{
 		FSynModelCardUpgradeData Data;
-		Data.PlayerBagIndex = M_CardIndex;
+		Data.PlayerBagIndex = -1;
+		Data.PlayerUIID = this->M_CardIndex;
 		Data.CardGrid = this;
 		Data.CardData = this->CopyData;
 		this->M_UI_PlayerSynthesis->GetCardUpgradeFunction()->AddCardDataMain(Data);

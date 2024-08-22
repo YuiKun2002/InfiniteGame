@@ -107,6 +107,9 @@ public:
 	//添加到卡片强化四叶草槽位
 	UFUNCTION()
 	void AddUpGradeCardCloverSlot();
+	//添加四叶草
+	UFUNCTION(BlueprintCallable)
+	void AddCardUpgradeCloverSlot(float Rate);
 	/*----------------------------------------卡片强化----------------------------------------*/
 
 

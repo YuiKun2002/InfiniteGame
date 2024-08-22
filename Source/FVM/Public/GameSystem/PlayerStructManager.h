@@ -295,8 +295,14 @@ public:
 	FEquipmentBase* GetEquipmentByName(const FString& _Name);
 	//通过名称获取卡片
 	FItemCard* GetCardByName(const FString& _Name);
+	//通过卡片ID获取背包位置
+	int32 GetCardByBagID(const FString& BagID);
+	//通过卡片等级获取背包位置
+	int32 GetCardByGrade(const int32& Grade);
 	//通过名称获取材料
 	FMaterialBase* GetMaterialByName(const FString& _Name);
+	//通过材料ID获取背包位置
+	int32 GetMaterialByBagID(const FString& BagID);
 public:
 	//获取当前玩家的等级图片路径
 	UFUNCTION(BlueprintCallable)

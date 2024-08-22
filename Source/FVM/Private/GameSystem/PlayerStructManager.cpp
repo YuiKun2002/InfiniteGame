@@ -68,9 +68,57 @@ FItemCard* UPlayerStructManager::GetCardByName(const FString& _Name)
 	return UItemBaseStruct::GetMetaByName<FItemCard>(this->M_PlayerItems_Card, _Name);
 }
 
+int32 UPlayerStructManager::GetCardByBagID(const FString& BagID)
+{
+	int32 i = 0;
+	for (const FItemCard& Data : this->M_PlayerItems_Card)
+	{
+		if (Data.BagID.Equals(BagID))
+		{
+			return i;
+		}
+
+		i++;
+	}
+
+	return -1;
+}
+
+int32 UPlayerStructManager::GetCardByGrade(const int32& Grade)
+{
+	int32 i = 0;
+	for (const FItemCard& Data : this->M_PlayerItems_Card)
+	{
+		if (Data.M_CardGrade == Grade)
+		{
+			return i;
+		}
+
+		i++;
+	}
+
+	return -1;
+}
+
 FMaterialBase* UPlayerStructManager::GetMaterialByName(const FString& _Name)
 {
 	return UItemBaseStruct::GetMetaByName<FMaterialBase>(this->M_PlayerItems_Material, _Name);
+}
+
+int32 UPlayerStructManager::GetMaterialByBagID(const FString& BagID)
+{
+	int32 i = 0;
+	for (const FMaterialBase& Data : this->M_PlayerItems_Material)
+	{
+		if (Data.BagID.Equals(BagID))
+		{
+			return i;
+		}
+
+		i++;
+	}
+
+	return -1;
 }
 
 FString UPlayerStructManager::GetGradeImagePath()
@@ -229,8 +277,14 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						//设置卡片类型
 						UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
 						CardData.M_ECardType = ECardType(uint8(subType->AsInt32()));
-						//添加
-						Cards.Emplace(CardData);
+
+						//卡片数量
+						int32 Nums = JsonObj->GetIntegerField(TEXT("totalNum"));
+						for (int32 i = 0; i < Nums; i++)
+						{
+							//添加
+							Cards.Emplace(CardData);
+						}
 					}
 					/*bool bResult;
 					UVaRestJsonValue* SubType = JsonObj->GetField((TEXT("subType")));
@@ -358,6 +412,8 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 
 void UPlayerStructManager::InitBag(const TArray<FItemCard>& Cards, const TArray<FMaterialBase>& Materials)
 {
+	this->M_PlayerItems_Card.Empty();
+	this->M_PlayerItems_Material.Empty();
 	this->M_PlayerItems_Card = Cards;
 	this->M_PlayerItems_Material = Materials;
 

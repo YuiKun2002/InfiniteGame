@@ -283,16 +283,9 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 		return;
 	}
 
-	//启用之前的禁止按钮UI
-	if (IsValid(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()))
-	{
-		if (IsValid(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetSelectCloverUI()))
-		{
-			this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetSelectCloverUI()->GetButton()->SetIsEnabled(true);
-		}
-	}
 
-	FCloverMaterial _Clover;
+
+	/*FCloverMaterial _Clover;
 	if (!UMaterialBaseStruct::GetMaterialSourceData<FCloverMaterial>(
 		this->MaterialBaseCopyData.ItemName.ToString(),
 		_Clover,
@@ -301,15 +294,33 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	{
 		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]查询失败!")));
 		return;
+	}*/
+
+	//请求数据【】-》拿到结果后，才能继续选择
+	//this->MaterialBaseCopyData;
+
+	this->M_UUI_PlayerSynthesis->OnSelectStoneRequest(
+		this,
+		FString::FromInt(this->MaterialBaseCopyData.M_ItemID)
+	);
+}
+
+void UUI_PlayerBagMaterialGrid::AddCardUpgradeCloverSlot(float Rate)
+{
+	//启用之前的禁止按钮UI
+	if (IsValid(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()))
+	{
+		if (IsValid(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetSelectCloverUI()))
+		{
+			this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetSelectCloverUI()->GetButton()->SetIsEnabled(true);
+		}
 	}
-
-	//禁用当前选择的UI
+	//设置当前选择的UI格子
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->SetSelectCloverUI(this);
-
+	//设置当前选择的四叶草数据
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->SetSelectClover(
-		this->MaterialBaseCopyData.ItemName.ToString(),
-		UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->MaterialBaseCopyData.ItemName.ToString()),
-		_Clover.M_UpGrateRate
+		this->MaterialBaseCopyData,
+		Rate
 	);
 
 	this->GetButton()->SetIsEnabled(false);
@@ -318,10 +329,9 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	UWidgetBase::SetButtonStyle(this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton(),
 		this->MaterialBaseCopyData.ItemTexturePath.ToString()
 	);
-
+	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->SetVisibility(ESlateVisibility::Visible);
 	//更新概率
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetUpGradeRate();
-
 	//重新绑定四叶草的点击功能
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.Clear();
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.AddDynamic(

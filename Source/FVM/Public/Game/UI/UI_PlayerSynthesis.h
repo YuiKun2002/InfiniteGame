@@ -60,7 +60,7 @@ public:
 
 	//卡片制作
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectMakeCardRequest(USynModel_MakeCard* MakeCardIns,const FString& composeId,const FString& prescriptionId);
+	void OnSelectMakeCardRequest(USynModel_MakeCard* MakeCardIns, const FString& composeId, const FString& prescriptionId);
 
 	/************************************************************************/
 	/*                              卡片强化                                 */
@@ -69,6 +69,27 @@ public:
 	//显示强化卡片
 	UFUNCTION(BlueprintCallable)
 	void ShowCardUpgrade();
+
+	//请求矿石数据{点击矿石的时候请求}
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelectStoneRequest(
+		class UUI_PlayerBagMaterialGrid* Grid,
+		const FString& ItemID
+	);
+
+	//进行卡片强化的请求
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCardUpgradeRequest(
+		class USynModel_CardUpgrade* CardUpgradeIns,
+		const FString& Card0ID,
+		const FString& Card1ID,
+		const FString& Card2ID,
+		const FString& Card3ID,
+		const FString& StoneID
+	);
+	/************************************************************************/
+	/*                              卡片转职                                 */
+	/************************************************************************/
 	//显示卡片转职
 	UFUNCTION(BlueprintCallable)
 	void ShowChangeCard();
