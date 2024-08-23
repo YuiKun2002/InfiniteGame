@@ -36,7 +36,7 @@ bool UUI_GamePrepare::Initialize()
 	//UE_LOG(LogTemp, Warning, TEXT("[UUI_GamePrepare::Initialize]: 赋值静态M_GamePrepareStatic"));
 
 	this->M_CardGradeMaxHead = this->GetWidgetComponent<UImage>(this, "Image_62");
-	this->M_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "CardGrid");
+	//this->Uniform_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "CardGrid");
 	this->M_SelectCardList = this->GetWidgetComponent<UHorizontalBox>(this, "SelectCardList");
 	this->M_MapHead = this->GetWidgetComponent<UImage>(this, "Map_Head_BG");
 	this->M_MouseList = this->GetWidgetComponent<UVerticalBox>(this, "MouseList");
@@ -67,7 +67,7 @@ void UUI_GamePrepare::SelectCard(const FString& _CardName, const FItemCard& _Car
 		this->GetWorld(),
 		LoadClass<UUI_PlayerBagCardGrid>(0,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")
-			));
+		));
 
 	M_TempCardGrid->SetFItemCardData(_CardData);
 	M_TempCardGrid->M_CardTexturePath = _CardData.ItemTexturePath.ToString();
@@ -137,11 +137,14 @@ void UUI_GamePrepare::LoadCardList()
 	//得到背包格子数量
 	this->M_CardBagCount = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerBagGirdGroup.GetBagCount(1);
 
-	this->M_CardGrid->ClearChildren();
+	//this->M_CardGrid->ClearChildren();
 
-	this->GetWorld()->GetTimerManager().ClearTimer(this->M_FTimeClip.M_FTimerHandle);
-	this->M_FTimeClip.M_Count = 0;
+	this->LoadCards();
 
+	//this->GetWorld()->GetTimerManager().ClearTimer(this->M_FTimeClip.M_FTimerHandle);
+	//this->M_FTimeClip.M_Count = 0;
+
+	/*
 	this->GetWorld()->GetTimerManager().SetTimer(this->M_FTimeClip.M_FTimerHandle, [&]() {
 		//卡片数据
 	 //	TArray<FItemCard>& _Items_ = UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card;
@@ -153,10 +156,19 @@ void UUI_GamePrepare::LoadCardList()
 		if (CurGradeMax < 0)
 			CurGradeMax = 0;
 
+		
+
+		
+
 		//判断索引是否有效
 		if (this->M_FTimeClip.M_Count < _CardItems_.Num() && this->M_FTimeClip.M_Count < M_CardBagCount)
 		{
-			UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(this->GetWorld(), LoadClass<UUI_PlayerBagCardGrid>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")));
+			UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(
+				this->GetWorld(),
+				UGameSystemFunction::GetUserInterClassByName(UI_BAGUINAME, TEXT("Card"))
+			);
+
+
 
 			//卡片大于限制等级，则将超越限制的卡片，改为限制等级
 			if (_CardItems_[this->M_FTimeClip.M_Count].M_CardGrade > CurGradeMax)
@@ -194,6 +206,7 @@ void UUI_GamePrepare::LoadCardList()
 		}
 
 		}, 0.01f, true);
+		*/
 }
 
 void UUI_GamePrepare::LoadMouseList()
@@ -216,10 +229,78 @@ void UUI_GamePrepare::CloseCurrentPanel()
 	this->M_FTimeClip.M_Count = 0;
 }
 
+UWidget* UUI_GamePrepare::WidgetCreate_InitCards(UItemDataTable* _Data, int32 _Index)
+{
+	UUI_PlayerBagCardGrid* Grid = CreateWidget<UUI_PlayerBagCardGrid>(this,
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Card")));
+
+	this->SetCardData(Grid, _Data, _Index);
+
+	return Grid;
+}
+
+void UUI_GamePrepare::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
+{
+	this->SetCardData(Cast<UUI_PlayerBagCardGrid>(_UWidget), _Data, _Index);
+}
+
+void UUI_GamePrepare::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index)
+{
+	//设置数据
+	_Grid->SetFItemCardData(_Data->GetTransValue<FItemCard>());
+	//设置纹理
+	_Grid->M_CardTexturePath = _Grid->GetFItemCardData()->ItemTexturePath.ToString();
+	//启动按钮
+	_Grid->GetButton()->SetIsEnabled(true);
+
+	//设置索引
+	_Grid->SetUIIndex(_Index);
+	_Grid->SetCardIndex(_Index);
+
+	//更新文本
+	_Grid->UpdateButtonTexture(FString::FromInt(_Grid->GetFItemCardData()->M_CardPrice));
+
+	//清理绑定
+	if (_Grid->GetButton()->OnClicked.IsBound())
+	{
+		_Grid->GetButton()->OnClicked.Clear();
+	}
+
+	//重新绑定
+
+	//this->OnCardLoad.ExecuteIfBound(_Grid, _Data, _Index);
+
+	//绑定音效
+	FScriptDelegate AddFunc_;
+	AddFunc_.BindUFunction(_Grid, "PlayOperateAudioDef");
+	_Grid->GetButton()->OnClicked.Add(AddFunc_);
+}
+
+void UUI_GamePrepare::LoadCards()
+{
+	if (!IsValid(this->ItemLoadManager_Card))
+	{
+		//卡片加载器
+		this->ItemLoadManager_Card = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Card_Game"));
+		this->ItemLoadManager_Card->InitWidget_First(this->Uniform_Card, this->ScrollBox_Card);
+		this->ItemLoadManager_Card->InitRange_Second(4, 5, 800, 120.f, 150.f);
+		this->ItemLoadManager_Card->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitCards"));
+		this->ItemLoadManager_Card->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateCards"));
+	}
+
+	//获取卡片数据
+	const TArray<FItemCard>& Datas = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card;
+	this->ItemLoadManager_Card->UpdateDatatable(Datas);
+	this->ItemLoadManager_Card->SetLoadItemMaxCount(Datas.Num());
+	this->ItemLoadManager_Card->ContinueRun();
+}
+
 void UUI_GamePrepare::InitPanelData()
 {
 	if (UFVMGameInstance::GetFVMGameInstance())
 	{
+		
+		/*
 		//获取角色形象界面
 		this->M_UUI_PlayerShow = CreateWidget<UUI_PlayerShow>(this,
 			LoadClass<UUI_PlayerShow>(0,
@@ -245,7 +326,7 @@ void UUI_GamePrepare::InitPanelData()
 			}
 
 			(this->GetWidgetComponent<UCanvasPanel>(this, "PlayerShow"))->AddChildToCanvas(this->M_UUI_PlayerShow);
-		}
+		}*/
 
 		//加载关卡配置
 		const FLevelConfig& LevelData =

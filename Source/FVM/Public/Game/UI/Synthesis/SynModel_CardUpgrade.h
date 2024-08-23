@@ -321,5 +321,5 @@ public:
 	UFUNCTION()
 	void SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index);
 	//加载卡片
-	void LoadCards(const TArray<FItemCard*>& CardsData, const int32& LoadCount);
+	void LoadCards(const TArray<FItemCard>& CardsData, const int32& LoadCount);
 };

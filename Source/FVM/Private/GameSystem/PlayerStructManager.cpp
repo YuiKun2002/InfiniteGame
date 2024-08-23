@@ -279,7 +279,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						CardData.M_ECardType = ECardType(uint8(subType->AsInt32()));
 
 						//卡片数量
-						int32 Nums = JsonObj->GetIntegerField(TEXT("totalNum"));
+						int32 Nums = JsonObj->GetIntegerField(TEXT("itemNum"));
 						for (int32 i = 0; i < Nums; i++)
 						{
 							//添加

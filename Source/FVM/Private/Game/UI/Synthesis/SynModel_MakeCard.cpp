@@ -579,7 +579,7 @@ void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIte
 	//设置材料数据
 	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
 	//设置材料的外观
-	UWidgetBase::SetButtonStyle(_Grid->GetButton(),_Grid->GetMaterialData()->ItemTexturePath.ToString());
+	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Grid->GetMaterialData()->ItemTexturePath.ToString());
 
 	if (_Grid->GetButton()->OnClicked.IsBound())
 	{
@@ -664,14 +664,14 @@ void USynModel_MakeCard::MakeCard()
 		this->PlayerSynthesis->OnSelectMakeCardRequest(
 			this,
 			TEXT("-1"),
-			FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
+			this->GetBlueprintData().Bp.BagID
 		);
 	}
 	else {
 		this->PlayerSynthesis->OnSelectMakeCardRequest(
 			this,
-			FString::FromInt(this->SpicesData.SpicesData.M_ItemID),
-			FString::FromInt(this->GetBlueprintData().Bp.M_ItemID)
+			this->SpicesData.SpicesData.BagID,
+			this->GetBlueprintData().Bp.BagID
 		);
 	}
 
@@ -924,6 +924,16 @@ FMakeCardBlueprintData& USynModel_MakeCard::GetBlueprintData()
 
 void USynModel_MakeCard::AddNewBlueprint(const FCardBlueprint& LBlueprintData, UUI_PlayerBagMaterialGrid* BGrid, int32 BUIGridIndex, USynModel_MakeCard* BClass)
 {
+	FString Log;
+	for (const auto& Data : LBlueprintData.M_Materials)
+	{
+		Log += TEXT("配方材料ID：") + Data;
+	}
+	UGameSystemFunction::FVMLog(__FUNCTION__,
+		TEXT("配方ID：") + LBlueprintData.BagID +
+		TEXT("		材料集合：") +
+		Log
+	);
 	this->GetBlueprintData().AddNewBlueprint(LBlueprintData, BGrid, BUIGridIndex, this);
 }
 

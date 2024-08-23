@@ -1024,16 +1024,16 @@ void USynModel_CardUpgrade::LoadCards()
 	//	M_PlayerBagGirdGroup.GetBagCount(1);
 
 	//获取卡片数据
-	TArray<FItemCard*> Datas;
-	UGameSystemFunction::GetPlayerCardDatas(
+	const TArray<FItemCard>& Datas = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card;
+	/*UGameSystemFunction::GetPlayerCardDatas(
 		Datas,
 		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card.Num()
-	);
+	);*/
 
 	this->LoadCards(Datas, Datas.Num());
 }
 
-void USynModel_CardUpgrade::LoadCards(const TArray<FItemCard*>& CardsData, const int32& LoadCount)
+void USynModel_CardUpgrade::LoadCards(const TArray<FItemCard>& CardsData, const int32& LoadCount)
 {
 	if (!IsValid(this->ItemLoadManager_Card))
 	{
