@@ -39,7 +39,7 @@ struct FVaRestCallTagResponse
 
 	UPROPERTY()
 	UVaRestRequestJSON* Request;
-
+	
 	UPROPERTY()
 	FName Tag;
 
@@ -99,6 +99,7 @@ public:
 		EVaRestRequestContentType ContentType,
 		FName Tag,
 		UVaRestJsonObject* VaRestJson,
+		const FString& Token,
 		const FVaRestCallTagDelegate& Callback);
 
 	/** Called when URL is processed (one for both success/unsuccess events)*/

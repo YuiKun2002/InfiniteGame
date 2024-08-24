@@ -240,7 +240,7 @@ public:
 public:
 	//设置全局缓存子系统
 	UFUNCTION(BlueprintCallable)
-	void SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem);
+	void SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem,const FString& Token);
 	//设置角色临时ID
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerID(const FString& TempID);

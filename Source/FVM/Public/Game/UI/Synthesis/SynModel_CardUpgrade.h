@@ -131,7 +131,7 @@ protected:
 	void CardUpgrade();
 	//重新加载
 	UFUNCTION(BlueprintCallable)
-	void ReLoadCardUpgrade(bool Result);
+	void ReLoadCardUpgrade(const FString& MainCardID,bool Result);
 private:
 	UPROPERTY()
 	UUI_PlayerSynthesis* PlayerSynthesis = nullptr;
@@ -253,12 +253,8 @@ private:
 		UImage*& CardGradeImg, const FString& WidgetName2,
 		UTextBlock*& CardPriceText, const FString& WidgetName3
 	);
-	//加载卡片
-	void LoadCards();
 	//更新概率文字
 	void UpdateUpRateText(const FString& Content);
-	//添加卡片
-	bool AddCard(const int32 Index, FSynModelCardUpgradeData CopyData);
 public:
 	/************************************************************************/
 	/*                          四叶草显示界面                               */
@@ -322,4 +318,8 @@ public:
 	void SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index);
 	//加载卡片
 	void LoadCards(const TArray<FItemCard>& CardsData, const int32& LoadCount);
+	//加载卡片
+	void LoadCards();
+	//添加卡片
+	bool AddCard(const int32 Index, FSynModelCardUpgradeData CopyData);
 };

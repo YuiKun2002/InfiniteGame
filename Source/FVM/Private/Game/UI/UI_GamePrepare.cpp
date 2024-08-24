@@ -22,18 +22,12 @@
 //角色形象
 #include "Game/UI/UI_PlayerShow.h"
 
-UUI_GamePrepare* UUI_GamePrepare::M_GamePrepareStatic = nullptr;
-
 bool UUI_GamePrepare::Initialize()
 {
 	if (!Super::Initialize())
 	{
 		return false;
 	}
-
-	//赋值静态变量
-	UUI_GamePrepare::M_GamePrepareStatic = this;
-	//UE_LOG(LogTemp, Warning, TEXT("[UUI_GamePrepare::Initialize]: 赋值静态M_GamePrepareStatic"));
 
 	this->M_CardGradeMaxHead = this->GetWidgetComponent<UImage>(this, "Image_62");
 	//this->Uniform_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "CardGrid");
@@ -47,27 +41,22 @@ bool UUI_GamePrepare::Initialize()
 void UUI_GamePrepare::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	UUI_GamePrepare::M_GamePrepareStatic = nullptr;
 }
 
-void UUI_GamePrepare::SelectCard(const FString& _CardName, const FItemCard& _CardData)
+void UUI_GamePrepare::SelectCard(const FItemCard& _CardData)
 {
-	for (auto Widget : this->M_BagGrid)
-	{
-		//寻找到你当前点击的卡片
-		if (Widget->GetFItemCardData()->ItemName.ToString().Equals(_CardName))
-		{
-			//禁用相关按钮
-			Widget->GetButton()->SetIsEnabled(false);
-		}
-	}
+	//for (auto Widget : this->M_BagGrid)
+	//{
+	//	//寻找到你当前点击的卡片
+	//	if (Widget->GetFItemCardData()->M_ItemID == _CardData.M_ItemID)
+	//	{
+	//		//禁用相关按钮
+	//		Widget->GetButton()->SetIsEnabled(false);
+	//	}
+	//}
 
-	UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(
-		this->GetWorld(),
-		LoadClass<UUI_PlayerBagCardGrid>(0,
-			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/MainFrame/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C'")
-		));
+	UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(this,
+		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Card")));
 
 	M_TempCardGrid->SetFItemCardData(_CardData);
 	M_TempCardGrid->M_CardTexturePath = _CardData.ItemTexturePath.ToString();
@@ -82,27 +71,35 @@ void UUI_GamePrepare::SelectCard(const FString& _CardName, const FItemCard& _Car
 	this->M_SelectCardList->AddChildToHorizontalBox(M_TempCardGrid);
 	//选择数量+1
 	this->M_SelectCardNum++;
+	//重新加载卡片
+	this->LoadCards();
 
 	//UE_LOG(LogTemp, Error, TEXT("%s  %d"), __FUNCTION__, _CardData.M_CardLayer);
 }
 
-void UUI_GamePrepare::SetCardEnable(const TArray<FString>& _Names, bool _bEnable)
+void UUI_GamePrepare::SetCardEnable(const TArray<int32>& _Names, bool _bEnable)
 {
 	if (!_Names.Num())
+	{
 		return;
+	}
 
 	for (auto Widget : this->M_BagGrid)
 	{
 		for (auto NamePP = _Names.CreateConstIterator(); NamePP; NamePP++)
 		{
 			//寻找到你当前点击的卡片
-			if (Widget->GetFItemCardData()->ItemName.ToString().Equals(*NamePP))
+			if (Widget->GetFItemCardData()->M_ItemID == *NamePP)
 			{
 				//禁用相关按钮
 				if (_bEnable)
+				{
 					Widget->GetButton()->SetIsEnabled(true);
+				}
 				else
+				{
 					Widget->GetButton()->SetIsEnabled(false);
+				}
 				break;
 			}
 		}
@@ -156,9 +153,9 @@ void UUI_GamePrepare::LoadCardList()
 		if (CurGradeMax < 0)
 			CurGradeMax = 0;
 
-		
 
-		
+
+
 
 		//判断索引是否有效
 		if (this->M_FTimeClip.M_Count < _CardItems_.Num() && this->M_FTimeClip.M_Count < M_CardBagCount)
@@ -252,6 +249,8 @@ void UUI_GamePrepare::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* 
 	_Grid->M_CardTexturePath = _Grid->GetFItemCardData()->ItemTexturePath.ToString();
 	//启动按钮
 	_Grid->GetButton()->SetIsEnabled(true);
+	//设置[准备UI]
+	_Grid->SetUI_Other(this);
 
 	//设置索引
 	_Grid->SetUIIndex(_Index);
@@ -267,12 +266,11 @@ void UUI_GamePrepare::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* 
 	}
 
 	//重新绑定
-
-	//this->OnCardLoad.ExecuteIfBound(_Grid, _Data, _Index);
+	_Grid->GetButton()->OnClicked.AddDynamic(_Grid, &UUI_PlayerBagCardGrid::SelectCurrentCard);
 
 	//绑定音效
 	FScriptDelegate AddFunc_;
-	AddFunc_.BindUFunction(_Grid, "PlayOperateAudioDef");
+	AddFunc_.BindUFunction(_Grid, TEXT("PlayOperateAudioDef"));
 	_Grid->GetButton()->OnClicked.Add(AddFunc_);
 }
 
@@ -289,9 +287,8 @@ void UUI_GamePrepare::LoadCards()
 	}
 
 	//获取卡片数据
-	const TArray<FItemCard>& Datas = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card;
-	this->ItemLoadManager_Card->UpdateDatatable(Datas);
-	this->ItemLoadManager_Card->SetLoadItemMaxCount(Datas.Num());
+	this->ItemLoadManager_Card->UpdateDatatable(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card);
+	this->ItemLoadManager_Card->SetLoadItemMaxCount(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card.Num());
 	this->ItemLoadManager_Card->ContinueRun();
 }
 
@@ -299,7 +296,7 @@ void UUI_GamePrepare::InitPanelData()
 {
 	if (UFVMGameInstance::GetFVMGameInstance())
 	{
-		
+
 		/*
 		//获取角色形象界面
 		this->M_UUI_PlayerShow = CreateWidget<UUI_PlayerShow>(this,
@@ -332,7 +329,7 @@ void UUI_GamePrepare::InitPanelData()
 		const FLevelConfig& LevelData =
 			UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager()->LevelConfig;
 
-		//设置角色即将进入地图的名称
+		//获取关卡配置
 		UGameConfigManager* CurConfig = UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager();
 		//加载地图配置
 		UFVMGameInstance::GetFVMGameInstance()->LoadGameMapStructManager(CurConfig->M_PlayerInGameMapName);

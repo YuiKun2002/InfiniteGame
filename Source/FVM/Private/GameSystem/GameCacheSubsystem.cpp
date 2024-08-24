@@ -84,6 +84,7 @@ bool UGameCacheSubsystem::Request(
 			ContentType,
 			TagName,
 			JsonObject,
+			this->PlayerAccountToken,
 			Callback
 		);
 
@@ -121,6 +122,11 @@ UGameCache* UGameCacheSubsystem::GetGameCache_Im(FName Tag)
 		return (*CurCache);
 	}
 	return NewObject<UGameCache>();
+}
+
+void UGameCacheSubsystem::SetToken(const FString& Token)
+{
+	this->PlayerAccountToken = Token;
 }
 
 void UGameCacheAsyncRequest::AsyncRequestComplet(FName Tag, UVaRestRequestJSON* Request)

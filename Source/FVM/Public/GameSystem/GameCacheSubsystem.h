@@ -207,7 +207,14 @@ public:
 
 	UGameCache* GetGameCache_Im(FName Tag);
 
+	//设置token
+	UFUNCTION(BlueprintCallable)
+	void SetToken(const FString& Token);
 private:
+	//缓存
 	UPROPERTY()
 	TMap<FName, UGameCache*> GameCache;
+	//请求token
+	UPROPERTY()
+	FString PlayerAccountToken;
 };

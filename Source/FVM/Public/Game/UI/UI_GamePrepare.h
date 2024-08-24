@@ -57,7 +57,6 @@ public:
 	//卡片栏的背包格子
 	int32 M_CardBagCount = 0;
 public:
-	static UUI_GamePrepare* M_GamePrepareStatic;
 	//卡片数据
 	UPROPERTY()
 	TArray<FItemCard> M_CardDatas_Copy;
@@ -91,10 +90,10 @@ public:
 	virtual void BeginDestroy() override;
 	//选择卡片
 	UFUNCTION()
-	void SelectCard(const FString& _CardName, const FItemCard& _CardData);
+	void SelectCard(const FItemCard& _CardData);
 	//设置指定的卡片禁用
 	UFUNCTION()
-	void SetCardEnable(const TArray<FString>& _Names, bool _bEnable);
+	void SetCardEnable(const TArray<int32>& _Names, bool _bEnable);
 public:
 	//取消卡片选择数量减1
 	UFUNCTION(BlueprintCallable)

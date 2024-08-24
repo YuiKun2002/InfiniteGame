@@ -17,8 +17,9 @@ void UPlayerUpdateClass::Update_Implementation(class UPlayerStructManager* Playe
 	UE_LOG(LogTemp, Warning, TEXT("默认角色更新类-UPlayerUpdateClass-更新"));
 }
 
-void UPlayerStructManager::SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem)
+void UPlayerStructManager::SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem, const FString& Token)
 {
+	Subsystem->SetToken(Token);
 	this->GameCacheSubsystem = Subsystem;
 }
 
@@ -640,10 +641,7 @@ void UPlayerStructManager::AddPlayerEx(float _ExValue)
 			{
 				UGameUserInterfaceSubsystem::RemoveGameTaskUIViewportSub();
 
-				if (!IsValid(UUI_GamePrepare::M_GamePrepareStatic))
-				{
-					UGameSystemFunction::LoadLastMap();
-				}
+				UGameSystemFunction::LoadLastMap();
 			}
 		}
 	}

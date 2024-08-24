@@ -134,10 +134,7 @@ void UUI_GameTask::GetTaskItems()
 			{
 				UGameUserInterfaceSubsystem::RemoveGameTaskUIViewportSub();
 
-				if (!IsValid(UUI_GamePrepare::M_GamePrepareStatic))
-				{
-					UGameSystemFunction::LoadLastMap();
-				}
+				UGameSystemFunction::LoadLastMap();
 			}
 
 			NewObject<UTaskFuncObjectExe>(UTaskFuncObjectExe::StaticClass(), CurNewClass)->OnInit();
