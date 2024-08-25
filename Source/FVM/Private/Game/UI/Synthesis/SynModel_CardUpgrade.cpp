@@ -336,48 +336,15 @@ float USynModel_CardUpgrade::GetCardPriceGradeRate(float _Price, int32 _CardGrad
 	//同星
 	if (MainCard_CurrentCard_Grade == 0)
 	{
-		if (_Price < 100)
-		{
-			Rate = M_UpGradeRate_0_Arrays_0_Low[_CardGrade];
-		}
-		else if (_Price >= 100 && _Price < 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_0_Mid[_CardGrade];
-		}
-		else if (_Price >= 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_0_Hei[_CardGrade];
-		}
+		Rate = M_UpGradeRate_0_Arrays_0_Hei[_CardGrade];
 	}//差1星
 	else if (MainCard_CurrentCard_Grade == 1)
 	{
-		if (_Price < 100)
-		{
-			Rate = M_UpGradeRate_0_Arrays_1_Low[_CardGrade];
-		}
-		else if (_Price >= 100 && _Price < 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_1_Mid[_CardGrade];
-		}
-		else if (_Price >= 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_1_Hei[_CardGrade];
-		}
+		Rate = M_UpGradeRate_0_Arrays_1_Hei[_CardGrade];
 	}//差2星
 	else if (MainCard_CurrentCard_Grade == 2)
 	{
-		if (_Price < 100)
-		{
-			Rate = M_UpGradeRate_0_Arrays_2_Low[_CardGrade];
-		}
-		else if (_Price >= 100 && _Price < 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_2_Mid[_CardGrade];
-		}
-		else if (_Price >= 200)
-		{
-			Rate = M_UpGradeRate_0_Arrays_2_Hei[_CardGrade];
-		}
+		Rate = M_UpGradeRate_0_Arrays_2_Hei[_CardGrade];
 	}
 	else if (MainCard_CurrentCard_Grade > 3) // 差3直接0
 	{
@@ -385,18 +352,7 @@ float USynModel_CardUpgrade::GetCardPriceGradeRate(float _Price, int32 _CardGrad
 	}//比主高1
 	else if (MainCard_CurrentCard_Grade == -1)
 	{
-		if (_Price < 100)
-		{
-			return M_UpGradeRate_0_Arrays_P1_Low[_CardGrade];
-		}
-		else if (_Price >= 100 && _Price < 200)
-		{
-			return M_UpGradeRate_0_Arrays_P1_Mid[_CardGrade];
-		}
-		else if (_Price >= 200)
-		{
-			return M_UpGradeRate_0_Arrays_P1_Hei[_CardGrade];
-		}
+		return M_UpGradeRate_0_Arrays_P1_Hei[_CardGrade];
 
 	}//比主高2
 	else if (MainCard_CurrentCard_Grade <= -2) {
@@ -705,7 +661,7 @@ void USynModel_CardUpgrade::ReLoadCardUpgrade(const FString& MainCardID, bool Re
 	//更新主卡索引
 	this->CardDatas[0].PlayerBagIndex = Index;
 	this->CardDatas[0].CardData.M_CardGrade = SerachLevel;
-	this->CardDatas[0].CardData.BagID;
+	this->CardDatas[0].CardData.BagID = MainCardID;
 	/*
 		UFVMGameInstance::GetPlayerStructManager_Static()->GetCardByBagID(this->CardDatas[0].CardData.BagID);
 	//提供UI索引进行二次查找
