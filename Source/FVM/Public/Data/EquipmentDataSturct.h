@@ -31,6 +31,30 @@ public:
 	FPlayerVersionCompensate M_FPlayerVersionCompensate;
 };
 
+
+UENUM(BlueprintType)
+enum class EWeaponType : uint8//[武器类型]
+{
+	//主武器
+	MainWeapon UMETA(DisplayName = "MainWeapon"),
+	//副武器
+	SecondaryWeapon UMETA(DisplayName = "SecondaryWeapon")
+};
+//武器
+USTRUCT(BlueprintType)
+struct FItemWeaponBase : public FItemBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//武器等级
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 WeaponLevel = 0;
+	//武器类型
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EWeaponType WeaponType = EWeaponType::MainWeapon;
+};
+
+
+
 //装备数据资产缓存
 UCLASS()
 class FVM_API UEquipmentDataAssetCache : public UGameDataAssetCache

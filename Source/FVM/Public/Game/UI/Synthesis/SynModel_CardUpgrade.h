@@ -131,7 +131,7 @@ protected:
 	void CardUpgrade();
 	//重新加载
 	UFUNCTION(BlueprintCallable)
-	void ReLoadCardUpgrade(const FString& MainCardID,bool Result);
+	void ReLoadCardUpgrade(const FString& MainCardID, bool Result);
 private:
 	UPROPERTY()
 	UUI_PlayerSynthesis* PlayerSynthesis = nullptr;
@@ -192,31 +192,12 @@ private:
 	UButton* M_Clover_Butt = nullptr;
 
 	//强化所用概率
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_2_Low = { 0.f,0.f, 48.0, 32.f,   19.f,    16.f,    10.f,    8.f,    4.f,  1.0f,   1.0f,  1.0f,  1.0f ,  1.0f, 1.0f, 1.0f };
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_2_Mid = { 0.f,0.f, 51.0, 36.f,   22.f,    18.f,    12.f,    9.f,    5.f,  2.f,    1.0f,  1.0f,  1.0f ,  1.0f, 1.0f, 1.0f };
 	UPROPERTY()
 	TArray<float> M_UpGradeRate_0_Arrays_2_Hei = { 0.f,0.f, 60.0, 42.90f, 24.20f,  20.10f,  13.20f,  10.6f,  6.0f, 2.20f,  1.80f, 1.70f, 1.60f , 1.40f,1.3f, 1.0f };
-
-	/*UPROPERTY()
-	TArray<float> M_UpGradeRate_0_Arrays_1_Low = { 0.f,72.0f, 56.0f, 48.0f,  32.0f,  27.0f, 21.0f,  17.0f, 10.0f,   3.0f,  3.0f,   3.0f,   3.0f ,  2.0f ,  2.0f,  2.0f,  1.0f ,0.0f };
-	UPROPERTY()
-	TArray<float> M_UpGradeRate_0_Arrays_1_Mid = { 0.f,80.0f, 72.0f, 50.0f,  36.0f,  30.0f, 24.0f,  19.0f, 5.f,     12.0f, 4.0f,   3.0f,   3.0f,   3.0f ,  2.0f,  2.0f,  2.0f ,0.0f };*/
 	UPROPERTY()
 	TArray<float> M_UpGradeRate_0_Arrays_1_Hei = { 0.f,88.0f, 79.2f, 55.0f,  40.3f,  33.0f, 26.40f, 21.2f, 13.2f,   4.50f, 4.60f,  4.3f,   4.0f ,  4.0f,   3.40f, 3.0f , 0.0f ,0.0f };
-
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_0_Low = { 100.0f,  100.0f,  80.0f,   56.0f,    40.0f,    32.0f,   26.0f,    21.0f,     16.0f,    11.0f,     10.0f,     9.0f,     8.0f ,    8.0f ,     7.0f,  6.0f ,  0.0f };
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_0_Mid = { 100.0f,  100.0f,  88.0f,   62.0f,    45.0f,    36.0f,   29.0f,    24.0f,     20.0f,    12.0f,     11.0f,     10.0f,    9.0f,     9.0f ,     8.0f,  7.0f ,  0.0f };
 	UPROPERTY()
 	TArray<float> M_UpGradeRate_0_Arrays_0_Hei = { 100.0f,   100.0f, 96.80f,  68.60f,   49.50f,   39.60f,  31.90f,   26.40f,    22.0f,    13.50f,    12.50f,    11.60f,   10.7f,    10.1f ,    9.5f,  8.80f , 0.0f };
-
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_P1_Low = { 100.0f,  100.0f, 100.0f,   72.0f,    72.0f,    72.0f,   72.0f,   72.0f,    72.0f,    72.0f,    72.0f,    72.0f,   72.0f ,   72.0f ,    72.0f,  72.0f ,72.0f };
-	//UPROPERTY()
-	//TArray<float> M_UpGradeRate_0_Arrays_P1_Mid = { 100.0f,  100.0f, 100.0f,   80.0f,    80.0f,    80.0f,   80.0f,   80.0f,    80.0f,    80.0f,    80.0f,    80.0f,   80.0f,    80.0f,     80.0f,  80.0f ,80.0f };
 	UPROPERTY()
 	TArray<float> M_UpGradeRate_0_Arrays_P1_Hei = { 100.0f,   100.0f, 100.0f,   88.0f,   88.0f,     88.0f,   88.0f,   88.0f,    88.0f,    88.0f,    88.0f,    88.0f,   88.0f,    88.0f,    88.0f,  88.0f, 88.0f };
 

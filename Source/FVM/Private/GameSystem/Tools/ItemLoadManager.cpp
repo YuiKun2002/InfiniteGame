@@ -219,17 +219,19 @@ void UItemLoadManager::CreateItem()
 			//加入到统一格子
 			if (this->M_Ccroll_Condition_bHorizontal)
 			{
-				this->M_GridSlotBuffers.Emplace(
-					this->M_Load_Uniform_Grid->AddChildToUniformGrid(
-						LWidget, i % this->M_Page_CurrentColCount, i / this->M_Page_CurrentColCount
-					));
+				UUniformGridSlot* Slot = this->M_Load_Uniform_Grid->AddChildToUniformGrid(
+					LWidget, i % this->M_Page_CurrentColCount, i / this->M_Page_CurrentColCount
+				);
+				Slot->SetHorizontalAlignment(HAlign_Fill);
+				this->M_GridSlotBuffers.Emplace(Slot);
 			}
 			else
 			{
-				this->M_GridSlotBuffers.Emplace(
-					this->M_Load_Uniform_Grid->AddChildToUniformGrid(
-						LWidget, i / this->M_Page_CurrentColCount, i % this->M_Page_CurrentColCount
-					));
+				UUniformGridSlot* Slot = this->M_Load_Uniform_Grid->AddChildToUniformGrid(
+					LWidget, i / this->M_Page_CurrentColCount, i % this->M_Page_CurrentColCount
+				);
+				Slot->SetHorizontalAlignment(HAlign_Fill);
+				this->M_GridSlotBuffers.Emplace(Slot);
 			}
 		}
 	}
@@ -318,7 +320,9 @@ bool UItemLoadManager::InitRange_Second(int32 _Row, int32 _Col, int32 _LoadMax, 
 		return false;
 
 	//设置容器的大小
-	UWidgetBase::WidgetToCanvasSlot(this->M_Load_Table_List)->SetSize(FVector2D(_Col * _TargetItem_Width, _Row * _TargetItem_Height));
+	UWidgetBase::WidgetToCanvasSlot(this->M_Load_Table_List)->SetSize(
+		FVector2D(_Col * _TargetItem_Width, _Row * _TargetItem_Height)
+	);
 
 	//如果设置了 横向模式
 	if (_bMode_Horizontal)
@@ -476,7 +480,10 @@ void UItemLoadManager::SetItemMargin(FVector2D _NewMargin)
 		this->M_Load_Uniform_Grid->SetSlotPadding(LMargin);
 
 		//设置容器的大小
-		UWidgetBase::WidgetToCanvasSlot(this->M_Load_Table_List)->SetSize(FVector2D(this->M_Page_CurrentRowCount * this->M_Page_LineWidth, this->M_Page_CurrentColCount * this->M_Page_LineHight));
+		UWidgetBase::WidgetToCanvasSlot(this->M_Load_Table_List)->SetSize(
+			FVector2D(this->M_Page_CurrentRowCount * this->M_Page_LineWidth,
+				this->M_Page_CurrentColCount * this->M_Page_LineHight
+			));
 	}
 	else {
 		FMargin LMargin = 0.f;
@@ -484,6 +491,10 @@ void UItemLoadManager::SetItemMargin(FVector2D _NewMargin)
 		this->M_Load_Uniform_Grid->SetSlotPadding(LMargin);
 
 		//设置容器的大小
-		UWidgetBase::WidgetToCanvasSlot(this->M_Load_Table_List)->SetSize(FVector2D(this->M_Page_CurrentColCount * this->M_Page_LineWidth, this->M_Page_CurrentRowCount * this->M_Page_LineHight));
+		UWidgetBase::WidgetToCanvasSlot(
+			this->M_Load_Table_List)->SetSize(FVector2D(
+				this->M_Page_CurrentColCount * this->M_Page_LineWidth,
+				this->M_Page_CurrentRowCount * this->M_Page_LineHight
+			));
 	}
 }

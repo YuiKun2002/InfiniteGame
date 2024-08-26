@@ -40,6 +40,8 @@
 #define UI_SHOPUINAME FName(TEXT("Shop"))
 //实验室UI集合
 #define UI_LABSUINAME FName(TEXT("Labs"))
+//英雄UI集合
+#define UI_HEROESUINAME FName(TEXT("Heroes"))
 
 
  //可视化名字类型分类[蓝图实现，全局的宏]

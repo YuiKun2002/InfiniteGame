@@ -235,6 +235,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 {
 	Cards.Empty();
 	Materials.Empty();
+	this->M_PlayerItems_Weapon.Empty();
 
 	if (this->GameCacheSubsystem)
 	{
@@ -253,7 +254,6 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 				UVaRestJsonValue* Type = JsonObj->GetField((TEXT("Type")));
 				int32 TargetType = Type->AsInt32();
 
-				//类型
 				if (TargetType == 1)
 				{
 					//卡片数据
@@ -323,41 +323,11 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 
 					}*/
 				}
-				//else if (TargetType == 2)
-				//{
-				//	//配方材料
-				//	FMaterialBase Mater;
-				//	//图片查询结果
-				//	bool bResult = UItemBaseStruct::GetTextureResource(
-				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
-				//		Mater.ItemTexturePath
-				//	);
-				//	if (bResult)
-				//	{
-				//		Cards.Emplace(Mater);
-				//	}
-				//	/*if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
-				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))), Mater, true, EMaterialType::E_CardSynthesisMaterial
-				//	))
-				//	{
-				//		Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
-				//		Materials.Emplace(Mater);
-				//	}*/
-				//}
-				//else if (TargetType == 3)
-				//{
-				//	//配方
-				//	FMaterialBase Mater;
-				//	if (UMaterialBaseStruct::SearchMaterailFromDataTableByID(
-				//		FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
-				//		Mater, true, EMaterialType::E_Blueprint
-				//	))
-				//	{
-				//		Mater.M_Count = JsonObj->GetIntegerField(TEXT("itemNum"));
-				//		Materials.Emplace(Mater);
-				//	}
-				//}
 				else {
+
+					/************************************************************************/
+					/*                              材料                                     */
+					/************************************************************************/
 					switch (TargetType)
 					{
 					case 2://材料
@@ -374,8 +344,6 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						);
 						if (bResult)
 						{
-							//解析Json数据
-
 							//设置名称
 							Mater.ItemName = FText::FromString(JsonObj->GetStringField(TEXT("name")));
 							//设置数量
@@ -402,6 +370,56 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 						}
 					}
 					break;
+
+
+					/************************************************************************/
+					/*                              武器                                    */
+					/************************************************************************/
+					case 0: {
+						//武器数据
+						FItemWeaponBase WeaponData;
+						//图片查询结果
+						bool bResult = UItemBaseStruct::GetTextureResource(
+							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
+							WeaponData.ItemTexturePath
+						);
+						if (bResult)
+						{
+							//设置名称
+							WeaponData.ItemName = FText::FromString(JsonObj->GetStringField(TEXT("name")));
+							//设置ID
+							WeaponData.M_ItemID = FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId")));
+							//设置BagID
+							WeaponData.BagID = JsonObj->GetStringField(TEXT("packageId"));
+							//设置武器等级
+							WeaponData.WeaponLevel = JsonObj->GetIntegerField(TEXT("itemLevel"));;
+							//设置武器类型
+							UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
+							//设置武器类型
+							EWeaponType WeaponType = EWeaponType::MainWeapon;
+							switch (uint8(subType->AsInt32()))
+							{
+							case 1:WeaponType = EWeaponType::SecondaryWeapon; break;
+							default:
+								WeaponType = EWeaponType::MainWeapon;
+								break;
+							}
+							//设置武器类型
+							WeaponData.WeaponType = WeaponType;
+
+
+							int32 Count = JsonObj->GetIntegerField(TEXT("itemNum"));
+							for (int32 i = 0; i < Count; i++)
+							{
+								//新增武器
+								this->M_PlayerItems_Weapon.Emplace(WeaponData);
+							}
+						}
+					} break;
+
+
+
+
 					default:
 						break;
 					}
