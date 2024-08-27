@@ -22,7 +22,6 @@ public:
 	FSoftObjectPath GetResource(const FName& Name, const FName& RowName, const int32& Key);
 private:
 	//图片数据
-	UPROPERTY()
 	DataTableAssetData<FItemResourceData> Data;
 	UPROPERTY()
 	TMap<int32, FSoftObjectPath> Datas;
