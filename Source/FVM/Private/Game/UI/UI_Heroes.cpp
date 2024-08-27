@@ -63,9 +63,12 @@ void UUI_Heroes::InitWeapons()
 	A.M_ItemID = 2;
 	UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
 	A.WeaponType = EWeaponType::MainWeapon;
+	A.WeaponLevel = 3;
 
 	FItemWeaponBase B;
-	A.M_ItemID = 3;
+	B.M_ItemID = 3;
+	B.WeaponLevel = 5;
+
 	UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
 	A.WeaponType = EWeaponType::SecondaryWeapon;
 	Weapons.Append({ A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B });
@@ -77,6 +80,12 @@ void UUI_Heroes::InitWeapons()
 	this->ItemLoadManagerItem->ContinueRun();
 }
 
+void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
+{
+	// FMainWeaponData
+	// FSecondaryWeaponData
+}
+
 UWidget* UUI_Heroes::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index)
 {
 	UUI_Heroes_WeaponItem* ItemWidget = CreateWidget<UUI_Heroes_WeaponItem>(this,
@@ -84,7 +93,7 @@ UWidget* UUI_Heroes::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index
 			TEXT("Weapon"))
 	);
 
-	ItemWidget->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>());
+	ItemWidget->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>(), this);
 	ItemWidget->InitWeaponData();
 
 	return ItemWidget;
@@ -92,6 +101,6 @@ UWidget* UUI_Heroes::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index
 
 void UUI_Heroes::WidgetRefreshUpdateWeapons(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
-	Cast<UUI_Heroes_WeaponItem>(_UWidget)->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>());
+	Cast<UUI_Heroes_WeaponItem>(_UWidget)->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>(), this);
 	Cast<UUI_Heroes_WeaponItem>(_UWidget)->InitWeaponData();
 }

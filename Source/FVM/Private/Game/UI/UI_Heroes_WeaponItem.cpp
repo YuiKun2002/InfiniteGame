@@ -9,9 +9,10 @@
 #include "GameSystem/GameDataSubsystem.h"
 
 
-void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data)
+void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Heroes* UIHero)
 {
 	this->WeaponData = Data;
+	this->UI_Hero = UIHero;
 }
 
 void UUI_Heroes_WeaponItem::InitWeaponData()
@@ -39,4 +40,12 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 		this->ItemStars,
 		TSoftObjectPtr<UTexture2D>(LevelPath)
 	);
+}
+
+void UUI_Heroes_WeaponItem::SelectWeapon()
+{
+	if (IsValid(this->UI_Hero))
+	{
+		UI_Hero->EquipWeapon(this->WeaponData);
+	}
 }

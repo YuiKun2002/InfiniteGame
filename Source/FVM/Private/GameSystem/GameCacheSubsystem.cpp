@@ -149,8 +149,19 @@ void UGameCacheAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJS
 		case 200:
 		{
 			UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
-			this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
-			this->RequestComplet.Broadcast();
+			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
+			int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
+			if (Response == 0)
+			{
+				this->RequestComplet.Broadcast();
+			}
+			else {
+				UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
+					Response,
+					*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
+				);
+				this->RequestFailed.Broadcast();
+			}
 		}
 		break;
 		case 201:
@@ -250,8 +261,19 @@ void UGameAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* R
 			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, this->Task->bSaveCache);
 			if (IsValid(CacheObject))
 			{
-				this->RequestComplet.Broadcast();
-				this->RequestCacheComplet.Broadcast(CacheObject);
+				int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
+				if (Response == 0)
+				{
+					this->RequestComplet.Broadcast();
+					this->RequestCacheComplet.Broadcast(CacheObject);
+				}
+				else {
+					UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
+						Response,
+						*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
+					);
+					this->RequestFailed.Broadcast();
+				}
 			}
 			else {
 				UE_LOG(LogTemp, Error, TEXT("code：200 临时缓存添加失败！"));

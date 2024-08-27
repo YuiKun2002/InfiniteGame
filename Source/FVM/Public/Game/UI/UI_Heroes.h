@@ -66,6 +66,11 @@ public:
 	//刷新格子界面
 	UFUNCTION()
 	void WidgetRefreshUpdateWeapons(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
+	//初始化武器
 	UFUNCTION(BlueprintCallable)
 	void InitWeapons();
+	//装备武器
+	UFUNCTION()
+	void EquipWeapon(const FItemWeaponBase& Data);
+
 };

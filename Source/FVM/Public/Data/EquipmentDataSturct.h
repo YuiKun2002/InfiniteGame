@@ -31,6 +31,9 @@ public:
 	FPlayerVersionCompensate M_FPlayerVersionCompensate;
 };
 
+/************************************************************************/
+/*                              武器类型                                 */
+/************************************************************************/
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8//[武器类型]
@@ -53,7 +56,52 @@ public:
 	EWeaponType WeaponType = EWeaponType::MainWeapon;
 };
 
+//主武器数据结构
+USTRUCT(BlueprintType)
+struct FMainWeaponData {
+	GENERATED_USTRUCT_BODY()
+public:
+	//攻击力
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ATK = 2.f;
+	//攻击力加成[%]
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ATKRate = 1.f;
+	//攻击冷却时间
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackCoolingTime = 1.f;
+	//攻击前摇时间
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackFristTime = 0.8;
+	//攻击后摇时间【攻击次数之间的间隔】
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackBackTime = 0.2f;
+	//攻击次数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AttackCount = 1;
+	//是否可以装备副武器
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bEquipSecondary = true;
+};
 
+//副武器数据结构
+USTRUCT(BlueprintType)
+struct FSecondaryWeaponData {
+	GENERATED_USTRUCT_BODY()
+public:
+	//基础生命值
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LifeBase = 100;
+	//生命值回复
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LifeReply = 10;
+	//生命值回复时间
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float LifeReplyTime = 1.f;
+	//攻击闪避率
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackMissRate = 0.f;
+};
 
 //装备数据资产缓存
 UCLASS()
