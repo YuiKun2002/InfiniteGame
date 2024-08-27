@@ -392,7 +392,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 							//设置BagID
 							WeaponData.BagID = JsonObj->GetStringField(TEXT("packageId"));
 							//设置武器等级
-							WeaponData.WeaponLevel = JsonObj->GetIntegerField(TEXT("itemLevel"));;
+							WeaponData.WeaponLevel = JsonObj->GetIntegerField(TEXT("itemLevel"));
 							//设置武器类型
 							UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
 							//设置武器类型

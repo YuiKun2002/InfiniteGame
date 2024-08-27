@@ -247,7 +247,7 @@ private:
 		}
 	}
 public:
-	//更新数据表(模板)（可以重复调用）
+	//更新数据表(模板)（可以重复调用）【不能使用临时对象】
 	template<typename FTableRowType>
 	void UpdateDatatable(const TArray<FTableRowType>& _SourceItems)
 	{

@@ -125,7 +125,7 @@ void UGameDataSubsystem::AddGameDataAssetCache(FName Name, UGameDataAssetCache* 
 	}
 }
 
-UGameDataAssetCache* UGameDataSubsystem::GetGameDataAssetCache(FName Name)
+UGameDataAssetCache* UGameDataSubsystem::GetGameDataAssetCacheByDef(FName Name)
 {
 	UGameDataAssetCache** TargetIns = this->GameDataAssetCache.Find(Name);
 	if (TargetIns && IsValid(*TargetIns))
@@ -134,6 +134,11 @@ UGameDataAssetCache* UGameDataSubsystem::GetGameDataAssetCache(FName Name)
 	}
 
 	return nullptr;
+}
+
+UGameDataAssetCache* UGameDataSubsystem::GetGameDataAssetCacheByName(TSubclassOf<UAssetCategoryName> Name)
+{
+	return GetGameDataAssetCache<UGameDataAssetCache>(Name.GetDefaultObject()->GetCategoryName());
 }
 
 void UGameDataSubsystem::OnWorldBeginPlay(UWorld& InWorld)

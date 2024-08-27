@@ -140,7 +140,10 @@ public:
 	void AddGameDataAssetCache(FName Name, UGameDataAssetCache* CacheIns);
 	//获取缓存对象
 	UFUNCTION(BlueprintPure, Category = "游戏数据子系统 | 缓存对象")
-	UGameDataAssetCache* GetGameDataAssetCache(FName Name);
+	UGameDataAssetCache* GetGameDataAssetCacheByDef(FName Name);
+	//获取缓存对象
+	UFUNCTION(BlueprintPure, Category = "游戏数据子系统 | 缓存对象")
+	static UGameDataAssetCache* GetGameDataAssetCacheByName(TSubclassOf<UAssetCategoryName> Name);
 public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Deinitialize() override;
@@ -167,7 +170,7 @@ CacheClassType* GetGameDataAssetCache(FName Name)
 		return nullptr;
 	}
 
-	UGameDataAssetCache* CurCache = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(Name);
+	UGameDataAssetCache* CurCache = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCacheByDef(Name);
 	if (IsValid(CurCache))
 	{
 		CacheClassType* CurCacheType = Cast<CacheClassType>(CurCache);
