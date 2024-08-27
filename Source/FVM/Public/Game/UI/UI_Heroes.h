@@ -76,6 +76,7 @@ public:
 	UFUNCTION()
 	void EquipWeapon(const FItemWeaponBase& Data);
 
+
 	//主武器槽
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UUI_Heroes_WeaponSlot* MainWeaponSlot;
@@ -85,6 +86,9 @@ public:
 	//暴击率
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* Text_Burst;
+	//取消主武器装备
+	UFUNCTION()
+	void CancelMainWeapon();
 
 	//副武器槽
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -95,4 +99,7 @@ public:
 	//生命值回复速度
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* Text_HealRate;
+	//取消副武器装备
+	UFUNCTION()
+	void CancelSecondaryWeapon();
 };

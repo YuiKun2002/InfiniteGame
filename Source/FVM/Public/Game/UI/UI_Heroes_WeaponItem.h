@@ -18,7 +18,15 @@ class FVM_API UUI_Heroes_WeaponSlot : public UWidgetBase
 {
 	GENERATED_BODY()
 public:
-	
+	//武器名称
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* WeaponName;
+	//武器等级
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* WepaonLevel;
+	//武器界面
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* ButtWeaponHead;
 };
 
 /**
@@ -31,7 +39,7 @@ class FVM_API UUI_Heroes_WeaponItem : public UWidgetBase
 public:
 	//设置武器数据
 	UFUNCTION()
-	void SetWeaponData(const FItemWeaponBase& Data,class UUI_Heroes* UIHero);
+	void SetWeaponData(const FItemWeaponBase& Data, class UUI_Heroes* UIHero);
 	//初始化武器数据
 	UFUNCTION()
 	void InitWeaponData();
