@@ -12,6 +12,14 @@ class UImage;
 class UButton;
 class UTextBlock;
 
+//武器槽
+UCLASS()
+class FVM_API UUI_Heroes_WeaponSlot : public UWidgetBase
+{
+	GENERATED_BODY()
+public:
+	
+};
 
 /**
  * 角色界面-武器道具

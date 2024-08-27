@@ -31,6 +31,9 @@ private:
 };
 
 
+class UTextBlock;
+class UUI_Heroes_WeaponSlot;
+
 /**
  * 英雄界面
  */
@@ -73,4 +76,23 @@ public:
 	UFUNCTION()
 	void EquipWeapon(const FItemWeaponBase& Data);
 
+	//主武器槽
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UUI_Heroes_WeaponSlot* MainWeaponSlot;
+	//攻击力
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* Text_Attack;
+	//暴击率
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* Text_Burst;
+
+	//副武器槽
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UUI_Heroes_WeaponSlot* SecondaryWeaponSlot;
+	//生命值
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* Text_Defence;
+	//生命值回复速度
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* Text_HealRate;
 };
