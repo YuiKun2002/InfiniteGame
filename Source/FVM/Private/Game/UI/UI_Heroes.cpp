@@ -67,20 +67,32 @@ void UUI_Heroes::InitWeapons()
 	A.M_ItemID = 2;
 	UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
 	A.WeaponType = EWeaponType::MainWeapon;
-	A.WeaponLevel = 3;
+	A.WeaponLevel = 0;
+
+	FItemWeaponBase C;
+	C.ItemName = FText(FText::FromName(TEXT("Cat Gun")));
+	C.M_ItemID = 4;
+	UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
+	C.WeaponType = EWeaponType::MainWeapon;
+	C.WeaponLevel = 2;
 
 	FItemWeaponBase B;
 	B.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
 	B.M_ItemID = 3;
-	B.WeaponLevel = 5;
+	B.WeaponLevel = 4;
 	UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
 	B.WeaponType = EWeaponType::SecondaryWeapon;
 
-	Weapons.Append({ A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B,A,B });
+	//UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Weapon.Empty();
+	this->Weapons.Append(
+		{ A,B,C,B,A,B,A,B,A,B,A,B,C,B,A,B,A,B,A,B,C,B,A,B,A,B,A,B,A,B,A,B,A,C,A,B }
+	);
 
-	this->ItemLoadManagerItem->UpdateDatatable(Weapons);
+	this->ItemLoadManagerItem->UpdateDatatable(
+		this->Weapons
+	);
 	this->ItemLoadManagerItem->SetLoadItemMaxCount(
-		Weapons.Num()
+		this->Weapons.Num()
 	);
 	this->ItemLoadManagerItem->ContinueRun();
 }
@@ -90,56 +102,89 @@ void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
 	// FMainWeaponData
 	// FSecondaryWeaponData
 
-	//获取缓存对象
-	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
-	FSoftObjectPath LevelPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), Data.WeaponLevel);
+	UPlayerStructManager* Player = UFVMGameInstance::GetPlayerStructManager_Static();
 
 	if (Data.WeaponType == EWeaponType::MainWeapon)
 	{
-		this->MainWeaponSlot->WeaponName->SetText(Data.ItemName);
-		this->MainWeaponSlot->SetButtonStyleSoft(
-			this->MainWeaponSlot->ButtWeaponHead,
-			TSoftObjectPtr<UTexture2D>(Data.ItemTexturePath), false, false
+		this->EquipCurrentWeapon(
+			Data,
+			this->MainWeaponSlot,
+			this->Text_Attack,
+			FText::FromString(TEXT("25")),
+			this->Text_Burst,
+			FText::FromString(TEXT("55%")),
+			this->WeaponCostCoin0,
+			FText::FromString(TEXT("2000"))
 		);
-		this->MainWeaponSlot->SetImageBrushByTexture(
-			this->MainWeaponSlot->WepaonLevel,
-			TSoftObjectPtr<UTexture2D>(LevelPath)
-		);
-		this->Text_Attack->SetText(FText::FromString(TEXT("30")));
-		this->Text_Burst->SetText(FText::FromString(TEXT("25%")));
-
-		this->MainWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
-		this->MainWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		this->MainWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 		//装备到角色->检查背包
+		if (Player->PlayerEquipWeaponData.MainWeapon.M_ItemID != -1)
+		{
+
+		}
+		else {
+
+		}
+
+
 		this->MainWeaponSlot->ButtWeaponHead->OnClicked.Clear();
 		this->MainWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelMainWeapon);
 	}
 	else {
-		this->SecondaryWeaponSlot->WeaponName->SetText(Data.ItemName);
-		this->SecondaryWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
-		this->SecondaryWeaponSlot->SetButtonStyleSoft(
-			this->SecondaryWeaponSlot->ButtWeaponHead,
-			TSoftObjectPtr<UTexture2D>(Data.ItemTexturePath), false, false
-		);
-		this->SecondaryWeaponSlot->SetImageBrushByTexture(
-			this->SecondaryWeaponSlot->WepaonLevel,
-			TSoftObjectPtr<UTexture2D>(LevelPath)
-		);
-		this->Text_Defence->SetText(FText::FromString(TEXT("100")));
-		this->Text_HealRate->SetText(FText::FromString(TEXT("10")));
 
-		this->SecondaryWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
-		this->SecondaryWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		this->SecondaryWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		this->EquipCurrentWeapon(
+			Data,
+			this->SecondaryWeaponSlot,
+			this->Text_Defence,
+			FText::FromString(TEXT("100")),
+			this->Text_HealRate,
+			FText::FromString(TEXT("10")),
+			this->WeaponCostCoin1,
+			FText::FromString(TEXT("500"))
+		);
 
 		//装备到角色->检查背包
+
+
 		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.Clear();
 		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelSecondaryWeapon);
 	}
+}
 
+void UUI_Heroes::EquipCurrentWeapon(
+	const FItemWeaponBase& BaseData,
+	UUI_Heroes_WeaponSlot* WeaponSlot,
+	UTextBlock* Text1,
+	const FText& CText1,
+	UTextBlock* Text2,
+	const FText& CText2,
+	UTextBlock* Text3,
+	const FText& CText3
+)
+{
+	//获取缓存对象
+	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
+	FSoftObjectPath LevelPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), BaseData.WeaponLevel);
 
+	//设置外观
+	WeaponSlot->WeaponName->SetText(BaseData.ItemName);
+	WeaponSlot->SetButtonStyleSoft(
+		WeaponSlot->ButtWeaponHead,
+		TSoftObjectPtr<UTexture2D>(BaseData.ItemTexturePath), false, false
+	);
+
+	WeaponSlot->SetImageBrushByTexture(
+		WeaponSlot->WepaonLevel,
+		TSoftObjectPtr<UTexture2D>(LevelPath)
+	);
+
+	Text1->SetText(CText1);
+	Text2->SetText(CText2);
+	Text3->SetText(CText3);
+
+	WeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
+	WeaponSlot->WeaponName->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	WeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UUI_Heroes::CancelMainWeapon()
@@ -150,6 +195,7 @@ void UUI_Heroes::CancelMainWeapon()
 
 	this->Text_Attack->SetText(FText::FromString(TEXT("???")));
 	this->Text_Burst->SetText(FText::FromString(TEXT("???")));
+	this->WeaponCostCoin0->SetText(FText::FromString(TEXT("0")));
 }
 
 void UUI_Heroes::CancelSecondaryWeapon()
@@ -160,6 +206,8 @@ void UUI_Heroes::CancelSecondaryWeapon()
 
 	this->Text_Defence->SetText(FText::FromString(TEXT("???")));
 	this->Text_HealRate->SetText(FText::FromString(TEXT("???")));
+	this->WeaponCostCoin1->SetText(FText::FromString(TEXT("0")));
+
 }
 
 UWidget* UUI_Heroes::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index)

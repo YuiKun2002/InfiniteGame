@@ -34,7 +34,7 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 	ItemLevel->SetText(FText::FromString(FString::FromInt(this->WeaponData.WeaponLevel + 1)));
 	//获取缓存对象
 	UHeroItemDataAssetCache* Data = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
-	FSoftObjectPath LevelPath = Data->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), this->WeaponData.WeaponLevel);
+	FSoftObjectPath LevelPath = Data->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), this->WeaponData.StarsLevel);
 	//设置星级
 	UWidgetBase::SetImageBrushByTexture(
 		this->ItemStars,

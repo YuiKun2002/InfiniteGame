@@ -52,6 +52,12 @@ public:
 	/************************************************************************/
 	/*                                武器界面                               */
 	/************************************************************************/
+
+	UPROPERTY()
+	TArray<FMainWeaponData> MainWeaponDatas;
+	UPROPERTY()
+	TArray<FSecondaryWeaponData> SecondaryWeaponDatas;
+
 	UPROPERTY()
 	TArray<FItemWeaponBase> Weapons;
 	//武器加载器
@@ -76,6 +82,17 @@ public:
 	UFUNCTION()
 	void EquipWeapon(const FItemWeaponBase& Data);
 
+	//装备武器
+	void EquipCurrentWeapon(
+		const FItemWeaponBase& BaseData,
+		UUI_Heroes_WeaponSlot* WeaponSlot,
+		UTextBlock* Text1,
+		const FText& CText1,
+		UTextBlock* Text2,
+		const FText& CText2,
+		UTextBlock* Text3,
+		const FText& CText3
+	);
 
 	//主武器槽
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -86,6 +103,9 @@ public:
 	//暴击率
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* Text_Burst;
+	//金币花费
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* WeaponCostCoin0;
 	//取消主武器装备
 	UFUNCTION()
 	void CancelMainWeapon();
@@ -99,6 +119,9 @@ public:
 	//生命值回复速度
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* Text_HealRate;
+	//金币花费
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* WeaponCostCoin1;
 	//取消副武器装备
 	UFUNCTION()
 	void CancelSecondaryWeapon();

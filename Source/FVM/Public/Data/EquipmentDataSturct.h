@@ -50,7 +50,10 @@ struct FItemWeaponBase : public FItemBase {
 public:
 	//武器等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 WeaponLevel = 0;
+	int32 WeaponLevel = 1;
+	//星星等级
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 StarsLevel = 0;
 	//武器类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EWeaponType WeaponType = EWeaponType::MainWeapon;
@@ -58,7 +61,7 @@ public:
 
 //主武器数据结构
 USTRUCT(BlueprintType)
-struct FMainWeaponData {
+struct FMainWeaponData : public FItemWeaponBase{
 	GENERATED_USTRUCT_BODY()
 public:
 	//攻击力
@@ -86,7 +89,7 @@ public:
 
 //副武器数据结构
 USTRUCT(BlueprintType)
-struct FSecondaryWeaponData {
+struct FSecondaryWeaponData : public FItemWeaponBase{
 	GENERATED_USTRUCT_BODY()
 public:
 	//基础生命值
@@ -101,6 +104,24 @@ public:
 	//攻击闪避率
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackMissRate = 0.f;
+};
+
+//角色装备的武器
+USTRUCT(BlueprintType)
+struct FPlayerEquipWeapon : public FItemBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//主武器
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemWeaponBase MainWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FMainWeaponData MainWeaponData;
+
+	//副武器
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemWeaponBase SecondaryWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FSecondaryWeaponData SecondaryWeaponData;
 };
 
 //装备数据资产缓存

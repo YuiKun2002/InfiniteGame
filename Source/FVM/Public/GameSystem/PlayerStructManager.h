@@ -187,6 +187,9 @@ public:
 
 
 	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+
 
 	//背包 _防御卡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -197,12 +200,19 @@ public:
 	//武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FItemWeaponBase> M_PlayerItems_Weapon;
+	//角色已经装备的武器
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FPlayerEquipWeapon PlayerEquipWeaponData;
 
+
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
 	//背包_装备
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FEquipmentBase> M_PlayerItems_Equipment;
 
-	/*-----------------------防御卡 + 装备------------------------*/
+
 
 
 	/*-----------------------装备区域的ID存储库------------------------*/
