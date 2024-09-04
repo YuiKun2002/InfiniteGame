@@ -8,7 +8,6 @@
 #include <Components/TextBlock.h>
 #include "GameSystem/GameDataSubsystem.h"
 
-
 void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Heroes* UIHero)
 {
 	this->WeaponData = Data;

@@ -43,6 +43,7 @@ enum class EWeaponType : uint8//[武器类型]
 	//副武器
 	SecondaryWeapon UMETA(DisplayName = "SecondaryWeapon")
 };
+
 //武器
 USTRUCT(BlueprintType)
 struct FItemWeaponBase : public FItemBase {

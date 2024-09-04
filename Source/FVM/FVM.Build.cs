@@ -8,7 +8,23 @@ public class FVM : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "RenderCore", "SlateCore", "Paper2D", "PolygonButton" , "GameplayTags" , "InJson" , "SpinePlugin" , "VaRest" , "RuntimeFilesDownloader" });
+        PublicDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "InputCore",
+            "UMG",
+            "RenderCore",
+            "SlateCore",
+            "Slate",
+            "Paper2D",
+            "PolygonButton" ,
+            "GameplayTags" ,
+            "InJson" ,
+            "SpinePlugin" ,
+            "VaRest" ,
+            "RuntimeFilesDownloader"
+        });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
 
