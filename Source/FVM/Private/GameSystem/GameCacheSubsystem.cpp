@@ -151,7 +151,7 @@ void UGameCacheAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJS
 			UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
 			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
 			int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
-			if (Response == 0)
+			if (Response == 0 || Response == 200)
 			{
 				this->RequestComplet.Broadcast();
 			}
@@ -262,7 +262,7 @@ void UGameAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* R
 			if (IsValid(CacheObject))
 			{
 				int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
-				if (Response == 0)
+				if (Response == 0 || Response == 200)
 				{
 					this->RequestComplet.Broadcast();
 					this->RequestCacheComplet.Broadcast(CacheObject);
