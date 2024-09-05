@@ -106,7 +106,7 @@ void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
 
 	if (Data.WeaponType == EWeaponType::MainWeapon)
 	{
-		this->EquipCurrentWeapon(
+		/*this->EquipCurrentWeapon(
 			Data,
 			this->MainWeaponSlot,
 			this->Text_Attack,
@@ -115,7 +115,7 @@ void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
 			FText::FromString(TEXT("55%")),
 			this->WeaponCostCoin0,
 			FText::FromString(TEXT("2000"))
-		);
+		);*/
 
 		//装备到角色->检查背包
 		if (Player->PlayerEquipWeaponData.MainWeapon.M_ItemID != -1)
@@ -127,12 +127,12 @@ void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
 		}
 
 
-		this->MainWeaponSlot->ButtWeaponHead->OnClicked.Clear();
-		this->MainWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelMainWeapon);
+		/*this->MainWeaponSlot->ButtWeaponHead->OnClicked.Clear();
+		this->MainWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelMainWeapon);*/
 	}
 	else {
 
-		this->EquipCurrentWeapon(
+		/*this->EquipCurrentWeapon(
 			Data,
 			this->SecondaryWeaponSlot,
 			this->Text_Defence,
@@ -141,13 +141,13 @@ void UUI_Heroes::EquipWeapon(const FItemWeaponBase& Data)
 			FText::FromString(TEXT("10")),
 			this->WeaponCostCoin1,
 			FText::FromString(TEXT("500"))
-		);
+		);*/
 
 		//装备到角色->检查背包
 
 
-		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.Clear();
-		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelSecondaryWeapon);
+		/*this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.Clear();
+		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Heroes::CancelSecondaryWeapon);*/
 	}
 }
 
@@ -189,24 +189,24 @@ void UUI_Heroes::EquipCurrentWeapon(
 
 void UUI_Heroes::CancelMainWeapon()
 {
-	this->MainWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
+	/*this->MainWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
 	this->MainWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
 	this->MainWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
 
 	this->Text_Attack->SetText(FText::FromString(TEXT("???")));
 	this->Text_Burst->SetText(FText::FromString(TEXT("???")));
-	this->WeaponCostCoin0->SetText(FText::FromString(TEXT("0")));
+	this->WeaponCostCoin0->SetText(FText::FromString(TEXT("0")));*/
 }
 
 void UUI_Heroes::CancelSecondaryWeapon()
 {
-	this->SecondaryWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
+	/*this->SecondaryWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
 	this->SecondaryWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
 	this->SecondaryWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
 
 	this->Text_Defence->SetText(FText::FromString(TEXT("???")));
 	this->Text_HealRate->SetText(FText::FromString(TEXT("???")));
-	this->WeaponCostCoin1->SetText(FText::FromString(TEXT("0")));
+	this->WeaponCostCoin1->SetText(FText::FromString(TEXT("0")));*/
 
 }
 

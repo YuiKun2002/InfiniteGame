@@ -94,6 +94,7 @@ public:
 		const FText& CText3
 	);
 
+	/*
 	//主武器槽
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UUI_Heroes_WeaponSlot* MainWeaponSlot;
@@ -106,9 +107,6 @@ public:
 	//金币花费
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* WeaponCostCoin0;
-	//取消主武器装备
-	UFUNCTION()
-	void CancelMainWeapon();
 
 	//副武器槽
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -122,7 +120,13 @@ public:
 	//金币花费
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UTextBlock* WeaponCostCoin1;
+	*/
+
+	//取消主武器装备
+	UFUNCTION()
+	void CancelMainWeapon();
 	//取消副武器装备
 	UFUNCTION()
 	void CancelSecondaryWeapon();
+	
 };
