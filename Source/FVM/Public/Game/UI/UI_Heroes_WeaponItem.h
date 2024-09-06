@@ -39,13 +39,16 @@ class FVM_API UUI_Heroes_WeaponItem : public UWidgetBase
 public:
 	//设置武器数据
 	UFUNCTION()
-	void SetWeaponData(const FItemWeaponBase& Data, class UUI_Heroes* UIHero);
+	void SetWeaponData(const FItemWeaponBase& Data, class UUI_Weapons* UIWeapon);
 	//初始化武器数据
 	UFUNCTION()
 	void InitWeaponData();
 	//选中武器
 	UFUNCTION(BlueprintCallable)
 	void SelectWeapon();
+	//当武器被选择时
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelectWeaponData(const FItemWeaponBase& WeaponBaseData);
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* Item;
@@ -55,7 +58,8 @@ private:
 	FItemWeaponBase WeaponData;
 	//英雄界面
 	UPROPERTY()
-	class UUI_Heroes* UI_Hero = nullptr;
+	class UUI_Weapons* UI_Weapon = nullptr;
+
 	/************************************************************************/
 	/*                                基础显示                               */
 	/************************************************************************/

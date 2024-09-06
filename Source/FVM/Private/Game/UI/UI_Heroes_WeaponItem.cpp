@@ -4,14 +4,15 @@
 #include "Game/UI/UI_Heroes_WeaponItem.h"
 #include <Components/Image.h>
 #include "Game/UI/UI_Heroes.h"
+#include "Game/UI/UI_Weapons.h"
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
 #include "GameSystem/GameDataSubsystem.h"
 
-void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Heroes* UIHero)
+void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Weapons* UIWeapon)
 {
 	this->WeaponData = Data;
-	this->UI_Hero = UIHero;
+	this->UI_Weapon = UIWeapon;
 }
 
 void UUI_Heroes_WeaponItem::InitWeaponData()
@@ -43,8 +44,10 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 
 void UUI_Heroes_WeaponItem::SelectWeapon()
 {
-	if (IsValid(this->UI_Hero))
-	{
-		UI_Hero->EquipWeapon(this->WeaponData);
-	}
+	//if (IsValid(this->UI_Weapon))
+	//{
+	//	//UI_Hero->EquipWeapon(this->WeaponData);
+	//}
+
+	this->OnSelectWeaponData(this->WeaponData);
 }

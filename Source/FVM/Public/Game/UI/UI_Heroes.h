@@ -9,31 +9,6 @@
 #include "GameSystem/Tools/ItemLoadManager.h"
 #include "UI_Heroes.generated.h"
 
-#define HEROITEM_HEROITEM FName(TEXT("HeroItem"))
-#define HEROITEM_ITEMLEVEL FName(TEXT("ItemLevel"))
-
-
-//英雄物品缓存对象
-UCLASS()
-class FVM_API UHeroItemDataAssetCache : public UGameDataAssetCache
-{
-	GENERATED_BODY()
-public:
-	FSoftObjectPath GetResource(const FName& Name, const FName& RowName, const int32& Key);
-private:
-	//图片数据
-	DataTableAssetData<FItemResourceData> Data;
-	UPROPERTY()
-	TMap<int32, FSoftObjectPath> Datas;
-	//名称
-	UPROPERTY()
-	FName ResourceName;
-};
-
-
-class UTextBlock;
-class UUI_Heroes_WeaponSlot;
-
 /**
  * 英雄界面
  */
@@ -53,80 +28,8 @@ public:
 	/*                                武器界面                               */
 	/************************************************************************/
 
-	UPROPERTY()
-	TArray<FMainWeaponData> MainWeaponDatas;
-	UPROPERTY()
-	TArray<FSecondaryWeaponData> SecondaryWeaponDatas;
 
-	UPROPERTY()
-	TArray<FItemWeaponBase> Weapons;
-	//武器加载器
-	UPROPERTY()
-	UItemLoadManager* ItemLoadManagerItem = nullptr;
-	//武器滑动区
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UScrollBox* Scroll_Item = nullptr;
-	//武器格子界面
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UUniformGridPanel* Uniform_Item = nullptr;
-	//创建格子界面
-	UFUNCTION()
-	UWidget* WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index);
-	//刷新格子界面
-	UFUNCTION()
-	void WidgetRefreshUpdateWeapons(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget);
-	//初始化武器
-	UFUNCTION(BlueprintCallable)
-	void InitWeapons();
-	//装备武器
-	UFUNCTION()
-	void EquipWeapon(const FItemWeaponBase& Data);
+	
 
-	//装备武器
-	void EquipCurrentWeapon(
-		const FItemWeaponBase& BaseData,
-		UUI_Heroes_WeaponSlot* WeaponSlot,
-		UTextBlock* Text1,
-		const FText& CText1,
-		UTextBlock* Text2,
-		const FText& CText2,
-		UTextBlock* Text3,
-		const FText& CText3
-	);
-
-	/*
-	//主武器槽
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UUI_Heroes_WeaponSlot* MainWeaponSlot;
-	//攻击力
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* Text_Attack;
-	//暴击率
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* Text_Burst;
-	//金币花费
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* WeaponCostCoin0;
-
-	//副武器槽
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UUI_Heroes_WeaponSlot* SecondaryWeaponSlot;
-	//生命值
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* Text_Defence;
-	//生命值回复速度
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* Text_HealRate;
-	//金币花费
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* WeaponCostCoin1;
-	*/
-
-	//取消主武器装备
-	UFUNCTION()
-	void CancelMainWeapon();
-	//取消副武器装备
-	UFUNCTION()
-	void CancelSecondaryWeapon();
 	
 };
