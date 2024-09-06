@@ -11,6 +11,27 @@
 class UImage;
 class UButton;
 class UTextBlock;
+class UUI_Heroes_WeaponSlot;
+
+#define HEROITEM_HEROITEM FName(TEXT("HeroItem"))
+#define HEROITEM_ITEMLEVEL FName(TEXT("ItemLevel"))
+
+//英雄物品缓存对象
+UCLASS()
+class FVM_API UHeroItemDataAssetCache : public UGameDataAssetCache
+{
+	GENERATED_BODY()
+public:
+	FSoftObjectPath GetResource(const FName& Name, const FName& RowName, const int32& Key);
+private:
+	//图片数据
+	DataTableAssetData<FItemResourceData> Data;
+	UPROPERTY()
+	TMap<int32, FSoftObjectPath> Datas;
+	//名称
+	UPROPERTY()
+	FName ResourceName;
+};
 
 //武器槽
 UCLASS()
@@ -27,6 +48,31 @@ public:
 	//武器界面
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ButtWeaponHead;
+public:
+	//初始化数据
+	UFUNCTION(BlueprintCallable)
+	void InitData(class UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData);
+	//装备武器
+	UFUNCTION(BlueprintCallable)
+	void EquipWeapon(bool bFirst);
+	//移除武器
+	UFUNCTION(BlueprintCallable)
+	void RemoveWeapon();
+	//分解武器
+	UFUNCTION(BlueprintCallable)
+	void Decompose(UUI_Heroes_WeaponSlot* OtherWeapon);
+
+	//获取武器数据
+	UFUNCTION(BlueprintPure)
+	void GetWeaponData(FItemWeaponBase& WeaponBaseData);
+private:
+	UFUNCTION()
+	void DecomposeWeapon();
+private:
+	UPROPERTY()
+	class UUI_Weapons* UIWeapon = nullptr;
+	UPROPERTY()
+	FItemWeaponBase WeaponData;
 };
 
 /**
@@ -48,7 +94,7 @@ public:
 	void SelectWeapon();
 	//当武器被选择时
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectWeaponData(const FItemWeaponBase& WeaponBaseData);
+	void OnSelectWeaponData(class UUI_Weapons* UIWeapon, const FItemWeaponBase& WeaponBaseData);
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* Item;
