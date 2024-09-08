@@ -46,11 +46,12 @@ FSoftObjectPath UHeroItemDataAssetCache::GetResource(const FName& Name, const FN
 	return FSoftObjectPath();
 }
 
-void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData)
+void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData, bool bFrist)
 {
 	//设置类
 	this->UIWeapon = UI_Weapon;
 	this->WeaponData = WeaponBaseData;
+	this->bFristWeapon = bFrist;
 
 	//获取缓存对象
 	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
@@ -72,10 +73,16 @@ void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FItemWeaponBa
 }
 
 
+void UUI_Heroes_WeaponSlot::InitEquipPosition(bool bFrist)
+{
+	this->bFristWeapon = bFrist;
+}
+
 void UUI_Heroes_WeaponSlot::EquipWeapon(bool bFirst)
 {
 	if (IsValid(this->UIWeapon))
 	{
+		//
 		this->bFristWeapon = bFirst;
 		//装备此武器
 		FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
@@ -84,14 +91,16 @@ void UUI_Heroes_WeaponSlot::EquipWeapon(bool bFirst)
 			this->UIWeapon->MainWeaponSlot->InitData(nullptr, this->WeaponData);
 			Weapon.MainWeapon = this->WeaponData;
 			Weapon.MainWeaponData;
+			Weapon.bMainEquip = true;
 		}
 		else {
 			this->UIWeapon->SecondaryWeaponSlot->InitData(nullptr, this->WeaponData);
 			Weapon.SecondaryWeapon = this->WeaponData;
 			Weapon.SecondaryWeaponData;
+			Weapon.bSecondaryEquip = true;
 		}
 		//存档
-		UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器装备"));
+		UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器装备") + FString(this->bFristWeapon ? TEXT("A") : TEXT("B")));
 	}
 }
 
@@ -107,13 +116,15 @@ void UUI_Heroes_WeaponSlot::RemoveWeapon()
 	{
 		Weapon.MainWeapon = {};
 		Weapon.MainWeaponData = {};
+		Weapon.bMainEquip = false;
 	}
 	else {
 		Weapon.SecondaryWeapon = {};
 		Weapon.SecondaryWeaponData = {};
+		Weapon.bSecondaryEquip = false;
 	}
 	//存档
-	UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器卸载"));
+	UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器卸载：") + FString(this->bFristWeapon ? TEXT("A") : TEXT("B")));
 }
 
 void UUI_Heroes_WeaponSlot::Decompose(UUI_Heroes_WeaponSlot* OtherWeapon)
@@ -130,6 +141,49 @@ void UUI_Heroes_WeaponSlot::Decompose(UUI_Heroes_WeaponSlot* OtherWeapon)
 void UUI_Heroes_WeaponSlot::GetWeaponData(FItemWeaponBase& WeaponBaseData)
 {
 	WeaponBaseData = this->WeaponData;
+}
+
+int32 UUI_Heroes_WeaponSlot::GetWeaponLevel()
+{
+	return this->WeaponData.WeaponLevel;
+}
+
+int32 UUI_Heroes_WeaponSlot::GetWeaponStars()
+{
+	return this->WeaponData.StarsLevel;
+}
+
+void UUI_Heroes_WeaponSlot::GetWeaponDetailData(FMainWeaponData& MainWeaponData)
+{
+	FMainWeaponData A = { this->WeaponData };
+
+	MainWeaponData = A;
+}
+
+void UUI_Heroes_WeaponSlot::SetWeaponLevel(int32 Level)
+{
+	if (Level < 1)
+	{
+		Level = 1;
+	}
+	else if (Level > 50)
+	{
+		Level = 50;
+	}
+	this->WeaponData.WeaponLevel = Level;
+}
+
+void UUI_Heroes_WeaponSlot::SetWeaponStars(int32 Level)
+{
+	if (Level < 0)
+	{
+		Level = 0;
+	}
+	else if (Level > 4)
+	{
+		Level = 4;
+	}
+	this->WeaponData.StarsLevel = Level;
 }
 
 void UUI_Heroes_WeaponSlot::DecomposeWeapon()

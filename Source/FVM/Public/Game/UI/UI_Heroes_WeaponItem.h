@@ -51,7 +51,10 @@ public:
 public:
 	//初始化数据
 	UFUNCTION(BlueprintCallable)
-	void InitData(class UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData);
+	void InitData(class UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData, bool bFrist = true);
+	//初始化【装备位置】
+	UFUNCTION(BlueprintCallable)
+	void InitEquipPosition(bool bFrist);
 	//装备武器
 	UFUNCTION(BlueprintCallable)
 	void EquipWeapon(bool bFirst);
@@ -61,10 +64,24 @@ public:
 	//分解武器
 	UFUNCTION(BlueprintCallable)
 	void Decompose(UUI_Heroes_WeaponSlot* OtherWeapon);
-
+public:
 	//获取武器数据
 	UFUNCTION(BlueprintPure)
 	void GetWeaponData(FItemWeaponBase& WeaponBaseData);
+	//获取武器等级
+	UFUNCTION(BlueprintPure)
+	int32 GetWeaponLevel();
+	//获取武器星级
+	UFUNCTION(BlueprintPure)
+	int32 GetWeaponStars();
+	//获取武器数据
+	UFUNCTION(BlueprintPure)
+	void GetWeaponDetailData(FMainWeaponData& MainWeaponData);
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponLevel(int32 Level);
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponStars(int32 Level);
 private:
 	UFUNCTION()
 	void DecomposeWeapon();

@@ -210,6 +210,13 @@ public:
 	//设置token
 	UFUNCTION(BlueprintCallable)
 	void SetToken(const FString& Token);
+
+	//设置模式
+	UFUNCTION(BlueprintCallable)
+	static void SetNetMode(bool bEnable);
+	//获取网络模式
+	UFUNCTION(BlueprintPure)
+	static bool GetNetMode();
 private:
 	//缓存
 	UPROPERTY()
@@ -217,4 +224,7 @@ private:
 	//请求token
 	UPROPERTY()
 	FString PlayerAccountToken;
+
+	//网络模式
+	static bool NetMode;
 };

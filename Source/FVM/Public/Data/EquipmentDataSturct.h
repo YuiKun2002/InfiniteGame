@@ -117,12 +117,16 @@ public:
 	FItemWeaponBase MainWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FMainWeaponData MainWeaponData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bMainEquip = false;
 
 	//副武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemWeaponBase SecondaryWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FMainWeaponData SecondaryWeaponData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSecondaryEquip = false;
 };
 
 //装备数据资产缓存

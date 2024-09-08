@@ -98,9 +98,12 @@ UGameCache* UGameCacheSubsystem::RequestComplet(FName Tag, UVaRestRequestJSON* R
 {
 	UGameCache* NewCache = NewObject<UGameCache>();
 	NewCache->SetRequestTag(Tag);
-	NewCache->SetRequestURL(Request->GetURL());
-	NewCache->SetRequestContent(Request->GetResponseObject()->EncodeJsonToSingleString());
-	NewCache->SetRequestJsonObject(Request->GetResponseObject());
+	if (IsValid(Request))
+	{
+		NewCache->SetRequestURL(Request->GetURL());
+		NewCache->SetRequestContent(Request->GetResponseObject()->EncodeJsonToSingleString());
+		NewCache->SetRequestJsonObject(Request->GetResponseObject());
+	}
 	if (bSave)
 	{
 		this->GameCache.Emplace(Tag, NewCache);
@@ -129,6 +132,17 @@ void UGameCacheSubsystem::SetToken(const FString& Token)
 	this->PlayerAccountToken = Token;
 }
 
+bool UGameCacheSubsystem::NetMode = true;
+void UGameCacheSubsystem::SetNetMode(bool bEnable)
+{
+	UGameCacheSubsystem::NetMode = bEnable;
+}
+
+bool UGameCacheSubsystem::GetNetMode()
+{
+	return UGameCacheSubsystem::NetMode;
+}
+
 void UGameCacheAsyncRequest::AsyncRequestComplet(FName Tag, UVaRestRequestJSON* Request)
 {
 	this->AsyncRequestCompletFunc(Tag, Request);
@@ -136,65 +150,72 @@ void UGameCacheAsyncRequest::AsyncRequestComplet(FName Tag, UVaRestRequestJSON* 
 
 void UGameCacheAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request)
 {
-	if (IsValid(Request))
+	if (UGameCacheSubsystem::GetNetMode())
 	{
-		switch (Request->GetResponseCode())
+		if (IsValid(Request))
 		{
-		case 0:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：0 服务器连接错误！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 200:
-		{
-			UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
-			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
-			int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
-			if (Response == 0 || Response == 200)
+			switch (Request->GetResponseCode())
 			{
-				this->RequestComplet.Broadcast();
-			}
-			else {
-				UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
-					Response,
-					*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
-				);
+			case 0:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：0 服务器连接错误！"));
 				this->RequestFailed.Broadcast();
 			}
+			break;
+			case 200:
+			{
+				UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
+				UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
+				int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
+				if (Response == 0 || Response == 200)
+				{
+					this->RequestComplet.Broadcast();
+				}
+				else {
+					UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
+						Response,
+						*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
+					);
+					this->RequestFailed.Broadcast();
+				}
+			}
+			break;
+			case 201:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：201 服务器创建！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 401:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：401 服务器未经授权！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 403:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：403 服务器被禁止！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 404:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：404 服务器未找到！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			default:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：%d 服务器未知错误！"), Request->GetResponseCode());
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			}
 		}
-		break;
-		case 201:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：201 服务器创建！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 401:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：401 服务器未经授权！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 403:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：403 服务器被禁止！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 404:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：404 服务器未找到！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		default:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：%d 服务器未知错误！"), Request->GetResponseCode());
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		}
+	}
+	else {
+		UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, true);
+		this->RequestComplet.Broadcast();
 	}
 
 	this->Task->RemoveFromRoot();
@@ -216,17 +237,26 @@ UGameCacheAsyncRequest* UGameCacheAsyncRequest::GameCacheAsyncRequest(FString UR
 
 void UGameCacheAsyncRequest::Activate()
 {
-	this->CallBcak.BindUFunction(this, TEXT("AsyncRequestComplet"));
+	if (UGameCacheSubsystem::GetNetMode())
+	{
+		this->CallBcak.BindUFunction(this, TEXT("AsyncRequestComplet"));
 
-	this->Task->GameCacheSubsystem->Request(
-		this->Task->VaRestSub,
-		this->Task->URL,
-		this->Task->Json,
-		this->Task->Verb,
-		this->Task->ContentType,
-		this->Task->Tag.GetDefaultObject()->GetCategoryName(),
-		CallBcak
-	);
+		this->Task->GameCacheSubsystem->Request(
+			this->Task->VaRestSub,
+			this->Task->URL,
+			this->Task->Json,
+			this->Task->Verb,
+			this->Task->ContentType,
+			this->Task->Tag.GetDefaultObject()->GetCategoryName(),
+			CallBcak
+		);
+	}
+	else {
+		this->AsyncRequestComplet(
+			this->Task->Tag.GetDefaultObject()->GetCategoryName(),
+			NewObject<UVaRestRequestJSON>()
+		);
+	}
 }
 
 UGameAsyncRequest* UGameAsyncRequest::GameAsyncRequest(FString URL, TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask, bool bSaveCache)
@@ -244,74 +274,83 @@ UGameAsyncRequest* UGameAsyncRequest::GameAsyncRequest(FString URL, TSubclassOf<
 
 void UGameAsyncRequest::AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request)
 {
-	if (IsValid(Request))
+	if (UGameCacheSubsystem::GetNetMode())
 	{
-		switch (Request->GetResponseCode())
+		if (IsValid(Request))
 		{
-		case 0:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：0 服务器连接错误！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 200:
-		{
-			UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
-			//获取缓存
-			UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, this->Task->bSaveCache);
-			if (IsValid(CacheObject))
+			switch (Request->GetResponseCode())
 			{
-				int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
-				if (Response == 0 || Response == 200)
+			case 0:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：0 服务器连接错误！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 200:
+			{
+				UE_LOG(LogTemp, Warning, TEXT("code：200 连接成功！"));
+				//获取缓存
+				UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, this->Task->bSaveCache);
+				if (IsValid(CacheObject))
 				{
-					this->RequestComplet.Broadcast();
-					this->RequestCacheComplet.Broadcast(CacheObject);
+					int32 Response = CacheObject->GetRequestJsonObject()->GetIntegerField(TEXT("code"));
+					if (Response == 0 || Response == 200)
+					{
+						this->RequestCacheComplet.Broadcast(CacheObject);
+						this->RequestComplet.Broadcast();
+					}
+					else {
+						UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
+							Response,
+							*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
+						);
+						this->RequestFailed.Broadcast();
+					}
 				}
 				else {
-					UE_LOG(LogTemp, Error, TEXT("Response code：%d %s"),
-						Response,
-						*CacheObject->GetRequestJsonObject()->GetStringField(TEXT("message"))
-					);
+					UE_LOG(LogTemp, Error, TEXT("code：200 临时缓存添加失败！"));
 					this->RequestFailed.Broadcast();
 				}
 			}
-			else {
-				UE_LOG(LogTemp, Error, TEXT("code：200 临时缓存添加失败！"));
+			break;
+			case 201:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：201 服务器创建！"));
 				this->RequestFailed.Broadcast();
 			}
+			break;
+			case 401:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：401 服务器未经授权！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 403:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：403 服务器被禁止！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			case 404:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：404 服务器未找到！"));
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			default:
+			{
+				UE_LOG(LogTemp, Error, TEXT("code：%d 服务器未知错误！"), Request->GetResponseCode());
+				this->RequestFailed.Broadcast();
+			}
+			break;
+			}
 		}
-		break;
-		case 201:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：201 服务器创建！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 401:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：401 服务器未经授权！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 403:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：403 服务器被禁止！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		case 404:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：404 服务器未找到！"));
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		default:
-		{
-			UE_LOG(LogTemp, Error, TEXT("code：%d 服务器未知错误！"), Request->GetResponseCode());
-			this->RequestFailed.Broadcast();
-		}
-		break;
-		}
+	}
+	else {
+		//获取缓存
+		UGameCache* CacheObject = this->Task->GameCacheSubsystem->RequestComplet(Tag, Request, this->Task->bSaveCache);
+		this->RequestCacheComplet.Broadcast(CacheObject);
+		this->RequestComplet.Broadcast();
 	}
 
 	this->Task->RemoveFromRoot();
