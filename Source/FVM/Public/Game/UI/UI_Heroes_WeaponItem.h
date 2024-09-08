@@ -73,6 +73,8 @@ private:
 	class UUI_Weapons* UIWeapon = nullptr;
 	UPROPERTY()
 	FItemWeaponBase WeaponData;
+	UPROPERTY()
+	bool bFristWeapon = true;
 };
 
 /**

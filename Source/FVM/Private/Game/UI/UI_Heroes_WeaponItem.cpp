@@ -76,13 +76,22 @@ void UUI_Heroes_WeaponSlot::EquipWeapon(bool bFirst)
 {
 	if (IsValid(this->UIWeapon))
 	{
+		this->bFristWeapon = bFirst;
+		//装备此武器
+		FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
 		if (bFirst)
 		{
 			this->UIWeapon->MainWeaponSlot->InitData(nullptr, this->WeaponData);
+			Weapon.MainWeapon = this->WeaponData;
+			Weapon.MainWeaponData;
 		}
 		else {
 			this->UIWeapon->SecondaryWeaponSlot->InitData(nullptr, this->WeaponData);
+			Weapon.SecondaryWeapon = this->WeaponData;
+			Weapon.SecondaryWeaponData;
 		}
+		//存档
+		UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器装备"));
 	}
 }
 
@@ -91,11 +100,25 @@ void UUI_Heroes_WeaponSlot::RemoveWeapon()
 	this->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
 	this->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
 	this->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
+
+	//装备此武器
+	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
+	if (this->bFristWeapon)
+	{
+		Weapon.MainWeapon = {};
+		Weapon.MainWeaponData = {};
+	}
+	else {
+		Weapon.SecondaryWeapon = {};
+		Weapon.SecondaryWeaponData = {};
+	}
+	//存档
+	UGameSystemFunction::SaveCurrentPlayerData(TEXT("角色武器卸载"));
 }
 
 void UUI_Heroes_WeaponSlot::Decompose(UUI_Heroes_WeaponSlot* OtherWeapon)
 {
-	if(IsValid(OtherWeapon))
+	if (IsValid(OtherWeapon))
 	{
 		OtherWeapon->RemoveWeapon();
 		OtherWeapon->DecomposeWeapon();
@@ -111,7 +134,7 @@ void UUI_Heroes_WeaponSlot::GetWeaponData(FItemWeaponBase& WeaponBaseData)
 
 void UUI_Heroes_WeaponSlot::DecomposeWeapon()
 {
-	
+	//销毁武器
 }
 
 void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Weapons* UIWeapon)

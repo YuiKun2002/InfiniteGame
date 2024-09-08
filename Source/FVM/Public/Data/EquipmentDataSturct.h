@@ -122,7 +122,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemWeaponBase SecondaryWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSecondaryWeaponData SecondaryWeaponData;
+	FMainWeaponData SecondaryWeaponData;
 };
 
 //装备数据资产缓存
