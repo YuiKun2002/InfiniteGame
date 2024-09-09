@@ -48,6 +48,12 @@ public:
 	//武器界面
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* ButtWeaponHead;
+	//武器等级图片
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UImage* ItemLV;
+	//武器等级文本
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UTextBlock* ItemLevel;
 public:
 	//初始化数据
 	UFUNCTION(BlueprintCallable)
@@ -64,6 +70,12 @@ public:
 	//分解武器
 	UFUNCTION(BlueprintCallable)
 	void Decompose(UUI_Heroes_WeaponSlot* OtherWeapon);
+	//强化武器
+	UFUNCTION(BlueprintCallable)
+	void Upgrade();
+	//进化武器
+	UFUNCTION(BlueprintCallable)
+	void Evolve();
 public:
 	//获取武器数据
 	UFUNCTION(BlueprintPure)
@@ -85,6 +97,8 @@ public:
 private:
 	UFUNCTION()
 	void DecomposeWeapon();
+	UFUNCTION()
+	void UpdageWeapon(FItemWeaponBase& Data);
 private:
 	UPROPERTY()
 	class UUI_Weapons* UIWeapon = nullptr;

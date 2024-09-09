@@ -56,20 +56,26 @@ void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FItemWeaponBa
 	//获取缓存对象
 	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
 	FSoftObjectPath LevelPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), WeaponBaseData.StarsLevel);
-	//设置外观
+	//设置名称
 	this->WeaponName->SetText(WeaponBaseData.ItemName);
+	//设置头像外观
 	this->SetButtonStyleSoft(
 		this->ButtWeaponHead,
 		TSoftObjectPtr<UTexture2D>(WeaponBaseData.ItemTexturePath), false, false
 	);
+	//设置星星外观
 	this->SetImageBrushByTexture(
 		this->WepaonLevel,
 		TSoftObjectPtr<UTexture2D>(LevelPath)
 	);
+	//设置等级
+	this->ItemLevel->SetText(FText::FromString(FString::FromInt(WeaponBaseData.WeaponLevel)));
 
 	this->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
 	this->WeaponName->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	this->WepaonLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	this->ItemLV->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	this->ItemLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 
@@ -109,6 +115,8 @@ void UUI_Heroes_WeaponSlot::RemoveWeapon()
 	this->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
 	this->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
 	this->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
+	this->ItemLV->SetVisibility(ESlateVisibility::Collapsed);
+	this->ItemLevel->SetVisibility(ESlateVisibility::Collapsed);
 
 	//装备此武器
 	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
@@ -136,6 +144,49 @@ void UUI_Heroes_WeaponSlot::Decompose(UUI_Heroes_WeaponSlot* OtherWeapon)
 		return;
 	}
 	this->DecomposeWeapon();
+}
+
+void UUI_Heroes_WeaponSlot::Upgrade()
+{
+	if (!IsValid(this->UIWeapon))
+	{
+		return;
+	}
+
+	//修改玩家装备的武器数据
+	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
+	if (Weapon.bMainEquip)
+	{
+		if (Weapon.MainWeapon.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->UpdageWeapon(Weapon.MainWeapon);
+		}
+	}
+	else if (Weapon.bSecondaryEquip)
+	{
+		if (Weapon.SecondaryWeapon.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->UpdageWeapon(Weapon.SecondaryWeapon);
+		}
+	}
+
+	//修改存储武器的背包数据
+	for (auto& SourceWeaponData : this->UIWeapon->Weapons)
+	{
+		if (SourceWeaponData.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->UpdageWeapon(SourceWeaponData);
+			break;
+		}
+	}
+
+	//修改当前槽位的武器数据
+	this->UpdageWeapon(this->WeaponData);
+}
+
+void UUI_Heroes_WeaponSlot::Evolve()
+{
+
 }
 
 void UUI_Heroes_WeaponSlot::GetWeaponData(FItemWeaponBase& WeaponBaseData)
@@ -191,6 +242,14 @@ void UUI_Heroes_WeaponSlot::DecomposeWeapon()
 	//销毁武器
 }
 
+void UUI_Heroes_WeaponSlot::UpdageWeapon(FItemWeaponBase& Data)
+{
+	if (Data.WeaponLevel < 50)
+	{
+		Data.WeaponLevel++;
+	}
+}
+
 void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Weapons* UIWeapon)
 {
 	this->WeaponData = Data;
@@ -199,9 +258,9 @@ void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Weapo
 
 void UUI_Heroes_WeaponItem::InitWeaponData()
 {
-	if (this->WeaponData.WeaponLevel < 0)
+	if (this->WeaponData.WeaponLevel < 1)
 	{
-		this->WeaponData.WeaponLevel = 0;
+		this->WeaponData.WeaponLevel = 1;
 	}
 	else if (this->WeaponData.WeaponLevel > 50)
 	{
@@ -223,7 +282,7 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 		, false, false);
 
 	//设置物品等级
-	ItemLevel->SetText(FText::FromString(FString::FromInt(this->WeaponData.WeaponLevel + 1)));
+	ItemLevel->SetText(FText::FromString(FString::FromInt(this->WeaponData.WeaponLevel)));
 
 	//获取缓存对象
 	UHeroItemDataAssetCache* Data = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
