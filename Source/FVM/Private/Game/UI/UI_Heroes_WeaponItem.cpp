@@ -162,7 +162,8 @@ void UUI_Heroes_WeaponSlot::Upgrade()
 			this->UpdageWeapon(Weapon.MainWeapon);
 		}
 	}
-	else if (Weapon.bSecondaryEquip)
+	
+	if (Weapon.bSecondaryEquip)
 	{
 		if (Weapon.SecondaryWeapon.BagID.Equals(this->WeaponData.BagID))
 		{
