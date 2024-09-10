@@ -162,7 +162,7 @@ void UUI_Heroes_WeaponSlot::Upgrade()
 			this->UpdageWeapon(Weapon.MainWeapon);
 		}
 	}
-	
+
 	if (Weapon.bSecondaryEquip)
 	{
 		if (Weapon.SecondaryWeapon.BagID.Equals(this->WeaponData.BagID))
@@ -187,7 +187,41 @@ void UUI_Heroes_WeaponSlot::Upgrade()
 
 void UUI_Heroes_WeaponSlot::Evolve()
 {
+	if (!IsValid(this->UIWeapon))
+	{
+		return;
+	}
 
+	//修改玩家装备的武器数据
+	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
+	if (Weapon.bMainEquip)
+	{
+		if (Weapon.MainWeapon.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->EvolveWeapon(Weapon.MainWeapon);
+		}
+	}
+
+	if (Weapon.bSecondaryEquip)
+	{
+		if (Weapon.SecondaryWeapon.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->EvolveWeapon(Weapon.SecondaryWeapon);
+		}
+	}
+
+	//修改存储武器的背包数据
+	for (auto& SourceWeaponData : this->UIWeapon->Weapons)
+	{
+		if (SourceWeaponData.BagID.Equals(this->WeaponData.BagID))
+		{
+			this->EvolveWeapon(SourceWeaponData);
+			break;
+		}
+	}
+
+	//修改当前槽位的武器数据
+	this->EvolveWeapon(this->WeaponData);
 }
 
 void UUI_Heroes_WeaponSlot::GetWeaponData(FItemWeaponBase& WeaponBaseData)
@@ -208,39 +242,66 @@ int32 UUI_Heroes_WeaponSlot::GetWeaponStars()
 void UUI_Heroes_WeaponSlot::GetWeaponDetailData(FMainWeaponData& MainWeaponData)
 {
 	FMainWeaponData A = { this->WeaponData };
-
+	int32 UpATK = (A.ATK * A.StarsLevel * 0.5);
+	A.ATK = A.ATK * (UpATK == 0 ? 1 : UpATK) * (1 + A.ATKRate) + (A.WeaponLevel * 0.5);
 	MainWeaponData = A;
 }
 
-void UUI_Heroes_WeaponSlot::SetWeaponLevel(int32 Level)
+bool UUI_Heroes_WeaponSlot::GetUpgradeWeapon()
 {
-	if (Level < 1)
+	if (!IsValid(this->UIWeapon))
 	{
-		Level = 1;
+		return false;
 	}
-	else if (Level > 50)
+
+	if (this->WeaponData.WeaponLevel < 50)
 	{
-		Level = 50;
+		return true;
 	}
-	this->WeaponData.WeaponLevel = Level;
+
+	return false;
 }
 
-void UUI_Heroes_WeaponSlot::SetWeaponStars(int32 Level)
+bool UUI_Heroes_WeaponSlot::GetEvolveWeapon()
 {
-	if (Level < 0)
+	if (!IsValid(this->UIWeapon))
 	{
-		Level = 0;
+		return false;
 	}
-	else if (Level > 4)
+
+	if (this->WeaponData.StarsLevel < 4)
 	{
-		Level = 4;
+		int32 CurStarsLevel = this->WeaponData.WeaponLevel / 10;
+		if (CurStarsLevel - this->WeaponData.StarsLevel > 0)
+		{
+			return true;
+		}
 	}
-	this->WeaponData.StarsLevel = Level;
+
+	return false;
+}
+
+class UUI_Weapons* UUI_Heroes_WeaponSlot::GetUIWeapon()
+{
+	return this->UIWeapon;
 }
 
 void UUI_Heroes_WeaponSlot::DecomposeWeapon()
 {
 	//销毁武器
+	if (!IsValid(this->UIWeapon))
+	{
+		return;
+	}
+
+	for (auto Pt = this->UIWeapon->Weapons.CreateIterator(); Pt; ++Pt)
+	{
+		if (Pt->BagID.Equals(this->WeaponData.BagID))
+		{
+			Pt.RemoveCurrent();
+			break;
+		}
+	}
 }
 
 void UUI_Heroes_WeaponSlot::UpdageWeapon(FItemWeaponBase& Data)
@@ -248,6 +309,14 @@ void UUI_Heroes_WeaponSlot::UpdageWeapon(FItemWeaponBase& Data)
 	if (Data.WeaponLevel < 50)
 	{
 		Data.WeaponLevel++;
+	}
+}
+
+void UUI_Heroes_WeaponSlot::EvolveWeapon(FItemWeaponBase& Data)
+{
+	if (Data.StarsLevel < 4)
+	{
+		Data.StarsLevel++;
 	}
 }
 
@@ -294,6 +363,26 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 		this->ItemStars,
 		TSoftObjectPtr<UTexture2D>(LevelPath)
 	);
+
+	this->Item->SetIsEnabled(true);
+
+	//修改玩家装备的武器数据
+	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
+	if (Weapon.bMainEquip)
+	{
+		if (Weapon.MainWeapon.M_ItemID == this->WeaponData.M_ItemID)
+		{
+			this->Item->SetIsEnabled(false);
+		}
+	}
+
+	if (Weapon.bSecondaryEquip)
+	{
+		if (Weapon.SecondaryWeapon.M_ItemID == this->WeaponData.M_ItemID)
+		{
+			this->Item->SetIsEnabled(false);
+		}
+	}
 }
 
 void UUI_Heroes_WeaponItem::SelectWeapon()

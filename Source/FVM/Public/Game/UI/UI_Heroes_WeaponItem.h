@@ -89,16 +89,22 @@ public:
 	//获取武器数据
 	UFUNCTION(BlueprintPure)
 	void GetWeaponDetailData(FMainWeaponData& MainWeaponData);
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponLevel(int32 Level);
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponStars(int32 Level);
+	//获取武器是否能升级
+	UFUNCTION(BlueprintPure)
+	bool GetUpgradeWeapon();
+	//获取武器是否能进化
+	UFUNCTION(BlueprintPure)
+	bool GetEvolveWeapon();
+	//获取武器UI界面
+	UFUNCTION(BlueprintPure)
+	class UUI_Weapons* GetUIWeapon();
 private:
 	UFUNCTION()
 	void DecomposeWeapon();
 	UFUNCTION()
 	void UpdageWeapon(FItemWeaponBase& Data);
+	UFUNCTION()
+	void EvolveWeapon(FItemWeaponBase& Data);
 private:
 	UPROPERTY()
 	class UUI_Weapons* UIWeapon = nullptr;
