@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetBase.h"
+#include "Game/UI/HeroesData.h"
 #include "Data/EquipmentDataSturct.h"
 #include "GameSystem/DataTableAssetData.h"
 #include "UI_Heroes_WeaponItem.generated.h"
@@ -13,25 +14,7 @@ class UButton;
 class UTextBlock;
 class UUI_Heroes_WeaponSlot;
 
-#define HEROITEM_HEROITEM FName(TEXT("HeroItem"))
-#define HEROITEM_ITEMLEVEL FName(TEXT("ItemLevel"))
 
-//英雄物品缓存对象
-UCLASS()
-class FVM_API UHeroItemDataAssetCache : public UGameDataAssetCache
-{
-	GENERATED_BODY()
-public:
-	FSoftObjectPath GetResource(const FName& Name, const FName& RowName, const int32& Key);
-private:
-	//图片数据
-	DataTableAssetData<FItemResourceData> Data;
-	UPROPERTY()
-	TMap<int32, FSoftObjectPath> Datas;
-	//名称
-	UPROPERTY()
-	FName ResourceName;
-};
 
 //武器槽
 UCLASS()

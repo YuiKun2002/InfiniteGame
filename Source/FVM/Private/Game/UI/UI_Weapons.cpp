@@ -128,106 +128,10 @@ void UUI_Weapons::InitWeapons()
 	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器界面-数据初始化"));
 }
 
-/*
-void UUI_Weapons::EquipWeapon(const FItemWeaponBase& Data)
-{
-	// FMainWeaponData
-	// FSecondaryWeaponData
-
-	UPlayerStructManager* Player = UFVMGameInstance::GetPlayerStructManager_Static();
-
-	if (Data.WeaponType == EWeaponType::MainWeapon)
-	{
-
-
-		//装备到角色->检查背包
-		if (Player->PlayerEquipWeaponData.MainWeapon.M_ItemID != -1)
-		{
-
-		}
-		else {
-
-		}
-
-
-		this->MainWeaponSlot->ButtWeaponHead->OnClicked.Clear();
-		this->MainWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Weapons::CancelMainWeapon);
-	}
-	else {
-
-
-
-		//装备到角色->检查背包
-
-
-		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.Clear();
-		this->SecondaryWeaponSlot->ButtWeaponHead->OnClicked.AddDynamic(this, &UUI_Weapons::CancelSecondaryWeapon);
-	}
-}
-
-void UUI_Weapons::EquipCurrentWeapon(
-	const FItemWeaponBase& BaseData,
-	UUI_Heroes_WeaponSlot* WeaponSlot,
-	UTextBlock* Text1,
-	const FText& CText1,
-	UTextBlock* Text2,
-	const FText& CText2,
-	UTextBlock* Text3,
-	const FText& CText3
-)
-{
-	//获取缓存对象
-	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
-	FSoftObjectPath LevelPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), BaseData.WeaponLevel);
-
-	//设置外观
-	WeaponSlot->WeaponName->SetText(BaseData.ItemName);
-	WeaponSlot->SetButtonStyleSoft(
-		WeaponSlot->ButtWeaponHead,
-		TSoftObjectPtr<UTexture2D>(BaseData.ItemTexturePath), false, false
-	);
-
-	WeaponSlot->SetImageBrushByTexture(
-		WeaponSlot->WepaonLevel,
-		TSoftObjectPtr<UTexture2D>(LevelPath)
-	);
-
-	Text1->SetText(CText1);
-	Text2->SetText(CText2);
-	Text3->SetText(CText3);
-
-	WeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Visible);
-	WeaponSlot->WeaponName->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	WeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-}
-
-void UUI_Weapons::CancelMainWeapon()
-{
-	this->MainWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
-	this->MainWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
-	this->MainWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
-
-	this->Text_Attack->SetText(FText::FromString(TEXT("???")));
-	this->Text_Burst->SetText(FText::FromString(TEXT("???")));
-	this->WeaponCostCoin0->SetText(FText::FromString(TEXT("0")));
-}
-
-void UUI_Weapons::CancelSecondaryWeapon()
-{
-	this->SecondaryWeaponSlot->ButtWeaponHead->SetVisibility(ESlateVisibility::Collapsed);
-	this->SecondaryWeaponSlot->WeaponName->SetVisibility(ESlateVisibility::Collapsed);
-	this->SecondaryWeaponSlot->WepaonLevel->SetVisibility(ESlateVisibility::Collapsed);
-
-	this->Text_Defence->SetText(FText::FromString(TEXT("???")));
-	this->Text_HealRate->SetText(FText::FromString(TEXT("???")));
-	this->WeaponCostCoin1->SetText(FText::FromString(TEXT("0")));
-}
-*/
-
 UWidget* UUI_Weapons::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Index)
 {
 	UUI_Heroes_WeaponItem* ItemWidget = CreateWidget<UUI_Heroes_WeaponItem>(this,
-		UGameSystemFunction::GetUserInterClassByName(UI_HEROESUINAME,
+		UGameSystemFunction::GetUserInterClassByName(UI_WEAPONSUINAME,
 			TEXT("Weapon"))
 	);
 

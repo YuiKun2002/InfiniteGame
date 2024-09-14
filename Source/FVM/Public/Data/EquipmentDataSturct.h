@@ -32,6 +32,36 @@ public:
 };
 
 /************************************************************************/
+/*                              角色类型                                 */
+/************************************************************************/
+//角色
+USTRUCT(BlueprintType)
+struct FItemHeroBase : public FItemBase {
+	GENERATED_USTRUCT_BODY()
+public:
+	//角色等级
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HeroLevel = 1;
+	//角色星级
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 StarsLevel = 0;
+	//角色稀有度
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 RarityLevel = 0;
+	//角色攻击
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ATK = 0;
+	//角色生命值
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HP = 100;
+	//角色生命值回复
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 HPRate = 10;
+	//角色CD
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CD = 5.f;
+};
+/************************************************************************/
 /*                              武器类型                                 */
 /************************************************************************/
 

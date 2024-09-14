@@ -197,12 +197,20 @@ public:
 	//背包_材料
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FMaterialBase> M_PlayerItems_Material;
-	//武器
+
+	//武器列表
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FItemWeaponBase> M_PlayerItems_Weapon;
 	//角色已经装备的武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FPlayerEquipWeapon PlayerEquipWeaponData;
+
+	//角色列表
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FItemHeroBase> M_PlayerItems_Heroes;
+	//当前选择的角色
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemHeroBase PlayerData;
 
 
 	/*-----------------------防御卡 + 装备------------------------*/
