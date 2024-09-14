@@ -46,21 +46,27 @@ void UUI_Heroes::InitHeroes()
 		A.M_ItemID = 12;
 		UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
 		A.HeroLevel = 1;
+		A.RarityLevel = 0;
+		A.StarsLevel = 1;
 		A.BagID = TEXT("0");
+
+		FItemHeroBase B;
+		B.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
+		B.M_ItemID = 14;
+		B.HeroLevel = 1;
+		B.RarityLevel = 1;
+		B.StarsLevel = 3;
+		UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
+		B.BagID = TEXT("2");
 
 		FItemHeroBase C;
 		C.ItemName = FText(FText::FromName(TEXT("Cat Gun")));
 		C.M_ItemID = 13;
 		UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
 		C.HeroLevel = 1;
+		C.RarityLevel = 2;
+		C.StarsLevel = 4;
 		C.BagID = TEXT("1");
-
-		FItemHeroBase B;
-		B.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
-		B.M_ItemID = 14;
-		B.HeroLevel = 1;
-		UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
-		B.BagID = TEXT("2");
 
 		this->Heroes.Append(
 			{ A,B,C }
@@ -82,10 +88,38 @@ void UUI_Heroes::InitData()
 {
 	//初始化选择界面
 	const FItemHeroBase& PlayerHeroData = this->GetCurrentHeroData();
-
+	//设置名称
 	this->HeroName->SetText(PlayerHeroData.ItemName);
+	//获取缓存对象
+	UHeroItemDataAssetCache* CacheData = GetGameDataAssetCache<UHeroItemDataAssetCache>(HEROITEM_HEROITEM);
+	//设置星级
+	FSoftObjectPath LevelPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具星星等级"), PlayerHeroData.StarsLevel);
+	this->SetImageBrushByTexture(this->HeroStarLevel, TSoftObjectPtr<UTexture2D>(LevelPath));
+	//设置稀有度
+	FSoftObjectPath RarityPath = CacheData->GetResource(HEROITEM_ITEMLEVEL, TEXT("道具稀有度"), PlayerHeroData.RarityLevel);
+	this->SetImageBrushByTexture(
+		this->HeroGrade, TSoftObjectPtr<UTexture2D>(RarityPath), FVector(1.f), 1.f, true
+	);
+	//设置等级
+	this->HeroLevel->SetText(FText::FromString(TEXT("LV.") + FString::FromInt(PlayerHeroData.HeroLevel)));
+	//设置选择按钮是否显示
+	const FItemHeroBase& CurPlayerHeroData = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerData;
+	if (CurPlayerHeroData.M_ItemID == PlayerHeroData.M_ItemID)
+	{
+		this->Choose->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else {
+		this->Choose->SetVisibility(ESlateVisibility::Visible);
+	}
+}
 
+void UUI_Heroes::Select()
+{
+	UFVMGameInstance::GetPlayerStructManager_Static()->PlayerData = this->GetCurrentHeroData();
 
+	UGameSystemFunction::SaveCurrentPlayerData(TEXT("选择当前角色"));
+
+	this->InitHeroes();
 }
 
 FItemHeroBase UUI_Heroes::GetCurrentHeroData()

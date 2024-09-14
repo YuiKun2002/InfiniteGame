@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameSystem/GameDataSubsystem.h"
+#include "GameSystem/Item/ItemBaseStruct.h"
 #include "HeroesData.generated.h"
 
 #define HEROITEM_HEROITEM FName(TEXT("HeroItem"))

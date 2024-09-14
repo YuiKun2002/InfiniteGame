@@ -49,6 +49,9 @@ public:
 	//初始化数据界面
 	UFUNCTION(BlueprintCallable)
 	void InitData();
+	//选择角色
+	UFUNCTION(BlueprintCallable)
+	void Select();
 	//当前选择的角色
 	UPROPERTY()
 	class UUI_HeroItem* CurHeroItem = nullptr;
