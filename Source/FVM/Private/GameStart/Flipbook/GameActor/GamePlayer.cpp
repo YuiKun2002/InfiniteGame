@@ -30,15 +30,7 @@ void AGamePlayer::InitMeshe(UUI_MapMeshe* _UUI_MapMeshe, AMapMeshe* _AMapMeshe)
 
 void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 {
-	//加载套装
-	this->LoadAnimation(
-		SuitData,
-		true,
-		this->M_SuitAnim,
-		this->M_Anim_Suit_Def,
-		this->M_Anim_Suit_Attack,
-		EPlayerEquipmentSlotPosition::E_Player_Suit
-	);
+	
 }
 
 void AGamePlayer::InitPlayerWeapon()
@@ -136,57 +128,8 @@ void AGamePlayer::SetPlayerTranslucency(UUI_MapMeshe* _CurMeshe)
 {
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 
-	//设置超级武器  默认 0
-	//设置翅膀的渲染层
-	if (this->M_FlyItemAnim)
-		this->M_FlyItemAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 1);
+	// SetTranslucency(_CurMeshe->GetTranslucency() + 1);
 
-	if (PlayerData->M_FPlayerSuit.M_bPlayerSuit && PlayerData->M_FPlayerSuit.M_ShowPlayerSuit)
-	{
-		//设置套装的渲染层
-		if (this->M_SuitAnim)
-			this->M_SuitAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 2);
-		//设置副武器 + 3
-
-		//设置主武器
-		if (this->M_PlayerFirstWeapon)
-			this->M_PlayerFirstWeapon->GetRenderComponent()->SetTranslucency(_CurMeshe->GetTranslucency() + 4);
-	}
-	else
-	{
-		//头发后
-		if (this->M_HairBackAnim)
-			this->M_HairBackAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 2);
-		//身体
-		if (this->M_BodyAnim)
-			this->M_BodyAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 3);
-		//裸头
-		if (this->M_HeadAnim)
-			this->M_HeadAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 4);
-		//眼睛
-		if (this->M_EyeAnim)
-			this->M_EyeAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 5);
-		//脸
-		if (this->M_FaceAnim)
-			this->M_FaceAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 6);
-		//眼镜
-		if (this->M_GlassesAnim)
-			this->M_GlassesAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 7);
-		//头发前
-		if (this->M_HairAnim)
-			this->M_HairAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 8);
-		//帽子
-		if (this->M_CapAnim)
-			this->M_CapAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 9);
-
-		//设置副武器 + 10
-
-		//设置主武器
-		if (this->M_PlayerFirstWeapon)
-		{
-			this->M_PlayerFirstWeapon->GetRenderComponent()->SetTranslucency(_CurMeshe->GetTranslucency() + 11);
-		}
-	}
 }
 
 void AGamePlayer::SetCurrentMouse(AMouseActor* _MouseActor)
@@ -233,32 +176,14 @@ int32 AGamePlayer::GetTranslucency()
 
 void AGamePlayer::PlayerDef_Anim()
 {
-	this->M_FlyItemAnim->SetPlayAnimation(this->M_Anim_Suit_FlyItemDef);
-	this->M_SuitAnim->SetPlayAnimation(this->M_Anim_Suit_Def);
-	this->M_HairBackAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairBackDef);
-	this->M_BodyAnim->SetPlayAnimation(this->M_Anim_BaseSuit_BodyDef);
-	this->M_HeadAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HeadDef);
-	this->M_EyeAnim->SetPlayAnimation(this->M_Anim_BaseSuit_EyeDef);
-	this->M_FaceAnim->SetPlayAnimation(this->M_Anim_BaseSuit_FaceDef);
-	this->M_GlassesAnim->SetPlayAnimation(this->M_Anim_BaseSuit_GlassesDef);
-	this->M_HairAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairDef);
-	this->M_CapAnim->SetPlayAnimation(this->M_Anim_BaseSuit_CapDef);
+	
 
 	this->M_PlayerFirstWeapon->PlayerDef_Anim();
 }
 
 void AGamePlayer::PlayerAttack_Anim()
 {
-	this->M_FlyItemAnim->SetPlayAnimation(this->M_Anim_Suit_FlyItemAttack);
-	this->M_SuitAnim->SetPlayAnimation(this->M_Anim_Suit_Attack);
-	this->M_HairBackAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairBackAttack);
-	this->M_BodyAnim->SetPlayAnimation(this->M_Anim_BaseSuit_BodyAttack);
-	this->M_HeadAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HeadAttack);
-	this->M_EyeAnim->SetPlayAnimation(this->M_Anim_BaseSuit_EyeAttack);
-	this->M_FaceAnim->SetPlayAnimation(this->M_Anim_BaseSuit_FaceAttack);
-	this->M_GlassesAnim->SetPlayAnimation(this->M_Anim_BaseSuit_GlassesAttack);
-	this->M_HairAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairAttack);
-	this->M_CapAnim->SetPlayAnimation(this->M_Anim_BaseSuit_CapAttack);
+	
 
 	this->M_PlayerFirstWeapon->PlayerAttack_Anim();
 }
