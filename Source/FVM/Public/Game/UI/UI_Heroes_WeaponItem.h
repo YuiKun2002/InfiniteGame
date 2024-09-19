@@ -40,7 +40,7 @@ public:
 public:
 	//初始化数据
 	UFUNCTION(BlueprintCallable)
-	void InitData(class UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData, bool bFrist = true);
+	void InitData(class UUI_Weapons* UI_Weapon, const FMainWeaponData& WeaponBaseData, bool bFrist = true);
 	//初始化【装备位置】
 	UFUNCTION(BlueprintCallable)
 	void InitEquipPosition(bool bFrist);
@@ -62,7 +62,7 @@ public:
 public:
 	//获取武器数据
 	UFUNCTION(BlueprintPure)
-	void GetWeaponData(FItemWeaponBase& WeaponBaseData);
+	void GetWeaponData(FMainWeaponData& WeaponBaseData);
 	//获取武器等级
 	UFUNCTION(BlueprintPure)
 	int32 GetWeaponLevel();
@@ -85,14 +85,14 @@ private:
 	UFUNCTION()
 	void DecomposeWeapon();
 	UFUNCTION()
-	void UpdageWeapon(FItemWeaponBase& Data);
+	void UpdageWeapon(FMainWeaponData& Data);
 	UFUNCTION()
-	void EvolveWeapon(FItemWeaponBase& Data);
+	void EvolveWeapon(FMainWeaponData& Data);
 private:
 	UPROPERTY()
 	class UUI_Weapons* UIWeapon = nullptr;
 	UPROPERTY()
-	FItemWeaponBase WeaponData;
+	FMainWeaponData WeaponData;
 	UPROPERTY()
 	bool bFristWeapon = true;
 };
@@ -107,7 +107,7 @@ class FVM_API UUI_Heroes_WeaponItem : public UWidgetBase
 public:
 	//设置武器数据
 	UFUNCTION()
-	void SetWeaponData(const FItemWeaponBase& Data, class UUI_Weapons* UIWeapon);
+	void SetWeaponData(const FMainWeaponData& Data, class UUI_Weapons* UIWeapon);
 	//初始化武器数据
 	UFUNCTION()
 	void InitWeaponData();
@@ -116,14 +116,14 @@ public:
 	void SelectWeapon();
 	//当武器被选择时
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnSelectWeaponData(class UUI_Weapons* UIWeapon, const FItemWeaponBase& WeaponBaseData);
+	void OnSelectWeaponData(class UUI_Weapons* UIWeapon, const FMainWeaponData& WeaponBaseData);
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* Item;
 private:
 	//武器数据
 	UPROPERTY()
-	FItemWeaponBase WeaponData;
+	FMainWeaponData WeaponData;
 	//英雄界面
 	UPROPERTY()
 	class UUI_Weapons* UI_Weapon = nullptr;

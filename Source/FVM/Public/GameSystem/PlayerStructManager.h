@@ -200,7 +200,7 @@ public:
 
 	//武器列表
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FItemWeaponBase> M_PlayerItems_Weapon;
+	TArray<FMainWeaponData> M_PlayerItems_Weapon;
 	//角色已经装备的武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FPlayerEquipWeapon PlayerEquipWeaponData;

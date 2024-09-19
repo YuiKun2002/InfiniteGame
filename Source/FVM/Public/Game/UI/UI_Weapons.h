@@ -26,7 +26,7 @@ public:
 	UPROPERTY()
 	TArray<FSecondaryWeaponData> SecondaryWeaponDatas;
 	UPROPERTY()
-	TArray<FItemWeaponBase> Weapons;
+	TArray<FMainWeaponData> Weapons;
 	//武器加载器
 	UPROPERTY()
 	UItemLoadManager* ItemLoadManagerItem = nullptr;

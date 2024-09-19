@@ -42,7 +42,7 @@ public:
 	//角色等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HeroLevel = 1;
-	//角色星级
+	//角色星级  
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 StarsLevel = 0;
 	//角色稀有度
@@ -50,17 +50,40 @@ public:
 	int32 RarityLevel = 0;
 	//角色攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ATK = 0;
+	float ATK = 10;
+	//角色加成比例
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ATKRate = 1.2f;
 	//角色生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 HP = 100;
-	//角色生命值回复
+	float HP = 100;
+	//角色系数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 HPRate = 10;
+	float HPCofficient = 1.1;
+	//角色生命值
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HPRate = 10.f;
+	//角色生命值系数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HPRateCofficient = 1.1f;
 	//角色CD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CD = 5.f;
+	//角色CD系数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CDCoefficient = 1.1f;
 };
+
+//数据计算
+UCLASS()
+class FVM_API UItemHeroDataFunc : public UObject
+{
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure)
+	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
+};
+
 /************************************************************************/
 /*                              武器类型                                 */
 /************************************************************************/
@@ -92,18 +115,23 @@ public:
 
 //主武器数据结构
 USTRUCT(BlueprintType)
-struct FMainWeaponData : public FItemWeaponBase{
+struct FMainWeaponData : public FItemWeaponBase {
 	GENERATED_USTRUCT_BODY()
 public:
 	//攻击力
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ATK = 2.f;
-	//攻击力加成[%]
+	//攻击力加成
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ATKRate = 1.f;
+	float ATKRCoefficient = 1.1f;
+
 	//攻击冷却时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackCoolingTime = 1.f;
+	//攻击冷却成长
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackCoolingTimeCoefficient = 1.1f;
+
 	//攻击前摇时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackFristTime = 0.8;
@@ -113,14 +141,39 @@ public:
 	//攻击次数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 AttackCount = 1;
-	//是否可以装备副武器
+
+	//暴击倍数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bEquipSecondary = true;
+	float CriticalMultiple = 2.f;
+	//暴击率
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CriticalStrikeRate = 0.02f;
+	//暴击率成长系数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CriticalStrikeRateCoefficient = 1.2f;
+
+	//射线设置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FLineTraceSetting> LineTraceSettings;
+
+	//是否可以进化
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bEvolve = false;
+};
+
+//数据计算
+UCLASS()
+class FVM_API UMainWeaponDataFunc : public UObject
+{
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure)
+	static FMainWeaponData Calculate(const FMainWeaponData& InputData);
 };
 
 //副武器数据结构
 USTRUCT(BlueprintType)
-struct FSecondaryWeaponData : public FItemWeaponBase{
+struct FSecondaryWeaponData : public FItemWeaponBase {
 	GENERATED_USTRUCT_BODY()
 public:
 	//基础生命值
@@ -144,17 +197,13 @@ struct FPlayerEquipWeapon : public FItemBase {
 public:
 	//主武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FItemWeaponBase MainWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FMainWeaponData MainWeaponData;
+	FMainWeaponData MainWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bMainEquip = false;
 
 	//副武器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FItemWeaponBase SecondaryWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FMainWeaponData SecondaryWeaponData;
+	FMainWeaponData SecondaryWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bSecondaryEquip = false;
 };
@@ -219,5 +268,4 @@ UCLASS()
 class FVM_API UEquipmentDataSturct : public UObject
 {
 	GENERATED_BODY()
-
 };

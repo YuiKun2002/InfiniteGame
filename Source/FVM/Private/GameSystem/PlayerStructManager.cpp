@@ -377,7 +377,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 					/************************************************************************/
 					case 0: {
 						//武器数据
-						FItemWeaponBase WeaponData;
+						FMainWeaponData WeaponData;
 						//图片查询结果
 						bool bResult = UItemBaseStruct::GetTextureResource(
 							FCString::Atoi(*JsonObj->GetStringField(TEXT("itemId"))),
@@ -394,18 +394,7 @@ void UPlayerStructManager::GetBagItems(TArray<FItemCard>& Cards, TArray<FMateria
 							//设置武器等级
 							WeaponData.WeaponLevel = JsonObj->GetIntegerField(TEXT("itemLevel"));
 							//设置武器类型
-							UVaRestJsonValue* subType = JsonObj->GetField((TEXT("subType")));
-							//设置武器类型
-							EWeaponType WeaponType = EWeaponType::MainWeapon;
-							switch (uint8(subType->AsInt32()))
-							{
-							case 1:WeaponType = EWeaponType::SecondaryWeapon; break;
-							default:
-								WeaponType = EWeaponType::MainWeapon;
-								break;
-							}
-							//设置武器类型
-							WeaponData.WeaponType = WeaponType;
+							WeaponData.WeaponType = EWeaponType::MainWeapon;
 
 
 							int32 Count = JsonObj->GetIntegerField(TEXT("itemNum"));

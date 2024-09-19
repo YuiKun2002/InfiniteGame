@@ -52,6 +52,12 @@ public:
 	//选择角色
 	UFUNCTION(BlueprintCallable)
 	void Select();
+	//强化
+	UFUNCTION(BlueprintCallable)
+	void Updage();
+	//进化
+	UFUNCTION(BlueprintCallable)
+	void Evolve();
 	//当前选择的角色
 	UPROPERTY()
 	class UUI_HeroItem* CurHeroItem = nullptr;
@@ -59,6 +65,16 @@ public:
 	//获取当前选择的角色
 	UFUNCTION(BlueprintPure)
 	FItemHeroBase GetCurrentHeroData();
+	FItemHeroBase& GetCurrentHeroDataByRef();
+	//获取细节数据
+	UFUNCTION(BlueprintPure)
+	void GetHeroDetailData(FItemHeroBase& OutData);
+	//获取是否可以强化
+	UFUNCTION(BlueprintPure)
+	bool GetUpgrade();
+	//获取是否可以进化
+	UFUNCTION(BlueprintPure)
+	bool GetEvolve();
 public:
 	//英雄名称
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))

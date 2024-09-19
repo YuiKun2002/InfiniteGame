@@ -9,7 +9,7 @@
 #include <Components/TextBlock.h>
 #include "GameSystem/GameDataSubsystem.h"
 
-void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FItemWeaponBase& WeaponBaseData, bool bFrist)
+void UUI_Heroes_WeaponSlot::InitData(UUI_Weapons* UI_Weapon, const FMainWeaponData& WeaponBaseData, bool bFrist)
 {
 	//设置类
 	this->UIWeapon = UI_Weapon;
@@ -59,13 +59,11 @@ void UUI_Heroes_WeaponSlot::EquipWeapon(bool bFirst)
 		{
 			this->UIWeapon->MainWeaponSlot->InitData(nullptr, this->WeaponData);
 			Weapon.MainWeapon = this->WeaponData;
-			Weapon.MainWeaponData;
 			Weapon.bMainEquip = true;
 		}
 		else {
 			this->UIWeapon->SecondaryWeaponSlot->InitData(nullptr, this->WeaponData);
 			Weapon.SecondaryWeapon = this->WeaponData;
-			Weapon.SecondaryWeaponData;
 			Weapon.bSecondaryEquip = true;
 		}
 		//存档
@@ -86,12 +84,10 @@ void UUI_Heroes_WeaponSlot::RemoveWeapon()
 	if (this->bFristWeapon)
 	{
 		Weapon.MainWeapon = {};
-		Weapon.MainWeaponData = {};
 		Weapon.bMainEquip = false;
 	}
 	else {
 		Weapon.SecondaryWeapon = {};
-		Weapon.SecondaryWeaponData = {};
 		Weapon.bSecondaryEquip = false;
 	}
 	//存档
@@ -187,7 +183,7 @@ void UUI_Heroes_WeaponSlot::Evolve()
 	this->EvolveWeapon(this->WeaponData);
 }
 
-void UUI_Heroes_WeaponSlot::GetWeaponData(FItemWeaponBase& WeaponBaseData)
+void UUI_Heroes_WeaponSlot::GetWeaponData(FMainWeaponData& WeaponBaseData)
 {
 	WeaponBaseData = this->WeaponData;
 }
@@ -204,10 +200,7 @@ int32 UUI_Heroes_WeaponSlot::GetWeaponStars()
 
 void UUI_Heroes_WeaponSlot::GetWeaponDetailData(FMainWeaponData& MainWeaponData)
 {
-	FMainWeaponData A = { this->WeaponData };
-	int32 UpATK = (A.ATK * A.StarsLevel * 0.5);
-	A.ATK = A.ATK * (UpATK == 0 ? 1 : UpATK) * (1 + A.ATKRate) + (A.WeaponLevel * 0.5);
-	MainWeaponData = A;
+	MainWeaponData = UMainWeaponDataFunc::Calculate(this->WeaponData);
 }
 
 bool UUI_Heroes_WeaponSlot::GetUpgradeWeapon()
@@ -267,7 +260,7 @@ void UUI_Heroes_WeaponSlot::DecomposeWeapon()
 	}
 }
 
-void UUI_Heroes_WeaponSlot::UpdageWeapon(FItemWeaponBase& Data)
+void UUI_Heroes_WeaponSlot::UpdageWeapon(FMainWeaponData& Data)
 {
 	if (Data.WeaponLevel < 50)
 	{
@@ -275,7 +268,7 @@ void UUI_Heroes_WeaponSlot::UpdageWeapon(FItemWeaponBase& Data)
 	}
 }
 
-void UUI_Heroes_WeaponSlot::EvolveWeapon(FItemWeaponBase& Data)
+void UUI_Heroes_WeaponSlot::EvolveWeapon(FMainWeaponData& Data)
 {
 	if (Data.StarsLevel < 4)
 	{
@@ -283,7 +276,7 @@ void UUI_Heroes_WeaponSlot::EvolveWeapon(FItemWeaponBase& Data)
 	}
 }
 
-void UUI_Heroes_WeaponItem::SetWeaponData(const FItemWeaponBase& Data, UUI_Weapons* UIWeapon)
+void UUI_Heroes_WeaponItem::SetWeaponData(const FMainWeaponData& Data, UUI_Weapons* UIWeapon)
 {
 	this->WeaponData = Data;
 	this->UI_Weapon = UIWeapon;

@@ -21,7 +21,7 @@ void UUI_Weapons::InitWeapons()
 
 	if (!this->Weapons.Num())
 	{
-		FItemWeaponBase A;
+		FMainWeaponData A;
 		A.ItemName = FText(FText::FromName(TEXT("Cat Sword")));
 		A.M_ItemID = 2;
 		UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
@@ -29,7 +29,7 @@ void UUI_Weapons::InitWeapons()
 		A.WeaponLevel = 1;
 		A.BagID = TEXT("0");
 
-		FItemWeaponBase C;
+		FMainWeaponData C;
 		C.ItemName = FText(FText::FromName(TEXT("Cat Gun")));
 		C.M_ItemID = 4;
 		UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
@@ -37,7 +37,7 @@ void UUI_Weapons::InitWeapons()
 		C.WeaponLevel = 2;
 		C.BagID = TEXT("1");
 
-		FItemWeaponBase B;
+		FMainWeaponData B;
 		B.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
 		B.M_ItemID = 3;
 		B.WeaponLevel = 4;
@@ -45,7 +45,7 @@ void UUI_Weapons::InitWeapons()
 		B.WeaponType = EWeaponType::MainWeapon;
 		B.BagID = TEXT("2");
 
-		FItemWeaponBase D;
+		FMainWeaponData D;
 		D.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
 		D.M_ItemID = 3;
 		D.WeaponLevel = 4;
@@ -53,7 +53,7 @@ void UUI_Weapons::InitWeapons()
 		D.WeaponType = EWeaponType::MainWeapon;
 		D.BagID = TEXT("3");
 
-		FItemWeaponBase E;
+		FMainWeaponData E;
 		E.ItemName = FText(FText::FromName(TEXT("Cat Sword")));
 		E.M_ItemID = 2;
 		UItemBaseStruct::GetTextureResource(2, E.ItemTexturePath);
@@ -135,7 +135,7 @@ UWidget* UUI_Weapons::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Inde
 			TEXT("Weapon"))
 	);
 
-	ItemWidget->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>(), this);
+	ItemWidget->SetWeaponData(_Data->GetTransValue<FMainWeaponData>(), this);
 	ItemWidget->InitWeaponData();
 
 	return ItemWidget;
@@ -143,6 +143,6 @@ UWidget* UUI_Weapons::WidgetCreateInitWeapons(UItemDataTable* _Data, int32 _Inde
 
 void UUI_Weapons::WidgetRefreshUpdateWeapons(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
-	Cast<UUI_Heroes_WeaponItem>(_UWidget)->SetWeaponData(_Data->GetTransValue<FItemWeaponBase>(), this);
+	Cast<UUI_Heroes_WeaponItem>(_UWidget)->SetWeaponData(_Data->GetTransValue<FMainWeaponData>(), this);
 	Cast<UUI_Heroes_WeaponItem>(_UWidget)->InitWeaponData();
 }

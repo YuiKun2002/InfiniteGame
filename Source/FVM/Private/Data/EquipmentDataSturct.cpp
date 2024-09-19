@@ -3,6 +3,7 @@
 
 #include "Data/EquipmentDataSturct.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
+#include "Math/UnrealMathUtility.h"
 
 void UEquipmentDataAssetCache::Unload_Implementation()
 {
@@ -112,4 +113,58 @@ TArray<FEquipment_GemAttack_Data>& UEquipmentDataAssetCache::GetGemAttack()
 TArray<FEquipment_FMail_Data>& UEquipmentDataAssetCache::GetMail()
 {
 	return GetDataTableSourceData(this->MailData, this->Mail, GLOBALASSET_EQUIP, TEXT("Mail"));
+}
+
+FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
+{
+	FMainWeaponData Data = InputData;
+
+	//计算攻击力
+	int32 ATK = Data.WeaponLevel == 1 ? Data.ATK :
+		Data.ATK * FMath::Pow(Data.ATKRCoefficient, (Data.WeaponLevel - 1));
+	Data.ATK = ATK;
+
+	//计算速度
+	int32 Speed = Data.WeaponLevel == 1 ? Data.AttackCoolingTime :
+		Data.AttackCoolingTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1));
+	Data.AttackCoolingTime = Speed;
+
+	//计算暴击率
+	float Critical = Data.WeaponLevel == 1 ? Data.CriticalStrikeRate :
+		Data.CriticalStrikeRate * FMath::Pow(Data.CriticalStrikeRateCoefficient, (Data.WeaponLevel - 1));
+
+	if (Critical > 1.f)
+	{
+		Critical = 1.f;
+	}
+	Data.CriticalStrikeRate = Critical;
+
+	return Data;
+}
+
+FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
+{
+	FItemHeroBase Data = InputData;
+
+	//计算攻击力
+	int32 ATK = Data.HeroLevel == 1 ? Data.ATK :
+		Data.ATK * FMath::Pow(Data.ATKRate, (Data.HeroLevel - 1));
+	Data.ATK = ATK;
+
+	//计算血量
+	int32 HP = Data.HeroLevel == 1 ? Data.HP :
+		Data.HP * FMath::Pow(Data.HPCofficient, (Data.HeroLevel - 1));
+	Data.HP = HP;
+
+	//计算血量
+	int32 HPRate = Data.HeroLevel == 1 ? Data.HPRate :
+		Data.HPRate * FMath::Pow(Data.HPRateCofficient, (Data.HeroLevel - 1));
+	Data.HPRate = HPRate;
+
+	//计算CD
+	int32 CD = Data.HeroLevel == 1 ? Data.CD :
+		Data.CD * FMath::Pow(Data.CDCoefficient, (Data.HeroLevel - 1));
+	Data.CD = CD;
+
+	return Data;
 }
