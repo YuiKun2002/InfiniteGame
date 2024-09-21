@@ -73,11 +73,11 @@ void AMouseActor::UpdateColor()
 			this->GetMyActor()->GetSpriteColor().B
 		), this->M_Proper_State.CurOpacity);*/
 
-		this->SetRenderColor(
+		this->SetSpineRenderColor(
 			FLinearColor(
-				this->GetRenderColor().R,
-				this->GetRenderColor().G,
-				this->GetRenderColor().B,
+				this->GetSpineRenderColor().R,
+				this->GetSpineRenderColor().G,
+				this->GetSpineRenderColor().B,
 				this->M_Proper_State.CurOpacity
 			)
 		);
@@ -949,11 +949,11 @@ void AMouseActor::Tick(float DeltaTime)
 			{
 				this->M_Proper_Condition.M_bColor = false;
 				this->M_Proper_State.CurOpacity = 1.f;
-				this->SetRenderColor(
+				this->SetSpineRenderColor(
 					FLinearColor(
-						this->GetRenderColor().R,
-						this->GetRenderColor().G,
-						this->GetRenderColor().B,
+						this->GetSpineRenderColor().R,
+						this->GetSpineRenderColor().G,
+						this->GetSpineRenderColor().B,
 						this->M_Proper_State.CurOpacity
 					)
 				);

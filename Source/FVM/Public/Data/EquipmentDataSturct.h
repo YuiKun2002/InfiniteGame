@@ -34,6 +34,18 @@ public:
 /************************************************************************/
 /*                              角色类型                                 */
 /************************************************************************/
+
+ //角色
+USTRUCT(BlueprintType)
+struct FEquipment_Hero_Data : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+public:
+	//角色名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, TSoftClassPtr<class AGamePlayer>> Heroes;
+};
+
 //角色
 USTRUCT(BlueprintType)
 struct FItemHeroBase : public FItemBase {
@@ -87,6 +99,17 @@ public:
 /************************************************************************/
 /*                              武器类型                                 */
 /************************************************************************/
+
+ //武器
+USTRUCT(BlueprintType)
+struct FEquipment_Weapon_Data : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY();
+public:
+	//武器名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FName, TSoftClassPtr<class APlayerFirstWeapon>> Weapons;
+};
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8//[武器类型]
@@ -234,7 +257,10 @@ public:
 	TArray<FEquipment_GemAttack_Data>& GetGemAttack();
 	//获取邮件
 	TArray<FEquipment_FMail_Data>& GetMail();
-
+	//获取角色
+	TArray<FEquipment_Hero_Data>& GetHeroes();
+	//获取武器
+	TArray<FEquipment_Weapon_Data>& GetWeapons();
 public:
 	DataTableAssetData<FEquipment_Bag_Data> Bag;
 	TArray<FEquipment_Bag_Data> BagData;
@@ -261,6 +287,12 @@ public:
 
 	DataTableAssetData<FEquipment_FMail_Data> Mail;
 	TArray<FEquipment_FMail_Data> MailData;
+
+	DataTableAssetData<FEquipment_Hero_Data> Heroes;
+	TArray<FEquipment_Hero_Data> HeroesData;
+
+	DataTableAssetData<FEquipment_Weapon_Data> Weapons;
+	TArray<FEquipment_Weapon_Data> WeaponsData;
 };
 
 

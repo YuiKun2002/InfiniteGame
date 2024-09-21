@@ -190,8 +190,6 @@ bool UUI_MapMeshe::PlayPlayer()
 		TEXT("")
 	))
 	{
-		AGameMapInstance::GetGameMapInstance()->SetGameStartNow();
-		AGameMapInstance::GetGameMapInstance()->OnPlayPlayerDelegate.Broadcast();
 		return true;
 	}
 
@@ -976,7 +974,7 @@ int32 UUI_MapMeshe::GetCharTranslucency()
 {
 	if (this->bHasChar)
 	{
-		return this->M_PlayerIns->GetTranslucency();
+		return this->M_PlayerIns->GetPlayerRenderLayerToCardLayer();
 	}
 
 	return this->GetTranslucency();

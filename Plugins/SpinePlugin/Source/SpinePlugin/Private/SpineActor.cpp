@@ -60,12 +60,17 @@ FRotator ASpineActor::GetRotation() const
 	return this->AnimRenderComp->GetRelativeRotation();
 }
 
-FLinearColor ASpineActor::GetRenderColor() const
+FLinearColor ASpineActor::GetSpineRenderColor() const
 {
 	return this->AnimRenderComp->Color;
 }
 
-int32 ASpineActor::GetRenderLayer() const
+int32 ASpineActor::GetSpineRenderLayer()
+{
+	return this->GetRenderLayer();
+}
+
+int32 ASpineActor::GetRenderLayer()
 {
 	return this->mRenderLayer;
 }
@@ -122,7 +127,7 @@ void ASpineActor::SetAnimationClear(int32 TrackIndex)
 	}
 }
 
-void ASpineActor::SetRenderColor(FLinearColor SpineColor)
+void ASpineActor::SetSpineRenderColor(FLinearColor SpineColor)
 {
 	this->AnimRenderComp->Color = SpineColor;
 }
@@ -140,6 +145,7 @@ void ASpineActor::SetRenderLayer(int32 RenderLayer)
 	}
 
 	this->mRenderLayer = RenderLayer;
+	this->AnimRenderComp->SetTranslucentSortPriority(RenderLayer);
 }
 
 void ASpineActor::InitSpineShow()

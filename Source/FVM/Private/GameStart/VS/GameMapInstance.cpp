@@ -209,8 +209,8 @@ void AGameMapInstance::BeginPlay()
 			this->GetWorld(),
 			LoadClass<UWidgetBase>(0,
 				TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/BPUI_PlayerPlayTips.BPUI_PlayerPlayTips_C'")
-				)
-			);
+			)
+		);
 		this->M_UI_PlayPlayerTipsWidget->AddToViewport(0);
 
 		this->SetGamePause(false);
@@ -378,10 +378,33 @@ bool AGameMapInstance::GetVSGameOver()
 void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _UI_MapMeshe)
 {
 	if (!IsValid(_MapMeshe))
+	{
 		return;
+	}
 
-	AGamePlayer* PlayerIns = this->GetWorld()->SpawnActor<AGamePlayer>(LoadClass<AGamePlayer>(0,
-		TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C'")));
+	//通过名称加载角色
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	//获取角色数据
+	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
+	//角色名称
+	FName CurPlayerName = FName(*PlayerData->PlayerData.ItemName.ToString());
+	//角色实例对象
+	TSoftClassPtr<AGamePlayer>* PlayerSoftIns = nullptr;
+	for (FEquipment_Hero_Data& CurDatas : Cache->GetHeroes())
+	{
+		PlayerSoftIns = CurDatas.Heroes.Find(CurPlayerName);
+		if(PlayerSoftIns)
+		{
+			break;	
+		}
+	}
+
+	if (!PlayerSoftIns)
+	{
+		return;
+	}
+
+	AGamePlayer* PlayerIns = this->GetWorld()->SpawnActor<AGamePlayer>(PlayerSoftIns->LoadSynchronous());
 
 	//设置旋转
 	PlayerIns->SetActorRotation(FRotator(0.f, 90.f, 0.f));

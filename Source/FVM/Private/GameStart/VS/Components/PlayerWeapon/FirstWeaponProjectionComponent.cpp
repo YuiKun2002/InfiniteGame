@@ -165,12 +165,12 @@ void UFirstWeaponProjectionComponent::LoadResource()
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("加载资源"));
 	}
 
-	const FPlayerWeaponFirst& LData = this->M_Owner->GetPlayerFirstWeaponData();
+	const FMainWeaponData& LData = this->M_Owner->GetPlayerFirstWeaponData();
 	this->InitLaunchProperty(
-		LData.M_ProjectionItemCount,
-		LData.M_ShootSpeed,
-		LData.M_FirstShootSpeed,
-		LData.M_ShootDelay
+		LData.AttackCount,
+		LData.AttackCoolingTime,
+		LData.AttackFristTime,
+		LData.AttackBackTime
 	);
 }
 
@@ -183,17 +183,15 @@ AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyI
 
 	//子弹的相对位置
 	FVector CurLocation = this->M_Owner->GetBulletLocationComp()->GetRelativeLocation();
-	//整体角色的世界位置
-	FVector OwnerLocation = this->M_Owner->GetGameLocation()->GetComponentLocation();
 
 	FTransform Trans;
-	Trans.SetLocation(FVector(OwnerLocation.X, OwnerLocation.Y + CurLocation.X, OwnerLocation.Z + CurLocation.Z));
+	Trans.SetLocation(CurLocation);
 
 	AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(this->Pool->GetObjectActor());
 	L_AFlyItemActor_->SetActorTransform(Trans);
 	L_AFlyItemActor_->SetMouseActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
-	L_AFlyItemActor_->SetATK(this->M_Owner->GetPlayerFirstWeaponData().M_ATKBase);
-	L_AFlyItemActor_->SetSecondATK(this->M_Owner->GetPlayerFirstWeaponData().M_SputteringATKRate);
+	L_AFlyItemActor_->SetATK(this->M_Owner->GetPlayerFirstWeaponData().ATK);
+	L_AFlyItemActor_->SetSecondATK(0.f);
 	L_AFlyItemActor_->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
 	L_AFlyItemActor_->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
 	L_AFlyItemActor_->Init();

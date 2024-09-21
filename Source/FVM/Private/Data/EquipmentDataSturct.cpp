@@ -115,6 +115,16 @@ TArray<FEquipment_FMail_Data>& UEquipmentDataAssetCache::GetMail()
 	return GetDataTableSourceData(this->MailData, this->Mail, GLOBALASSET_EQUIP, TEXT("Mail"));
 }
 
+TArray<FEquipment_Hero_Data>& UEquipmentDataAssetCache::GetHeroes()
+{
+	return GetDataTableSourceData(this->HeroesData, this->Heroes, GLOBALASSET_EQUIP, TEXT("Heroes"));
+}
+
+TArray<FEquipment_Weapon_Data>& UEquipmentDataAssetCache::GetWeapons()
+{
+	return GetDataTableSourceData(this->WeaponsData, this->Weapons, GLOBALASSET_EQUIP, TEXT("Weapons"));
+}
+
 FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 {
 	FMainWeaponData Data = InputData;

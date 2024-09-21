@@ -485,14 +485,14 @@ void ACardActor::UpdateCardEnableState()
 		//如果没有设置则设置卡片颜色
 		if (!this->M_bColorSet)
 		{
-			this->SetRenderColor(SPINE_COLOR_DARK);
+			this->SetSpineRenderColor(SPINE_COLOR_DARK);
 			this->M_bColorSet = true;
 		}
 	}
 	else {
 		if (this->M_bColorSet)
 		{
-			this->SetRenderColor(SPINE_COLOR_WHITE);
+			this->SetSpineRenderColor(SPINE_COLOR_WHITE);
 			this->M_bColorSet = false;
 			this->CardActive();
 		}

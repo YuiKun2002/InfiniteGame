@@ -18,16 +18,6 @@ class FVM_API AGamePlayerBase : public ASpineActor
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION()
-		void LoadAnimation(
-			const FPlayerSuitItem& _Value, //角色服装数据
-			bool _bUseFirst,	//服装位置【前，后】
-			UFlipbookBaseComponent* _Position,//服装动画组件
-			UPaperFlipbook*& _Def,//默认动画
-			UPaperFlipbook*& _Attack,//攻击动画
-			EPlayerEquipmentSlotPosition _Type//服装类型
-		);
-public:
 	// Sets default values for this actor's properties
 	AGamePlayerBase();
 
@@ -42,4 +32,9 @@ public:
 	//初始化角色基本数据
 	void InitPlayerData();
 
+	//获取角色数据
+	void GetPlayerData(FItemHeroBase& OutData);
+private:
+	UPROPERTY()
+	FItemHeroBase HeroData;
 };

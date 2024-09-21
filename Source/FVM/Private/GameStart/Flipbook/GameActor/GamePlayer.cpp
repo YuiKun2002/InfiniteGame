@@ -30,7 +30,7 @@ void AGamePlayer::InitMeshe(UUI_MapMeshe* _UUI_MapMeshe, AMapMeshe* _AMapMeshe)
 
 void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 {
-	
+
 }
 
 void AGamePlayer::InitPlayerWeapon()
@@ -38,38 +38,58 @@ void AGamePlayer::InitPlayerWeapon()
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 
 	//加载武器(主武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_bUse)
+	if (PlayerData->PlayerEquipWeaponData.bMainEquip)
 	{
-		this->LoadPlayerFirstWeapon(PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_WeaponName,
-			PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_WeaponResource_C_Path
+		this->LoadPlayerWeapon(
+			*PlayerData->PlayerEquipWeaponData.MainWeapon.ItemName.ToString(),
+			PlayerData->PlayerEquipWeaponData.MainWeapon
 		);
 	}
-	else {
+	else if (PlayerData->PlayerEquipWeaponData.bSecondaryEquip)
+	{
+		this->LoadPlayerWeapon(
+			*PlayerData->PlayerEquipWeaponData.SecondaryWeapon.ItemName.ToString(),
+			PlayerData->PlayerEquipWeaponData.SecondaryWeapon
+		);
+	}
+	else
+	{
+		FMainWeaponData DefWeaponData;
 		//如果没有装备则使用默认武器
-		this->LoadPlayerFirstWeapon(
-			TEXT("小笼机枪"),
-			TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/Weapon/First/BP_小笼机枪.BP_小笼机枪_C'")
-		);
-	}
-
-	//加载武器(副武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerSecondWeapon.M_bUse)
-	{
-
-	}
-	//加载武器(超级武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerSuperWeapon.M_bUse)
-	{
-
+		this->LoadPlayerWeapon(TEXT("CatGun"), DefWeaponData);
 	}
 }
 
-void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FString& _ClassPath)
+void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponData& WeaponData)
 {
+	if (IsValid(this->M_PlayerFirstWeapon))
+	{
+		this->M_PlayerFirstWeapon->Destroy();
+		this->M_PlayerFirstWeapon = nullptr;
+	}
 
+	//通过名称加载角色
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	//武器实例对象
+	TSoftClassPtr<APlayerFirstWeapon>* PlayerSoftIns = nullptr;
+	for (FEquipment_Weapon_Data& CurDatas : Cache->GetWeapons())
+	{
+		PlayerSoftIns = CurDatas.Weapons.Find(WeapinName);
+		if (PlayerSoftIns)
+		{
+			break;
+		}
+	}
+
+	if (!PlayerSoftIns)
+	{
+		return;
+	}
+
+	//加载武器
 	this->M_PlayerFirstWeapon = this->GetWorld()->SpawnActor<APlayerFirstWeapon>(
-		LoadClass<APlayerFirstWeapon>(0, *_ClassPath)
-		);
+		PlayerSoftIns->LoadSynchronous()
+	);
 
 	if (UFVMGameInstance::GetDebug())
 	{
@@ -80,7 +100,7 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 	{
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("设置角色数据"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("设置武器的角色数据"));
 		}
 
 		//设置角色
@@ -92,9 +112,9 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 		}
 
 		//初始化武器数据
-		this->M_PlayerFirstWeapon->InitWeaponData(
-			UFVMGameInstance::GetPlayerStructManager_Static(),
-			_WeapinName,
+		this->M_PlayerFirstWeapon->InitWeapon(
+			this,
+			WeaponData,
 			this->M_UUI_MapMeshe,
 			this->M_AMapMeshe
 		);
@@ -104,18 +124,10 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("主武器创建完成"));
 		}
 
-		this->M_PlayerFirstWeapon->InitRotation();
-		this->M_PlayerFirstWeapon->SetActorLocation(this->GetActorLocation());
-		this->M_PlayerFirstWeapon->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
-
+		//this->M_PlayerFirstWeapon->InitRotation();
+		//this->M_PlayerFirstWeapon->SetActorLocation(this->GetActorLocation());
 		//更新角色武器位置
-		this->M_PlayerFirstWeapon->MeshMoveUpdate(0.f, this->M_UUI_MapMeshe, this->M_AMapMeshe);
-	}
-	else {
-		if (UFVMGameInstance::GetDebug())
-		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("资源路径有错，确保路径末尾含有_C"));
-		}
+		//this->M_PlayerFirstWeapon->MeshMoveUpdate(0.f, this->M_UUI_MapMeshe, this->M_AMapMeshe);
 	}
 }
 
@@ -128,8 +140,7 @@ void AGamePlayer::SetPlayerTranslucency(UUI_MapMeshe* _CurMeshe)
 {
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 
-	// SetTranslucency(_CurMeshe->GetTranslucency() + 1);
-
+	this->SetRenderLayer(_CurMeshe->GetTranslucency() + 1);
 }
 
 void AGamePlayer::SetCurrentMouse(AMouseActor* _MouseActor)
@@ -162,29 +173,18 @@ UUI_MapMeshe* const AGamePlayer::GetUIMapMeshe()
 	return this->M_UUI_MapMeshe;
 }
 
-int32 AGamePlayer::GetTranslucency()
+int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 {
-	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
-
-	if (PlayerData->M_FPlayerSuit.M_bPlayerSuit && PlayerData->M_FPlayerSuit.M_ShowPlayerSuit)
-	{
-		return this->M_UUI_MapMeshe->GetTranslucency() + 4;
-	}
-
-	return this->M_UUI_MapMeshe->GetTranslucency() + 11;
+	return this->GetRenderLayer() + 11;
 }
 
 void AGamePlayer::PlayerDef_Anim()
 {
-	
-
 	this->M_PlayerFirstWeapon->PlayerDef_Anim();
 }
 
 void AGamePlayer::PlayerAttack_Anim()
 {
-	
-
 	this->M_PlayerFirstWeapon->PlayerAttack_Anim();
 }
 

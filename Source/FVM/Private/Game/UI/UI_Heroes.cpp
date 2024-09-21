@@ -42,7 +42,7 @@ void UUI_Heroes::InitHeroes()
 	if (!this->Heroes.Num())
 	{
 		FItemHeroBase A;
-		A.ItemName = FText(FText::FromName(TEXT("Cat Sword")));
+		A.ItemName = FText(FText::FromName(TEXT("Xiao")));
 		A.M_ItemID = 12;
 		UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
 		A.HeroLevel = 1;
@@ -51,7 +51,7 @@ void UUI_Heroes::InitHeroes()
 		A.BagID = TEXT("0");
 
 		FItemHeroBase B;
-		B.ItemName = FText(FText::FromName(TEXT("Cat Shield")));
+		B.ItemName = FText(FText::FromName(TEXT("Yu")));
 		B.M_ItemID = 14;
 		B.HeroLevel = 1;
 		B.RarityLevel = 1;
@@ -60,7 +60,7 @@ void UUI_Heroes::InitHeroes()
 		B.BagID = TEXT("2");
 
 		FItemHeroBase C;
-		C.ItemName = FText(FText::FromName(TEXT("Cat Gun")));
+		C.ItemName = FText(FText::FromName(TEXT("CCC")));
 		C.M_ItemID = 13;
 		UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
 		C.HeroLevel = 1;
