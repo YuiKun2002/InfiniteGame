@@ -66,6 +66,8 @@ void UUI_MapMeshe::PlayCard(
 		return;
 	}
 
+	//设置名称
+	Card->CardActor_Name = _CardData.ItemName;
 	//设置线路
 	Card->SetLine(this->GetLine());
 	//设置UIMapMesh
