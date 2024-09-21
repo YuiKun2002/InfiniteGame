@@ -32,12 +32,6 @@ public:
 	//Tick
 	virtual void Tick(float DeltaSeconds) override;
 public:
-	//卡片发呆动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftClassPtr<class UAssetCategoryName> CardActor_Idle;
-	//卡片攻击动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftClassPtr<class UAssetCategoryName> CardActor_Attack;
 	//卡片攻击的子弹
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 子弹对象类")
 	TSoftClassPtr<AFlyItemActor> CardActor_BulletClassObj;

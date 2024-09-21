@@ -95,6 +95,7 @@ public:
 	void TickCondition(float DeltaTime);
 
 	//资源加载
+	UFUNCTION(BlueprintCallable)
 	virtual void LoadResource();
 
 	//设置攻击模式的开启和关闭

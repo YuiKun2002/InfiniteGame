@@ -28,13 +28,13 @@ struct FUCardSpawnComponent_Resource {
 public:
 	//默认动画
 	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-		UPaperFlipbook* M_UPaperFlipbook_Idle = nullptr;
+	UPaperFlipbook* M_UPaperFlipbook_Idle = nullptr;
 	//生产动画
 	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-		UPaperFlipbook* M_UPaperFlipbook_Spawn = nullptr;
+	UPaperFlipbook* M_UPaperFlipbook_Spawn = nullptr;
 	//生长动画
 	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-		UPaperFlipbook* M_UPaperFlipbook_Spawn_Up = nullptr;
+	UPaperFlipbook* M_UPaperFlipbook_Spawn_Up = nullptr;
 };
 
 //条件数据
@@ -44,16 +44,16 @@ struct FUCardSpawnComponent_Condition {
 public:
 	//当前卡片是否可以生长
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardProperty")
-		bool M_CurrentCardIsWeekUp = false;
+	bool M_CurrentCardIsWeekUp = false;
 	//成长延迟
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardProperty")
-		float M_AutoUpTime = 0.f;
+	float M_AutoUpTime = 0.f;
 	//当前记录的时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardProperty")
-		float M_AutoUpCurrentTime = 0.f;
+	float M_AutoUpCurrentTime = 0.f;
 	//提升火苗产量的倍率
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CardProperty")
-		float M_SpawnFlameNumRate = 2.f;
+	float M_SpawnFlameNumRate = 2.f;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -65,8 +65,7 @@ public:
 	UCardSpawnComponent();
 
 	//资源加载
-	UFUNCTION(BlueprintCallable)
-		virtual void LoadResource() override;
+	virtual void LoadResource() override;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -85,21 +84,21 @@ public:
 private:
 	//当前生产卡片对象
 	UPROPERTY()
-		ASpawnCardActor* CurSpawnCardActor = nullptr;
+	ASpawnCardActor* CurSpawnCardActor = nullptr;
 private:
 	//卡片的状态
 	UPROPERTY(EditInstanceOnly, Category = "卡片状态")
-		FCardSpawn M_FCardSpawn;
+	FCardSpawn M_FCardSpawn;
 	//条件
 	UPROPERTY(EditInstanceOnly, Category = "卡片状态 | 条件")
-		FUCardSpawnComponent_Condition M_SpawnCondition;
+	FUCardSpawnComponent_Condition M_SpawnCondition;
 	//动画资源实例
 	UPROPERTY(EditInstanceOnly, Category = "卡片状态 | 动画")
-		FUCardSpawnComponent_Resource M_Resource;
+	FUCardSpawnComponent_Resource M_Resource;
 	//生产的火苗值
 	UPROPERTY()
-		int32 M_SpawnFlameValue = 25;
+	int32 M_SpawnFlameValue = 25;
 	//生长模式
 	UPROPERTY()
-		bool InWeekUp = false;
+	bool InWeekUp = false;
 };

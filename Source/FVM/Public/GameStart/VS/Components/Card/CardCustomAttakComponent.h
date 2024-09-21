@@ -19,20 +19,20 @@ class FVM_API UCardCustomAttakComponent : public UCardLauncherComponent
 	GENERATED_BODY()
 private:
 	UPROPERTY()
-		AAttackCardActor* M_CardActor = nullptr;
+	AAttackCardActor* M_CardActor = nullptr;
 	UPROPERTY()
-		AFlyItemActor* M_AFlyItemActor = nullptr;
+	AFlyItemActor* M_AFlyItemActor = nullptr;
 	UPROPERTY()
-		UPaperFlipbook* M_Idle = nullptr;
+	UPaperFlipbook* M_Idle = nullptr;
 	UPROPERTY()
-		UPaperFlipbook* M_Attack = nullptr;
+	UPaperFlipbook* M_Attack = nullptr;
 	UPROPERTY()
-		UObjectPoolManager* Pool = nullptr;
+	UObjectPoolManager* Pool = nullptr;
 private:
 	UPROPERTY()
-		float _tick_count = 0.f;
+	float _tick_count = 0.f;
 	UPROPERTY()
-		UMouseManagerComponent* MouseManager = nullptr;
+	UMouseManagerComponent* MouseManager = nullptr;
 public:
 	// Sets default values for this component's properties
 	UCardCustomAttakComponent();
@@ -52,6 +52,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
 	//资源加载
-	UFUNCTION(BlueprintCallable)
-		virtual void LoadResource() override;
+	virtual void LoadResource() override;
 };
