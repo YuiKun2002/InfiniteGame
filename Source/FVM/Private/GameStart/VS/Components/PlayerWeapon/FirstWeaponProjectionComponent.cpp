@@ -86,17 +86,7 @@ void UFirstWeaponProjectionComponent::TickComponent(float DeltaTime, ELevelTick 
 	else {
 		this->M_time = 0.f;
 
-		if (!IsValid(this->M_Owner))
-		{
-			return;
-		}
-
-		if (!IsValid(this->M_Owner->GetPlayerActor()))
-		{
-			return;
-		}
-
-		bool LResult = false;
+		//bool LResult = false;
 
 		//当前检测到的老鼠线路
 		ELineTraceType CurCheckLineType;
@@ -107,7 +97,7 @@ void UFirstWeaponProjectionComponent::TickComponent(float DeltaTime, ELevelTick 
 		);
 
 		//老鼠有效则设置攻击模式
-		if (Cast<AMouseActor>(CurMouse) && IsValid(CurMouse))
+		if (IsValid(CurMouse) && Cast<AMouseActor>(CurMouse))
 		{
 			this->M_Owner->GetPlayerActor()->SetCurrentMouse(Cast<AMouseActor>(CurMouse));
 			this->SetAttackModEnabled(true);
@@ -160,18 +150,34 @@ void UFirstWeaponProjectionComponent::LoadResource()
 {
 	Super::LoadResource();
 
+	if (!IsValid(this->M_Owner))
+	{
+		this->SetTickableWhenPaused(true);
+	}
+
+	if (!IsValid(this->M_Owner->GetPlayerActor()))
+	{
+		this->SetTickableWhenPaused(true);
+	}
+
 	if (UFVMGameInstance::GetDebug())
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("加载资源"));
 	}
 
 	const FMainWeaponData& LData = this->M_Owner->GetPlayerFirstWeaponData();
+
 	this->InitLaunchProperty(
 		LData.AttackCount,
 		LData.AttackCoolingTime,
 		LData.AttackFristTime,
 		LData.AttackBackTime
 	);
+
+	this->SpawnBulletLocation =
+		this->M_Owner->GetActorLocation() +
+		this->M_Owner->GetPointComponent()->GetRelativeLocation() +
+		this->M_Owner->GetBulletLocationComp()->GetRelativeLocation();
 }
 
 AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset)
@@ -181,11 +187,8 @@ AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyI
 		this->Pool = UObjectPoolManager::MakePoolManager(this->GetWorld(), _Path_C, 1);
 	}
 
-	//子弹的相对位置
-	FVector CurLocation = this->M_Owner->GetBulletLocationComp()->GetRelativeLocation();
-
 	FTransform Trans;
-	Trans.SetLocation(CurLocation);
+	Trans.SetLocation(this->SpawnBulletLocation);
 
 	AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(this->Pool->GetObjectActor());
 	L_AFlyItemActor_->SetActorTransform(Trans);

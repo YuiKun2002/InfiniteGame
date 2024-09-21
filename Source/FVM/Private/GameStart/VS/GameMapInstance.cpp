@@ -415,12 +415,12 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 	{
 		_UI_MapMeshe->SetPlayer(PlayerIns);
 	}
+	//初始化排序
+	PlayerIns->SetPlayerTranslucency(_UI_MapMeshe);
 	//初始化角色外观
 	PlayerIns->InitPlayerData();
 	//初始化武器
 	PlayerIns->InitPlayerWeapon();
-	//初始化排序
-	PlayerIns->SetPlayerTranslucency(_UI_MapMeshe);
 	//添加角色
 	this->SetPlayer(
 		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerName,

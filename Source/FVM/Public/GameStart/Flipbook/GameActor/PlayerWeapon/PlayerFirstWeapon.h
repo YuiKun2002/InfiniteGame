@@ -20,19 +20,6 @@ UCLASS()
 class FVM_API APlayerFirstWeapon : public ASpineActor
 {
 	GENERATED_BODY()
-private:
-	//主武器数据
-	UPROPERTY()
-	FMainWeaponData M_FFPlayerWeaponFirstData;
-	//主武器射线位置(已经计算过后)
-	UPROPERTY()
-	TArray<FLineTraceSetting> M_FirstWeaponLineTraceSettings;
-	//角色
-	UPROPERTY()
-	AGamePlayer* M_AGamePlayer = nullptr;
-	//对应的网格实例
-	UPROPERTY()
-	AMapMeshe* M_AMapMeshe = nullptr;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UFirstWeaponProjectionComponent* M_UFirstWeaponProjectionComponent = nullptr;
@@ -42,6 +29,10 @@ public:
 	//浮动骨骼
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USpineBoneFollowerComponent* BoneFollowerComp = nullptr;
+public:
+	//武器基础射线
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
+	TArray<FLineTraceSetting> WeaponLineTraceSettings;
 public:
 	APlayerFirstWeapon();
 
@@ -79,4 +70,17 @@ public:
 	AGamePlayer* GetPlayerActor();
 	//获取射线位置
 	const TArray<FLineTraceSetting>& GetLineTraceSetting();
+private:
+	//主武器数据
+	UPROPERTY()
+	FMainWeaponData M_FFPlayerWeaponFirstData;
+	//主武器射线位置(已经计算过后)
+	UPROPERTY()
+	TArray<FLineTraceSetting> M_FirstWeaponLineTraceSettings;
+	//角色
+	UPROPERTY()
+	AGamePlayer* M_AGamePlayer = nullptr;
+	//对应的网格实例
+	UPROPERTY()
+	AMapMeshe* M_AMapMeshe = nullptr;
 };

@@ -21,16 +21,10 @@ UCLASS(ShowCategories = (Mobility, ComponentReplication), ClassGroup = Paper2D, 
 class FVM_API UFirstWeaponProjectionComponent : public UCardLauncherComponent
 {
 	GENERATED_BODY()
-private:
-	//主武器
-	UPROPERTY()
-		APlayerFirstWeapon* M_Owner = nullptr;
-	UPROPERTY()
-		UObjectPoolManager* Pool = nullptr;
 public:
 	//可蓝图调用
 	UPROPERTY(BlueprintAssignable)
-		FItemSpawnDelegate OnSpawn;
+	FItemSpawnDelegate OnSpawn;
 public:
 	virtual void BeginPlay() override;
 	//生成投射物并且设置属性
@@ -49,10 +43,10 @@ public:
 public:
 	//生成子弹
 	UFUNCTION(BlueprintCallable)
-		AFlyItemActor* SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset);
+	AFlyItemActor* SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset);
 	//更新攻击->有老鼠就自动攻击
 	UFUNCTION(BlueprintCallable)
-		void UpdateAutoAttack(float _DeltaTime);
+	void UpdateAutoAttack(float _DeltaTime);
 private:
 	/*碰撞结果*/
 	FHitResult M_Trance_Result;
@@ -61,4 +55,12 @@ private:
 	ECollisionChannel M_Trance_Target;
 	/*时间*/
 	float M_time = 0;
+	/*子弹生成位置*/
+	FVector SpawnBulletLocation = FVector::ZeroVector;
+private:
+	//主武器
+	UPROPERTY()
+	APlayerFirstWeapon* M_Owner = nullptr;
+	UPROPERTY()
+	UObjectPoolManager* Pool = nullptr;
 };

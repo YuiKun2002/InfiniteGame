@@ -22,7 +22,7 @@ APlayerFirstWeapon::APlayerFirstWeapon()
 	this->M_UFirstWeaponProjectionComponent = CreateDefaultSubobject<UFirstWeaponProjectionComponent>(TEXT("FristWeapon_Projection"));
 	this->BulletLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("FristWeapon_BulletLocationComp"));
 	this->BoneFollowerComp = CreateDefaultSubobject<USpineBoneFollowerComponent>(TEXT("FristWeapon_SpineBoneFollowerComponent"));
-	this->BulletLocationComp->SetupAttachment(this->GetRenderComponent());
+	this->BulletLocationComp->SetupAttachment(this->GetPointComponent());
 }
 
 void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& WeaponData, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
@@ -49,7 +49,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	this->SetRenderLayer(Player->GetSpineRenderLayer() + 1);
 
 	//计算射线目标位置
-	for (const auto& LineTrace : this->M_FFPlayerWeaponFirstData.LineTraceSettings)
+	for (const auto& LineTrace : this->WeaponLineTraceSettings)
 	{
 		UGameSystemFunction::CalculateLineTracePosition(
 			_MapMeshe->GetActorLocation(),
