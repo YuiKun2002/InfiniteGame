@@ -134,10 +134,48 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 		Data.ATK * FMath::Pow(Data.ATKRCoefficient, (Data.WeaponLevel - 1));
 	Data.ATK = ATK;
 
+	//初始速度
+	float CurSpeed = Data.AttackCoolingTime;
+
 	//计算速度
-	int32 Speed = Data.WeaponLevel == 1 ? Data.AttackCoolingTime :
-		Data.AttackCoolingTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1));
+	float Speed = Data.WeaponLevel == 1 ? Data.AttackCoolingTime :
+		Data.AttackCoolingTime - (
+			Data.AttackCoolingTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackCoolingTime
+			);
 	Data.AttackCoolingTime = Speed;
+
+	//攻击前摇
+	float FirstSpeed = Data.WeaponLevel == 1 ? Data.AttackFristTime :
+		Data.AttackFristTime - (
+			Data.AttackFristTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackFristTime
+			);
+	Data.AttackFristTime = FirstSpeed;
+
+	//子弹间隔
+	float BackSpeed = Data.WeaponLevel == 1 ? Data.AttackBackTime :
+		Data.AttackBackTime - (
+			Data.AttackBackTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackBackTime
+			);
+	Data.AttackBackTime = BackSpeed;
+
+	if (Data.AttackFristTime < 0.f)
+	{
+		Data.AttackFristTime = 0.f;
+	}
+
+	if (Data.AttackBackTime < 0.f)
+	{
+		Data.AttackBackTime = 0.f;
+	}
+
+	if (Data.AttackCoolingTime < Data.AttackFristTime)
+	{
+		Data.AttackCoolingTime = Data.AttackFristTime;
+	}
+
+
+	//速度提升比例
+	Data.AttackSpeedUpRate = 1.f - (Data.AttackCoolingTime / CurSpeed);
 
 	//计算暴击率
 	float Critical = Data.WeaponLevel == 1 ? Data.CriticalStrikeRate :
@@ -150,6 +188,13 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 	Data.CriticalStrikeRate = Critical;
 
 	return Data;
+}
+
+FMainWeaponData UMainWeaponDataFunc::CalculateNext(const FMainWeaponData& InputData)
+{
+	FMainWeaponData Data = InputData;
+	Data.WeaponLevel += 1;
+	return UMainWeaponDataFunc::Calculate(Data);
 }
 
 FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
@@ -177,4 +222,11 @@ FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 	Data.CD = CD;
 
 	return Data;
+}
+
+FItemHeroBase UItemHeroDataFunc::CalculateNext(const FItemHeroBase& InputData)
+{
+	FItemHeroBase Data = InputData;
+	Data.HeroLevel += 1;
+	return UItemHeroDataFunc::Calculate(Data);
 }

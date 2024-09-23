@@ -11,9 +11,6 @@ class UPaperFlipbook;
 class AFlyItemActor;
 class AMouseActor;
 
-#define SpineCardAnimationState_Idle TEXT("01_idle")
-#define SpineCardAnimationState_Attack TEXT("02_attack")
-
 /*
 	攻击卡片基础功能
 	【一般直线攻击卡片】小笼包，三线，双向等这种类型的基础卡片

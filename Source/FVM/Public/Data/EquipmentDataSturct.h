@@ -94,6 +94,8 @@ class FVM_API UItemHeroDataFunc : public UObject
 public:
 	UFUNCTION(BlueprintPure)
 	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
+	UFUNCTION(BlueprintPure)
+	static FItemHeroBase CalculateNext(const FItemHeroBase& InputData);
 };
 
 /************************************************************************/
@@ -154,13 +156,16 @@ public:
 	//攻击冷却成长
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackCoolingTimeCoefficient = 1.1f;
+	//提升比例
+	UPROPERTY()
+	float AttackSpeedUpRate = 0.f;
 
 	//攻击前摇时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackFristTime = 0.8;
+	float AttackFristTime = 0.43;
 	//攻击后摇时间【攻击次数之间的间隔】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackBackTime = 0.2f;
+	float AttackBackTime = 0.1f;
 	//攻击次数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 AttackCount = 1;
@@ -192,6 +197,8 @@ class FVM_API UMainWeaponDataFunc : public UObject
 public:
 	UFUNCTION(BlueprintPure)
 	static FMainWeaponData Calculate(const FMainWeaponData& InputData);
+	UFUNCTION(BlueprintPure)
+	static FMainWeaponData CalculateNext(const FMainWeaponData& InputData);
 };
 
 //副武器数据结构

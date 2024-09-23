@@ -122,7 +122,7 @@ void UMesheControllComponent::SpawnMeshes()
 				LoadClass<AMapLauncherBase>(
 					0,
 					*this->M_GameMapStructManager->LevelConfig.LevelLauncherPath.ToString())
-				), FTransform()));
+			), FTransform()));
 
 	if (TMapLauncher)
 	{
@@ -137,7 +137,7 @@ void UMesheControllComponent::SpawnMeshes()
 	//完成生成
 	AMapLauncherBase* MapLauncher = Cast<AMapLauncherBase>(
 		UGameplayStatics::FinishSpawningActor(TMapLauncher, FTransform())
-		);
+	);
 
 	//设置地图发射器
 	this->M_MapLauncher = MapLauncher;
@@ -171,7 +171,7 @@ void UMesheControllComponent::SpawnMeshes()
 
 			AVSAnimalBase* CurAnim = this->GetWorld()->SpawnActor<AVSAnimalBase>(
 				LoadClass<AVSAnimalBase>(0, *Animal.ToString())
-				);
+			);
 
 			if (!CurAnim)
 			{
@@ -239,7 +239,7 @@ AMapMeshe* UMesheControllComponent::CreateNewMapMeshe(
 		//创建背景
 		ASpriteActor* Bg = Comp->GetWorld()->SpawnActor<ASpriteActor>(
 			LoadClass<ASpriteActor>(0, TEXT("Class'/Script/FVM.SpriteActor'"))
-			);
+		);
 		if (Bg)
 		{
 			//设置精灵
@@ -457,7 +457,7 @@ void UMesheControllComponent::BeginPlay()
 	//加载(地形)Actor
 	this->M_AMapMeshe = LoadClass<AMapMeshe>(0,
 		TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/AMapMeshe.AMapMeshe_C'")
-		);
+	);
 
 	//如果加载失败则返回
 	if (!this->M_AMapMeshe)
@@ -474,6 +474,27 @@ void UMesheControllComponent::InitGameMapMeshe()
 	this->ClearAllMeshes();
 
 	this->SpawnMeshes();
+
+	//初始化显示网格
+	FVector FirstPoint = this->GetMesh(0, 0)->GetActorLocation();
+	this->M_CurTipMeshes.Reset(M_CurMapLine.Col * M_CurMapLine.Row);
+	for (int32 i = 0; i < M_CurMapLine.Row; i++)
+	{
+		for (int32 j = 0; j < M_CurMapLine.Col; j++)
+		{
+			AActor* Ac = this->GetWorld()->SpawnActor(LoadClass<AActor>(0,
+				TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/Grid/BP_Grid.BP_Grid_C'")));
+			Ac->SetActorLocation(
+				FVector(
+					FirstPoint.X,
+					FirstPoint.Y + 60 * j,
+					FirstPoint.Z - 64 * i
+				)
+			);
+			Ac->SetActorHiddenInGame(true);
+			this->M_CurTipMeshes.Add(Ac);
+		}
+	}
 }
 
 
@@ -527,4 +548,38 @@ bool UMesheControllComponent::CheckMesheIsValid(const int32& _Row, const int32& 
 	}
 
 	return false;
+}
+
+void UMesheControllComponent::ShowTipMeshe(ELineType LineType)
+{
+	if (this->bShowTip)
+	{
+		if (this->ShowTipLineType == LineType)
+		{
+			return;
+		}
+	}
+
+	this->bShowTip = true;
+	this->ShowTipLineType = LineType;
+
+	for (AActor* CurTipMeshe : this->M_CurTipMeshes)
+	{
+		CurTipMeshe->SetActorHiddenInGame(false);
+	}
+}
+
+void UMesheControllComponent::CloseTipMeshe()
+{
+	if (!this->bShowTip)
+	{
+		return;
+	}
+
+	this->bShowTip = false;
+
+	for (AActor* CurTipMeshe : this->M_CurTipMeshes)
+	{
+		CurTipMeshe->SetActorHiddenInGame(true);
+	}
 }

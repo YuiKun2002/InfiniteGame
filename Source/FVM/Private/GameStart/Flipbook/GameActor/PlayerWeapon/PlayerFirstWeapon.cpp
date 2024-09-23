@@ -3,6 +3,7 @@
 
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
+#include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "SpineBoneFollowerComponent.h"
 #include "SpineSkeletonRendererComponent.h"
 
@@ -33,6 +34,25 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("计算射线位置"));
 	}
+
+	//交换坐标
+	FVector PointLocation = this->GetPointComponent()->GetRelativeLocation();
+	this->GetPointComponent()->SetRelativeLocation(
+		FVector(
+			PointLocation.Y,
+			PointLocation.X,
+			PointLocation.Z
+		)
+	);
+
+	FVector BulletLocation = this->BulletLocationComp->GetRelativeLocation();
+	this->BulletLocationComp->SetRelativeLocation(
+		FVector(
+			BulletLocation.Y,
+			BulletLocation.X,
+			BulletLocation.Z
+		)
+	);
 
 	this->BoneFollowerComp->Target = Player;
 	this->BoneFollowerComp->BoneName = TEXT("hand1");
@@ -82,7 +102,6 @@ const FMainWeaponData& APlayerFirstWeapon::GetPlayerFirstWeaponData()
 void APlayerFirstWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void APlayerFirstWeapon::Tick(float DeltaTime)
@@ -108,16 +127,6 @@ void APlayerFirstWeapon::MeshMoveUpdate(float DeltaTime, UUI_MapMeshe* _UI_MapMe
 void APlayerFirstWeapon::SetPlayeActor(AGamePlayer* _Player)
 {
 	this->M_AGamePlayer = _Player;
-}
-
-void APlayerFirstWeapon::PlayerDef_Anim()
-{
-	//this->SetPlayAnimation(this->M_Anim_FirstWeaponDef);
-}
-
-void APlayerFirstWeapon::PlayerAttack_Anim()
-{
-	//this->SetPlayAnimation(this->M_Anim_FirstWeaponAttack);
 }
 
 USceneComponent* APlayerFirstWeapon::GetBulletLocationComp()

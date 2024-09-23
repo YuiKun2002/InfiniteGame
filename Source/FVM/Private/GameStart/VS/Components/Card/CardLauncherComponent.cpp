@@ -106,6 +106,11 @@ void UCardLauncherComponent::SetTrackEntry(class UTrackEntry* Track)
 	this->AnimTrackEntry = Track;
 }
 
+class UTrackEntry* UCardLauncherComponent::GetTrackEntry()
+{
+	return this->AnimTrackEntry;
+}
+
 //发射个数，攻击速度，首次攻击延迟，每次攻击延迟
 void UCardLauncherComponent::InitLaunchProperty(int32 _LaunchCount, float _AttackDelay, float _FirstProjectionAttackDelay, float _ProjectionAttackDelay)
 {

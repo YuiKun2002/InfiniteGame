@@ -121,7 +121,7 @@ void UUI_Weapons::InitWeapons()
 
 	if (!bA || !bB)
 	{
-		UGameSystemFunction::SaveCurrentPlayerData(TEXT("武器未找到，自动卸载武器"));
+		UGameSystemFunction::SaveCurrentPlayerData(TEXT("武器A或者B未找到，自动卸载武器"));
 	}
 
 

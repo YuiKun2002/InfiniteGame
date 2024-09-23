@@ -4,6 +4,7 @@
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
 #include "GameStart/VS/UI/UI_MapMeshe.h"
 #include "GameStart/VS/MapMeshe.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
@@ -180,12 +181,13 @@ int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 
 void AGamePlayer::PlayerDef_Anim()
 {
-	this->M_PlayerFirstWeapon->PlayerDef_Anim();
+	this->SetAnimation(0, TEXT("idle"), true);
 }
 
-void AGamePlayer::PlayerAttack_Anim()
+void AGamePlayer::PlayerAttack_Anim(float TimeScale)
 {
-	this->M_PlayerFirstWeapon->PlayerAttack_Anim();
+	UTrackEntry* Track = this->SetAnimation(0, TEXT("attack"), true);
+	Track->SetTimeScale(TimeScale);
 }
 
 void AGamePlayer::Tick(float DeltaTime)

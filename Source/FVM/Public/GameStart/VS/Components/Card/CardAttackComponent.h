@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	//生成投射物并且设置属性
-	virtual void SpawnBullet(AFlyItemActor* NewBullet) ;
+	virtual void SpawnBullet(AFlyItemActor* NewBullet);
 	//播放攻击动画
 	virtual void PlayAttackAnimation() override;
 	//播放默认动画

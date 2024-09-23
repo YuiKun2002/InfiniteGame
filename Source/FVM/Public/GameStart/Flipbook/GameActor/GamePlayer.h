@@ -80,7 +80,7 @@ public:
 	//角色默认动画
 	void PlayerDef_Anim();
 	//角色攻击动画
-	void PlayerAttack_Anim();
+	void PlayerAttack_Anim(float TimeScale);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

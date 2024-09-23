@@ -54,7 +54,7 @@ void UUI_MapMeshe::PlayCard(
 
 	ACardActor* Card = Cast <ACardActor>(
 		UGameplayStatics::BeginDeferredActorSpawnFromClass(this->M_MapMeshe->GetWorld(), _CardRes, Trans)
-		);
+	);
 
 	//卡片无效
 	if (!IsValid(Card))
@@ -172,7 +172,7 @@ void UUI_MapMeshe::PlayFinish(ACardActor* NewCard)
 		LoadClass<AActor>(
 			0,
 			TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/PlayGroundAnim/BP_放置动画.BP_放置动画_C'")
-			)
+		)
 	);
 
 	CurAnim->SetActorLocation(NewCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
@@ -658,6 +658,25 @@ bool UUI_MapMeshe::CheckCurMesheEnabled()
 	}
 }
 
+bool UUI_MapMeshe::CheckCard()
+{
+	if (this->GetPlayer())
+	{
+		if (this->M_Card_Data.Num() > 1)
+		{
+			return true;
+		}
+	}
+	else {
+		if (this->M_Card_Data.Num() > 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 TArray<UObject*> UUI_MapMeshe::GetUIMesheEnabledObjs()
 {
 	TArray<UObject*> CurObjs;
@@ -769,7 +788,7 @@ bool UUI_MapMeshe::CreateCard(
 			AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 				LoadClass<AGameActorFlipbookBase>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/BPEradicate.BPEradicate_C'")
-					),
+				),
 				this->M_MapMesheTransform);
 
 			Eradicate_->SetAnimationPlayEndDestroy();
@@ -778,8 +797,8 @@ bool UUI_MapMeshe::CreateCard(
 			switch (this->M_ELineType)
 			{
 			case ELineType::OnWater:
-			case ELineType::Underwater: {UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio"); }break;
-			default: {UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio"); }break;
+			case ELineType::Underwater: { UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio"); }break;
+			default: { UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio"); }break;
 
 			}
 			return false;
@@ -965,6 +984,20 @@ void UUI_MapMeshe::CardTypeDebug(const FString& _CardName, ELineType _LineType)
 	default:
 		break;
 	}
+}
+
+AEradicateActor* UUI_MapMeshe::ShowEradicate()
+{
+	AEradicateActor* Eradicate = this->GetWorld()->SpawnActor<AEradicateActor>(LoadClass<AActor>(0,
+		TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/Eradicate/BP_Eradicate.BP_Eradicate_C'")));
+	Eradicate->UIMeshe = this;
+	Eradicate->SetActorLocation(FVector(
+		500.f,
+		this->M_MapMesheTransform.GetLocation().Y,
+		this->M_MapMesheTransform.GetLocation().Z
+	));
+	return Eradicate;
+	//UE_LOG(LogTemp,Error,TEXT("%f %f %f"),this->M_MapMesheTransform.GetLocation().X,this->M_MapMesheTransform.GetLocation().Y,this->M_MapMesheTransform.GetLocation().Z);
 }
 
 int32 UUI_MapMeshe::GetTranslucency()

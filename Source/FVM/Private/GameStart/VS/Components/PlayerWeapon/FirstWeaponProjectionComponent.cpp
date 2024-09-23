@@ -3,6 +3,7 @@
 
 #include "GameStart/VS/Components/PlayerWeapon/FirstWeaponProjectionComponent.h"
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
@@ -42,26 +43,49 @@ void UFirstWeaponProjectionComponent::BeginPlay()
 	}
 }
 
-void UFirstWeaponProjectionComponent::Spawn()
+void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 {
-	Super::Spawn();
+	//初始化生成位置
+	this->SpawnBulletLocation =
+		this->M_Owner->GetActorLocation() +
+		this->M_Owner->GetPointComponent()->GetRelativeLocation() +
+		this->M_Owner->GetBulletLocationComp()->GetRelativeLocation();
 
-	//调用动态多播代理物体投射
-	this->OnSpawn.Broadcast();
+	FTransform Trans;
+	Trans.SetLocation(this->SpawnBulletLocation);
+	NewBullet->SetActorTransform(Trans);
+	NewBullet->SetMouseActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
+	NewBullet->SetATK(this->TargetData.ATK);
+	NewBullet->SetSecondATK(0.f);
+	NewBullet->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
+	NewBullet->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
+	NewBullet->Init();
+	NewBullet->OnInit();
 }
 
 void UFirstWeaponProjectionComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
+	//播放角色的攻击动画
+	this->M_Owner->GetPlayerActor()->PlayerAttack_Anim(1 + TargetData.AttackSpeedUpRate);
 
-	this->M_Owner->GetPlayerActor()->PlayerAttack_Anim();
+	//播放武器的攻击动画
+	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetAttackAnimName(), true);
+	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
+	//绑定动画事件
+	Track->AnimationComplete.AddDynamic(
+		this, &UFirstWeaponProjectionComponent::OnAnimationComplete);
+	this->SetTrackEntry(Track);
 }
 
 void UFirstWeaponProjectionComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
+	//播放武器的默认动画
+	this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
+	//播放角色的默认动画
 	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
 }
 
@@ -107,42 +131,6 @@ void UFirstWeaponProjectionComponent::TickComponent(float DeltaTime, ELevelTick 
 			this->M_Owner->GetPlayerActor()->SetCurrentMouse(nullptr);
 			this->SetAttackModEnabled(false);
 		}
-
-		//for (const auto& Line : this->M_Owner->GetLineTraceSetting())
-		//{
-		//	DrawDebugLine(this->GetWorld(), Line.M_BeginLocation, Line.M_EndLocation, FColor::Red);
-
-		//	M_Trance_Target = ECollisionChannel::ECC_Visibility;
-
-		//	switch (Line.M_ELineTraceType)
-		//	{
-		//	case ELineTraceType::E_MouseGround:M_Trance_Target = ECollisionChannel::ECC_GameTraceChannel2; break;
-		//	case ELineTraceType::E_MouseSky:M_Trance_Target = ECollisionChannel::ECC_GameTraceChannel3; break;
-		//	case ELineTraceType::E_MouseUnder:M_Trance_Target = ECollisionChannel::ECC_GameTraceChannel4; break;
-		//	}
-
-		//	if (this->GetWorld()->LineTraceSingleByChannel(M_Trance_Result, Line.M_BeginLocation, Line.M_EndLocation, M_Trance_Target, M_Trance_Params, M_Trance_ResParams))
-		//	{
-		//		this->M_Owner->GetPlayerActor()->SetCurrentMouse(Cast<AMouseActor>(M_Trance_Result.GetActor()));
-
-		//		LResult = true;
-		//	}
-		//}
-
-		////所有的线扫描结束之后结果是false，则关闭当前攻击对象
-		//if (!LResult)
-		//{
-		//	this->M_Owner->GetPlayerActor()->SetCurrentMouse(nullptr);
-		//}
-
-		////如果老鼠存在
-		//if (IsValid(this->M_Owner->GetPlayerActor()->GetCurrentMouse()))
-		//{
-		//	this->SetAttackModEnabled(true);
-		//}
-		//else {
-		//	this->SetAttackModEnabled(false);
-		//}
 	}
 }
 
@@ -153,11 +141,13 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	if (!IsValid(this->M_Owner))
 	{
 		this->SetTickableWhenPaused(true);
+		return;
 	}
 
 	if (!IsValid(this->M_Owner->GetPlayerActor()))
 	{
 		this->SetTickableWhenPaused(true);
+		return;
 	}
 
 	if (UFVMGameInstance::GetDebug())
@@ -167,21 +157,28 @@ void UFirstWeaponProjectionComponent::LoadResource()
 
 	const FMainWeaponData& LData = this->M_Owner->GetPlayerFirstWeaponData();
 
+	this->TargetData = UMainWeaponDataFunc::Calculate(LData);
+
+	//初始化发射条件
 	this->InitLaunchProperty(
-		LData.AttackCount,
-		LData.AttackCoolingTime,
-		LData.AttackFristTime,
-		LData.AttackBackTime
+		this->TargetData.AttackCount,
+		this->TargetData.AttackCoolingTime,
+		this->TargetData.AttackFristTime,
+		this->TargetData.AttackBackTime
 	);
 
-	this->SpawnBulletLocation =
-		this->M_Owner->GetActorLocation() +
-		this->M_Owner->GetPointComponent()->GetRelativeLocation() +
-		this->M_Owner->GetBulletLocationComp()->GetRelativeLocation();
+	//初始化子弹资源
+	this->InitLaunchBulletByDef(this->M_Owner->WeaponBulletClassObj);
+
+	//播放武器的默认动画
+	this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
+	//播放角色的默认动画
+	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
 }
 
 AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset)
 {
+	/*
 	if (!IsValid(this->Pool))
 	{
 		this->Pool = UObjectPoolManager::MakePoolManager(this->GetWorld(), _Path_C, 1);
@@ -202,8 +199,8 @@ AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyI
 	//L_AFlyItemActor_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
 	//AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this->M_Owner->GetWorld(), LoadClass<AFlyItemActor>(0, *_Path_C), Trans));
 	//UGameplayStatics::FinishSpawningActor(L_AFlyItemActor_, Trans);
-
-	return L_AFlyItemActor_;
+	*/
+	return nullptr;
 }
 
 void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
@@ -212,4 +209,9 @@ void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 	{
 		this->SetAttackModEnabled(true);
 	}
+}
+
+void UFirstWeaponProjectionComponent::OnAnimationComplete(class UTrackEntry* Track)
+{
+	this->OnAnimationPlayEnd();
 }

@@ -33,6 +33,9 @@ public:
 	//武器基础射线
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
 	TArray<FLineTraceSetting> WeaponLineTraceSettings;
+	//武器基础子弹
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
+	TSoftClassPtr<class AFlyItemActor> WeaponBulletClassObj;
 public:
 	APlayerFirstWeapon();
 
@@ -59,10 +62,6 @@ public:
 public:
 	//设置主角
 	void SetPlayeActor(AGamePlayer* _Player);
-	//角色默认动画
-	void PlayerDef_Anim();
-	//角色攻击动画
-	void PlayerAttack_Anim();
 public:
 	//获取子弹的位置
 	USceneComponent* GetBulletLocationComp();

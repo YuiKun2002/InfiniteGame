@@ -104,6 +104,9 @@ public:
 	//设置动画轨道
 	UFUNCTION()
 	void SetTrackEntry(class UTrackEntry* Track);
+	//获取动画轨道
+	UFUNCTION()
+	class UTrackEntry* GetTrackEntry();
 	//设置发射的属性
 	UFUNCTION(BlueprintCallable)
 	void InitLaunchProperty(

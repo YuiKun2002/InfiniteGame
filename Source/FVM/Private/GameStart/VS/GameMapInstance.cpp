@@ -426,12 +426,10 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerName,
 		PlayerIns
 	);
-
 	//更新角色位置
 	_MapMeshe->UpdatePlayerLocation();
-
+	//游戏开始
 	this->SetGameStartNow();
-
 	//调用放置角色的委托
 	this->OnPlayPlayerDelegate.Broadcast();
 }
