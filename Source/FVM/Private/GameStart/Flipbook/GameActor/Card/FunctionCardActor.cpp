@@ -132,8 +132,6 @@ void AFunctionCardActor::BeginPlay()
 {
 	this->ItemCardFunction = this->GetCardDataComponent()->GetCardFunction(this->CardActor_Name.ToString());
 
-	UE_LOG(LogTemp,Error,TEXT("名字 ：%s"),*this->CardActor_Name.ToString());
-
 	//强化提升生命值
 	if (this->ItemCardFunction.M_ECardUpGradeType == ECardUpGradeType::E_Defence_Up)
 	{
