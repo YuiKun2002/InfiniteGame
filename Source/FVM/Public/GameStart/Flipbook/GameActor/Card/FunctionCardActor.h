@@ -6,6 +6,8 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "FunctionCardActor.generated.h"
 
+#define SpineAnimationState_FuncCard_DefAnimation TEXT("idle")
+
 #define SpineAnimationState_SpawnCard_Def TEXT("Def")
 #define SpineAnimationState_SpawnCard_DefSpawn TEXT("DefSpawn")
 #define SpineAnimationState_SpawnCard_Grow TEXT("Grow")

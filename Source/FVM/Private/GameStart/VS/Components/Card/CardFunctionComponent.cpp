@@ -50,17 +50,9 @@ void UCardFunctionComponent::BeginPlay()
 	//获取卡片格子
 	this->M_CardMapMeshe = this->FunctionCardActor->GetUIMapMesh();
 
-	//播放默认动画
-	/*if (UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml))
-	{
-		this->FunctionCardActor->SetPlayAnimation(
-			UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml)
-		);
-	}*/
-
 	UTrackEntry* Track = this->FunctionCardActor->SetAnimation(
 		0,
-		SpineAnimationState_BurgerCard_Idle,
+		SpineAnimationState_FuncCard_DefAnimation,
 		true
 	);
 
