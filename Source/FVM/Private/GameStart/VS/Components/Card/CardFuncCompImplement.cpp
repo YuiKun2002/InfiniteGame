@@ -1274,6 +1274,11 @@ bool UCardFunctionTrigger::Execute(class UCardFunctionComponent* CardFuncComp)
 			//组件绑定
 			if (IsValid(CardFuncComp->GetCardActor()->GetOverlapBoxComponent()))
 			{
+				UGameSystemFunction::FVMLog(__FUNCTION__,
+					FString(TEXT("绑定触发器：") +
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+					)
+				);
 				CardFuncComp->GetCardActor()->GetOverlapBoxComponent()->
 					OnComponentBeginOverlap.AddDynamic(CardFuncComp, &UCardFunctionComponent::EventTrigger);
 			}
