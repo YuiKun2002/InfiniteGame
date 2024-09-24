@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
@@ -131,6 +131,8 @@ UCardFunctionBase* AFunctionCardActor::GetCurrentExecuteCardFuncClass()
 void AFunctionCardActor::BeginPlay()
 {
 	this->ItemCardFunction = this->GetCardDataComponent()->GetCardFunction(this->CardActor_Name.ToString());
+
+	UE_LOG(LogTemp,Error,TEXT("名字 ：%s"),*this->CardActor_Name.ToString());
 
 	//强化提升生命值
 	if (this->ItemCardFunction.M_ECardUpGradeType == ECardUpGradeType::E_Defence_Up)
