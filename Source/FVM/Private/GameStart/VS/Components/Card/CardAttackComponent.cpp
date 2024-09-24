@@ -89,6 +89,13 @@ void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
 	this->OnAnimationPlayEnd();
 }
 
+void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName)
+{
+	Super::ReInitDefIdleAnimName(IdleName);
+
+	this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true);
+}
+
 void UCardAttackComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();

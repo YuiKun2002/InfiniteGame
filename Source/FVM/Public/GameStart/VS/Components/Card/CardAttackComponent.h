@@ -33,7 +33,9 @@ public:
 	//当动画播放完毕时触发
 	UFUNCTION()
 	void OnAnimationComplete(class UTrackEntry* Track);
-
+	//重新初始化Idle动画
+	virtual void ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName) override;
+	//更新
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 protected:
 	//攻击卡
