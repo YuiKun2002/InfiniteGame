@@ -117,6 +117,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool ReturnPool() override;
 	//动画播放完成
+	UFUNCTION()
 	void AnimComplete(UTrackEntry* Track);
 	//初始化
 	void Init();

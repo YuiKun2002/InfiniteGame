@@ -165,6 +165,7 @@ bool AFlyItemActor::ReturnPool()
 
 void AFlyItemActor::AnimComplete(UTrackEntry* Track)
 {
+	this->SetTrackEntry(nullptr);
 	this->ReturnPool();
 }
 
@@ -356,6 +357,7 @@ void AFlyItemActor::PlayAnim_Split()
 		this->SetTrackEntry(Trac);
 	}
 	else {
+		this->SetTrackEntry(nullptr);
 		this->ReturnPool();
 	}
 }
