@@ -101,6 +101,9 @@ public:
 	//设置攻击模式的开启和关闭
 	UFUNCTION(BlueprintCallable)
 	void SetAttackModEnabled(bool _value);
+	//获取攻击模式
+	UFUNCTION(BlueprintPure)
+	bool GetAttackModEnabled() const;
 	//设置动画轨道
 	UFUNCTION()
 	void SetTrackEntry(class UTrackEntry* Track);

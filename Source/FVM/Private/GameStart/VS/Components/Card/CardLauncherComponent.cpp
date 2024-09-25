@@ -78,6 +78,11 @@ void UCardLauncherComponent::SetAttackModEnabled(bool _value)
 	this->M_BeginAttackMod = _value;
 }
 
+bool UCardLauncherComponent::GetAttackModEnabled() const
+{
+	return this->M_BeginAttackMod;
+}
+
 void UCardLauncherComponent::OnAnimationPlayEnd()
 {
 	//攻击模式状态

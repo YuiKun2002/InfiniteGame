@@ -74,4 +74,5 @@ private:
 	class AMouseActor* CurSky = nullptr;
 private:
 	float time = 0.f;
+	bool bSky = false;
 };

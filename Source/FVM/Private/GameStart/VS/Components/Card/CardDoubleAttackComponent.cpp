@@ -205,25 +205,21 @@ void UCardDoubleAttackComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	}
 	else {
 		this->CurSky = this->LineComp->GetMouseTopBySky();
-	}
-	
-	if (IsValid(this->CurSky))
-	{
-		//if (this->CurSky->GetActorLocation().Y > this->AttackCardActor->GetActorLocation().Y)
-		//{
-
-		if (time >= 0.3f)
+		this->time = 0.f;
+		if (IsValid(this->CurSky))
 		{
-			time = 0.f;
-
-			this->TickCondition(DeltaTime);
-
+			this->bSky = true;
 			this->AttackCardActor->AnalysisActor(this->CurSky);
-
 			this->SetAttackModEnabled(true);
 		}
-		
-		//}
+		else {
+			this->bSky = false;
+		}
+	}
+
+	if (this->bSky)
+	{
+		this->TickCondition(DeltaTime);
 	}
 	else {
 		//陆地攻击
@@ -240,7 +236,7 @@ void UCardDoubleAttackComponent::InitSecondLaunchBullet(TSoftClassPtr<AFlyItemAc
 
 	this->bSInit = true;
 
-	this->AddSecondLaunchBulletByRandomValue(100,Res,AnimName);
+	this->AddSecondLaunchBulletByRandomValue(100, Res, AnimName);
 }
 
 void UCardDoubleAttackComponent::AddSecondLaunchBulletByRandomValue(
@@ -262,7 +258,7 @@ void UCardDoubleAttackComponent::AddSecondLaunchBulletByRandomValue(
 	//如果没有初始化，则初始化
 	if (!this->bSInit)
 	{
-		this->InitSecondLaunchBullet(Res,AnimName);
+		this->InitSecondLaunchBullet(Res, AnimName);
 		return;
 	}
 
