@@ -59,11 +59,7 @@ void UCardFunctionComponent::BeginPlay()
 	Track->AnimationComplete.AddDynamic(
 		this, &UCardFunctionComponent::OnAnimationPlayEnd
 	);
-
-	//绑定动画播放完毕函数
-	//this->FunctionCardActor->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(
-	//	this, &UCardFunctionComponent::OnAnimationPlayEnd
-	//);
+	this->SetTrackEntry(Track);
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunction(this);
@@ -141,5 +137,24 @@ void UCardFunctionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunctionUpdate(this, DeltaTime);
+}
+
+void UCardFunctionComponent::SetTrackEntry(UTrackEntry* NewTrackEntry)
+{
+	if (IsValid(this->CurTrackEntry))
+	{
+		this->CurTrackEntry->AnimationComplete.RemoveAll(this);
+	}
+	else {
+		return;
+	}
+
+	this->CurTrackEntry = nullptr;
+	this->CurTrackEntry = NewTrackEntry;
+}
+
+UTrackEntry* UCardFunctionComponent::GetTrackEntry()
+{
+	return this->CurTrackEntry;
 }
 

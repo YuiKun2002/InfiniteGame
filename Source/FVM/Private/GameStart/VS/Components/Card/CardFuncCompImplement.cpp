@@ -561,7 +561,7 @@ void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncCo
 		float TargetATK =
 			BombATK + BombATK * BombATKRate *
 			CardFuncComp->GetCardActor()->GetCardGrade(
-			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 			) *
 			0.1f;
 
@@ -1287,8 +1287,8 @@ bool UCardFunctionTrigger::Execute(class UCardFunctionComponent* CardFuncComp)
 			if (UFVMGameInstance::GetDebug())
 			{
 				UGameSystemFunction::FVMLog(__FUNCTION__,
-					FString(TEXT("遇到飞行物功能卡片函数执行：") + 
-					CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+					FString(TEXT("遇到飞行物功能卡片函数执行：") +
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 					)
 				);
 			}
@@ -1367,7 +1367,7 @@ bool UCardFunctionTrigger::OnOverlapBegin(class UCardFunctionComponent* CardFunc
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__,
 			FString(TEXT("遇到飞行物功能卡片函数执行：") +
-			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 			)
 		);
 	}
@@ -1410,7 +1410,7 @@ bool UCardFunctionCatBox::Execute(class UCardFunctionComponent* CardFuncComp)
 			this->CardDataTRB = *CurFindData;
 
 			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(
-			CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
 			);
 			//初始化血量提升
 			CardFuncComp->GetCardActor()->SetCardHP(
@@ -1685,7 +1685,7 @@ bool UCardFunctionBurger::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncCo
 		{
 			//设置咀嚼次数
 			int32 CardGrade = CardFuncComp->GetCardActor()->GetCardGrade(
-			CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetCardData().ItemName.ToString()
 			);
 			int32 CurEttingCount = this->CardDataTRB.EattingCount - CardGrade * 0.5f;
 			//咀嚼次数
@@ -2019,15 +2019,16 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 			if (IsValid(this->Gen(CardFuncComp, true)))
 			{
 				this->bCheckPlay = true;
-				/*CardFuncComp->GetCardActor()->SetPlayAnimation(
-					UGameSystemFunction::LoadRes(this->CardDataTRB.StateLeft)
-				);*/
 
-				CardFuncComp->GetCardActor()->SetAnimation(
-					0,
-					SpineAnimationState_FlourbagCard_Left,
-					true
+				// UCardFunctionComponent::OnAnimationPlayEnd
+
+				UTrackEntry* NewTrack = CardFuncComp->GetCardActor()->SetAnimation(0,
+					this->CardDataTRB.StateLeft.GetDefaultObject()->GetCategoryName().ToString(),true
 				);
+				NewTrack->AnimationComplete.AddDynamic(
+					CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd
+				);
+				CardFuncComp->SetTrackEntry(NewTrack);
 
 				//关闭碰撞
 				CardFuncComp->GetCardActor()->SetCollisionEnable(false);
@@ -2042,15 +2043,14 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 			if (IsValid(this->Gen(CardFuncComp, false)))
 			{
 				this->bCheckPlay = true;
-				/*CardFuncComp->GetCardActor()->SetPlayAnimation(
-					UGameSystemFunction::LoadRes(this->CardDataTRB.StateRight)
-				);*/
 
-				CardFuncComp->GetCardActor()->SetAnimation(
-					0,
-					SpineAnimationState_FlourbagCard_Right,
-					true
+				UTrackEntry* NewTrack = CardFuncComp->GetCardActor()->SetAnimation(0,
+					this->CardDataTRB.StateRight.GetDefaultObject()->GetCategoryName().ToString(),true
 				);
+				NewTrack->AnimationComplete.AddDynamic(
+					CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd
+				);
+				CardFuncComp->SetTrackEntry(NewTrack);
 
 				//关闭碰撞
 				CardFuncComp->GetCardActor()->SetCollisionEnable(false);
@@ -2078,15 +2078,13 @@ bool UCardFunctionFlourbag::OnAnimPlayEnd(class UCardFunctionComponent* CardFunc
 	{
 		this->bEnd = false;
 
-		/*CardFuncComp->GetCardActor()->SetPlayAnimation(
-			UGameSystemFunction::LoadRes(this->CardDataTRB.State1)
-		);*/
-
-		CardFuncComp->GetCardActor()->SetAnimation(
-			0,
-			SpineAnimationState_FlourbagCard_Idle,
-			true
+		UTrackEntry* NewTrack = CardFuncComp->GetCardActor()->SetAnimation(0,
+			this->CardDataTRB.State1.GetDefaultObject()->GetCategoryName().ToString(), true
 		);
+		NewTrack->AnimationComplete.AddDynamic(
+			CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd
+		);
+		CardFuncComp->SetTrackEntry(NewTrack);
 
 		FLine Cur = CardFuncComp->GetCardActor()->GetLine();
 

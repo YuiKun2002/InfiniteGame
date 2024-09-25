@@ -667,13 +667,13 @@ public:
 		TSoftObjectPtr<class UCurveFloat> MoveCurve;
 	//动画状态[默认状态]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> State1;
+		TSubclassOf<UAssetCategoryName> State1;
 	//攻击状态1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> StateLeft;
+		TSubclassOf<UAssetCategoryName> StateLeft;
 	//攻击状态2
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> StateRight;
+		TSubclassOf<UAssetCategoryName> StateRight;
 };
 
 //面粉袋功能
