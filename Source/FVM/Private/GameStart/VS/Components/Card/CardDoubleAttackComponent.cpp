@@ -18,6 +18,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetSystemLibrary.h>
 
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 
@@ -84,24 +85,74 @@ void UCardDoubleAttackComponent::Spawn()
 				this->SPool[this->STargetCardOtherItem.GetIndex()]->GetObjectActor()
 			);
 
-			//新生成的对象设置自定义拥有者(CardActor)
-			_TargetActor->SetLine(this->AttackCardActor->GetLine().Row);
-			_TargetActor->SetActorTransform(NewTrans);
-			_TargetActor->SetMouseActorLocation(this->AttackCardActor->GetCurrentMouse());
-			_TargetActor->SetATK(CurATK);
-			_TargetActor->SetSecondATK(
-				this->AttackCardActor->GetCurrentSecondATK(
-					this->AttackCardActor->GetATKCardData().M_SputteringATKRate)
-			);
-			_TargetActor->SetFloatModeEnable(this->AttackCardActor->GetFloatMode());
-			_TargetActor->Init();
-			_TargetActor->OnInit();
+			this->SpawnBullet(_TargetActor);
 
 			AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent;
 		}
 	}
 	else {
 		Super::Spawn();
+	}
+}
+
+void UCardDoubleAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
+{
+	if (IsValid(this->CurSky))
+	{
+		FTransform NewTrans;
+		//如果第二个发射坐标有效
+		if (IsValid(this->SecondBulletLauncherPointComp))
+		{
+			FVector NewLocaltion =
+				this->AttackCardActor->GetActorLocation() +
+				this->AttackCardActor->GetPointComponent()->GetRelativeLocation() +
+				this->SecondBulletLauncherPointComp->GetRelativeLocation();
+
+			//设置未旋转的位置
+			NewTrans.SetLocation(NewLocaltion);
+			//设置旋转后的位置
+			NewTrans.SetLocation(
+				FVector(
+					550.f,
+					NewTrans.GetLocation().Y,
+					NewTrans.GetLocation().Z
+				)
+			);
+		}
+		else {
+			NewTrans.SetLocation(
+				this->AttackCardActor->GetBulletLauncherLocation()
+			);
+			NewTrans.SetLocation(
+				FVector(
+					550.f,
+					NewTrans.GetLocation().Y,
+					NewTrans.GetLocation().Z
+				)
+			);
+		}
+
+		float CurATK = this->AttackCardActor->GetCurrentATK();
+		if (Cast<AFlyStateMouse>(this->CurSky))
+		{
+			CurATK = this->CurSky->GetTotalHP() * 0.21f;
+		}
+
+		//新生成的对象设置自定义拥有者(CardActor)
+		NewBullet->SetLine(this->AttackCardActor->GetLine().Row);
+		NewBullet->SetActorTransform(NewTrans);
+		NewBullet->SetMouseActorLocation(this->AttackCardActor->GetCurrentMouse());
+		NewBullet->SetATK(CurATK);
+		NewBullet->SetSecondATK(
+			this->AttackCardActor->GetCurrentSecondATK(
+				this->AttackCardActor->GetATKCardData().M_SputteringATKRate)
+		);
+		NewBullet->SetFloatModeEnable(this->AttackCardActor->GetFloatMode());
+		NewBullet->Init();
+		NewBullet->OnInit();
+	}
+	else {
+		Super::SpawnBullet(NewBullet);
 	}
 }
 
@@ -118,10 +169,12 @@ void UCardDoubleAttackComponent::PlayAttackAnimation()
 		//初始化数据
 		this->LauncherItem(this->SOtherItems, this->CurSFinishItems, this->STargetCardOtherItem);
 
-		//this->AttackCardActor->SetPlayAnimation(this->STargetCardOtherItem.GetAnim());
-
-		this->AttackCardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
-
+		//播放动画
+		UTrackEntry* Track = this->AttackCardActor->SetAnimation(0, this->STargetCardOtherItem.GetAnim(), true);
+		//绑定动画事件
+		Track->AnimationComplete.AddDynamic(
+			this, &UCardAttackComponent::OnAnimationComplete);
+		this->SetTrackEntry(Track);
 	}
 	else {
 		Super::PlayAttackAnimation();
@@ -163,7 +216,19 @@ void UCardDoubleAttackComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	}
 }
 
-void UCardDoubleAttackComponent::AddLaunchRadomItemSecond(
+void UCardDoubleAttackComponent::InitSecondLaunchBullet(TSoftClassPtr<AFlyItemActor> Res, TSoftClassPtr<class UAssetCategoryName> AnimName)
+{
+	if (this->bSInit)
+	{
+		return;
+	}
+
+	this->bSInit = true;
+
+	this->AddSecondLaunchBulletByRandomValue(100,Res,AnimName);
+}
+
+void UCardDoubleAttackComponent::AddSecondLaunchBulletByRandomValue(
 	int32 RandomValue,
 	TSoftClassPtr<AFlyItemActor> Res,
 	TSoftClassPtr<UAssetCategoryName> AnimName
@@ -176,6 +241,14 @@ void UCardDoubleAttackComponent::AddLaunchRadomItemSecond(
 	else if (RandomValue > 100)
 	{
 		RandomValue = 0;
+	}
+
+
+	//如果没有初始化，则初始化
+	if (!this->bSInit)
+	{
+		this->InitSecondLaunchBullet(Res,AnimName);
+		return;
 	}
 
 	UClass* NameClass = AnimName.LoadSynchronous();

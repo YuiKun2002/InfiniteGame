@@ -14,12 +14,18 @@ class FVM_API UCardDoubleAttackComponent : public UCardAttackComponent
 {
 	GENERATED_BODY()
 public:
+	//第二发射位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* SecondBulletLauncherPointComp = nullptr;
+public:
 	//初始化
 	virtual void BeginPlay() override;
 	//资源加载
 	virtual void LoadResource() override;
 	//生成投射物并且设置属性
 	virtual void Spawn() override;
+	//生成投射物并且设置属性
+	virtual void SpawnBullet(AFlyItemActor* NewBullet);
 	//播放攻击动画
 	virtual void PlayAttackAnimation() override;
 	//销毁
@@ -27,14 +33,22 @@ public:
 	//更新
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
+	//初始化第二个攻击
+	UFUNCTION(BlueprintCallable)
+	void InitSecondLaunchBullet(
+		TSoftClassPtr<AFlyItemActor> Res,
+		TSoftClassPtr<class UAssetCategoryName> AnimName
+	);
 	//添加随机发射物【新增攻击动作】
 	UFUNCTION(BlueprintCallable)
-	void AddLaunchRadomItemSecond(
+	void AddSecondLaunchBulletByRandomValue(
 		int32 RandomValue,
 		TSoftClassPtr<AFlyItemActor> Res,
 		TSoftClassPtr<class UAssetCategoryName> AnimName
 	);
 private:
+	UPROPERTY()
+	bool bSInit = false;
 	UPROPERTY()
 	bool bSFirst = false;
 	UPROPERTY()
