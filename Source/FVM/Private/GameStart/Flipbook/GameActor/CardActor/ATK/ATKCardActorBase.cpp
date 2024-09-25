@@ -60,9 +60,17 @@ FVector AATKCardActorBase::GetBulletLauncherLocation()
 		//卡片的位置
 		this->GetActorLocation() +
 		//卡片点位位置
-		this->GetPointComponent()->GetRelativeLocation() +
+		FVector(
+			this->GetPointComponent()->GetRelativeLocation().Y,
+			this->GetPointComponent()->GetRelativeLocation().X,
+			this->GetPointComponent()->GetRelativeLocation().Z
+		) +
 		//子弹发射位置
-		this->BulletLauncherPointComp->GetRelativeLocation();
+		FVector(
+			this->BulletLauncherPointComp->GetRelativeLocation().Y,
+			this->BulletLauncherPointComp->GetRelativeLocation().X,
+			this->BulletLauncherPointComp->GetRelativeLocation().Z
+		);
 }
 
 FATKCardActorLineTrace& AATKCardActorBase::GetLineTracePosition()

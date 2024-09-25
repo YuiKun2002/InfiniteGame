@@ -128,6 +128,11 @@ UCardFunctionBase* AFunctionCardActor::GetCurrentExecuteCardFuncClass()
 	return nullptr;
 }
 
+FString AFunctionCardActor::GetIdleAnimName()
+{
+	return FunCardIdleAnimName.GetDefaultObject()->GetCategoryName().ToString();
+}
+
 void AFunctionCardActor::BeginPlay()
 {
 	this->ItemCardFunction = this->GetCardDataComponent()->GetCardFunction(this->CardActor_Name.ToString());

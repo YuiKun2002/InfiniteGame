@@ -52,7 +52,7 @@ void UCardFunctionComponent::BeginPlay()
 
 	UTrackEntry* Track = this->FunctionCardActor->SetAnimation(
 		0,
-		SpineAnimationState_FuncCard_DefAnimation,
+		this->FunctionCardActor->GetIdleAnimName(),
 		true
 	);
 

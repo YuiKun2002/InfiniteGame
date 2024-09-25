@@ -6,7 +6,7 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "FunctionCardActor.generated.h"
 
-#define SpineAnimationState_FuncCard_DefAnimation TEXT("idle")
+#define SpineAnimationState_FuncCard_DefAnimation TEXT("Idle")
 
 #define SpineAnimationState_SpawnCard_Def TEXT("Def")
 #define SpineAnimationState_SpawnCard_DefSpawn TEXT("DefSpawn")
@@ -142,12 +142,13 @@ public:
 	//获取当前正在执行的功能
 	UFUNCTION(BlueprintCallable)
 	UCardFunctionBase* GetCurrentExecuteCardFuncClass();
-
-
+	//获取Idle动画名称
+	UFUNCTION(BlueprintPure)
+	FString GetIdleAnimName();
 public:
-	//默认动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftObjectPtr<UPaperFlipbook> CardActor_DefAniml;
+	//默认动画名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画名称")
+	TSubclassOf<UAssetCategoryName> FunCardIdleAnimName;
 public:
 
 	virtual void BeginPlay() override;
@@ -173,4 +174,5 @@ private:
 	//当前卡片功能触发死亡
 	UPROPERTY()
 	TArray<class UCardFunctionBase*> CardFunctionClassInstanceOnDeathQueue;
+
 };

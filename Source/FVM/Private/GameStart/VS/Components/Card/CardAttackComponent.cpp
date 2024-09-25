@@ -45,7 +45,7 @@ void UCardAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewTrans.SetLocation(
 		FVector(
 			550.f,
-			NewTrans.GetLocation().X,
+			NewTrans.GetLocation().Y,
 			NewTrans.GetLocation().Z
 		)
 	);
