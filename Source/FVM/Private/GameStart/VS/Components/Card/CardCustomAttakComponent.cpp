@@ -4,6 +4,7 @@
 #include "GameStart/VS/Components/Card/CardCustomAttakComponent.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/Flipbook/GameActor/CardActor/AttackCardActor.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "Paper2D/Classes/PaperFlipbookComponent.h"
@@ -14,10 +15,6 @@ UCardCustomAttakComponent::UCardCustomAttakComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-
-
 }
 
 
@@ -40,21 +37,6 @@ void UCardCustomAttakComponent::LoadResource()
 {
 	Super::LoadResource();
 
-	//this->M_Idle = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_DefAnim);
-	//this->M_Attack = UGameSystemFunction::LoadRes(this->M_CardActor->CardActor_AttackAnim);
-
-	this->Pool = UObjectPoolManager::MakePoolManager(this->GetWorld(),
-		this->M_CardActor->CardActor_BulletClassObj, 1
-	);
-
-	this->Pool->SetObjectPoolMaxCount(10);
-
-	if (!Pool->InitComplete())
-	{
-		UE_LOG(LogTemp, Error,
-			TEXT("[CardCustomAttakComponent.cpp UCardCustomAttakComponent::LoadResource] 飞行物加载失败，请检查路径 或者 后缀_C"));
-	}
-
 	//设置攻击投射属性
 	this->InitLaunchProperty(
 		this->M_CardActor->GetCurrentAttackCount(),
@@ -62,80 +44,58 @@ void UCardCustomAttakComponent::LoadResource()
 		this->M_CardActor->GetCurrentFristAttackDelay(),
 		this->M_CardActor->GetCurrentSecondAttackDelay()
 	);
+
+	//初始化默认子弹
+	this->InitLaunchBulletByDef(this->M_CardActor->CardActor_BulletClassObj);
+
+	//播放发呆动画
+	this->M_CardActor->SetAnimation(0, this->GetIdleAnimName(), true);
+	this->SetTrackEntry(nullptr);
 }
 
-void UCardCustomAttakComponent::Spawn()
+
+void UCardCustomAttakComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
-	Super::Spawn();
+	this->OnAnimationPlayEnd();
+	this->SetTrackEntry(nullptr);
+}
 
-	//获取对象池的对象
-	//生成子弹
-
-	if (!IsValid(this->Pool))
-	{
-		return;
-	}
-
-	AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(this->Pool->GetObjectActor());
-
-	if (!IsValid(_TargetActor))
-	{
-		return;
-	}
-
+void UCardCustomAttakComponent::SpawnBullet(AFlyItemActor* NewBullet)
+{
 	//获取对象的变换位置
-	const FTransform& _trans = this->M_CardActor->GetActorTransform();
 	FTransform NewTrans;
-	NewTrans.SetLocation(_trans.GetLocation());
-
-	/*UE_LOG(LogTemp, Error, TEXT("[%.2f %.2f %.2f],[%.2f %.2f %.2f]")
-		, this->M_CardActor->GetActorLocation().X
-		, this->M_CardActor->GetActorLocation().Y
-		, this->M_CardActor->GetActorLocation().Z
-
-		, this->M_CardActor->GetBulletLauncherLocation().X
-		, this->M_CardActor->GetBulletLauncherLocation().Y
-		, this->M_CardActor->GetBulletLauncherLocation().Z
-	);*/
+	NewTrans.SetLocation(this->M_CardActor->GetBulletLauncherLocation());
 
 	//新生成的对象设置自定义拥有者(CardActor)
-	_TargetActor->SetActorTransform(NewTrans);
-	_TargetActor->SetMouseActorLocation(this->M_CardActor->GetCurrentMouse());
-	_TargetActor->SetATK(this->M_CardActor->GetCurrentATK());
-	_TargetActor->SetSecondATK(
+	NewBullet->SetActorTransform(NewTrans);
+	NewBullet->SetMouseActorLocation(this->M_CardActor->GetCurrentMouse());
+	NewBullet->SetATK(this->M_CardActor->GetCurrentATK());
+	NewBullet->SetSecondATK(
 		this->M_CardActor->GetCurrentSecondATK(
 			this->M_CardActor->GetATKCardData().M_SputteringATKRate)
 	);
-	_TargetActor->SetLine(this->M_CardActor->GetLine().Row);
-	_TargetActor->Init();
-	_TargetActor->OnInit();
-
+	NewBullet->SetLine(this->M_CardActor->GetLine().Row);
+	NewBullet->Init();
+	NewBullet->OnInit();
 }
 
 void UCardCustomAttakComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-	this->M_CardActor->SetAnimation(0, SpineCardAnimationState_Attack, true);
+	//播放动画
+	UTrackEntry* Track = this->M_CardActor->SetAnimation(0, this->GetAttackAnimName(), true);
+	//绑定动画事件
+	Track->AnimationComplete.AddDynamic(
+		this, &UCardCustomAttakComponent::OnAnimationComplete);
+	this->SetTrackEntry(Track);
 }
 
 void UCardCustomAttakComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->M_CardActor->SetAnimation(0, SpineCardAnimationState_Idle, true);
-}
-
-
-void UCardCustomAttakComponent::BeginDestroy()
-{
-	Super::BeginDestroy();
-
-	if (IsValid(this->Pool))
-	{
-		this->Pool->ClearAllObjectActor();
-		this->Pool = nullptr;
-	}
+	this->M_CardActor->SetAnimation(0, this->GetIdleAnimName(), true);
 }
 
 // Called every frame
