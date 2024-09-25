@@ -20,16 +20,16 @@ public:
 public:
 	//默认动画1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAnim1;
+		TSubclassOf<UAssetCategoryName> CardActor_DefAnim1;
 	//半血动画2
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAnim2;
+		TSubclassOf<UAssetCategoryName> CardActor_DefAnim2;
 	//残血动画3
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAnim3;
+		TSubclassOf<UAssetCategoryName> CardActor_DefAnim3;
 	//死亡动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DeathAnim;
+		TSubclassOf<UAssetCategoryName> CardActor_DeathAnim;
 public:
 
 	virtual void BeginPlay() override;

@@ -36,16 +36,31 @@ void UCardDefenceComponent::UpdateState()
 		if (HP >= HPTop * (0.6f))
 		{
 			//第一状态
-			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Full, true);
+			if (IsValid(this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()))
+			{
+				this->DefenceCardActor->SetAnimation(0,
+					this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
+					, true);
+			}
 		}
 		else if (HP >= HPTop * (0.3f) && HP < HPTop * (0.6f))
 		{
 			//第二状态
-			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Damage, true);
+			if (IsValid(this->DefenceCardActor->CardActor_DefAnim2.GetDefaultObject()))
+			{
+				this->DefenceCardActor->AddAnimation(0,
+					this->DefenceCardActor->CardActor_DefAnim2.GetDefaultObject()->GetCategoryName().ToString()
+					, true, 0.1f);
+			}
 		}
 		else {
 			//第三状态
-			this->DefenceCardActor->SetAnimation(0, CardDefenceAnimState_Low, true);
+			if (IsValid(this->DefenceCardActor->CardActor_DefAnim3.GetDefaultObject()))
+			{
+				this->DefenceCardActor->AddAnimation(0,
+					this->DefenceCardActor->CardActor_DefAnim3.GetDefaultObject()->GetCategoryName().ToString()
+					, true, 0.1f);
+			}
 		}
 
 	}
@@ -53,7 +68,12 @@ void UCardDefenceComponent::UpdateState()
 
 void UCardDefenceComponent::LoadResource()
 {
-
+	if (IsValid(this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()))
+	{
+		this->DefenceCardActor->SetAnimation(0,
+			this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
+			, true);
+	}
 }
 
 void UCardDefenceComponent::BeHurt(AMouseActor* CurMouseActor)
