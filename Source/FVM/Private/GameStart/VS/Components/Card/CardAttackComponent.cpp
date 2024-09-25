@@ -87,6 +87,7 @@ void UCardAttackComponent::LoadResource()
 void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
+	this->SetTrackEntry(nullptr);
 }
 
 void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName)

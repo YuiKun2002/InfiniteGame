@@ -199,15 +199,30 @@ void UCardDoubleAttackComponent::BeginDestroy()
 
 void UCardDoubleAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	this->CurSky = this->LineComp->GetMouseTopBySky();
+	if (time < 0.3f)
+	{
+		this->time += DeltaTime;
+	}
+	else {
+		this->CurSky = this->LineComp->GetMouseTopBySky();
+	}
+	
 	if (IsValid(this->CurSky))
 	{
 		//if (this->CurSky->GetActorLocation().Y > this->AttackCardActor->GetActorLocation().Y)
 		//{
-		this->TickCondition(DeltaTime);
 
-		this->AttackCardActor->AnalysisActor(this->CurSky);
-		this->SetAttackModEnabled(true);
+		if (time >= 0.3f)
+		{
+			time = 0.f;
+
+			this->TickCondition(DeltaTime);
+
+			this->AttackCardActor->AnalysisActor(this->CurSky);
+
+			this->SetAttackModEnabled(true);
+		}
+		
 		//}
 	}
 	else {

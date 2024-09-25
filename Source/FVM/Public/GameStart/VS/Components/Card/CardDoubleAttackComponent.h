@@ -72,4 +72,6 @@ private:
 	class UMouseLineManager* LineComp = nullptr;
 	UPROPERTY()
 	class AMouseActor* CurSky = nullptr;
+private:
+	float time = 0.f;
 };
