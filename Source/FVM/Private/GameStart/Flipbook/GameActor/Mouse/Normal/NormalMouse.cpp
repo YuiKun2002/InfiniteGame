@@ -19,12 +19,6 @@ void ANormalMouse::BeginPlay()
 	this->MesheComp->AddLocalOffset(this->CollisionOffset);
 	this->BodyComp->AddLocalOffset(this->CollisionOffset);
 
-	if (UFVMGameInstance::GetDebug())
-	{
-		this->MesheComp->SetHiddenInGame(false);
-		this->BodyComp->SetHiddenInGame(false);
-	}
-
 	//绑定动画播放结束的委托
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
 	//初始化状态管理器

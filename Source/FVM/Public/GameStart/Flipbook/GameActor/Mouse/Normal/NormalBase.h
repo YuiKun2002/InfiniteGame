@@ -139,4 +139,5 @@ public:
 	class UCapsuleComponent* BodyComp = nullptr;
 public:
 	ANormalCapsuleBase();
+	virtual void BeginPlay() override;
 };

@@ -383,3 +383,14 @@ ANormalCapsuleBase::ANormalCapsuleBase()
 	this->MesheComp->SetupAttachment(this->GetPointComponent());
 	this->BodyComp->SetupAttachment(this->GetPointComponent());
 }
+
+void ANormalCapsuleBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		this->MesheComp->SetHiddenInGame(false);
+		this->BodyComp->SetHiddenInGame(false);
+	}
+}
