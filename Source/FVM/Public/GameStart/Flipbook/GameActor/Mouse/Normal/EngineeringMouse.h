@@ -42,7 +42,7 @@ public:
 
 //工程师鼠投掷的子弹
 UCLASS()
-class FVM_API AEngineeringPrjBullet : public AGameActorFlipbookBase
+class FVM_API AEngineeringPrjBullet : public ASpineActor
 {
 	GENERATED_BODY()
 public:
