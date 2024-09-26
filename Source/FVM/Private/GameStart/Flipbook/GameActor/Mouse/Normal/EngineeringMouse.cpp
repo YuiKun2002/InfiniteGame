@@ -319,19 +319,6 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 	//生成投射物体
 	FTransform Trans;
 	Trans.SetLocation(this->GetLauncherPoint());
-
-	UE_LOG(LogTemp, Error, TEXT("%f %f %f"),
-		this->GetActorLocation().X,
-		this->GetActorLocation().Y,
-		this->GetActorLocation().Z
-	);
-
-	UE_LOG(LogTemp, Error, TEXT("%f %f %f"),
-		this->GetLauncherPoint().X,
-		this->GetLauncherPoint().Y,
-		this->GetLauncherPoint().Z
-	);
-
 	//生成子弹对象
 	AEngineeringPrjBullet* CurProj = this->GetWorld()->SpawnActor<AEngineeringPrjBullet>(
 		this->TargetCreateBullet.Get(),
