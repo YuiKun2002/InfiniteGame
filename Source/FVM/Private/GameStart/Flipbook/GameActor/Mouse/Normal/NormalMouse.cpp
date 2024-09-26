@@ -111,8 +111,6 @@ void ANormalMouse::MouseDeathed()
 {
 	//关闭碰撞
 	this->ClosedBoxComponent(this->MesheComp);
-	//this->ClosedBoxComponent(this->BodyComp);
-
 	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Super::MouseDeathed();

@@ -8,7 +8,9 @@
 #include <Components/BoxComponent.h>
 #include "GameStart/VS/MapBaseType.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "GameSystem/GameDataSubsystem.h"
 #include "SpineSkeletonAnimationComponent.h"
+#include "GameSystem/Item/Card/CardBaseStruct.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "MouseActor.generated.h"
