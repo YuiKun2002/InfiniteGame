@@ -24,6 +24,11 @@ void ANormalMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//初始化碰撞网格位置
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->CollisionOffset);
+
 	if (UFVMGameInstance::GetDebug())
 	{
 		this->MesheComp->SetHiddenInGame(false);
