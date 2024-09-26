@@ -8,6 +8,7 @@
 #include <Components/BoxComponent.h>
 #include "GameStart/VS/MapBaseType.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "MouseActor.generated.h"
@@ -19,6 +20,13 @@ class UMouseManagerComponent;
 class UBoxComponent;
 
 #define SpineMouseDeath TEXT("Death")
+
+
+#define  BINDANIMATION(Anim,Object,Func)\
+	Anim->AnimationComplete.AddDynamic(\
+	Object,\
+	Func\
+	)\
 
 //障碍物对象
 UCLASS()
@@ -302,6 +310,9 @@ public:
 	//获取当前的不透明度
 	UFUNCTION(BlueprintCallable)
 	float GetColorOpacity() const;
+	//获取轨道动画
+	UFUNCTION(BlueprintCallable)
+	UTrackEntry* GetTrackEntry();
 public:
 	//设置老鼠标记
 	UFUNCTION(BlueprintCallable)
@@ -388,6 +399,9 @@ public:
 		class UPrimitiveComponent* _MouseBodyOverlap,
 		ECollisionChannel _MouseType
 	);
+	//设置轨道动画
+	UFUNCTION(BlueprintCallable)
+	void SetTrackEntry(UTrackEntry* NewTrackEntry);
 public:
 	//进入网格
 	UFUNCTION(BlueprintCallable)
@@ -553,6 +567,9 @@ private:
 	//入水的时间轴
 	UPROPERTY()
 	class UTimeLineClass* InWaterTimeLine = nullptr;
+	//动画轨道
+	UPROPERTY()
+	UTrackEntry* CurAnimTrackEntry = nullptr;
 protected:
 	//入水开启或者关闭
 	UPROPERTY()

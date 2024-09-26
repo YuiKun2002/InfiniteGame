@@ -234,7 +234,8 @@ public:
 	//执行buff
 	virtual void ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime);
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd();
+	UFUNCTION()
+	virtual void OnAnimationPlayEnd(class UTrackEntry* Track);
 protected:
 	UFUNCTION()
 	ANormalMouse* Get();
@@ -258,14 +259,11 @@ public:
 	//当老鼠被命中时受到的伤害数值
 	virtual bool BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType) override;
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd() override;
+	virtual void OnAnimationPlayEnd(UTrackEntry* Track) override;
 public:
 	//是否启动攻击线
 	UPROPERTY()
 	bool M_bEnableAttakLine = true;
-	//当前轨道0动画
-	UPROPERTY()
-	class UTrackEntry* TrackEntry = nullptr;
 	//状态
 	UPROPERTY()
 	int32 State = 0;
@@ -290,7 +288,7 @@ public:
 	//当老鼠死亡时
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd() override;
+	virtual void OnAnimationPlayEnd(class UTrackEntry* Track) override;
 	//动画播放完成
 	UFUNCTION()
 	void OnAnimationComplet(class UTrackEntry* Track);
@@ -318,7 +316,7 @@ public:
 	//当老鼠死亡时
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd() override;
+	virtual void OnAnimationPlayEnd(class UTrackEntry* Track) override;
 protected:
 	void ModeAddState();
 };
@@ -345,7 +343,7 @@ public:
 	//当老鼠死亡时
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd() override;
+	virtual void OnAnimationPlayEnd(class UTrackEntry* Track) override;
 };
 
 //甲虫模式
@@ -363,7 +361,7 @@ public:
 	//当老鼠死亡时
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	virtual void OnAnimationPlayEnd() override;
+	virtual void OnAnimationPlayEnd(class UTrackEntry* Track) override;
 	//执行buff
 	virtual void ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime);
 	UPROPERTY()
@@ -430,7 +428,7 @@ public:
 	virtual void ExitBuff(EGameBuffTag BuffTag)	override;
 	//动画播放完毕
 	UFUNCTION()
-	void OnAnimationPlayEnd();
+	void OnAnimationPlayEnd(class UTrackEntry* Track);
 };
 
 UCLASS()

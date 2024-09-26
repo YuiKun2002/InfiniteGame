@@ -3,7 +3,7 @@
 
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/EngineeringMouse.h"
 #include <Components/BoxComponent.h>
-#include <Components/SphereComponent.h>
+#include <Components/Capsulecomponent.h>
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/VS/UI/UI_MapMeshe.h"
@@ -11,21 +11,6 @@
 #include "GameStart/VS/Components/MesheControllComponent.h"
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include "GameStart/VS/MapMeshe.h"
-
-AEngineeringMouse::AEngineeringMouse()
-{
-	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
-	this->CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
-
-	//设置依附
-	this->MesheComp->SetupAttachment(this->GetRootComponent());
-	this->CollisionComp->SetupAttachment(this->MesheComp);
-}
-
-void AEngineeringMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 void AEngineeringMouse::MouseTick(const float& DeltaTime)
 {
@@ -104,7 +89,7 @@ void AEngineeringMouse::MouseTick(const float& DeltaTime)
 							}
 
 							this->SetbIsHurt(true);
-							this->BeHit(CurCard,this->GetTotalHP(), EFlyItemAttackType::Def);
+							this->BeHit(CurCard, this->GetTotalHP(), EFlyItemAttackType::Def);
 							this->bCheck = false;
 							return;
 						}
@@ -149,12 +134,14 @@ void AEngineeringMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
+	//初始化碰撞网格位置
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->CollisionOffset);
 
-	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AEngineeringMouse::AnimPlayEnd);
 	this->Meshe = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AEngineeringMouse::MouseInit()
@@ -169,6 +156,10 @@ void AEngineeringMouse::MouseInit()
 
 	this->ReadyBulletTime = 0;//this->ReadyNewMouseTime;
 	this->ProjectileBulletTime = this->ShootNewBulletTime;
+
+	//播放移动动画
+	UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
+	this->SetTrackEntry(Track);
 }
 
 void AEngineeringMouse::MoveingUpdate(float DeltaTime)
@@ -212,9 +203,9 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 void AEngineeringMouse::MouseDeathed()
 {
 	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-		
+
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->bCheck = false;
 	this->bProjStart = false;
 
@@ -223,13 +214,13 @@ void AEngineeringMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//播放死亡动画
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Death.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AMouseActor::AlienDeadAnimationCompelet);
+		this->SetTrackEntry(Track);
 	}
 }
 
-void AEngineeringMouse::AnimPlayEnd()
+void AEngineeringMouse::AnimPlayEnd(UTrackEntry* TrackEntry)
 {
 	if (!this->bBeginMove)
 	{
@@ -241,10 +232,13 @@ void AEngineeringMouse::AnimPlayEnd()
 		return;
 	}
 
+	//动画结束允许移动
 	this->bMove = true;
 
+	//如果处于发射模式
 	if (this->bShoot)
 	{
+		//查询一次网格
 		for (int32 i = 0; i < this->Meshe->GetMapMeshRowAndCol().Col; i++)
 		{
 			AMapMeshe* CurMapMeshe = this->Meshe->GetMesh(this->GetMouseLine().Row, i);
@@ -254,7 +248,7 @@ void AEngineeringMouse::AnimPlayEnd()
 				{
 					if (CurMapMeshe->GetUIMapMeshe()->GetCardDatas().Num())
 					{
-						//检测是否允许移动				
+						//检测有卡片，禁止移动			
 						this->bMove = false;
 						break;
 					}
@@ -263,37 +257,46 @@ void AEngineeringMouse::AnimPlayEnd()
 		}
 	}
 
+	//允许移动
 	if (this->bMove)
 	{
 		this->MoveStart();
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
+		this->SetTrackEntry(Track);
 	}
 	else {
-		this->MoveStop();
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Wait));
+		//禁止移动
 
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		this->MoveStop();
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track,this,&AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
 	}
 
+	//子弹有效，禁止移动，允许射击
 	if (this->bValidBullet && !this->bMove && this->bShoot)
 	{
+		//发射时间小于0
 		if (this->ProjectileBulletTime <= 0.f)
 		{
+			//进行发射，开启当前发射状态
 			this->ProjectileBulletTime = this->ShootNewBulletTime;
 			this->ReadyBulletTime = this->ReadyNewBulletTime;
 			this->bCurShoot = true;
 			this->bValidBullet = false;
 
-			//发射新老鼠
+			//播放发射动画
+			UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack.GetDefaultObject()->GetCategoryName().ToString(), true);
+			BINDANIMATION(Track,this,&AEngineeringMouse::AnimPlayEnd);
+			this->SetTrackEntry(Track);
+
 			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->Anim.Shoot),
 				UGameSystemFunction::LoadRes(this->Anim.Wait)
 			);*/
 
-			this->SetAnimation(0,TEXT("SpineTag"),true);
-			this->SetAnimation(0,TEXT("SpineTag"),true);
+			//this->SetAnimation(0, TEXT("SpineTag"), true);
+			//this->SetAnimation(0, TEXT("SpineTag"), true);
 
 			if (this->bCurShoot)
 			{
@@ -322,7 +325,7 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 	AEngineeringPrjBullet* CurProj = this->GetWorld()->SpawnActor<AEngineeringPrjBullet>(
 		this->TargetCreateBullet.Get(),
 		Trans
-		);
+	);
 
 	if (IsValid(CurProj))
 	{

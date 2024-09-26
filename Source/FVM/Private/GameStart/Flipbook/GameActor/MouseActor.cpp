@@ -514,6 +514,11 @@ float AMouseActor::GetColorOpacity() const
 	return this->M_Proper_State.CurOpacity;
 }
 
+UTrackEntry* AMouseActor::GetTrackEntry()
+{
+	return this->CurAnimTrackEntry;
+}
+
 void AMouseActor::SetMouseTag(EMouseTag NewTag)
 {
 	this->M_Proper_State.M_MouseTag = NewTag;
@@ -592,6 +597,17 @@ void AMouseActor::SetMouseCollisionType(UPrimitiveComponent* _Collison, UPrimiti
 		_MouseBodyOverlap->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 		_MouseBodyOverlap->SetCollisionObjectType(ECC_Pawn);
 	}
+}
+
+void AMouseActor::SetTrackEntry(UTrackEntry* NewTrackEntry)
+{
+	if (IsValid(this->CurAnimTrackEntry))
+	{
+		this->CurAnimTrackEntry->AnimationComplete.Clear();
+		this->CurAnimTrackEntry->AnimationComplete.RemoveAll(this);
+	}
+
+	this->CurAnimTrackEntry = NewTrackEntry;
 }
 
 void AMouseActor::BPInMapMeshe(ELineType CurLineType)
