@@ -368,11 +368,13 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 FVector AEngineeringMouse::GetLauncherPoint()
 {
-	return FVector(
+	/*return FVector(
 		this->GetActorLocation().X,
 		this->GetActorLocation().Y + this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
 		this->GetActorLocation().Z + this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
-	);
+	);*/
+
+	return this->GetActorLocation() + this->GetPointComponent()->GetRelativeLocation() + this->LauncherBulletPointComp->GetRelativeLocation();
 }
 
 void AEngineeringMouse::PlayIdleAnim()
