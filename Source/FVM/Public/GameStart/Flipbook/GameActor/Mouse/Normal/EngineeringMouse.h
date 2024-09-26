@@ -88,6 +88,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "属性 | 发射新子弹的时间")
 	float ShootNewBulletTime = 3.f;
 public:
+	//发射位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* LauncherBulletPointComp = nullptr;
+public:
 	//老鼠更新
 	virtual void MouseTick(const float& DeltaTime) override;
 	//初始化
@@ -105,6 +109,8 @@ public:
 	//射击
 	void ProjectileBullet(const FLine& CurLine);
 private:
+	//获取发射位置
+	FVector GetLauncherPoint();
 	void PlayIdleAnim();
 	void PlayMoveAnim();
 	void PlayAttackAnim();
@@ -130,7 +136,8 @@ private:
 	float AtkDelay = 0.2f;
 	//是否检测
 	bool bCheck = true;
-
+private:
+	//网格
 	UPROPERTY()
 	class UMesheControllComponent* Meshe = nullptr;
 };

@@ -62,14 +62,13 @@ void AEngineeringMouse::MouseTick(const float& DeltaTime)
 		else {
 			this->AtkDelay = 0.2f;
 
-			TArray<FHitResult> Res;
-			if (UGameSystemFunction::AddSphereTraceMulti(
-				this, Res, FVector(0.f, 0.f, 15.f), FVector(0.f, 0.f, 15.f), 20.f,
-				UGameSystemFunction::GetCardCollisionTraceType(ECardCollisionType::E_CardActor)))
-			{
-				for (const FHitResult& CurHit : Res)
-				{
-					ACardActor* CurCard = Cast<ACardActor>(CurHit.GetActor());
+			UGameSystemFunction::AddLineTrance(
+				this->GetWorld(),
+				this->GetActorLocation(), FVector(0.f, -10.f, 0.f), FVector(0.f, 10.f, 0.f),
+				UGameSystemFunction::GetCardCollisionBoxType(ECardCollisionType::E_CardActor), this,
+				[](UObject* OwnerActor, AActor* Card) {
+					AEngineeringMouse* Mouse = Cast<AEngineeringMouse>(OwnerActor);
+					ACardActor* CurCard = Cast<ACardActor>(Card);
 					if (IsValid(CurCard) && CurCard->GetCurrentHP() > 0.f)
 					{
 						if (CurCard->GetCardData().M_ECardCollisionType == ECardCollisionType::E_CardActor2)
@@ -88,14 +87,24 @@ void AEngineeringMouse::MouseTick(const float& DeltaTime)
 								UResourceManagerComponent::ResourceAddBadCard();
 							}
 
-							this->SetbIsHurt(true);
-							this->BeHit(CurCard, this->GetTotalHP(), EFlyItemAttackType::Def);
-							this->bCheck = false;
+							Mouse->SetbIsHurt(true);
+							Mouse->BeHit(CurCard, Mouse->GetTotalHP(), EFlyItemAttackType::Def);
+							Mouse->bCheck = false;
 							return;
 						}
 					}
+				});
+
+			/*TArray<FHitResult> Res;
+			if (UGameSystemFunction::AddSphereTraceMulti(
+				this, Res, FVector(0.f, 0.f, 15.f), FVector(0.f, 0.f, 15.f), 20.f,
+				UGameSystemFunction::GetCardCollisionTraceType(ECardCollisionType::E_CardActor)))
+			{
+				for (const FHitResult& CurHit : Res)
+				{
+
 				}
-			}
+			}*/
 		}
 	}
 
@@ -178,7 +187,7 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 			//移动停止
 			this->MoveStop();
 			//播放动画【等待动画】
-			this->PlayIdleAnim();			
+			this->PlayIdleAnim();
 			//开始移动完成
 			this->bBeginMove = true;
 			return;
@@ -288,14 +297,6 @@ void AEngineeringMouse::AnimPlayEnd(UTrackEntry* TrackEntry)
 			//播放发射动画
 			this->PlayAttackAnim();
 
-			/*this->SetPlayAnimationOnce(
-				UGameSystemFunction::LoadRes(this->Anim.Shoot),
-				UGameSystemFunction::LoadRes(this->Anim.Wait)
-			);*/
-
-			//this->SetAnimation(0, TEXT("SpineTag"), true);
-			//this->SetAnimation(0, TEXT("SpineTag"), true);
-
 			if (this->bCurShoot)
 			{
 				this->bCurShoot = false;
@@ -317,7 +318,7 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 	//生成投射物体
 	FTransform Trans;
-	Trans.SetLocation(this->GetActorLocation());
+	Trans.SetLocation(this->GetLauncherPoint());
 
 	//生成子弹对象
 	AEngineeringPrjBullet* CurProj = this->GetWorld()->SpawnActor<AEngineeringPrjBullet>(
@@ -363,6 +364,15 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 		CurProj->Destroy();
 	}
+}
+
+FVector AEngineeringMouse::GetLauncherPoint()
+{
+	return FVector(
+		this->GetActorLocation().X,
+		this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
+		this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
+	);
 }
 
 void AEngineeringMouse::PlayIdleAnim()
