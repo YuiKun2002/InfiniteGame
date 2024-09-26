@@ -370,8 +370,8 @@ FVector AEngineeringMouse::GetLauncherPoint()
 {
 	return FVector(
 		this->GetActorLocation().X,
-		this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
-		this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
+		this->GetActorLocation().Y + this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
+		this->GetActorLocation().Z + this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
 	);
 }
 
