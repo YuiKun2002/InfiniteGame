@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/SpriteActor.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include <Components/Capsulecomponent.h>
 #include <Components/SphereComponent.h>
 #include <Components/BoxComponent.h>
 
@@ -371,4 +372,14 @@ ANormalSphereBase::ANormalSphereBase()
 
 	this->MMeshe->SetupAttachment(this->GetRootComponent());
 	this->MBody->SetupAttachment(this->MMeshe);
+}
+
+ANormalCapsuleBase::ANormalCapsuleBase()
+{
+	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
+
+	//设置依附
+	this->MesheComp->SetupAttachment(this->GetPointComponent());
+	this->BodyComp->SetupAttachment(this->GetPointComponent());
 }

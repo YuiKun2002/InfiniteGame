@@ -10,16 +10,6 @@
 #include <Components/BoxComponent.h>
 #include <Components/Capsulecomponent.h>
 
-ANormalMouse::ANormalMouse()
-{
-	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
-	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
-
-	//设置依附
-	this->MesheComp->SetupAttachment(this->GetPointComponent());
-	this->BodyComp->SetupAttachment(this->GetPointComponent());
-}
-
 void ANormalMouse::BeginPlay()
 {
 	Super::BeginPlay();

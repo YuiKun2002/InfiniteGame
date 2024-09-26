@@ -375,19 +375,12 @@ public:
  *普通陆地老鼠
  */
 UCLASS()
-class FVM_API ANormalMouse : public ANormalBase
+class FVM_API ANormalMouse : public ANormalCapsuleBase
 {
 	GENERATED_BODY()
 
 	friend class UNormalMouseDefenceStateManager;
 
-public:
-	//网格碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UBoxComponent* MesheComp = nullptr;
-	//身体碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* BodyComp = nullptr;
 public:
 	//老鼠的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠模式")
@@ -411,8 +404,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "状态管理器")
 	UNormalMouseStateManager* Manager = nullptr;
 public:
-	//构造
-	ANormalMouse();
 	//初始化
 	virtual void BeginPlay() override;
 	//更新

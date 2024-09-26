@@ -124,3 +124,19 @@ public:
 public:
 	ANormalSphereBase();
 };
+
+//自带胶囊体碰撞
+UCLASS()
+class FVM_API ANormalCapsuleBase : public ANormalBase
+{
+	GENERATED_BODY()
+public:
+	//检查碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* MesheComp = nullptr;
+	//重叠碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* BodyComp = nullptr;
+public:
+	ANormalCapsuleBase();
+};
