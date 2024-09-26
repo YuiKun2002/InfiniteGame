@@ -320,6 +320,18 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 	FTransform Trans;
 	Trans.SetLocation(this->GetLauncherPoint());
 
+	UE_LOG(LogTemp, Error, TEXT("%f %f %f"),
+		this->GetActorLocation().X,
+		this->GetActorLocation().Y,
+		this->GetActorLocation().Z
+	);
+
+	UE_LOG(LogTemp, Error, TEXT("%f %f %f"),
+		this->GetLauncherPoint().X,
+		this->GetLauncherPoint().Y,
+		this->GetLauncherPoint().Z
+	);
+
 	//生成子弹对象
 	AEngineeringPrjBullet* CurProj = this->GetWorld()->SpawnActor<AEngineeringPrjBullet>(
 		this->TargetCreateBullet.Get(),
@@ -355,7 +367,7 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 						//CurProj->SetFlipbookPitchRotation(90.f);
 						CurProj->SetRenderLayer(9999);
-						CurProj->CInit(CurMapMeshe->GetActorLocation(), CurCard);
+						CurProj->CInit(CurMapMeshe->GetActorLocation(), this->GetLauncherPoint(), CurCard);
 						return;
 					}
 				}
@@ -372,9 +384,12 @@ FVector AEngineeringMouse::GetLauncherPoint()
 		this->GetActorLocation().X,
 		this->GetActorLocation().Y + this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
 		this->GetActorLocation().Z + this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
-	);*/
+	);
+	*/
 
-	return this->GetActorLocation() + this->GetPointComponent()->GetRelativeLocation() + this->LauncherBulletPointComp->GetRelativeLocation();
+	return this->GetActorLocation() +
+		this->GetPointComponent()->GetRelativeLocation() +
+		this->LauncherBulletPointComp->GetRelativeLocation();
 }
 
 void AEngineeringMouse::PlayIdleAnim()
@@ -427,9 +442,9 @@ AEngineeringPrjBullet::AEngineeringPrjBullet()
 	this->bInit = false;
 }
 
-void AEngineeringPrjBullet::CInit(const FVector& TargetLocation, const TArray<class ACardActor*>& TargetHitCard)
+void AEngineeringPrjBullet::CInit(const FVector& TargetLocation, const FVector& CurLocation, const TArray<class ACardActor*>& TargetHitCard)
 {
-	this->Init(TargetLocation, TargetHitCard);
+	this->Init(TargetLocation, CurLocation, TargetHitCard);
 	this->bInit = true;
 }
 

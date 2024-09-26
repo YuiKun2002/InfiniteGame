@@ -48,13 +48,13 @@ class FVM_API AEngineeringPrjBullet : public AGameActorFlipbookBase
 public:
 	//初始化
 	UFUNCTION(BlueprintImplementableEvent)
-	void Init(const FVector& TargetLocation, const TArray<class ACardActor*>& TargetHitCard);
+	void Init(const FVector& TargetLocation,const FVector& CurLocation, const TArray<class ACardActor*>& TargetHitCard);
 	//更新
 	UFUNCTION(BlueprintImplementableEvent)
 	void Update(const float& DeltaTime);
 public:
 	AEngineeringPrjBullet();
-	void CInit(const FVector& TargetLocation, const TArray<class ACardActor*>& TargetHitCard);
+	void CInit(const FVector& TargetLocation,const FVector& CurLocation, const TArray<class ACardActor*>& TargetHitCard);
 	virtual void Tick(float DeltaTime) override;
 private:
 	bool bInit = false;
