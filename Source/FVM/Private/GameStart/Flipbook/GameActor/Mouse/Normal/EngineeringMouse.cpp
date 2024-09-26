@@ -175,7 +175,11 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 
 		if (this->GetActorLocation().Y < 425.f - (55.f * this->BeginMoveGrid))
 		{
+			//移动停止
 			this->MoveStop();
+			//播放动画【等待动画】
+			this->PlayIdleAnim();			
+			//开始移动完成
 			this->bBeginMove = true;
 			return;
 		}
@@ -261,16 +265,12 @@ void AEngineeringMouse::AnimPlayEnd(UTrackEntry* TrackEntry)
 	if (this->bMove)
 	{
 		this->MoveStart();
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
-		this->SetTrackEntry(Track);
+		this->PlayMoveAnim();
 	}
 	else {
 		//禁止移动
-
 		this->MoveStop();
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle.GetDefaultObject()->GetCategoryName().ToString(), true);
-		BINDANIMATION(Track,this,&AEngineeringMouse::AnimPlayEnd);
-		this->SetTrackEntry(Track);
+		this->PlayIdleAnim();
 	}
 
 	//子弹有效，禁止移动，允许射击
@@ -286,9 +286,7 @@ void AEngineeringMouse::AnimPlayEnd(UTrackEntry* TrackEntry)
 			this->bValidBullet = false;
 
 			//播放发射动画
-			UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack.GetDefaultObject()->GetCategoryName().ToString(), true);
-			BINDANIMATION(Track,this,&AEngineeringMouse::AnimPlayEnd);
-			this->SetTrackEntry(Track);
+			this->PlayAttackAnim();
 
 			/*this->SetPlayAnimationOnce(
 				UGameSystemFunction::LoadRes(this->Anim.Shoot),
@@ -364,6 +362,51 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 		}
 
 		CurProj->Destroy();
+	}
+}
+
+void AEngineeringMouse::PlayIdleAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+}
+
+void AEngineeringMouse::PlayMoveAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+}
+
+void AEngineeringMouse::PlayAttackAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
 	}
 }
 

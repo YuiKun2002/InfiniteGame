@@ -105,6 +105,10 @@ public:
 	//射击
 	void ProjectileBullet(const FLine& CurLine);
 private:
+	void PlayIdleAnim();
+	void PlayMoveAnim();
+	void PlayAttackAnim();
+private:
 	//开局移动是否完成
 	bool bBeginMove = false;
 	//是否允许移动S
