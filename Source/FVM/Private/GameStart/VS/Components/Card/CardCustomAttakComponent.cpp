@@ -68,7 +68,7 @@ void UCardCustomAttakComponent::SpawnBullet(AFlyItemActor* NewBullet)
 
 	//新生成的对象设置自定义拥有者(CardActor)
 	NewBullet->SetActorTransform(NewTrans);
-	NewBullet->SetMouseActorLocation(this->M_CardActor->GetCurrentMouse());
+	NewBullet->SetObjectActorLocation(this->M_CardActor->GetCurrentMouse());
 	NewBullet->SetATK(this->M_CardActor->GetCurrentATK());
 	NewBullet->SetSecondATK(
 		this->M_CardActor->GetCurrentSecondATK(

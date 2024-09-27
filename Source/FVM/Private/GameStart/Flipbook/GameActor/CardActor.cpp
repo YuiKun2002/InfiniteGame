@@ -389,6 +389,9 @@ void ACardActor::BeginPlay()
 	this->bCollisionActive = true;
 	this->bCollisionState = true;
 
+	this->M_CardTypeBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
 	this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(
 		UGameSystemFunction::GetCardCollisionBoxType(
 			this->GetCardData().M_ECardCollisionType), ECollisionResponse::ECR_Block);
@@ -581,6 +584,9 @@ void ACardActor::SetCardCollisonState(bool bActive)
 		{
 			this->bCollisionActive = true;
 			this->bCollisionState = true;
+
+			this->M_CardTypeBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,ECollisionResponse::ECR_Overlap);
 
 			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(
 				UGameSystemFunction::GetCardCollisionBoxType(this->GetCardData().M_ECardCollisionType),

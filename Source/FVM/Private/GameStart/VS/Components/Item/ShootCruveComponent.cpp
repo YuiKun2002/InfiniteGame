@@ -35,7 +35,7 @@ void UShootCruveComponent::InitTarget()
 {
 	//因为Actor组件BeginPlay() 先于 Actor 本身
 	this->M_CurrentLocation = this->M_Owner->GetActorLocation();
-	this->Target = Cast<AFlyItemActor>(this->M_Owner)->GetMouseActorLocation();
+	this->Target = Cast<AFlyItemActor>(this->M_Owner)->GetObjectActorLocation();
 }
 
 FVector UShootCruveComponent::GetCurveLine(float FlyTime, float FlyTime_MaxHight)

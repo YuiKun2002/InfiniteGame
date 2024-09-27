@@ -118,7 +118,9 @@ enum class ECardCollisionType : uint8 {
 	//一般的默认卡
 	E_CardActor2 UMETA(Display = "CardActor2"),
 	//类似鱼刺的卡片
-	E_CardActor3 UMETA(Display = "CardActor3")
+	E_CardActor3 UMETA(Display = "CardActor3"),
+	//无，Tag
+	E_None UMETA(Display = "None"),
 };
 
 //卡片种类类型
