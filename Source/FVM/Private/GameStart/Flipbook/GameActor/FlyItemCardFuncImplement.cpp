@@ -26,7 +26,7 @@ void UFlyItemReboundCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCar
 
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	if (_Comp)
 	{
@@ -89,7 +89,7 @@ void UFlyItemBuffCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFu
 {
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	if (_Comp)
 	{
@@ -129,7 +129,7 @@ void UFlyItemAcrossCardFunc::Execute(
 	//获取射击组件（原来的子弹）
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	//没有该组件
 	if (!_Comp)
@@ -146,7 +146,7 @@ void UFlyItemAcrossCardFunc::Execute(
 
 	//获取资源组件
 	UResourceManagerComponent* CurComp = AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent;
-	
+
 	//飞行物子弹对象
 	//UClass* FlyActor_Class = nullptr;
 	//FlyActor_Class = UGameSystemFunction::LoadRes(CardData.AcrossBulletClass);
@@ -190,14 +190,16 @@ void UFlyItemAcrossCardFunc::Execute(
 	}
 
 	//预创建飞行物
-	AFlyItemActor* _FlyActor = Cast<AFlyItemActor>(First->GetObjectActor());
+	AActor* CurActor = First->GetObjectActor();
+	AFlyItemActor* _FlyActor = Cast<AFlyItemActor>(CurActor);
 	//设置功能组件数据(防止某些功能重复使用)
 	_FlyActor->SetActor_CardFunction_Component(Cast<UActorComponent>(CardFuncComp));
-	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	//获取数据
 	CurFlyItem->FlyItemActorSwap(_FlyActor);
 	_FlyActor->Init();
 	_FlyActor->OnInit();
+
+	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	CurFlyItem->SetActorLocation(FVector::ZeroVector);
 	CurFlyItem->ReturnPool();
 	////完成生成
@@ -209,7 +211,7 @@ void UFlyItemAcrossCardFunc::Execute(
 	//获取射击组件（新的子弹）
 	UShootLineComponent* CurSComp = Cast<UShootLineComponent>(
 		_FlyActor->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	if (IsValid(CurSComp))
 	{
@@ -260,7 +262,7 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 		//获取射击组件（原来的子弹）
 		UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 			CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-			);
+		);
 
 		//没有该组件
 		if (!_Comp)
@@ -271,7 +273,7 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 		//当前伤害加成数值
 		float CurRate = CardData.ATK +
 			CardFuncComp->GetCardActor()->GetCardGrade(
-			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 			) *
 			CardData.ATKRate * 0.1f;
 
@@ -280,7 +282,7 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 			UGameSystemFunction::FVMLog(__FUNCTION__,
 				FString(
 					FString::FromInt(CardFuncComp->GetCardActor()->GetCardGrade(
-					CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())
 					) +
 					TEXT("级【") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString() +
 					TEXT("】遇到管线类的子弹：子弹攻击力增强：") +

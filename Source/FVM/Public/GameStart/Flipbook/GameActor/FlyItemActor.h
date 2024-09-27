@@ -202,6 +202,9 @@ public:
 	//设置动画轨道
 	UFUNCTION()
 	void SetTrackEntry(class UTrackEntry* Track);
+	//设置上次的对象
+	UFUNCTION(BlueprintCallable)
+	void SetLastObjectActor(AActor* ObjectActor);
 public:
 	//添加Buff
 	void AddBuff(TMap<Buff_Infor, float>& _buffers);
@@ -251,6 +254,8 @@ public:
 	//获取对象的ActorLocation
 	UFUNCTION(BlueprintCallable)
 	AActor* const GetObjectActor();
+	UFUNCTION(BlueprintCallable)
+	AActor* const GetLastObjectActor();
 	//获取可以攻击的类型
 	UFUNCTION(BlueprintCallable)
 	TArray<ELineType>& GetAttackType();
