@@ -650,12 +650,13 @@ AFlyItemActor* AFlyItemActor::FlyItemActorSwap(AFlyItemActor* _FlyActor)
 	if (IsValid(_FlyActor))
 	{
 		//新生成的对象设置自定义拥有者(CardActor)
+		_FlyActor->M_AttackType = _FlyActor->M_AttackType;
+		_FlyActor->M_AttackCardType = _FlyActor->M_AttackCardType;
 		_FlyActor->M_ObjectActorLocation = this->M_ObjectActorLocation;
 		_FlyActor->M_FlyData.ATK = this->M_FlyData.ATK;
 		_FlyActor->M_FlyData.CurATK = this->M_FlyData.CurATK;
 		_FlyActor->M_FlyData._SecondATK = this->M_FlyData._SecondATK;
 		_FlyActor->M_FlyData.M_Line = this->M_FlyData.M_Line;
-		_FlyActor->M_AttackType = this->M_AttackType;
 		//_FlyActor->InitRotation();
 		_FlyActor->SetFlyConstraintLine(this->M_FlyCondition.M_bConstraintLine);
 		return  _FlyActor;
