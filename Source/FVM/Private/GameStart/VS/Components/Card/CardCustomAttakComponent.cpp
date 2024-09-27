@@ -76,7 +76,7 @@ void UCardCustomAttakComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	);
 	NewBullet->SetLine(this->M_CardActor->GetLine().Row);
 	NewBullet->Init();
-	NewBullet->OnInit();
+	
 }
 
 void UCardCustomAttakComponent::PlayAttackAnimation()

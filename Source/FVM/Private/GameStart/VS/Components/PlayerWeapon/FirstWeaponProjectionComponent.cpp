@@ -60,7 +60,7 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
 	NewBullet->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
 	NewBullet->Init();
-	NewBullet->OnInit();
+	
 }
 
 void UFirstWeaponProjectionComponent::PlayAttackAnimation()

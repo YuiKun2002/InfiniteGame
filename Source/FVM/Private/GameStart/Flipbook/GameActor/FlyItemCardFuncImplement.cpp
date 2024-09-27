@@ -197,7 +197,6 @@ void UFlyItemAcrossCardFunc::Execute(
 	//获取数据
 	CurFlyItem->FlyItemActorSwap(_FlyActor);
 	_FlyActor->Init();
-	_FlyActor->OnInit();
 
 	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	CurFlyItem->SetActorLocation(FVector::ZeroVector);

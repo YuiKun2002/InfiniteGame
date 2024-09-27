@@ -50,7 +50,7 @@ void AFlyItemActor::InitCollision()
 	this->M_SphereCollision->SetCollisionObjectType(ECC_Pawn);
 	this->M_SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	this->M_SphereCollision->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AFlyItemActor::BeginPlay()
@@ -110,8 +110,6 @@ void AFlyItemActor::PoolInit(class UObjectPoolManager* PoolManager)
 	this->SetTargetHitState(false);
 	this->M_CurrentHitObjectActor = nullptr;
 	this->bFirstHitResult = false;
-
-
 	this->OnPoolInit();
 }
 
@@ -207,6 +205,8 @@ void AFlyItemActor::Init()
 			break;
 		}
 	}
+
+	this->OnInit();
 
 	this->SetCollisionEnabled(true);
 }
@@ -339,6 +339,9 @@ void AFlyItemActor::PlayAnim_Fly()
 
 void AFlyItemActor::PlayAnim_Split()
 {
+	//关闭碰撞
+	this->SetCollisionEnabled(false);
+
 	bool bResult = this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName.Equals(TEXT("None"));
 	if (bResult)
 	{
@@ -367,6 +370,9 @@ void AFlyItemActor::HitEnd(UPrimitiveComponent* _UBoxComp)
 
 void AFlyItemActor::Hit()
 {
+	//执行蓝图层的事件
+	this->OnHit(this->M_FlyCondition.M_FlyItemAttackType);
+
 	this->bFirstHitResult = true;
 
 	//播放BGM
@@ -381,9 +387,6 @@ void AFlyItemActor::Hit()
 		this->CreateStaticItem(ResPath_C);
 	}
 
-	//执行蓝图层的事件
-	this->OnHit(this->M_FlyCondition.M_FlyItemAttackType);
-
 	//如果子弹类型不是穿透类型
 	if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
 	{
@@ -392,9 +395,6 @@ void AFlyItemActor::Hit()
 			//设置击中状态
 			this->SetTargetHitState(true);
 		}
-
-		//关闭碰撞
-		this->SetCollisionEnabled(false);
 
 		//播放Split动画
 		this->PlayAnim_Split();

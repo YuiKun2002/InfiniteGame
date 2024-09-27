@@ -149,7 +149,7 @@ void UCardDoubleAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		);
 		NewBullet->SetFloatModeEnable(this->AttackCardActor->GetFloatMode());
 		NewBullet->Init();
-		NewBullet->OnInit();
+		
 	}
 	else {
 		Super::SpawnBullet(NewBullet);
