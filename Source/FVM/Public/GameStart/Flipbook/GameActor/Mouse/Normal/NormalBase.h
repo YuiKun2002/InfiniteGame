@@ -22,6 +22,9 @@ public:
 	//盒体碰撞
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠属性")
 	FVector CollisionOffset = FVector(0.f, 0.f, 17.f);
+	//身体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠属性")
+	FVector BodyCollisionOffset = FVector(0.f, 0.f, 17.f);
 public:
 	ANormalBase();
 

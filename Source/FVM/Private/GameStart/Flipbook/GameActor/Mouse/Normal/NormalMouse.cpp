@@ -17,7 +17,7 @@ void ANormalMouse::BeginPlay()
 	//初始化碰撞网格位置
 	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
 	this->MesheComp->AddLocalOffset(this->CollisionOffset);
-	this->BodyComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 
 	//绑定动画播放结束的委托
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
