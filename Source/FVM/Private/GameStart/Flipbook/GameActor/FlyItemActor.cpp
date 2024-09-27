@@ -810,10 +810,101 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 
 void AFlyItemActor::HitCard_OverlapBegin(AActor* _Card)
 {
-	//老鼠对象
+	//卡片对象
 	if (ACardActor* Card = Cast<ACardActor>(_Card))
 	{
-		
+		if (this->M_LastHitObjectActor == _Card)
+		{
+			return;
+		}
+
+		if (Card->GetCurrentHP() < 0.f)
+		{
+			return;
+		}
+
+		//判断是（约束本行）并且 当前行和行不匹配
+		if (this->GetFlyConstraintLine() && Card->GetLine().Row != this->GetLine())
+		{
+			return;
+		}
+
+		//非静态对象
+		if (!this->M_FlyCondition.M_bStaticFlyItem)
+		{
+			//当前拥有卡片对象则跳出
+			if (this->M_CurrentHitObjectActor)
+			{
+				return;
+			}
+		}
+
+		bool bHit = false;
+		if (this->M_AttackCardType == ECardCollisionType::E_CardActor)
+		{
+			bHit = true;
+		}
+		else if (Card->GetCardData().M_ECardCollisionType == this->M_AttackCardType)
+		{
+			bHit = true;
+		}
+
+		if (bHit)
+		{
+			float bCurHP = Card->GetCurrentHP();
+
+			//Mouse->BeHit(this, this->GetCurATK(), this->M_FlyCondition.M_FlyItemAttackType)
+			//被命中传入伤害数值
+			if (!Card->UpdateCardState(this->GetCurATK(),0.f))
+			{
+				if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
+				{
+					//设置当前击中的卡片
+					this->M_CurrentHitObjectActor = Card;
+				}
+				//上一次击中的老鼠
+				this->M_LastHitObjectActor = Card;
+				//飞行物击中
+				this->Hit();
+				//设置老鼠状态->被击中
+				//Card->SetbIsHurt(true);
+				//解析Buff信息
+				//Card->ParseBuff_Information(this->M_FItem_Buff);
+			}
+			else {
+				//执行了BeHit修改了血量后，返回false，此时判断是否是最后一击
+				if (bCurHP > 0.f)
+				{
+					if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
+					{
+						//设置当前击中的老鼠
+						this->M_CurrentHitObjectActor = Card;
+					}
+					//上一次击中的老鼠
+					this->M_LastHitObjectActor = Card;
+					//飞行物击中
+					this->Hit();
+					//卡片死亡
+					Card->KillCard();
+					//设置老鼠状态->被击中
+					//Mouse->SetbIsHurt(true);
+					//解析Buff信息
+					//Mouse->ParseBuff_Information(this->M_FItem_Buff);
+				}
+			}
+
+			if (UFVMGameInstance::GetDebug())
+			{
+				UE_LOG(
+					LogTemp,
+					Error,
+					TEXT("(%s)击中[%s]造成伤害 %.2f"),
+					*UGameSystemFunction::GetObjectName(this),
+					*UGameSystemFunction::GetObjectName(Card),
+					this->GetCurATK()
+				);
+			}
+		}
 	}
 }
 
