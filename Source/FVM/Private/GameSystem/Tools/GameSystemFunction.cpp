@@ -530,20 +530,25 @@ bool UGameSystemFunction::AddLineTrance(
 	TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
 )
 {
+	return UGameSystemFunction::AddLineTrance(World, CurLoca + BeginOffset, CurLoca + EndOffset, CC, InputObj, Func);
+}
+
+bool UGameSystemFunction::AddLineTrance(const UWorld* World, const FVector& Begin, const FVector& End, ECollisionChannel CC, UObject* InputObj, TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func)
+{
 	//添加射线
 	FHitResult Hit;
 
 	if (UFVMGameInstance::GetDebug())
 	{
 		DrawDebugLine(World,
-			CurLoca + BeginOffset,
-			CurLoca + EndOffset,
+			Begin,
+			End,
 			FColor(1.f, 0.f, 0.f, 1.f), false, 5.f);
 	}
 
 	if (World->LineTraceSingleByChannel(Hit,
-		CurLoca + BeginOffset,
-		CurLoca + EndOffset,
+		Begin,
+		End,
 		CC))
 	{
 		Func(InputObj, Hit.GetActor());

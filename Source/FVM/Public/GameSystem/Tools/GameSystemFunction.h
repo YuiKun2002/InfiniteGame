@@ -245,6 +245,14 @@ public:
 		UObject* InputObj,
 		TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
 	);
+	static bool AddLineTrance(
+		const UWorld* World,
+		const FVector& Begin,
+		const FVector& End,
+		ECollisionChannel CC,
+		UObject* InputObj,
+		TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
+	);
 	static bool AddLineTranceMulti(
 		const UWorld* World,
 		const FVector& BeginLocation,
