@@ -54,7 +54,9 @@ void UMesheControllComponent::SpawnMeshes()
 		this->M_GameMapStructManager->GameMapStruct.M_Meshe[0].M_Col.Num());
 
 	//生成第一个网格位置
-	const FVector2D& FristMeshPosition = this->M_GameMapStructManager->GameMapStruct.M_FirstRowMesheLocation;
+	FVector2D FristMeshPosition = this->M_GameMapStructManager->GameMapStruct.M_FirstRowMesheLocation;
+	// 110是地图在场景的Z偏移。 -32是减去网格高度的一半。对齐中心点
+	FristMeshPosition.Y += 110 - 32;
 
 	//网格位置
 	FTransform CurrentMesheLocation;

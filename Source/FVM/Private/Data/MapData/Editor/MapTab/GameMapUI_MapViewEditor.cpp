@@ -10,6 +10,7 @@
 #include "Paper2D/Classes/PaperFlipbook.h"
 
 #include <Components/TextBlock.h>
+#include <Components/SizeBox.h>
 #include <Components/Button.h>
 #include <Components/VerticalBox.h>
 #include <Components/EditableTextBox.h>
@@ -228,6 +229,7 @@ bool UGameMapUI_MapViewEditor::Initialize()
 
 	this->MeshePanel = Cast<UCanvasPanel>(this->GetWidgetFromName(FName(TEXT("CanvasPanel_40"))));
 	this->Bg = Cast<UImage>(this->GetWidgetFromName(FName(TEXT("Image_54"))));
+	this->BgBox = Cast<USizeBox>(this->GetWidgetFromName(FName(TEXT("SizeBox_65"))));
 	this->CardsPanel = Cast<UUniformGridPanel>(this->GetWidgetFromName(FName(TEXT("CardsPanel"))));
 
 	return true;
@@ -247,12 +249,20 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 	this->GameMapUI_MapTab = CurGameMapUI_MapTab;
 
 	//设置背景
-	Bg->SetBrushResourceObject(CurGameMapUI_MapTab->GetEditor()->GetCurEditData().M_FLevelConfig.LevelBGHead.TryLoad());
-	FVector2D Size = Bg->Brush.GetImageSize();
+	TSoftObjectPtr<UTexture2D> SoftImg(CurGameMapUI_MapTab->GetEditor()->GetCurEditData().M_FLevelConfig.LevelBGHead);
+	UTexture2D* Img = SoftImg.LoadSynchronous();
+	if (IsValid(Img))
+	{
+		Bg->SetBrushFromTexture(Img);
+		this->OnInit(CurGameMapUI_MapTab->GetConfig());
+		UE_LOG(LogTemp, Error, TEXT("%d %d"), Img->GetSizeX(), Img->GetSizeY());
+		this->BgBox->SetWidthOverride(Img->GetSizeX());
+		this->BgBox->SetHeightOverride(Img->GetSizeY());
+		this->Offset.X = int32(Img->GetSizeX() / 2) * -1 + 30; // 30 32  是网格大小的一半
+		this->Offset.Y = int32(Img->GetSizeY() / 2) * -1 + 32;
 
-	UE_LOG(LogTemp, Error, TEXT("地图大小 %f,%f"), Size.X, Size.Y);
-
-	this->OnInit(CurGameMapUI_MapTab->GetConfig());
+		this->RenderMeshe();
+	}
 
 	//初始化卡片选择
 	//this->CardsPanel
@@ -489,7 +499,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 				//设置位置
 				FVector2D Location = this->GameMapUI_MapTab->GetConfigRef().M_FirstRowMesheLocation;
 				//UI偏移
-				Location -= FVector2D(-527.f, -190.f);
+				Location -= Offset;
 
 				Location.X += CurCol.M_PaddingCol * Col;
 				Location.Y -= CurRow.M_PaddingRow * Row;
@@ -514,7 +524,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 				//设置位置
 				FVector2D Location = this->GameMapUI_MapTab->GetConfigRef().M_FirstRowMesheLocation;
 				//UI偏移
-				Location -= FVector2D(-527.f, -190.f);
+				Location -= Offset;
 
 				Location.X += CurCol.M_PaddingCol * Col;
 				Location.Y -= CurRow.M_PaddingRow * Row;
