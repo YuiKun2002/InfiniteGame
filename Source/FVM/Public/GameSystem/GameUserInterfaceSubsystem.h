@@ -12,7 +12,23 @@
 class UWidgetBase;
 class UAssetCategoryName;
 
-//UI结构体
+
+////UI集合结构体【UI界面映射】
+//USTRUCT(BlueprintType)
+//struct FGameUserInterfaceGroupTableRowBase : public FTableRowBase {
+//	GENERATED_USTRUCT_BODY()
+//public:
+//	//UI的名称
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	FName UserInterName;
+//
+//	//UI的资产
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	TSoftClassPtr<UWidgetBase> UserInterSource;
+//};
+
+
+//UI结构体【UI配置表{项}】
 USTRUCT(BlueprintType)
 struct FGameUserInterfaceTableRowBase : public FTableRowBase {
 	GENERATED_USTRUCT_BODY()
@@ -22,21 +38,7 @@ public:
 	TMap<FName, TSoftClassPtr<UWidgetBase>> UI;
 };
 
-//UI集合结构体
-USTRUCT(BlueprintType)
-struct FGameUserInterfaceGroupTableRowBase : public FTableRowBase {
-	GENERATED_USTRUCT_BODY()
-public:
-	//UI的名称
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName UserInterName;
-
-	//UI的资产
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftClassPtr<UWidgetBase> UserInterSource;
-};
-
-//UI实例
+//UI实例【一个实例包含多个UI界面】
 UCLASS()
 class FVM_API UGameUserInterfaceInstance : public UObject {
 	GENERATED_BODY()
