@@ -193,13 +193,13 @@ void UGameMapUI_MapMesheItem::UpdateCardView()
 			(this,
 				LoadClass<UGameMapUI_MapViewCardViewPanel>(0,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BPUI_MaoViewCardAnim.BPUI_MaoViewCardAnim_C'")
-					)
-				);
+				)
+			);
 
 		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(
 			FName(CardViewData.CardName),
 			TEXT("FCardFCardpreViewHeadData")
-			);
+		);
 
 		if (CurData)
 		{
@@ -212,7 +212,7 @@ void UGameMapUI_MapMesheItem::UpdateCardView()
 			//设置显示层级
 			CurSlot->SetZOrder(CurData->M_CardpreViewHead.CardLayer + 3);
 			//设置偏移
-			CardViewPanel->SetRenderTranslation(CurData->M_CardpreViewHead.CardViewOffset + FVector2D(45.f,0.f));
+			CardViewPanel->SetRenderTranslation(CurData->M_CardpreViewHead.CardViewOffset + FVector2D(45.f, 0.f));
 			CardViewPanel->SetRenderScale(CurData->M_CardpreViewHead.CardViewScale);
 			//添加缓存区
 			this->MapViewCardViews.Emplace(CardViewPanel);
@@ -248,6 +248,9 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 
 	//设置背景
 	Bg->SetBrushResourceObject(CurGameMapUI_MapTab->GetEditor()->GetCurEditData().M_FLevelConfig.LevelBGHead.TryLoad());
+	FVector2D Size = Bg->Brush.GetImageSize();
+
+	UE_LOG(LogTemp, Error, TEXT("地图大小 %f,%f"), Size.X, Size.Y);
 
 	this->OnInit(CurGameMapUI_MapTab->GetConfig());
 
@@ -295,10 +298,10 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 			this,
 			LoadClass<UGameMapUI_MapViewCardItem>(0,
 				TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BPUI_MapViewCardItem.BPUI_MapViewCardItem_C'"))
-			);
+		);
 
 		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(
-		FName(Card.ItemName.ToString()), TEXT("FCardFCardpreViewHeadData")
+			FName(Card.ItemName.ToString()), TEXT("FCardFCardpreViewHeadData")
 		);
 		if (CurData)
 		{
@@ -332,7 +335,7 @@ void UGameMapUI_MapViewEditor::UpdateMeshe(FMesheCol MesheCol, int32 Row, int32 
 
 	Cast<UGameMapUI_MapMesheItem>(
 		this->MeshePanel->GetChildAt(Row * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[0].M_Col.Num() + Col)
-		)->UpdateConfig(MesheCol);
+	)->UpdateConfig(MesheCol);
 
 	this->RenderMeshe();
 }
@@ -350,7 +353,7 @@ void UGameMapUI_MapViewEditor::UniformSelectChangeMeshe(int32 Row, int32 Col, FM
 
 				Cast<UGameMapUI_MapMesheItem>(
 					this->MeshePanel->GetChildAt(Row * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[Row].M_Col.Num() + ColIndex)
-					)->UpdateConfig(MesheCol);
+				)->UpdateConfig(MesheCol);
 
 				ColIndex++;
 			}
@@ -369,7 +372,7 @@ void UGameMapUI_MapViewEditor::UniformSelectChangeMeshe(int32 Row, int32 Col, FM
 
 					Cast<UGameMapUI_MapMesheItem>(
 						this->MeshePanel->GetChildAt(RowIndex * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[RowIndex].M_Col.Num() + Col)
-						)->UpdateConfig(MesheCol);
+					)->UpdateConfig(MesheCol);
 
 
 					RowIndex++;
@@ -500,7 +503,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 					this,
 					LoadClass<UGameMapUI_MapMesheItem>(nullptr,
 						TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BP_MapViewEditorMesheItem.BP_MapViewEditorMesheItem_C'"))
-					);
+				);
 
 				CurMeshe->Row = Row;
 				CurMeshe->Col = Col;
