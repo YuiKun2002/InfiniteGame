@@ -37,9 +37,6 @@ public:
 	//资源加载
 	virtual void LoadResource() override;
 public:
-	//生成子弹
-	UFUNCTION(BlueprintCallable)
-	AFlyItemActor* SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset);
 	//更新攻击->有老鼠就自动攻击
 	UFUNCTION(BlueprintCallable)
 	void UpdateAutoAttack(float _DeltaTime);

@@ -80,17 +80,6 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 		);
 	}
 
-
-	////初始化动画数据
-	//this->M_Anim_FirstWeaponDef = LoadObject<UPaperFlipbook>(0,
-	//	*this->M_FFPlayerWeaponFirstData.M_WeaponDef_Path.ToString()
-	//	);
-
-	//this->M_Anim_FirstWeaponAttack = LoadObject<UPaperFlipbook>(0,
-	//	*this->M_FFPlayerWeaponFirstData.M_WeaponAttack_Path.ToString()
-	//	);
-
-
 	this->M_UFirstWeaponProjectionComponent->LoadResource();
 }
 

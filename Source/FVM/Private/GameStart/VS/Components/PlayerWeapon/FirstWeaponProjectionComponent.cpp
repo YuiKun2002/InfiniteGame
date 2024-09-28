@@ -60,7 +60,6 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
 	NewBullet->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
 	NewBullet->Init();
-	
 }
 
 void UFirstWeaponProjectionComponent::PlayAttackAnimation()
@@ -176,33 +175,6 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
 }
 
-AFlyItemActor* UFirstWeaponProjectionComponent::SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset)
-{
-	/*
-	if (!IsValid(this->Pool))
-	{
-		this->Pool = UObjectPoolManager::MakePoolManager(this->GetWorld(), _Path_C, 1);
-	}
-
-	FTransform Trans;
-	Trans.SetLocation(this->SpawnBulletLocation);
-
-	AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(this->Pool->GetObjectActor());
-	L_AFlyItemActor_->SetActorTransform(Trans);
-	L_AFlyItemActor_->SetMouseActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
-	L_AFlyItemActor_->SetATK(this->M_Owner->GetPlayerFirstWeaponData().ATK);
-	L_AFlyItemActor_->SetSecondATK(0.f);
-	L_AFlyItemActor_->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
-	L_AFlyItemActor_->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
-	L_AFlyItemActor_->Init();
-	L_AFlyItemActor_->OnInit();
-	//L_AFlyItemActor_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
-	//AFlyItemActor* L_AFlyItemActor_ = Cast<AFlyItemActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(this->M_Owner->GetWorld(), LoadClass<AFlyItemActor>(0, *_Path_C), Trans));
-	//UGameplayStatics::FinishSpawningActor(L_AFlyItemActor_, Trans);
-	*/
-	return nullptr;
-}
-
 void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 {
 	if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->IsMouseExist())
@@ -214,4 +186,5 @@ void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 void UFirstWeaponProjectionComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
+	this->SetTrackEntry(nullptr);
 }
