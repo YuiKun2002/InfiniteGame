@@ -43,6 +43,12 @@ public:
 	//当动画播放完毕
 	UFUNCTION()
 	void OnAnimationComplete(class UTrackEntry* Track);
+	//检测外星人
+	UFUNCTION()
+	void CheckAlien();
+private:
+	void PlayIdleAnim();
+	void PlayAttackAnim();
 private:
 	/*碰撞结果*/
 	FHitResult M_Trance_Result;

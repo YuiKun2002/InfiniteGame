@@ -145,9 +145,6 @@ void UCardFunctionComponent::SetTrackEntry(UTrackEntry* NewTrackEntry)
 	{
 		this->CurTrackEntry->AnimationComplete.RemoveAll(this);
 	}
-	else {
-		return;
-	}
 
 	this->CurTrackEntry = nullptr;
 	this->CurTrackEntry = NewTrackEntry;

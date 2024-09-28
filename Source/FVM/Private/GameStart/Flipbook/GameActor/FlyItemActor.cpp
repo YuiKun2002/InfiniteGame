@@ -317,9 +317,6 @@ void AFlyItemActor::SetTrackEntry(class UTrackEntry* Track)
 		this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
 		this->AnimTrackEntry->AnimationComplete.Clear();
 	}
-	else {
-		return;
-	}
 
 	this->AnimTrackEntry = Track;
 }

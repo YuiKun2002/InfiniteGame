@@ -66,26 +66,14 @@ void UFirstWeaponProjectionComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-	//播放角色的攻击动画
-	this->M_Owner->GetPlayerActor()->PlayerAttack_Anim(1 + TargetData.AttackSpeedUpRate);
-
-	//播放武器的攻击动画
-	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetAttackAnimName(), true);
-	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
-	//绑定动画事件
-	Track->AnimationComplete.AddDynamic(
-		this, &UFirstWeaponProjectionComponent::OnAnimationComplete);
-	this->SetTrackEntry(Track);
+	this->PlayAttackAnim();
 }
 
 void UFirstWeaponProjectionComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	//播放武器的默认动画
-	this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
-	//播放角色的默认动画
-	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
+	this->PlayIdleAnim();
 }
 
 void UFirstWeaponProjectionComponent::InitCondition()
@@ -109,26 +97,9 @@ void UFirstWeaponProjectionComponent::TickComponent(float DeltaTime, ELevelTick 
 	else {
 		this->M_time = 0.f;
 
-		//bool LResult = false;
-
-		//当前检测到的老鼠线路
-		ELineTraceType CurCheckLineType;
-		//当前老鼠
-		AActor* CurMouse = UGameSystemFunction::CreateCheckMouseLineTrace(
-			this->GetWorld(),
-			this->M_Owner->GetLineTraceSetting(), CurCheckLineType
-		);
-
-		//老鼠有效则设置攻击模式
-		if (IsValid(CurMouse) && Cast<AMouseActor>(CurMouse))
+		if (!IsValid(this->M_Owner->GetPlayerActor()->GetCurrentMouse()))
 		{
-			this->M_Owner->GetPlayerActor()->SetCurrentMouse(Cast<AMouseActor>(CurMouse));
-			this->SetAttackModEnabled(true);
-		}
-		else
-		{
-			this->M_Owner->GetPlayerActor()->SetCurrentMouse(nullptr);
-			this->SetAttackModEnabled(false);
+			this->CheckAlien();
 		}
 	}
 }
@@ -169,10 +140,7 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	//初始化子弹资源
 	this->InitLaunchBulletByDef(this->M_Owner->WeaponBulletClassObj);
 
-	//播放武器的默认动画
-	this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
-	//播放角色的默认动画
-	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
+	this->PlayIdleAnim();
 }
 
 void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
@@ -186,5 +154,52 @@ void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 void UFirstWeaponProjectionComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
+	this->CheckAlien();
 	this->SetTrackEntry(nullptr);
+}
+
+void UFirstWeaponProjectionComponent::CheckAlien()
+{
+	//当前检测到的老鼠线路
+	ELineTraceType CurCheckLineType;
+	//当前老鼠
+	AActor* CurMouse = UGameSystemFunction::CreateCheckMouseLineTrace(
+		this->GetWorld(),
+		this->M_Owner->GetLineTraceSetting(), CurCheckLineType
+	);
+
+	//老鼠有效则设置攻击模式
+	if (IsValid(CurMouse) && Cast<AMouseActor>(CurMouse))
+	{
+		this->M_Owner->GetPlayerActor()->SetCurrentMouse(Cast<AMouseActor>(CurMouse));
+		this->SetAttackModEnabled(true);
+	}
+	else
+	{
+		this->M_Owner->GetPlayerActor()->SetCurrentMouse(nullptr);
+		this->SetAttackModEnabled(false);
+	}
+}
+
+void UFirstWeaponProjectionComponent::PlayIdleAnim()
+{
+	//播放角色的默认动画
+	this->M_Owner->GetPlayerActor()->PlayerDef_Anim();
+	//播放武器的默认动画
+	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
+	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
+	//绑定动画事件
+	BINDANIMATION(Track,this,&UFirstWeaponProjectionComponent::OnAnimationComplete);
+	this->SetTrackEntry(Track);
+}
+
+void UFirstWeaponProjectionComponent::PlayAttackAnim()
+{
+	//播放角色的攻击动画
+	this->M_Owner->GetPlayerActor()->PlayerAttack_Anim(1 + TargetData.AttackSpeedUpRate);
+	//播放武器的攻击动画
+	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetAttackAnimName(), true);
+	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
+	BINDANIMATION(Track,this,&UFirstWeaponProjectionComponent::OnAnimationComplete);
+	this->SetTrackEntry(Track);
 }
