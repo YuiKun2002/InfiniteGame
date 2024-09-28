@@ -13,6 +13,7 @@ class UImage;
 class UTextBlock;
 class UScrollBox;
 class UCanvasPanel;
+class UUniformGridPanel;
 class UCanvasPanelSlot;
 class UUI_EradicateCard;
 class UUI_GamePlayerHead;
@@ -21,7 +22,10 @@ UCLASS()
 class FVM_API UUI_CardBar : public UWidgetBase
 {
 	GENERATED_BODY()
-
+public:
+	//卡片格子界面
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UUniformGridPanel* CardPanel;
 public:
 	//初始化
 	virtual bool Initialize() override;
@@ -34,29 +38,29 @@ public:
 private:
 	//铲卡道具2
 	UPROPERTY()
-		UUI_EradicateCard* M_TCard_Item_2 = nullptr;
+	UUI_EradicateCard* M_TCard_Item_2 = nullptr;
 private:
 	//水平线
 	UPROPERTY()
-		UImage* M_Bg_1 = nullptr;
+	UImage* M_Bg_1 = nullptr;
 	//垂直线
 	UPROPERTY()
-		UImage* M_Bg_2 = nullptr;
+	UImage* M_Bg_2 = nullptr;
 	//拐角图片
 	UPROPERTY()
-		UImage* M_Bg_3 = nullptr;
+	UImage* M_Bg_3 = nullptr;
 	//第二列卡槽
 	UPROPERTY()
-		UCanvasPanel* M_UCanvasPanel_CardSlot = nullptr;
+	UCanvasPanel* M_UCanvasPanel_CardSlot = nullptr;
 private:
 	//水平卡
 	UPROPERTY()
-		UHorizontalBox* M_UHorizontalBox_Cards = nullptr;
+	UHorizontalBox* M_UHorizontalBox_Cards = nullptr;
 	//垂直卡
 	UPROPERTY()
-		UVerticalBox* M_UVerticalBox_Cards = nullptr;
+	UVerticalBox* M_UVerticalBox_Cards = nullptr;
 private:
 	//显示角色的位置
 	UPROPERTY()
-		UScrollBox* M_PlayerScrollBox = nullptr;
+	UScrollBox* M_PlayerScrollBox = nullptr;
 };

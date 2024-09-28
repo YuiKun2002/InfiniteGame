@@ -8,6 +8,7 @@
 
 #include <Components/HorizontalBox.h>
 #include <Components/VerticalBox.h>
+#include <Components/UniformGridPanel.h>
 #include <Components/Image.h>
 #include <Components/Textblock.h>
 
@@ -23,9 +24,11 @@
 bool UUI_CardBar::Initialize()
 {
 	if (!Super::Initialize())
+	{
 		return false;
+	}
 
-	this->M_PlayerScrollBox =  this->GetWidgetComponent<UScrollBox>(this, TEXT("ScrollBox_40"));
+	this->M_PlayerScrollBox = this->GetWidgetComponent<UScrollBox>(this, TEXT("ScrollBox_40"));
 	this->M_UHorizontalBox_Cards = this->GetWidgetComponent<UHorizontalBox>(this, TEXT("HorizontalBox_55"));
 	this->M_UVerticalBox_Cards = this->GetWidgetComponent<UVerticalBox>(this, TEXT("VerticalBox_65"));
 	this->M_Bg_1 = this->GetWidgetComponent<UImage>(this, TEXT("Bg_Len_1"));
@@ -43,6 +46,11 @@ void UUI_CardBar::Init()
 
 void UUI_CardBar::AddCard(UWidget* _Wid)
 {
+	this->CardPanel->AddChildToUniformGrid(_Wid,
+		this->CardPanel->GetChildrenCount() / 2
+		, this->CardPanel->GetChildrenCount() % 2);
+
+	return;
 	//横向最多12张
 	if (this->M_UHorizontalBox_Cards->GetChildrenCount() < 12)
 	{
