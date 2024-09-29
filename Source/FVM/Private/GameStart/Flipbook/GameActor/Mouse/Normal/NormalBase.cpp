@@ -332,11 +332,6 @@ void ANormalBase::BeginPlay()
 
 void ANormalBase::PlayBombEffAnim()
 {
-	/*this->SetPlayAnimation(
-		LoadObject<UPaperFlipbook>(0,
-			TEXT("PaperFlipbook'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/Other/FB_MouseBombEff.FB_MouseBombEff'"))
-	);*/
-
 	UTrackEntry* Trac = this->SetAnimation(0,
 		this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
 	);
