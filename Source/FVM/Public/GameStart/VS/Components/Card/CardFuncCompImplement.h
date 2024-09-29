@@ -113,9 +113,9 @@ public:
 	//生成对象[爆炸生成]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSoftClassPtr<AFunctionActor> OtherShow;
-	//爆炸翻书动画路径
+	//爆炸动画名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> BombAnimPath;
+		TSubclassOf<UAssetCategoryName> BombAnimName;
 	//爆炸音效
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString BombAudioName = TEXT("Bomb");
