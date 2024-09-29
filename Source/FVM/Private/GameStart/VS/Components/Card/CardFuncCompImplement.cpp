@@ -670,15 +670,13 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 {
 	//播放爆炸动画
-	/*CardFuncComp->GetCardActor()->SetPlayAnimation(
-		UGameSystemFunction::LoadRes(CardDataTRB.BombAnimPath)
-	);*/
-
-	CardFuncComp->GetCardActor()->SetAnimation(
+	UTrackEntry* Track = CardFuncComp->GetCardActor()->SetAnimation(
 		0,
-		SpineAnimationState_UniformCard_Bomb,
+		this->CardDataTRB.BombAnimName.GetDefaultObject()->GetCategoryName().ToString(),
 		true
 	);
+	BINDANIMATION(Track,CardFuncComp,&UCardFunctionComponent::OnAnimationPlayEnd);
+	CardFuncComp->SetTrackEntry(Track);
 
 	//actor对象加载
 	UClass* Obj = UGameSystemFunction::LoadRes(this->CardDataTRB.OtherShow);
@@ -2023,7 +2021,7 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 				// UCardFunctionComponent::OnAnimationPlayEnd
 
 				UTrackEntry* NewTrack = CardFuncComp->GetCardActor()->SetAnimation(0,
-					this->CardDataTRB.StateLeft.GetDefaultObject()->GetCategoryName().ToString(),true
+					this->CardDataTRB.StateLeft.GetDefaultObject()->GetCategoryName().ToString(), true
 				);
 				NewTrack->AnimationComplete.AddDynamic(
 					CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd
@@ -2045,7 +2043,7 @@ bool UCardFunctionFlourbag::Update(class UCardFunctionComponent* CardFuncComp, c
 				this->bCheckPlay = true;
 
 				UTrackEntry* NewTrack = CardFuncComp->GetCardActor()->SetAnimation(0,
-					this->CardDataTRB.StateRight.GetDefaultObject()->GetCategoryName().ToString(),true
+					this->CardDataTRB.StateRight.GetDefaultObject()->GetCategoryName().ToString(), true
 				);
 				NewTrack->AnimationComplete.AddDynamic(
 					CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd

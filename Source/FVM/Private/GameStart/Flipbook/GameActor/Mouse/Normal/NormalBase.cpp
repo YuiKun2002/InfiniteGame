@@ -337,8 +337,11 @@ void ANormalBase::PlayBombEffAnim()
 			TEXT("PaperFlipbook'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/Other/FB_MouseBombEff.FB_MouseBombEff'"))
 	);*/
 
-	this->SetAnimation(0, TEXT("SpineTag"), true);
-
+	UTrackEntry* Trac = this->SetAnimation(0,
+		this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+	);
+	BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
+	this->SetTrackEntry(Trac);
 }
 
 bool ANormalBase::GetMouseDeathByBomb() const
