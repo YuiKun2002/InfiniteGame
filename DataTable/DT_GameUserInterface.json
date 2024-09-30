@@ -1,0 +1,96 @@
+[
+	{
+		"Name": "Global",
+		"UI":
+		{
+			"GameInfor": "/Game/Resource/BP/Game/UI/BPUI_GameInfor.BPUI_GameInfor_C",
+			"GameTask": "/Game/Resource/BP/Game/UI/BP_GameTask.BP_GameTask_C",
+			"TaskFinishTip": "/Game/Resource/BP/Game/UI/UI_Tip/BP_TasjFinish.BP_TasjFinish_C",
+			"NewLevelTip": "/Game/Resource/BP/Game/UI/UI_Tip/BP_NewMap.BP_NewMap_C",
+			"NewItemShow": "/Game/Resource/BP/Game/UI/BP_NewItemPanel.BP_NewItemPanel_C",
+			"DialogueInfor": "/Game/Resource/BP/Game/UI/Dialogue/BP_DialogueInfor.BP_DialogueInfor_C",
+			"MainFrame": "/Game/Resource/BP/Game/UI/BPUI_MainFrame.BPUI_MainFrame_C",
+			"GameWorldMap": "/Game/Resource/BP/Game/GameMap/GameWorldMap.GameWorldMap_C",
+			"Notice": "/Game/Resource/BP/Game/UI/BPUI_Notice.BPUI_Notice_C",
+			"GameSetting": "/Game/Resource/BP/Game/UI/UIGameSetting.UIGameSetting_C",
+			"OpenGame": "/Game/Resource/BP/Game/InGame/OpenGame.OpenGame_C",
+			"InGame": "/Game/Resource/BP/Game/InGame/UI_InGame.UI_InGame_C",
+			"GameTest": "/Game/Resource/BP/Game/UI/GameTest.GameTest_C",
+			"GamePrepare": "/Game/Resource/BP/Game/GamePrepare/BPUI_GamePrepare.BPUI_GamePrepare_C",
+			"ItemTitleTip": "/Game/Resource/BP/Game/UI/UI_Tip/BPUI_ItemTitleTip.BPUI_ItemTitleTip_C",
+			"UserAccount": "/Game/Resource/BP/Game/UI/NetWork/AccountLogin/BP_AccountLogin.BP_AccountLogin_C",
+			"Wait": "/Game/Resource/BP/Game/UI/NetWork/AccountLogin/BP_Wait.BP_Wait_C",
+			"Signin": "/Game/Resource/BP/Game/UI/Signin/BP_Signin.BP_Signin_C",
+			"Shop": "/Game/Resource/BP/Game/UI/BPUIShop.BPUIShop_C",
+			"Bag": "/Game/Resource/BP/Game/UI/BPUIPlayerBag.BPUIPlayerBag_C",
+			"Labs": "/Game/Resource/BP/Game/UI/Labs/BP_UILabs.BP_UILabs_C",
+			"Heroes": "/Game/Resource/BP/Game/UI/Heroes/BP_HeroesPanel.BP_HeroesPanel_C",
+			"Pay": "/Game/Resource/BP/Game/UI/UI_Tip/UI_BuyItem_Tip.UI_BuyItem_Tip_C",
+			"Weapons": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_WeaponsPanel.BP_WeaponsPanel_C",
+			"Mail": "/Game/Resource/BP/Game/UI/Mail/BP_Mail.BP_Mail_C"
+		}
+	},
+	{
+		"Name": "WorldMap",
+		"UI":
+		{
+			"MainMap": "/Game/Resource/BP/Game/GameMap/BP_UIMainMap.BP_UIMainMap_C",
+			"Map1": "/Game/Resource/BP/Game/GameMap/BP_UIMap_000.BP_UIMap_000_C",
+			"Map2": "/Game/Resource/BP/Game/GameMap/BP_UIMap_001.BP_UIMap_001_C",
+			"Map3": "/Game/Resource/BP/Game/GameMap/BP_UIMap_003.BP_UIMap_003_C",
+			"Map4": "/Game/Resource/BP/Game/GameMap/BP_UIMap_004.BP_UIMap_004_C",
+			"Map5": "/Game/Resource/BP/Game/GameMap/BP_UIMap_005.BP_UIMap_005_C"
+		}
+	},
+	{
+		"Name": "Bag",
+		"UI":
+		{
+			"Card": "/Game/Resource/BP/Game/UI/Bag/BPUI_BagCardGrid.BPUI_BagCardGrid_C",
+			"Material": "/Game/Resource/BP/Game/UI/Bag/BP_BagMaterialGrid.BP_BagMaterialGrid_C"
+		}
+	},
+	{
+		"Name": "Shop",
+		"UI":
+		{
+			"Card": "/Game/Resource/BP/Game/UI/Shop/BPUI_ShopCard.BPUI_ShopCard_C"
+		}
+	},
+	{
+		"Name": "Labs",
+		"UI":
+		{
+			"Material": "/Game/Resource/BP/Game/UI/Labs/BP_PlayerBagMaterialGrid.BP_PlayerBagMaterialGrid_C",
+			"Card": "/Game/Resource/BP/Game/UI/Labs/BPUI_PlayerBagCardGrid.BPUI_PlayerBagCardGrid_C"
+		}
+	},
+	{
+		"Name": "Heroes",
+		"UI":
+		{
+			"HeroItem": "/Game/Resource/BP/Game/UI/Heroes/BP_HeroItem.BP_HeroItem_C",
+			"HeroUpgrade": "/Game/Resource/BP/Game/UI/Heroes/BP_Hero_Upgrade.BP_Hero_Upgrade_C"
+		}
+	},
+	{
+		"Name": "Weapons",
+		"UI":
+		{
+			"Weapon": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_Item.BP_Item_C",
+			"WeaponOperate": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_WeaponUpPanel.BP_WeaponUpPanel_C",
+			"WeaponOperate_Equip": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_Weapon_Equip_Panel.BP_Weapon_Equip_Panel_C",
+			"Weapon_Decompose": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_Weapon_Decompose.BP_Weapon_Decompose_C",
+			"Weapon_Upgrade": "/Game/Resource/BP/Game/UI/Heroes/Weapon/BP_Weapon_Upgrade.BP_Weapon_Upgrade_C"
+		}
+	},
+	{
+		"Name": "Mail",
+		"UI":
+		{
+			"MailContentShow": "/Game/Resource/BP/Game/UI/Mail/BP_MailItemContentShow.BP_MailItemContentShow_C",
+			"MailItem": "/Game/Resource/BP/Game/UI/Mail/BP_MailItem.BP_MailItem_C",
+			"Item": "/Game/Resource/BP/Game/UI/Mail/BP_Item.BP_Item_C"
+		}
+	}
+]
