@@ -227,7 +227,7 @@ void AEngineeringMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//播放死亡动画
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Death.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AMouseActor::AlienDeadAnimationCompelet);
 		this->SetTrackEntry(Track);
 	}
@@ -383,12 +383,12 @@ void AEngineeringMouse::PlayIdleAnim()
 {
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}
 	else {
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Idle_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.IdleDamageAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}
@@ -398,12 +398,12 @@ void AEngineeringMouse::PlayMoveAnim()
 {
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}
 	else {
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}
@@ -413,12 +413,12 @@ void AEngineeringMouse::PlayAttackAnim()
 {
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}
 	else {
-		UTrackEntry* Track = this->SetAnimation(0, this->Anim.Attack_Damage.GetDefaultObject()->GetCategoryName().ToString(), true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
 		this->SetTrackEntry(Track);
 	}

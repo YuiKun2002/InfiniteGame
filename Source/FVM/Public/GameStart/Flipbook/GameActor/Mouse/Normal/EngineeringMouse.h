@@ -14,32 +14,6 @@ class UPaperFlipbook;
 class UBoxComponent;
 class USphereComponent;
 
-USTRUCT(BlueprintType)
-struct FEngineeringMouseResourceStruct {
-	GENERATED_USTRUCT_BODY()
-public:
-	//移动
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Move;
-	//移动
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Move_Damage;
-	//等待
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Idle;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Idle_Damage;
-	//发射
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Attack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Attack_Damage;
-	//死亡形态
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UAssetCategoryName> Death;
-};
-
-
 //工程师鼠投掷的子弹
 UCLASS()
 class FVM_API AEngineeringPrjBullet : public ASpineActor
@@ -66,9 +40,6 @@ class FVM_API AEngineeringMouse : public ANormalCapsuleBase
 {
 	GENERATED_BODY()
 public:
-	//动画资源
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FEngineeringMouseResourceStruct Anim;
 	//需要创建的子弹
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "属性 | 需要创建的子弹资源")
 	TSoftClassPtr<class AEngineeringPrjBullet> TargetCreateBullet;
