@@ -497,6 +497,8 @@ void UMesheControllComponent::InitGameMapMeshe()
 
 	this->SpawnMeshes();
 
+	/*
+
 	//初始化显示网格
 	FVector FirstPoint = this->GetMesh(0, 0)->GetActorLocation();
 	this->M_CurTipMeshes.Reset(M_CurMapLine.Col * M_CurMapLine.Row);
@@ -517,6 +519,8 @@ void UMesheControllComponent::InitGameMapMeshe()
 			this->M_CurTipMeshes.Add(Ac);
 		}
 	}
+
+	*/
 }
 
 
@@ -574,6 +578,8 @@ bool UMesheControllComponent::CheckMesheIsValid(const int32& _Row, const int32& 
 
 void UMesheControllComponent::ShowTipMeshe(ELineType LineType)
 {
+	return;
+
 	if (this->bShowTip)
 	{
 		if (this->ShowTipLineType == LineType)
@@ -593,6 +599,8 @@ void UMesheControllComponent::ShowTipMeshe(ELineType LineType)
 
 void UMesheControllComponent::CloseTipMeshe()
 {
+	return;
+
 	if (!this->bShowTip)
 	{
 		return;
