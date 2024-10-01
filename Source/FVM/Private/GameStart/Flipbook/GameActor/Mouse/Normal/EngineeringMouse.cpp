@@ -167,7 +167,7 @@ void AEngineeringMouse::MouseInit()
 	this->ProjectileBulletTime = this->ShootNewBulletTime;
 
 	//播放移动动画
-	UTrackEntry* Track = this->SetAnimation(0, this->Anim.Move.GetDefaultObject()->GetCategoryName().ToString(), true);
+	UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 	this->SetTrackEntry(Track);
 }
 

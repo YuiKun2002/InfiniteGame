@@ -47,6 +47,8 @@ void ULockingAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			return;
 		}
 
+
+		this->SetAttackModEnabled(false);
 		//查询结果
 		bool CheckResult = CheckLineAlien(this->CardActor->GetLine().Row);
 		if (CheckResult)
@@ -54,17 +56,22 @@ void ULockingAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			this->SetAttackModEnabled(true);
 		}
 		else {
+			TArray<int32> Rows;
 			for (int32 i = 0; i < AGameMapInstance::GetGameMapInstance()->
 				M_MesheControllComponent->GetMapMeshRowAndCol().Row; i++)
 			{
 				if (i != this->CardActor->GetLine().Row)
 				{
-					if (CheckLineAlien(i))
-					{
-						this->SetAttackModEnabled(true);
-						return;
-					}
+					Rows.Emplace(i);
 				}
+			}
+
+			int32 RanRow = UGameSystemFunction::GetRandomRange(0, Rows.Num() - 1);
+
+			if (CheckLineAlien(Rows[RanRow]))
+			{
+				this->SetAttackModEnabled(true);
+				return;
 			}
 		}
 
@@ -203,7 +210,7 @@ bool ULockingAttackComponent::CheckAlien(UMouseLineManager* AlienManagerComp)
 				this->CurrentAlien = AlienManagerComp->GetMouseTopByGorund();
 				return true;
 			}
-		}break;		
+		}break;
 		case ELineTraceType::E_MouseUnder:
 		{
 			if (AlienManagerComp->GetMouseUnderGround().Num())
