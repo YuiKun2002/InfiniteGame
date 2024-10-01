@@ -10,7 +10,7 @@
 /**
  * 锁定攻击
  */
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API ULockingAttackComponent : public UAttackLauncherComponent
 {
 	GENERATED_BODY()

@@ -100,7 +100,7 @@ void ULockingAttackComponent::LoadResource()
 
 void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 {
-	if (IsValid(CurrentAlien) && CurrentAlien->GetMouseIsDeath())
+	if (IsValid(CurrentAlien) && !CurrentAlien->GetMouseIsDeath())
 	{
 		FTransform Trans;
 		Trans.SetLocation(CurrentAlien->GetActorLocation());
