@@ -104,6 +104,7 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	{
 		FTransform Trans;
 		Trans.SetLocation(CurrentAlien->GetActorLocation());
+
 		NewBullet->SetLine(this->CardActor->GetLine().Row);
 		NewBullet->SetActorTransform(Trans);
 		NewBullet->SetObjectActorLocation(this->CardActor->GetCurrentMouse());
@@ -112,7 +113,7 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 			this->CardActor->GetCurrentSecondATK(
 				this->CardActor->GetATKCardData().M_SputteringATKRate)
 		);
-		NewBullet->SetFloatModeEnable(this->CardActor->GetFloatMode());
+		NewBullet->SetFloatModeEnable(true);
 		NewBullet->Init();
 	}
 }
