@@ -172,4 +172,7 @@ private:
 	//当前提示的网格类型
 	UPROPERTY()
 	ELineType ShowTipLineType = ELineType::DisEnable;
+private:
+	UPROPERTY()
+	AActor* FlameActor = nullptr;
 };

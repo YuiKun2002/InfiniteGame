@@ -1,6 +1,8 @@
 #include "GameStart\VS\Components\MesheControllComponent.h"
 #include "GameStart/VS/Components/MapMesheWidgetComponent.h"
 
+#include "Engine/Texture2D.h"
+
 #include "GameStart/VS/Animal/VSAnimalBase.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/VS/MapMeshe.h"
@@ -58,9 +60,27 @@ void UMesheControllComponent::SpawnMeshes()
 	// 110是地图在场景的Z偏移。 -32是减去网格高度的一半。对齐中心点
 	FristMeshPosition.Y += 110 - 32;
 
+
+
+	TSoftObjectPtr<UTexture2D> MapSize(this->M_GameMapStructManager->LevelConfig.LevelBGHead);
+	UTexture2D* Texture = MapSize.LoadSynchronous();
+	if (IsValid(Texture))
+	{
+		//初始化基地位置
+		this->FlameActor = this->GetWorld()->SpawnActor<AActor>(
+			LoadClass<AActor>(nullptr,
+				TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/UI_Player/UICardBad/BP_FlameActor.BP_FlameActor_C'"))
+		);
+		this->FlameActor->SetActorLocation(FVector(
+			550.f,
+			-260.f,
+			-70.f
+		));
+	}
+
+
 	//网格位置
 	FTransform CurrentMesheLocation;
-
 	float RowPadding = 0.f;
 	//得到网格层渲染优先级【第Row层的优先级】
 	int32 CurMesheTranslucency = GetRangeLayer(0, TranslucencyConst::ETranslucency::EMeshe);
