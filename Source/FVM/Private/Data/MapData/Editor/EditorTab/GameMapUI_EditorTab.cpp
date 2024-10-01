@@ -85,8 +85,8 @@ void UGameMapUI_EditorTab::InitEditorTabListItems()
 				this,
 				LoadClass<UFVMEditUI_EditRowTableItem>(0,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/EditorTab/BP_EditorTabListItem.BP_EditorTabListItem_C'")
-					)
-				);
+				)
+			);
 			//初始化
 			CurRow->InitData(this);
 			//设置数据
@@ -152,9 +152,14 @@ void UGameMapUI_EditorTab::AddNewRow(FName NewRowName)
 	if (this->FVMEditUI_GameMapEdit->GetGameMapRowNames().Find(NewRowName) == INDEX_NONE)
 	{
 		//添加新行
-		FGameMapData NewData;
-		NewData.M_FLevelConfig.LevelName = NewRowName.ToString();
-		this->FVMEditUI_GameMapEdit->GetGameMapData()->AddRow(NewRowName, NewData);
+
+		UMapDataStructAsset* Data = UMapDataStruct::CreateMapDataAsset(NewRowName.ToString());
+		Data->Data.M_FLevelConfig.LevelName = NewRowName.ToString();
+
+		FGameMapDataList DataList;
+		DataList.MapDataTable = TSoftObjectPtr<UMapDataStructAsset>(Data->GetPathName());
+
+		this->FVMEditUI_GameMapEdit->GetGameMapData()->AddRow(NewRowName, DataList);
 
 		//刷新行
 		this->FVMEditUI_GameMapEdit->InitGameMapListItems();

@@ -77,22 +77,28 @@ bool UFVMGameInstance::GetUpdateGame()
 UGameMapStructManager* UFVMGameInstance::LoadGameMapStructManager(const FString& _FileName)
 {
 	UDataTable* GameMapData = LoadObject<UDataTable>(0,
-		TEXT("DataTable'/Game/Resource/BP/Data/MapData/GameMapData.GameMapData'"));
-	TArray<FGameMapData*> M_GameMapData;
+		TEXT("DataTable'/Game/Resource/BP/Data/MapData/DT_GameMapDataList.DT_GameMapDataList'"));
+	TArray<FGameMapDataList*> M_GameMapData;
 	GameMapData->GetAllRows("GameMapList", M_GameMapData);
 
 	for (auto Datas : M_GameMapData)
 	{
+		UMapDataStructAsset* Asset = (*Datas).MapDataTable.LoadSynchronous();
+		if (!IsValid(Asset))
+		{
+			continue;
+		}
+		
 		//从数据表寻找指定的地图名称
-		if ((*Datas).M_FLevelConfig.LevelName.Equals(_FileName))
+		if (Asset->Data.M_FLevelConfig.LevelName.Equals(_FileName))
 		{
 			//创建新的地图结构并且将数据表的数据赋予给新创建的地图结构
 			this->M_UGameMapStructManager = Cast<UGameMapStructManager>(
 				UGameplayStatics::CreateSaveGameObject(
 					LoadClass<UGameMapStructManager>(0, TEXT("Class'/Script/FVM.GameMapStructManager'"))
 				));
-			this->M_UGameMapStructManager->GameMapStruct = (*Datas).M_FGameMapStruct;
-			this->M_UGameMapStructManager->LevelConfig = (*Datas).M_FLevelConfig;
+			this->M_UGameMapStructManager->GameMapStruct = Asset->Data.M_FGameMapStruct;
+			this->M_UGameMapStructManager->LevelConfig = Asset->Data.M_FLevelConfig;
 
 
 			//创建新的老鼠结构并且把数据表的数据赋予给新的老鼠结构
@@ -101,7 +107,7 @@ UGameMapStructManager* UFVMGameInstance::LoadGameMapStructManager(const FString&
 					LoadClass<UMouseStructManager>(0, TEXT("Class'/Script/FVM.MouseStructManager'"))
 				));
 			//设置老鼠配置
-			this->M_MouseStructManager->SetMouseConfig((*Datas).M_FMouseConfig);
+			this->M_MouseStructManager->SetMouseConfig(Asset->Data.M_FMouseConfig);
 			//设置行数量
 			this->M_MouseStructManager->SetRowCount(this->M_UGameMapStructManager->GameMapStruct.M_Meshe.Num());
 

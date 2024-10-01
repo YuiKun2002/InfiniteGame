@@ -23,6 +23,7 @@ public class FVM : ModuleRules
             "InJson" ,
             "SpinePlugin" ,
             "VaRest" ,
+            "AssetRegistry",
             "RuntimeFilesDownloader"
         });
 
