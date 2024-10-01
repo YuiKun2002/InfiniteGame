@@ -115,6 +115,7 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		);
 		NewBullet->SetFloatModeEnable(true);
 		NewBullet->Init();
+		NewBullet->HitMouse_OverlapBegin(CurrentAlien);
 	}
 }
 

@@ -443,7 +443,6 @@ void AFlyItemActor::CreateStaticItem(TSoftClassPtr<AFlyItemActor> CurFlyItemActo
 	_TargetActor->SetATK(this->GetSecondATK());
 	_TargetActor->SetSecondATK(this->GetSecondATK());
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 	//AFlyItemActor* Finish = Cast<AFlyItemActor>(UGameplayStatics::FinishSpawningActor(Item, Trans));
 
@@ -535,7 +534,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	_TargetActor->SetLine(this->M_FlyData.M_Line + _LineOffset);
 	_TargetActor->SetFlyConstraintLine(_IsbConstaintLine);
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 	/*AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(
 		this->GetWorld(), UGameSystemFunction::LoadRes(_FlyActorPath_C), Trans)
@@ -612,7 +610,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
 	_TargetActor->AddActorLocalOffset(Offset);
 	_TargetActor->SetActorRelativeRotation(FRotator(0.f, 0.f, _RotationAngle));
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 
 	/*AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
