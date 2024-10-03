@@ -5,6 +5,7 @@
 #include <Components/Image.h>
 #include <Components/VerticalBox.h>
 #include <Components/TextBlock.h>
+#include <Components/Button.h>
 
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/PlayerStructManager.h"
@@ -74,7 +75,7 @@ bool UUI_RoomCreate::Initialize()
 	this->MapBg = this->GetWidgetComponent<UImage>(this, TEXT("Image_149"));
 	this->MouseDefImg = this->GetWidgetComponent<UImage>(this, TEXT("DefMouseImg"));
 
-	this->ShowRoomList = this->GetWidgetComponent<UVerticalBox>(this, TEXT("VerticalBox_23"));
+	//this->ShowRoomList = this->GetWidgetComponent<UVerticalBox>(this, TEXT("VerticalBox_23"));
 
 	return true;
 }
@@ -95,48 +96,29 @@ void UUI_RoomCreate::Init(FString MapName)
 		//加载背景		
 		this->SetImageBrush(this->MapBg, Cur->LevelConfig.LevelBGHead.ToString());
 
-		//加载房间1
-		UUI_RoomCreateRoomListItem* Cur1 = this->Gen(TEXT("【默认难度】材料掉落率增加0.3%"));
-		Cur1->OnSelctDelegate.BindUObject(this, &UUI_RoomCreate::Room1);
-		//加载房间2
-		UUI_RoomCreateRoomListItem* Cur2 = this->Gen(TEXT("【简单难度】欢乐大冒险,Let's go!"));
-		Cur2->OnSelctDelegate.BindUObject(this, &UUI_RoomCreate::Room2);
-		//加载房间3
-		UUI_RoomCreateRoomListItem* Cur3 = this->Gen(TEXT("【困难难度】关键材料掉落，掉落率增加0.5%"));
-		Cur3->OnSelctDelegate.BindUObject(this, &UUI_RoomCreate::Room3);
-		//加载房间4
-		UUI_RoomCreateRoomListItem* Cur4 = this->Gen(TEXT("【极限难度】等级限制，关键材料掉落，掉落率增加1%"));
-		Cur4->OnSelctDelegate.BindUObject(this, &UUI_RoomCreate::Room4);
-
-		this->Alls.Emplace(Cur1);
-		this->Alls.Emplace(Cur2);
-		this->Alls.Emplace(Cur3);
-		this->Alls.Emplace(Cur4);
-		this->ShowRoomList->AddChildToVerticalBox(Cur1);
-		this->ShowRoomList->AddChildToVerticalBox(Cur2);
-		this->ShowRoomList->AddChildToVerticalBox(Cur3);
-		this->ShowRoomList->AddChildToVerticalBox(Cur4);
+		//设置文本
+		this->MapTitle->SetText(FText::FromString(MapName));
 
 		//默认选择1
-		Cur1->Select();
+		this->Room1();
 	}
 }
 
-UUI_RoomCreateRoomListItem* UUI_RoomCreate::Gen(FString RoomName)
-{
-	UUI_RoomCreateRoomListItem* NewUI = CreateWidget<UUI_RoomCreateRoomListItem>(this,
-		LoadClass<UUI_RoomCreateRoomListItem>(0,
-			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/RoomCreate/BPUI_RoomCreateRoomListItem.BPUI_RoomCreateRoomListItem_C'")));
-
-	NewUI->Init(this);
-	NewUI->SetData(FString::FromInt(
-		UGameSystemFunction::GetRandomRange(1000, 9999)
-	), RoomName,
-		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerSex
-	);
-
-	return NewUI;
-}
+//UUI_RoomCreateRoomListItem* UUI_RoomCreate::Gen(FString RoomName)
+//{
+//	UUI_RoomCreateRoomListItem* NewUI = CreateWidget<UUI_RoomCreateRoomListItem>(this,
+//		LoadClass<UUI_RoomCreateRoomListItem>(0,
+//			TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/RoomCreate/BPUI_RoomCreateRoomListItem.BPUI_RoomCreateRoomListItem_C'")));
+//
+//	NewUI->Init(this);
+//	NewUI->SetData(FString::FromInt(
+//		UGameSystemFunction::GetRandomRange(1000, 9999)
+//	), RoomName,
+//		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerSex
+//	);
+//
+//	return NewUI;
+//}
 
 void UUI_RoomCreate::Room1()
 {
@@ -149,32 +131,9 @@ void UUI_RoomCreate::Room1()
 	{
 		Cur->LevelConfig.LevelItems.Remove(CurIg);
 	}
-}
 
-void UUI_RoomCreate::Room2()
-{
-	//获取当前的地图管理器
-	UGameMapStructManager* Cur = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager();
-	Cur->LevelConfig = this->SourceData;
-
-	//移除忽略项目
-	for (const FString& CurIg : this->SourceData.IgnoreItems)
-	{
-		Cur->LevelConfig.LevelItems.Remove(CurIg);
-	}
-
-	Cur->LevelConfig.MouseLevel = 1;
-	Cur->LevelConfig.ItemsCountRate = 1;
-}
-
-void UUI_RoomCreate::Room3()
-{
-	//获取当前的地图管理器
-	UGameMapStructManager* Cur = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager();
-	Cur->LevelConfig = this->SourceData;
-	Cur->LevelConfig.MouseLevel = Cur->LevelConfig.MouseLevel + 1;
-	Cur->LevelConfig.ItemsCountRate = 1;
-	Cur->LevelConfig.ItemsValue += 150.f * 0.05f;
+	this->Easy->SetIsEnabled(false);
+	this->Hard->SetIsEnabled(true);
 }
 
 void UUI_RoomCreate::Room4()
@@ -190,5 +149,7 @@ void UUI_RoomCreate::Room4()
 	}
 	Cur->LevelConfig.ItemsCountRate = 1;
 	Cur->LevelConfig.ItemsValue += 150.f * 0.1f;
-}
 
+	this->Easy->SetIsEnabled(true);
+	this->Hard->SetIsEnabled(false);
+}

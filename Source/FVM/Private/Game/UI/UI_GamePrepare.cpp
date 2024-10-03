@@ -281,7 +281,7 @@ void UUI_GamePrepare::LoadCards()
 		//卡片加载器
 		this->ItemLoadManager_Card = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Card_Game"));
 		this->ItemLoadManager_Card->InitWidget_First(this->Uniform_Card, this->ScrollBox_Card);
-		this->ItemLoadManager_Card->InitRange_Second(4, 5, 800, 120.f, 150.f);
+		this->ItemLoadManager_Card->InitRange_Second(4, 5, 800, 155.f, 170.f);
 		this->ItemLoadManager_Card->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitCards"));
 		this->ItemLoadManager_Card->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateCards"));
 	}
