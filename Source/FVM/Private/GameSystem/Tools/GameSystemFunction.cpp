@@ -429,6 +429,7 @@ EGameVsMap UGameSystemFunction::GetPlayerLastInMap()
 
 void UGameSystemFunction::ResetDataTable(class UDataTable* _datatable)
 {
+#if WITH_EDITOR
 	for (const auto& Name : _datatable->GetRowNames())
 	{
 		FItemCard* CardData = nullptr;
@@ -468,6 +469,7 @@ void UGameSystemFunction::ResetDataTable(class UDataTable* _datatable)
 	}
 
 	_datatable->MarkPackageDirty();
+#endif
 }
 
 FString UGameSystemFunction::GetObjectName(const UObject* Obj)

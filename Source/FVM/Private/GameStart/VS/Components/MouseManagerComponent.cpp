@@ -1023,8 +1023,16 @@ const UMouseTimeManager* const UMouseManagerComponent::GetMouseTimeManager()
 
 bool UMouseManagerComponent::GetMousePathByName(const FString& MouseName, FString& OutMousePath, FMouseBase& OutData)
 {
+	FMouseBase* CurPath = this->MousePaths.Find(MouseName);
+	if (CurPath)
+	{
+		OutData = *CurPath;
+		OutMousePath = (*CurPath).ItemTarget_ActorFilePath.ToString();
+		return true;
+	}
+
 	const FMouseConfig& CurConfig = this->M_UMouseStructManager->GetMouseConfig();
-	
+
 	FString CurName = *CurConfig.AllMouseKeyListMap.Find(FCString::Atoi(*MouseName));
 
 	for (const auto& Cur : this->AllMouseData)
@@ -1034,6 +1042,8 @@ bool UMouseManagerComponent::GetMousePathByName(const FString& MouseName, FStrin
 			OutMousePath = Cur.M_Mouse.ItemTarget_ActorFilePath.ToString();
 
 			OutData = Cur.M_Mouse;
+
+			this->MousePaths.Emplace(MouseName, Cur.M_Mouse);
 
 			return true;
 		}
@@ -1074,6 +1084,12 @@ void UMouseManagerComponent::OnRoundNodeChangedCallback()
 					//老鼠的资产路径
 					FString CurMousePath;
 					FMouseBase MouseData;
+
+					if (Cur.CurMouseName.Equals(TEXT("")))
+					{
+						continue;
+					}
+
 					//拿到路径并且生成老鼠
 					if (this->GetMousePathByName(Cur.CurMouseName, CurMousePath, MouseData))
 					{

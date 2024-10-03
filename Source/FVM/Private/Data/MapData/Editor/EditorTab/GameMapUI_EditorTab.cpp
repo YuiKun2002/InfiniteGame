@@ -3,6 +3,7 @@
 
 #include "Data/MapData/Editor/EditorTab/GameMapUI_EditorTab.h"
 #include "Data/MapData/Editor/FVMEditUI_GameMapEdit.h"
+#include "Data/CardData/MouseDataStruct.h"
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
 #include <Components/VerticalBox.h>
@@ -165,4 +166,67 @@ void UGameMapUI_EditorTab::AddNewRow(FName NewRowName)
 		this->FVMEditUI_GameMapEdit->InitGameMapListItems();
 		this->InitEditorTabListItems();
 	}
+}
+
+void UGameMapUI_EditorTab::EditAlienName(const FString& SourceName, const FString& TargetName)
+{
+	// Map DataTable 
+	// DataTable'/Game/Resource/BP/Data/MapData/DT_GameMapDataList.DT_GameMapDataList'
+
+	// Alien DataTable
+	// DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'
+
+
+	UDataTable* Map = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/Resource/BP/Data/MapData/DT_GameMapDataList.DT_GameMapDataList'"));
+	UDataTable* Alien = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'"));
+
+	TArray<FMouse_Data*> AlienList;
+	Alien->GetAllRows<FMouse_Data>(TEXT("AlienLists"), AlienList);
+	for (FMouse_Data* list : AlienList)
+	{
+		if (list->M_Mouse.M_MouseName.Equals(SourceName))
+		{
+			list->M_Mouse.M_MouseName = TargetName;
+			break;
+		}
+	}
+
+	//修改所有地图带有当前名称的外星人
+	TArray<FGameMapDataList*> List;
+	Map->GetAllRows<FGameMapDataList>(TEXT("maps"), List);
+	for (FGameMapDataList* list : List)
+	{
+		UMapDataStructAsset* Aseet = list->MapDataTable.LoadSynchronous();
+		if (IsValid(Aseet))
+		{
+			int32* ID = Aseet->Data.M_FMouseConfig.AllMouseListMap.Find(SourceName);
+			if (ID)
+			{
+				int32 LID = *ID;
+				Aseet->Data.M_FMouseConfig.AllMouseKeyListMap.Emplace(LID, TargetName);
+				Aseet->Data.M_FMouseConfig.AllMouseListMap.Remove(SourceName);
+				Aseet->Data.M_FMouseConfig.AllMouseListMap.Emplace(TargetName, LID);
+			}
+		}
+	}
+
+#if WITH_EDITOR
+	UPackage* Package = FindPackage(nullptr,
+		*FPackageName::FilenameToLongPackageName(Map->GetPathName())
+	);
+	if (Package)
+	{
+		Package->MarkPackageDirty();
+		Package->SetDirtyFlag(true);
+	}
+
+	UPackage* PackageA = FindPackage(nullptr,
+		*FPackageName::FilenameToLongPackageName(Alien->GetPathName())
+	);
+	if (PackageA)
+	{
+		PackageA->MarkPackageDirty();
+		PackageA->SetDirtyFlag(true);
+	}
+#endif
 }

@@ -33,7 +33,7 @@ public:
 
 	//配置
 	UFUNCTION(BlueprintCallable)
-		void Config();
+	void Config();
 
 private:
 	//行名称
@@ -41,11 +41,11 @@ private:
 
 	//编辑器选项
 	UPROPERTY()
-		class UGameMapUI_EditorTab* Class = nullptr;
+	class UGameMapUI_EditorTab* Class = nullptr;
 private:
 	//按钮上的标题名称
 	UPROPERTY()
-		UTextBlock* Text_Title = nullptr;
+	UTextBlock* Text_Title = nullptr;
 };
 
 
@@ -66,23 +66,26 @@ public:
 public:
 	//加载数据表的行
 	UFUNCTION(BlueprintCallable)
-		void LoadRowDatas(FName RowName);
+	void LoadRowDatas(FName RowName);
 	//添加新的数据行
 	UFUNCTION(BlueprintCallable)
-		void AddNewRow(FName NewRowName);
+	void AddNewRow(FName NewRowName);
+	//修改外星人名称
+	UFUNCTION(BlueprintCallable)
+	void EditAlienName(const FString& SourceName,const FString& TargetName);
 private:
 	//主界面
 	UPROPERTY()
-		UFVMEditUI_GameMapEdit* FVMEditUI_GameMapEdit = nullptr;
+	UFVMEditUI_GameMapEdit* FVMEditUI_GameMapEdit = nullptr;
 	//编辑器【做出编辑器选项】
 
 	//右侧显示，地图数据表的所有行按钮
 	UPROPERTY()
-		UVerticalBox* EditorTab_ListViewPanel = nullptr;
+	UVerticalBox* EditorTab_ListViewPanel = nullptr;
 	//新增行命名文字输入
 	UPROPERTY()
-		UEditableTextBox* EditorTab_NewRowInputText = nullptr;
+	UEditableTextBox* EditorTab_NewRowInputText = nullptr;
 	//新增行命名保存按钮
 	UPROPERTY()
-		UButton* EditorTab_NewRowSaveButt = nullptr;
+	UButton* EditorTab_NewRowSaveButt = nullptr;
 };

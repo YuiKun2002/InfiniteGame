@@ -168,15 +168,13 @@ void UFVMEditUI_GameMapEdit::SaveConfig()
 		);
 		if (Package)
 		{
+			#if WITH_EDITOR
 			Package->MarkPackageDirty();
 			Package->SetDirtyFlag(true);
-			#if WITH_EDITOR
-			//FEditorFileUtils::SaveDirtyPackages(false, false, true);
 			#endif
-			this->SaveCurPakage();
 		}
 	}
-
+	this->SaveCurPakage();
 	//缓存配置
 	this->LoadConfig();
 }
