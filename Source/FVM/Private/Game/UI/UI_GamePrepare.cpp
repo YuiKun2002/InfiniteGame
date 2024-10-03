@@ -31,7 +31,7 @@ bool UUI_GamePrepare::Initialize()
 
 	this->M_CardGradeMaxHead = this->GetWidgetComponent<UImage>(this, "Image_62");
 	//this->Uniform_CardGrid = this->GetWidgetComponent<UUniformGridPanel>(this, "CardGrid");
-	this->M_SelectCardList = this->GetWidgetComponent<UHorizontalBox>(this, "SelectCardList");
+	this->M_SelectCardList = this->GetWidgetComponent<UUniformGridPanel>(this, "UniformGridPanel_58");
 	this->M_MapHead = this->GetWidgetComponent<UImage>(this, "Map_Head_BG");
 	this->M_MouseList = this->GetWidgetComponent<UVerticalBox>(this, "MouseList");
 
@@ -68,7 +68,9 @@ void UUI_GamePrepare::SelectCard(const FItemCard& _CardData)
 	CallFunc.BindUFunction(M_TempCardGrid, "RemoveCurrentSelectCard");
 	M_TempCardGrid->GetButtonClickEvent().Add(CallFunc);
 	//添加到列表
-	this->M_SelectCardList->AddChildToHorizontalBox(M_TempCardGrid);
+	this->M_SelectCardList->AddChildToUniformGrid(
+		M_TempCardGrid, this->M_SelectCardList->GetChildrenCount() / 2,
+		this->M_SelectCardList->GetChildrenCount() % 2);
 	//选择数量+1
 	this->M_SelectCardNum++;
 	//重新加载卡片
@@ -281,7 +283,7 @@ void UUI_GamePrepare::LoadCards()
 		//卡片加载器
 		this->ItemLoadManager_Card = NewObject<UItemLoadManager>(this, TEXT("ItemLoadManager_Card_Game"));
 		this->ItemLoadManager_Card->InitWidget_First(this->Uniform_Card, this->ScrollBox_Card);
-		this->ItemLoadManager_Card->InitRange_Second(4, 5, 800, 155.f, 170.f);
+		this->ItemLoadManager_Card->InitRange_Second(4, 7, 800, 155.f, 170.f);
 		this->ItemLoadManager_Card->OnCreateItem.BindUFunction(this, TEXT("WidgetCreate_InitCards"));
 		this->ItemLoadManager_Card->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefresh_UpdateCards"));
 	}

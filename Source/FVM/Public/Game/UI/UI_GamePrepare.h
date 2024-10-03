@@ -40,7 +40,7 @@ private:
 	UUniformGridPanel* M_CardGrid = nullptr;
 	//选择的卡片列表
 	UPROPERTY()
-	UHorizontalBox* M_SelectCardList = nullptr;
+	UUniformGridPanel* M_SelectCardList = nullptr;
 	//背包格子
 	UPROPERTY()
 	TArray<UUI_PlayerBagCardGrid*> M_BagGrid;
