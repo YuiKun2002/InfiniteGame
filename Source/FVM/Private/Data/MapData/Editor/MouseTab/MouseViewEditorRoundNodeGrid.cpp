@@ -57,7 +57,8 @@ void UMouseViewEditorRoundNodeGrid::GenerateNewMouse()
 	{
 		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
 	}
-	else if (this->GameMapUI_MouseViewEditor->bEnableMouseNodeRemove)
+	
+	if (this->GameMapUI_MouseViewEditor->bEnableMouseNodeRemove)
 	{
 		FMouseConfigNode CurSelectNode;
 		CurSelectNode.CurMouseName = TEXT("");
@@ -70,9 +71,8 @@ void UMouseViewEditorRoundNodeGrid::GenerateNewMouse()
 		this->GameMapUI_MouseViewEditor->SelectRoundNodeWithMouseNode(this);
 		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(CurSelectNode);
 	}
-	else {
-		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
-	}
+
+	this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
 }
 
 void UMouseViewEditorRoundNodeGrid::InitEditorRoundNodeGrid(const int32& Row, const int32& Col, UGameMapUI_MouseViewEditor* GameMapUIMouseViewEditor)

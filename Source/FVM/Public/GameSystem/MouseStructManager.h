@@ -384,6 +384,12 @@ public:
 	//当前波数【根据关卡波数配置决定只解析多少】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FRondWidthMouseConfig> CurRoundConfig;
+	//所有老鼠名称Key集合
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, int32> AllMouseListMap;
+	//所有老鼠IDKey集合
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FString> AllMouseKeyListMap;
 };
 
 

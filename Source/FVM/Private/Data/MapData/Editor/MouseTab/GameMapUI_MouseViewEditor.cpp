@@ -42,7 +42,7 @@ void UGameMapUI_MouseViewEditor::InitMouseViewEditor(UFVMEditUI_GameMapEdit* Cla
 	this->GameMapUI_MouseTab = OwnerClass;
 
 	this->MouseViewSelectMousePanel = Cast<UMouseViewSelectMousePanel>(this->GetWidgetFromName(FName(TEXT("UMouseViewSelectMousePanel"))));
-
+	this->MouseViewSelectMousePanel->GameMapUI_MouseViewEditor = this;
 	//初始化格子节点
 	this->InitRoundNodeGrid();
 	//初始化老鼠选择项
@@ -75,7 +75,7 @@ void UGameMapUI_MouseViewEditor::InitRoundNodeGrid()
 				LoadClass<UMouseViewEditorRoundNodeGrid>(
 					nullptr,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BP_MouseEditorGrid.BP_MouseEditorGrid_C'")
-					));
+				));
 
 			//初始化数据
 			CurGrid->InitEditorRoundNodeGrid(Row, Col, this);
@@ -155,28 +155,28 @@ void UGameMapUI_MouseViewEditor::CheckTimeNodeCount()
 			this->CurRoundNodeIndex
 		];
 
-			//当前回合节点中的最小子节点个数是否有20个
-			if (CurTimeNode.CurNode.Num() < 20)
-			{
-				const FGameMapStruct& CurGameMapData = this->FVMEditUI_GameMapEdit->GetCurEditData().M_FGameMapStruct;
+	//当前回合节点中的最小子节点个数是否有20个
+	if (CurTimeNode.CurNode.Num() < 20)
+	{
+		const FGameMapStruct& CurGameMapData = this->FVMEditUI_GameMapEdit->GetCurEditData().M_FGameMapStruct;
 
-				//差多少补多少
-				int32 Result = 20 - CurTimeNode.CurNode.Num();
-				for (int32 i = 0; i < Result; i++)
-				{
-					FTimeNode CurLocalTimeNode;
+		//差多少补多少
+		int32 Result = 20 - CurTimeNode.CurNode.Num();
+		for (int32 i = 0; i < Result; i++)
+		{
+			FTimeNode CurLocalTimeNode;
 
-					TArray<FMouseConfigNode> CurMouseNodes;
-					CurMouseNodes.SetNum(CurGameMapData.M_Meshe.Num());
+			TArray<FMouseConfigNode> CurMouseNodes;
+			CurMouseNodes.SetNum(CurGameMapData.M_Meshe.Num());
 
-					CurLocalTimeNode.CurMouseNode = CurMouseNodes;
+			CurLocalTimeNode.CurMouseNode = CurMouseNodes;
 
-					CurTimeNode.CurNode.Emplace(CurLocalTimeNode);
-				}
+			CurTimeNode.CurNode.Emplace(CurLocalTimeNode);
+		}
 
-				//更新数据表视图
-				this->GameMapUI_MouseTab->UpdateView();
-			}
+		//更新数据表视图
+		this->GameMapUI_MouseTab->UpdateView();
+	}
 }
 
 void UGameMapUI_MouseViewEditor::UpdateView()
@@ -483,6 +483,7 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 {
 	if (IsValid(this->MouseViewEditorRoundNodeGrid))
 	{
+
 		//写入数据
 		{
 			//获取老鼠配置
