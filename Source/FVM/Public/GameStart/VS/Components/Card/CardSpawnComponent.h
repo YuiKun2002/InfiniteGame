@@ -21,22 +21,6 @@ enum class FCardSpawn : uint8 {
 	_ESpawn UMETA(DisplayName = "Spawn"),
 };
 
-//资源数据
-USTRUCT(BlueprintType)
-struct FUCardSpawnComponent_Resource {
-	GENERATED_USTRUCT_BODY()
-public:
-	//默认动画
-	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-	UPaperFlipbook* M_UPaperFlipbook_Idle = nullptr;
-	//生产动画
-	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-	UPaperFlipbook* M_UPaperFlipbook_Spawn = nullptr;
-	//生长动画
-	UPROPERTY(EditInstanceOnly, Category = "ResInstance")
-	UPaperFlipbook* M_UPaperFlipbook_Spawn_Up = nullptr;
-};
-
 //条件数据
 USTRUCT(BlueprintType)
 struct FUCardSpawnComponent_Condition {
@@ -81,6 +65,9 @@ public:
 
 	//动画播放完毕
 	virtual	void OnAnimationPlayEnd() override;
+
+	UFUNCTION()
+	void AnimationPlayEnd(UTrackEntry* Track);
 private:
 	//当前生产卡片对象
 	UPROPERTY()
@@ -92,9 +79,6 @@ private:
 	//条件
 	UPROPERTY(EditInstanceOnly, Category = "卡片状态 | 条件")
 	FUCardSpawnComponent_Condition M_SpawnCondition;
-	//动画资源实例
-	UPROPERTY(EditInstanceOnly, Category = "卡片状态 | 动画")
-	FUCardSpawnComponent_Resource M_Resource;
 	//生产的火苗值
 	UPROPERTY()
 	int32 M_SpawnFlameValue = 25;

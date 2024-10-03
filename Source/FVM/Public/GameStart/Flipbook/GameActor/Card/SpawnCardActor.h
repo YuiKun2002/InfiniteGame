@@ -17,20 +17,10 @@ class FVM_API ASpawnCardActor : public ACardActor
 public:
 	//默认动画1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAnim1;
+		TSubclassOf<UAssetCategoryName> Idle;
 	//生产动画1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_SpawnAnim1;
-	//默认动画2
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_DefAnim2;
-	//生产动画2
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_SpawnAnim2;
-	//生长动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-		TSoftObjectPtr<UPaperFlipbook> CardActor_UpAnim;
-
+		TSubclassOf<UAssetCategoryName> Attack;
 public:
 
 	//获取生产卡片数据

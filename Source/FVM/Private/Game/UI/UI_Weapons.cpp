@@ -23,40 +23,40 @@ void UUI_Weapons::InitWeapons()
 	{
 		FMainWeaponData A;
 		A.ItemName = FText(FText::FromName(TEXT("CatSword")));
-		A.M_ItemID = 2;
-		UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
+		A.M_ItemID = 15;
+		UItemBaseStruct::GetTextureResource(A.M_ItemID, A.ItemTexturePath);
 		A.WeaponType = EWeaponType::MainWeapon;
 		A.WeaponLevel = 1;
 		A.BagID = TEXT("0");
 
+		FMainWeaponData B;
+		B.ItemName = FText(FText::FromName(TEXT("CatShield")));
+		B.M_ItemID = 17;
+		B.WeaponLevel = 4;
+		UItemBaseStruct::GetTextureResource(B.M_ItemID, B.ItemTexturePath);
+		B.WeaponType = EWeaponType::MainWeapon;
+		B.BagID = TEXT("2");
+
 		FMainWeaponData C;
 		C.ItemName = FText(FText::FromName(TEXT("CatGun")));
-		C.M_ItemID = 4;
-		UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
+		C.M_ItemID = 16;
+		UItemBaseStruct::GetTextureResource(C.M_ItemID, C.ItemTexturePath);
 		C.WeaponType = EWeaponType::MainWeapon;
 		C.WeaponLevel = 2;
 		C.BagID = TEXT("1");
 
-		FMainWeaponData B;
-		B.ItemName = FText(FText::FromName(TEXT("CatShield")));
-		B.M_ItemID = 3;
-		B.WeaponLevel = 4;
-		UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
-		B.WeaponType = EWeaponType::MainWeapon;
-		B.BagID = TEXT("2");
-
 		FMainWeaponData D;
 		D.ItemName = FText(FText::FromName(TEXT("CatShield")));
-		D.M_ItemID = 3;
+		D.M_ItemID = 17;
 		D.WeaponLevel = 4;
-		UItemBaseStruct::GetTextureResource(3, D.ItemTexturePath);
+		UItemBaseStruct::GetTextureResource(D.M_ItemID, D.ItemTexturePath);
 		D.WeaponType = EWeaponType::MainWeapon;
 		D.BagID = TEXT("3");
 
 		FMainWeaponData E;
 		E.ItemName = FText(FText::FromName(TEXT("CatSword")));
-		E.M_ItemID = 2;
-		UItemBaseStruct::GetTextureResource(2, E.ItemTexturePath);
+		E.M_ItemID = 15;
+		UItemBaseStruct::GetTextureResource(E.M_ItemID, E.ItemTexturePath);
 		E.WeaponType = EWeaponType::MainWeapon;
 		E.WeaponLevel = 1;
 		E.StarsLevel = 2;
