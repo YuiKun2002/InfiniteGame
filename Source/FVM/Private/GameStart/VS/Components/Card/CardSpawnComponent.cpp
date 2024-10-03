@@ -139,7 +139,7 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	/*
+	
 
 	//游戏暂停则不在生产
 	if (this->CurSpawnCardActor->GamePause())
@@ -152,6 +152,7 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	//卡片生命值不为0
 	if (this->CurSpawnCardActor->GetCurrentHP() > 0.f)
 	{
+		/*
 		//自动生长时间计时
 		if (this->M_SpawnCondition.M_CurrentCardIsWeekUp)
 		{
@@ -188,11 +189,15 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		//生长模式关闭状态
 		if (!this->InWeekUp)
 		{
-			this->SetAttackModEnabled(true);
+
 		}
+
+		*/	
+
+		this->SetAttackModEnabled(true);
 	}
 
-	*/
+	
 }
 
 void UCardSpawnComponent::OnAnimationPlayEnd()
