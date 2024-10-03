@@ -55,10 +55,41 @@ void UMouseViewEditorRoundNodeGrid::GenerateNewMouse()
 
 	if (bIsGen && !this->GameMapUI_MouseViewEditor->bEnableMouseNodeRemove)
 	{
+		//获取全部老鼠列表
+		FMouseConfig& MouseRef = this->GameMapUI_MouseViewEditor->GetMouseTab()->GetConfigRef();
+		//赋予ID号
+		int32* ID = MouseRef.AllMouseListMap.Find(this->MouseConfigNode.CurMouseName);
+		FString TargetName = FString();
+		if (ID)
+		{
+			TargetName = FString::FromInt(*ID);
+			MouseRef.AllMouseKeyListMap.Emplace(*ID, this->MouseConfigNode.CurMouseName);
+			//添加老鼠数量
+			int32* Count = MouseRef.UseMouseKeyListCountMap.Find(*ID);
+			if (Count)
+			{
+				MouseRef.UseMouseKeyListCountMap.Emplace(*ID, (*Count + 1));
+			}
+		}
+		else {
+			//获取可用ID
+			int32 NewID = 0;
+			if (MouseRef.ValidKeyID.Num())
+			{
+				NewID = MouseRef.ValidKeyID[0];
+				MouseRef.ValidKeyID.RemoveAtSwap(0);
+			}
+			else {
+				NewID = MouseRef.AllMouseListMap.Num();
+			}
+			MouseRef.AllMouseListMap.Emplace(this->MouseConfigNode.CurMouseName, NewID);
+			MouseRef.AllMouseKeyListMap.Emplace(NewID, this->MouseConfigNode.CurMouseName);
+			MouseRef.UseMouseKeyListCountMap.Emplace(NewID, 1);
+			TargetName = FString::FromInt(NewID);
+		}
+		this->MouseConfigNode.CurMouseName = TargetName;
 		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
-	}
-	
-	if (this->GameMapUI_MouseViewEditor->bEnableMouseNodeRemove)
+	}else if (this->GameMapUI_MouseViewEditor->bEnableMouseNodeRemove)
 	{
 		FMouseConfigNode CurSelectNode;
 		CurSelectNode.CurMouseName = TEXT("");
@@ -71,8 +102,9 @@ void UMouseViewEditorRoundNodeGrid::GenerateNewMouse()
 		this->GameMapUI_MouseViewEditor->SelectRoundNodeWithMouseNode(this);
 		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(CurSelectNode);
 	}
-
-	this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
+	else {
+		this->GameMapUI_MouseViewEditor->UpdateCurRoundNodeWidthMouseNode(this->MouseConfigNode);
+	}
 }
 
 void UMouseViewEditorRoundNodeGrid::InitEditorRoundNodeGrid(const int32& Row, const int32& Col, UGameMapUI_MouseViewEditor* GameMapUIMouseViewEditor)
@@ -146,10 +178,20 @@ void UMouseViewEditorRoundNodeGrid::UpdateView()
 			return;
 		}
 
+		FMouseConfig& Configref = this->GameMapUI_MouseViewEditor->GetMouseTab()->GetConfigRef();
+
+		FString* FindName = Configref.AllMouseKeyListMap.Find(FCString::Atoi(*CurMouseNode.CurMouseName));
+		if (!FindName)
+		{
+			return;
+		}
+
 		//获取全部老鼠的数据表
 		UDataTable* const CurAllMouseDataTable = this->GameMapUI_MouseViewEditor->GameMapUI_MouseTab->GetMouseData();
 		//得到老鼠数据
-		FMouse_Data* const CurMouseData = CurAllMouseDataTable->FindRow<FMouse_Data>(FName(FString(CurMouseNode.CurMouseName)), TEXT("AllMouseData"));
+		FMouse_Data* const CurMouseData = CurAllMouseDataTable->FindRow<FMouse_Data>(FName(FString(
+			*FindName
+		)), TEXT("AllMouseData"));
 		if (CurMouseData)
 		{
 			//设置图像显示

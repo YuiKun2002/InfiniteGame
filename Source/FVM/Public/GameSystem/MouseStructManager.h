@@ -390,6 +390,12 @@ public:
 	//所有老鼠IDKey集合
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int32, FString> AllMouseKeyListMap;
+	//使用的老鼠数量
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, int32> UseMouseKeyListCountMap;
+	//有效的Key
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> ValidKeyID;
 };
 
 

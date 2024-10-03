@@ -490,7 +490,7 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 			FMouseConfig& CurMouseConfig = this->GetGameMapUIMouseTab()->GetConfigRef();
 
 			//覆写当前节点的老鼠
-			CurMouseConfig.CurRoundConfig[
+			FMouseConfigNode& ConfigNode = CurMouseConfig.CurRoundConfig[
 				this->GetCurRoundIndex() //回合
 			].CurNode[
 				this->GetCurRoundNodeIndex()//回合节点
@@ -498,7 +498,32 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 				this->MouseViewEditorRoundNodeGrid->ColIndex //通过列得到时间节点【x轴】
 			].CurMouseNode[
 				this->MouseViewEditorRoundNodeGrid->RowIndex//通过行得到老鼠节点【Y轴】
-			] = NewNode;
+			];
+
+				//判断之前是否有数据
+				if (!ConfigNode.CurMouseName.Equals(TEXT("")))
+				{
+					//添加老鼠数量
+					int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
+					int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
+					if (Count)
+					{
+						int32 TCount = (*Count - 1);
+						if (TCount <= 0)
+						{
+							CurMouseConfig.ValidKeyID.Emplace(ID);
+							CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
+							CurMouseConfig.AllMouseKeyListMap.Remove(ID);
+							CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
+							
+						}
+						else {
+							CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+						}
+					}
+				}
+
+				ConfigNode = NewNode;
 		}
 
 		this->MouseViewEditorRoundNodeGrid->MouseConfigNode = NewNode;

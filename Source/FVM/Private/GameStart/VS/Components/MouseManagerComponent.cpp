@@ -387,7 +387,7 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 					CreateWidget<UUI_MouseRoundUpTip>(MouseManagerComponent->GetWorld(),
 						LoadClass<UUI_MouseRoundUpTip>(0,
 							TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/UI_MouseRoundUpTips.UI_MouseRoundUpTips_C'")
-							));
+						));
 
 				bool bRe = false;
 				if (RoundConfig.RoundKey.KeyName.Equals(TEXT("")))
@@ -706,7 +706,7 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 	Trans.SetLocation(FVector(2000.f, 0.f, 0.f));
 	AMouseActor* CurNewMouse = Comp->GetOwner()->GetWorld()->SpawnActor<AMouseActor>(
 		UGameSystemFunction::LoadRes(MouseClass), Trans
-		);
+	);
 
 	if (IsValid(CurNewMouse))
 	{
@@ -809,7 +809,7 @@ bool UMouseSpawnManager::MakeNewMouseByName(UDataTable* MouseDataTable, FString 
 
 			AMouseActor* CurNewMouse = AGameMapInstance::GetGameMapInstance()->GetWorld()->SpawnActor<AMouseActor>(
 				Cast<UClass>(CurData.ItemTarget_ActorFilePath.TryLoad()), Trans
-				);
+			);
 
 			if (IsValid(CurNewMouse))
 			{
@@ -1023,9 +1023,13 @@ const UMouseTimeManager* const UMouseManagerComponent::GetMouseTimeManager()
 
 bool UMouseManagerComponent::GetMousePathByName(const FString& MouseName, FString& OutMousePath, FMouseBase& OutData)
 {
+	const FMouseConfig& CurConfig = this->M_UMouseStructManager->GetMouseConfig();
+	
+	FString CurName = *CurConfig.AllMouseKeyListMap.Find(FCString::Atoi(*MouseName));
+
 	for (const auto& Cur : this->AllMouseData)
 	{
-		if (Cur.M_Mouse.M_MouseName.Equals(MouseName))
+		if (Cur.M_Mouse.M_MouseName.Equals(CurName))
 		{
 			OutMousePath = Cur.M_Mouse.ItemTarget_ActorFilePath.ToString();
 
@@ -1073,7 +1077,6 @@ void UMouseManagerComponent::OnRoundNodeChangedCallback()
 					//拿到路径并且生成老鼠
 					if (this->GetMousePathByName(Cur.CurMouseName, CurMousePath, MouseData))
 					{
-
 						//当前最新的老鼠
 						AMouseActor* CurMouse = nullptr;
 
@@ -1174,7 +1177,7 @@ void UMouseManagerComponent::InitNextRoundCallBack()
 		this->GetWorld(),
 		LoadClass<UUserWidget>(0,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/UI_MouseRoundTips.UI_MouseRoundTips_C'")
-			));
+		));
 	MouseRoundTip->AddToViewport();
 
 	//更新进度值
@@ -1237,7 +1240,7 @@ void UMouseManagerComponent::ShowMouseUI(int32 Round)
 			this->GetWorld(),
 			LoadClass<UUI_MouseRound>(0,
 				TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/UIMouseRound.UIMouseRound_C'")
-				));
+			));
 
 		this->M_UUI_MouseRound->AddToViewport();
 	}
@@ -1562,7 +1565,7 @@ void UMouseManagerComponent::AddMouse(AMouseActor* _CurMouse, const int32& Row, 
 			if (bInit)
 			{
 				_CurMouse->MouseInit();
-				_CurMouse->GetMouseManager()->CurSpawnRow = Row;	
+				_CurMouse->GetMouseManager()->CurSpawnRow = Row;
 			}
 		}
 	}

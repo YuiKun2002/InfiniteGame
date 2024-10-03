@@ -58,27 +58,8 @@ void UMouseViewSelectMouseItem::Select()
 
 	this->CurSelectMousePanel->CurSelectMouseItem = this;
 
-	//获取全部老鼠列表
-	FMouseConfig& MouseRef = this->CurMouseTab->GetConfigRef();
-
-	//赋予ID号
-	int32* ID = MouseRef.AllMouseListMap.Find(this->MouseData.M_Mouse.M_MouseName);
-
-	FString TargetName = FString();
-	if (ID)
-	{
-		TargetName = FString::FromInt(*ID);
-		MouseRef.AllMouseKeyListMap.Emplace(*ID,this->MouseData.M_Mouse.M_MouseName);	
-	}
-	else {	
-		int32 NewID = MouseRef.AllMouseListMap.Num();
-		MouseRef.AllMouseListMap.Emplace(this->MouseData.M_Mouse.M_MouseName, NewID);
-		MouseRef.AllMouseKeyListMap.Emplace(NewID,this->MouseData.M_Mouse.M_MouseName);	
-		TargetName = FString::FromInt(NewID);
-	}
-
 	FMouseConfigNode NewMouseNode;
-	NewMouseNode.CurMouseName = TargetName;
+	NewMouseNode.CurMouseName = this->MouseData.M_Mouse.M_MouseName;
 	this->CurSelectMousePanel->CurUnifromMouseNodeSetting = NewMouseNode;
 	this->CurSelectMousePanel->OnSelect(NewMouseNode);
 }
