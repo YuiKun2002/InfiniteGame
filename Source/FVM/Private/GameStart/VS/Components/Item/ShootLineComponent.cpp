@@ -64,6 +64,29 @@ void UShootLineComponent::SetMoveEnabled(bool _bMove)
 void UShootLineComponent::SetTargetNode(FTargetNode _FTargetNode)
 {
 	this->M_MoveNode = _FTargetNode;
+	this->SetMoveDirection(this->M_MoveNode.M_EShootDirection);
+}
+
+void UShootLineComponent::InitDirection()
+{
+	if (IsValid(this->M_Owner))
+	{
+		switch (this->M_MoveNode.M_EShootDirection)
+		{
+		case EShootDirection::EUp:
+			this->M_Owner->SetRotation(90.f);
+			break;
+		case EShootDirection::EDown:
+			this->M_Owner->SetRotation(-90.f);
+			break;
+		case EShootDirection::ELeft:
+			this->M_Owner->SetRotation(180.f);
+			break;
+		default:
+			this->M_Owner->SetRotation(0.f);
+			break;
+		}
+	}
 }
 
 const EShootDirection& UShootLineComponent::GetMoveDirection()

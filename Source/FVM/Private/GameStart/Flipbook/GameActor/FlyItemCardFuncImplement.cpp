@@ -137,6 +137,8 @@ void UFlyItemAcrossCardFunc::Execute(
 		return;
 	}
 
+	EShootDirection CurMoveDirection = _Comp->GetMoveDirection();
+
 	if (UFVMGameInstance::GetDebug())
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__,
@@ -200,7 +202,7 @@ void UFlyItemAcrossCardFunc::Execute(
 
 	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	CurFlyItem->SetActorLocation(FVector::ZeroVector);
-	CurFlyItem->ReturnPool();
+
 	////完成生成
 	//AFlyItemActor* Finish_Class = Cast<AFlyItemActor>(
 	//	UGameplayStatics::FinishSpawningActor(_FlyActor,
@@ -212,16 +214,18 @@ void UFlyItemAcrossCardFunc::Execute(
 		_FlyActor->GetComponentByClass(UShootLineComponent::StaticClass())
 	);
 
+	CurFlyItem->ReturnPool();
+
 	if (IsValid(CurSComp))
 	{
-		switch (CurSComp->GetMoveDirection())
+		switch (CurMoveDirection)
 		{
 			//如果是上下或者带有角度的对象  统一右边发射并且统一 位置
 		case EShootDirection::EDown:
 		case EShootDirection::EUp:
 		{
 			//设置旋转
-			_FlyActor->SetRotation(0.f);
+			//_FlyActor->SetRotation(0.f);
 			_FlyActor->SetActorLocation(CardFuncComp->GetCardActor()->GetActorLocation());
 			CurSComp->SetMoveDirection(EShootDirection::ERight);
 		}
@@ -234,7 +238,9 @@ void UFlyItemAcrossCardFunc::Execute(
 			_FlyActor->GetCardActor()->SetRelativeLocation(LocalPos);
 			_FlyActor->GetCardActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));*/
 
-			CurFlyItem->SetRotation(180);
+			_FlyActor->SetRotation(180.f);
+			//_FlyActor->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
+
 			CurSComp->SetMoveDirection(EShootDirection::ELeft);
 		}
 		break;

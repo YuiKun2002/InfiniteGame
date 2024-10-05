@@ -70,6 +70,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTargetNode(FTargetNode _FTargetNode);
 
+	//初始化旋转
+	UFUNCTION(BlueprintCallable)
+	void InitDirection();
+
 	//获取移动方向
 	UFUNCTION(BlueprintCallable)
 	const EShootDirection& GetMoveDirection();

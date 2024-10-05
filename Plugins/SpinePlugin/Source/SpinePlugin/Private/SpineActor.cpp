@@ -57,7 +57,7 @@ UTrackEntry* ASpineActor::GetCurrentAnimationTrackEntry(int32 TrackIndex) const
 
 FRotator ASpineActor::GetRotation() const
 {
-	return this->AnimRenderComp->GetRelativeRotation();
+	return this->PointComp->GetRelativeRotation();
 }
 
 FLinearColor ASpineActor::GetSpineRenderColor() const
@@ -169,11 +169,9 @@ void ASpineActor::InitSpineShow()
 void ASpineActor::SetRotation(float Angle)
 {
 	//设置旋转角度
-	this->AnimRenderComp->SetRelativeRotation(
-		FRotator(
-			Angle,
-			this->AnimRenderComp->GetRelativeRotation().Yaw,
-			this->AnimRenderComp->GetRelativeRotation().Roll
-		)
-	);
+	FTransform Trans = this->PointComp->GetComponentToWorld();
+	FRotationConversionCache a;
+	Trans.SetRotation(a.RotatorToQuat(FRotator(0.f, 0.f, Angle)));
+
+	this->PointComp->SetWorldTransform(Trans);
 }

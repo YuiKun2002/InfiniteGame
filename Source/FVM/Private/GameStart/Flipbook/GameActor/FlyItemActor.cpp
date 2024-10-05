@@ -553,22 +553,38 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	default:; break;
 	}
 
-	//获取指定的组件
-	for (UActorComponent* Comp : _TargetActor->GetComponents())
+	UShootLineComponent* CurSComp = Cast<UShootLineComponent>(
+		_TargetActor->GetComponentByClass(UShootLineComponent::StaticClass())
+	);
+
+	if (IsValid(CurSComp))
 	{
-		if (Cast<UShootLineComponent>(Comp))
+		CurSComp->SetTargetNode(_Node);
+		CurSComp->SetMoveDirection(_Node.M_EShootDirection);
+
+		//如果是浮动模式则不受行限制
+		if (this->M_bFloatMode)
 		{
-			Cast<UShootLineComponent>(Comp)->SetTargetNode(_Node);
-
-			//如果是浮动模式则不受行限制
-			if (this->M_bFloatMode)
-			{
-				_TargetActor->SetFlyConstraintLine(false);
-			}
-
-			break;
+			_TargetActor->SetFlyConstraintLine(false);
 		}
 	}
+
+	////获取指定的组件
+	//for (UActorComponent* Comp : _TargetActor->GetComponents())
+	//{
+	//	if (Cast<UShootLineComponent>(Comp))
+	//	{
+	//		Cast<UShootLineComponent>(Comp)->SetTargetNode(_Node);
+
+	//		//如果是浮动模式则不受行限制
+	//		if (this->M_bFloatMode)
+	//		{
+	//			_TargetActor->SetFlyConstraintLine(false);
+	//		}
+
+	//		break;
+	//	}
+	//}
 }
 
 void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
