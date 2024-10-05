@@ -960,6 +960,11 @@ void AMouseActor::Tick(float DeltaTime)
 		if (!this->M_Buff->GetConstBuff())
 		{
 			this->MoveingUpdate(DeltaTime * this->M_Buff->GetTickRate());
+
+			for (UWaterSceneComponent*& Water : this->WaterComps)
+			{
+				Water->Move(DeltaTime * this->M_Buff->GetTickRate());
+			}
 		}
 	}
 

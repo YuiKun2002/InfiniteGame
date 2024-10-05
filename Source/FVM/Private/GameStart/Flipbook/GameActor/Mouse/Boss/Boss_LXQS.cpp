@@ -57,7 +57,7 @@ void ABoss_LXQS::InMapMeshe(ELineType NewType)
 
 	}
 	else {
-		this->InWaterAnim->SetHiddenInGame(true);
+		//this->InWaterAnim->SetHiddenInGame(true);
 		/*this->GetRenderComponent()->
 			SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0);*/
 		this->M_Proper_Condition.M_CurrentInType = NewType;

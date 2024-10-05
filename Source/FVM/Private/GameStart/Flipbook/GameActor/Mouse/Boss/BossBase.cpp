@@ -441,9 +441,9 @@ int32 ABossBase::GetMouseLevel()
 
 void ABossBase::UpdateBossOpacity(const float& value)
 {
-	float Time = UKismetMathLibrary::Lerp(0.f, 1.f, value);
+	//float Time = UKismetMathLibrary::Lerp(0.f, 1.f, value);
 	//this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), Time);
-	this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Time));
+	//this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Time));
 }
 
 void ABossBase::SpawnMouseByName(const FString& MouseName, int32 Row, int32 Col /*= -1*/)
