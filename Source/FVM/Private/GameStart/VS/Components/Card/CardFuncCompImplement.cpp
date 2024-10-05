@@ -669,14 +669,20 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 
 void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 {
-	//播放爆炸动画
-	UTrackEntry* Track = CardFuncComp->GetCardActor()->SetAnimation(
-		0,
-		this->CardDataTRB.BombAnimName.GetDefaultObject()->GetCategoryName().ToString(),
-		true
-	);
-	BINDANIMATION(Track,CardFuncComp,&UCardFunctionComponent::OnAnimationPlayEnd);
-	CardFuncComp->SetTrackEntry(Track);
+	if (IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
+	{
+		//播放爆炸动画
+		UTrackEntry* Track = CardFuncComp->GetCardActor()->SetAnimation(
+			0,
+			this->CardDataTRB.BombAnimName.GetDefaultObject()->GetCategoryName().ToString(),
+			true
+		);
+		BINDANIMATION(Track, CardFuncComp, &UCardFunctionComponent::OnAnimationPlayEnd);
+		CardFuncComp->SetTrackEntry(Track);
+	}
+	else {
+		CardFuncComp->SetTrackEntry(nullptr);
+	}
 
 	//actor对象加载
 	UClass* Obj = UGameSystemFunction::LoadRes(this->CardDataTRB.OtherShow);
@@ -695,6 +701,11 @@ void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 			CardDataTRB.BombAudioName,
 			TEXT("ItemAudio")
 		);
+	}
+
+	if (!IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
+	{
+		CardFuncComp->OnAnimationPlayEnd(nullptr);
 	}
 }
 
