@@ -12,6 +12,7 @@
 #include "SpineSkeletonAnimationComponent.h"
 #include "GameSystem/Item/Card/CardBaseStruct.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
+#include "GameStart/VS/Components/Alien/WaterSceneComponent.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "MouseActor.generated.h"
 
@@ -232,9 +233,6 @@ public:
 	//老鼠的位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* M_MousePosition = nullptr;
-	//老鼠入水的动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UFlipbookBaseComponent* InWaterAnim = nullptr;
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)
@@ -460,7 +458,9 @@ public:
 	//添加老鼠检测，卡片
 	UFUNCTION(BlueprintCallable)
 	void AddAttackCardUpdate();
-
+	//添加水组件
+	UFUNCTION(BlueprintCallable)
+	void AddWaterComponent(UWaterSceneComponent* WaterComp);
 public:
 	//老鼠目前的行为
 
@@ -578,4 +578,7 @@ protected:
 	//入水开启或者关闭
 	UPROPERTY()
 	bool bInWaterAnimState = true;
+	//水动画
+	UPROPERTY()
+	TArray<UWaterSceneComponent*> WaterComps;
 };

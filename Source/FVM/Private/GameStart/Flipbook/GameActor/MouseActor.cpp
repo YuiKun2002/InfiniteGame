@@ -42,11 +42,8 @@ void AMouseActor::MouseTick(const float& DeltaTime) {}
 AMouseActor::AMouseActor()
 {
 	this->M_MousePosition = CreateDefaultSubobject<USceneComponent>("MouseTargetPositionComp");
-	this->InWaterAnim = CreateDefaultSubobject<UFlipbookBaseComponent>("InWaterAnimComp");
-
 	//设置依附
 	this->M_MousePosition->SetupAttachment(this->GetPointComponent(), TEXT("MouseTargetLocationComp"));
-	this->InWaterAnim->SetupAttachment(this->GetRenderComponent());
 }
 
 UMouseManagerComponent* AMouseActor::GetMouseManager()
@@ -678,11 +675,18 @@ void AMouseActor::ForceSetWaterAnimShow(ELineType CurLineType)
 		if (this->M_Proper_Condition.M_CurrentInType == ELineType::OnGround)
 		{
 			//显示入水动画
-			this->InWaterAnim->SetHiddenInGame(false);
-			this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1.f));
+			//this->InWaterAnim->SetHiddenInGame(false);
+			//this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1.f));
+
+
+			for (UWaterSceneComponent*& Water : this->WaterComps)
+			{
+				Water->SpawnWater();
+			}
+
 			//设置透明度
-			this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("Range")),
-				this->MouseInWaterRate);
+			//this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("Range")),
+			//	this->MouseInWaterRate);
 		}
 	}
 	else {
@@ -690,8 +694,14 @@ void AMouseActor::ForceSetWaterAnimShow(ELineType CurLineType)
 		if (CurLineType != ELineType::OnWater && this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater)
 		{
 			//显示入水动画
-			this->InWaterAnim->SetHiddenInGame(true);
-			this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+			//this->InWaterAnim->SetHiddenInGame(true);
+			//this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+
+			for (UWaterSceneComponent*& Water : this->WaterComps)
+			{
+				Water->End();
+			}
+
 			//设置透明度
 			this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0);
 		}
@@ -848,6 +858,11 @@ void AMouseActor::AddAttackCardUpdate()
 			this->SetbIsAttack(false);
 		}
 	}
+}
+
+void AMouseActor::AddWaterComponent(UWaterSceneComponent* WaterComp)
+{
+	this->WaterComps.Emplace(WaterComp);
 }
 
 void AMouseActor::SetMouseMoveOtherLineFunc(FLine NewLine)
@@ -1020,9 +1035,6 @@ void AMouseActor::BeginPlay()
 
 	//移动
 	this->MoveStart();
-	//隐藏入水动画
-	this->InWaterAnim->SetHiddenInGame(true);
-
 
 	//绑定死亡动画播放结束
 	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
@@ -1119,8 +1131,13 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 		if (this->M_Proper_Condition.M_CurrentInType == ELineType::OnGround)
 		{
 			//显示入水动画
-			this->InWaterAnim->SetHiddenInGame(false);
-			this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+			//this->InWaterAnim->SetHiddenInGame(false);
+			//this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+
+			for (UWaterSceneComponent*& Water : this->WaterComps)
+			{
+				Water->SpawnWater();
+			}
 
 			this->M_Proper_Condition.M_CurrentInType = ELineType::OnWater;
 			//得到z轴位置
@@ -1139,7 +1156,7 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 					Location.Z = TargetZ;
 					Cast<AMouseActor>(CurMouse)->SetActorLocation(Location);
 
-					Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, time));
+					//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, time));
 
 					Cast<AMouseActor>(CurMouse)->GetRenderComponent()->
 						SetScalarParameterValueOnMaterials(FName(TEXT("Opacity")), 0.2f);
@@ -1158,8 +1175,13 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						Cur->SetActorLocation(Location);
 						Cur->GetRenderComponent()->
 							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Cur->MouseInWaterRate);
-						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1));
-						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(false);
+						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1));
+						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(false);
+
+						for (UWaterSceneComponent*& Water : Cast<AMouseActor>(CurMouse)->WaterComps)
+						{
+							Water->SpawnWater();
+						}
 					}
 					else {
 						FVector Location = Cast<AMouseActor>(CurMouse)->GetActorLocation();
@@ -1167,8 +1189,13 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						Cur->SetActorLocation(Location);
 						Cur->GetRenderComponent()->
 							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0.f);
-						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
-						Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
+						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
+						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
+
+						for (UWaterSceneComponent*& Water : Cast<AMouseActor>(CurMouse)->WaterComps)
+						{
+							Water->End();
+						}
 					}
 					}
 					);
@@ -1180,7 +1207,12 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 		if (CurLineType != ELineType::OnWater && this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater)
 		{
 
-			this->InWaterAnim->SetHiddenInGame(true);
+			//this->InWaterAnim->SetHiddenInGame(true);
+
+			for (UWaterSceneComponent*& Water : this->WaterComps)
+			{
+				Water->End();
+			}
 
 			this->M_Proper_Condition.M_CurrentInType = CurLineType;
 
@@ -1199,7 +1231,12 @@ void AMouseActor::SetRenderLayer(int32 _Layer)
 {
 	Super::SetRenderLayer(_Layer + 19);
 
-	this->InWaterAnim->SetTranslucency(_Layer + 20);
+	//this->InWaterAnim->SetTranslucency(_Layer + 20);
+
+	for (UWaterSceneComponent*& Water : this->WaterComps)
+	{
+		Water->RenderLayer(_Layer + 19);
+	}
 }
 
 void AMouseActor::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime)
