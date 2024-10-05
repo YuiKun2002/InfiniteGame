@@ -416,7 +416,7 @@ void UGameMapUI_MapViewEditor::UpdateWiewIndex(const int32& Row, const int32& Co
 
 void UGameMapUI_MapViewEditor::UpdateNewRowAndCol(int32 NewRow, int32 NewCol, FVector2D FirstGridLocation)
 {
-	if (NewRow < 0 || NewCol < 0 || NewRow > 12 || NewCol > 12)
+	if (NewRow < 0 || NewCol < 0 || NewRow > 20 || NewCol > 20)
 	{
 		return;
 	}
