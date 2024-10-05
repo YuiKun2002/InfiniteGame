@@ -228,12 +228,13 @@ void UFlyItemAcrossCardFunc::Execute(
 		break;
 		case EShootDirection::ELeft:
 		{
-			//FVector LocalPos = _FlyActor->GetMyActor()->GetRelativeLocation();
-			//LocalPos.Y *= -1.f;
+			/*FVector LocalPos = _FlyActor->GetCardActor()->GetRelativeLocation();
+			LocalPos.Y *= -1.f;
 
-			//_FlyActor->GetMyActor()->SetRelativeLocation(LocalPos);
-			//_FlyActor->GetMyActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
+			_FlyActor->GetCardActor()->SetRelativeLocation(LocalPos);
+			_FlyActor->GetCardActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));*/
 
+			CurFlyItem->SetRotation(180);
 			CurSComp->SetMoveDirection(EShootDirection::ELeft);
 		}
 		break;
