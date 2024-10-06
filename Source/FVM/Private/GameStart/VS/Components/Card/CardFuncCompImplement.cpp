@@ -437,43 +437,44 @@ void UCardFunctionBombBase::CreateBombGridExtension(
 	TArray<AMapMouseMesheManager*> MapMouseMeshes;
 	
 	//获取当前网格
-	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, LineMax.Col));
+	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, Line.Col));
 
 	//获取Top网格
 	int32 TopExtension = Line.Row - GridExtension.Top >= 0 ? Line.Row - GridExtension.Top : 0;
 	for (int32 i = Line.Row - 1; i >= TopExtension; i--)
 	{
-		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, LineMax.Col));
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
 	}
 
 	//获取Bottom网格
 	int32 BottomExtension = Line.Row + GridExtension.Bottom < LineMax.Row ? Line.Row + GridExtension.Bottom : LineMax.Row - 1;
-	for (int32 i = Line.Row + 1; i < BottomExtension; i++)
+	for (int32 i = Line.Row + 1; i <= BottomExtension; i++)
 	{
-		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, LineMax.Col));
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
 	}
 
 	//获取Right网格
 	int32 RightExtension = Line.Col + GridExtension.Right < LineMax.Col ? Line.Col + GridExtension.Right : LineMax.Col - 1;
-	for (int32 i = Line.Col + 1; i < RightExtension; i++)
+	for (int32 i = Line.Col + 1; i <= RightExtension; i++)
 	{
-		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, i));
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
 	}
 
 	//获取Left网格
 	int32 LeftExtension = Line.Col - GridExtension.Left >= 0 ? Line.Col - GridExtension.Left : 0;
 	for (int32 i = Line.Col - 1; i >= LeftExtension; i--)
 	{
-		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, i));
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
 	}
 
 	//加载动画资源
-	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
+	this->ResourceLoad(MapMouseMeshes, CardFuncComp);
 
 	//遍历全部网格
-	for (AMapMouseMesheManager* Meshe : MapMouseMeshes)
+	for (AMapMouseMesheManager*& Meshe : MapMouseMeshes)
 	{
-		for (auto& Mouses : Meshe->GetCurMouse())
+		TMap<FString, AMouseActor*> Mouses = Meshe->GetCurMouseCopy();
+		for (auto& Mouses : Mouses)
 		{
 			bool bResult = false;
 			for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
