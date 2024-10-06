@@ -196,6 +196,18 @@ public:
 	virtual bool OnAnimPlayEnd(class UCardFunctionComponent* CardFuncComp)  override;
 };
 
+//格子爆炸基础功能
+UCLASS(BlueprintType, Blueprintable)
+class FVM_API UCardFunctionBombGridBase : public UCardFunctionBombBase
+{
+	GENERATED_BODY()
+public:
+	//生成对象
+	virtual UCardFunctionBase* MakeNewClass() override;
+	//动画播放完毕
+	virtual bool OnAnimPlayEnd(class UCardFunctionComponent* CardFuncComp)  override;
+};
+
 //触碰爆炸功能
 UCLASS(BlueprintType, Blueprintable)
 class FVM_API UCardFunctionOverlapBomb : public UCardFunctionBombBase

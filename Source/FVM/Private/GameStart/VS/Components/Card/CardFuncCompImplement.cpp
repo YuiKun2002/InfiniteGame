@@ -759,7 +759,22 @@ bool UCardFunctionBombLine::OnAnimPlayEnd(class UCardFunctionComponent* CardFunc
 	return true;
 }
 
+UCardFunctionBase* UCardFunctionBombGridBase::MakeNewClass()
+{
+	return NewObject<UCardFunctionBombGridBase>();
+}
 
+bool UCardFunctionBombGridBase::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncComp)
+{
+	if (this->bBomb)
+	{
+		return false;
+	}
+
+	this->CreateBombLine(CardFuncComp, false);
+
+	return true;
+}
 
 UCardFunctionBase* UCardFunctionOverlapBomb::MakeNewClass()
 {
