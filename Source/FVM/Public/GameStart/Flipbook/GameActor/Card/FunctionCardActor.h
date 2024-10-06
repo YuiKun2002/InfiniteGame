@@ -99,7 +99,7 @@ class FVM_API AFunctionActor : public AActor
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnInit(class AFunctionCardActor* CurCardActor);
+	void OnInit(class AFunctionCardActor* CurCardActor,const TArray<class AMapMouseMesheManager*>& MouseMesheManagers);
 };
 
 

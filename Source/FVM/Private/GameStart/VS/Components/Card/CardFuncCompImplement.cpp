@@ -225,7 +225,8 @@ void UCardFunctionBombBase::CreateBomb(UCardFunctionComponent* CardFuncComp, boo
 {
 	this->bBomb = true;
 
-	this->ResourceLoad(CardFuncComp);
+	TArray<AMapMouseMesheManager*> MapMouseMeshes;
+	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
 
 	TArray<FHitResult> Hits;
 	for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
@@ -325,7 +326,8 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 	//防止多出执行
 	this->bBomb = true;
 
-	this->ResourceLoad(CardFuncComp);
+	TArray<AMapMouseMesheManager*> MapMouseMeshes;
+	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
 
 	FLine CurLine = CardFuncComp->GetCardActor()->GetLine();
 
@@ -421,120 +423,182 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 	}
 }
 
-//UMesheControllComponent* CurComp = AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent;
+void UCardFunctionBombBase::CreateBombGridExtension(
+	const FLine& Line,
+	const FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
+	UCardFunctionComponent* CardFuncComp,
+	bool bCollision
+)
+{
+	this->bBomb = true;
+	//网格组件
+	UMesheControllComponent* MesheComp = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
+	FLine LineMax = MesheComp->GetMapMeshRowAndCol();
+	TArray<AMapMouseMesheManager*> MapMouseMeshes;
+	
+	//获取当前网格
+	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, LineMax.Col));
 
-//FVector CurLocation = CurComp->GetMapMeshLocation(CurLine.Row, 0);
-//CurLocation = CurLocation + FVector(0.f, -25.f, 0.f);
+	//获取Top网格
+	int32 TopExtension = Line.Row - GridExtension.Top >= 0 ? Line.Row - GridExtension.Top : 0;
+	for (int32 i = Line.Row - 1; i >= TopExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, LineMax.Col));
+	}
 
-//FVector TargetLocation = CurComp->GetMapMeshLocation(CurLine.Row,
-//	CurComp->GetMapMeshRowAndCol().Col - 1
-//);
-//TargetLocation = TargetLocation + FVector(0.f, 25.f, 0.f);
+	//获取Bottom网格
+	int32 BottomExtension = Line.Row + GridExtension.Bottom < LineMax.Row ? Line.Row + GridExtension.Bottom : LineMax.Row - 1;
+	for (int32 i = Line.Row + 1; i < BottomExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, LineMax.Col));
+	}
+
+	//获取Right网格
+	int32 RightExtension = Line.Col + GridExtension.Right < LineMax.Col ? Line.Col + GridExtension.Right : LineMax.Col - 1;
+	for (int32 i = Line.Col + 1; i < RightExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, i));
+	}
+
+	//获取Left网格
+	int32 LeftExtension = Line.Col - GridExtension.Left >= 0 ? Line.Col - GridExtension.Left : 0;
+	for (int32 i = Line.Col - 1; i >= LeftExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(LineMax.Row, i));
+	}
+
+	//加载动画资源
+	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
+
+	//遍历全部网格
+	for (AMapMouseMesheManager* Meshe : MapMouseMeshes)
+	{
+		for (auto& Mouses : Meshe->GetCurMouse())
+		{
+			bool bResult = false;
+			for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
+			{
+				switch (MouseCollisionType)
+				{
+				case EMouseCollisionType::MouseGround:
+					if (Mouses.Value->GetMouseLineType() == ELineType::OnGround)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseSky:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Sky)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseUnder:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Underground)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseActor:
+				{
+					bResult = true;
+				}
+				break;
+				}
+			}
+
+			if (!bResult)
+			{
+				continue;
+			}
+
+			AMouseActor* MouseAc = Mouses.Value;
+
+			//默认结果  true
+			bResult = true;
+			//是否约束行
+			if (this->CardDataTRB.bConstLine)
+			{
+				if (IsValid(MouseAc) && MouseAc->GetMouseLine().Row != CardFuncComp->GetCardActor()->GetLine().Row)
+				{
+					bResult = false;
+				}
+			}
+
+			//结果确定
+			if (bResult)
+			{
+				//查询秒杀类型
+				bool bKill = false;
+				for (const EMouseTag& CurTag : this->CardDataTRB.MouseTag)
+				{
+					if (MouseAc->GetMouseTag() == CurTag)
+					{
+						bKill = true;
+						break;
+					}
+				}
 
 
-//for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
-//{
-//	TArray<TEnumAsByte<EObjectTypeQuery>>  ObjTypes;
-//	ObjTypes.Emplace(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn)
-//	);
+				float BombATK = this->CardDataTRB.BombATK;
+				float BombATKRate = this->CardDataTRB.BombATKRate;
+				float TargetATK =
+					BombATK + BombATK * BombATKRate *
+					CardFuncComp->GetCardActor()->GetCardGrade(
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+					) *
+					0.1f;
 
-//	UGameSystemFunction::AddLineTranceMulti(
-//		CardFuncComp->GetCardActor()->GetWorld(),
-//		CurLocation, TargetLocation, ObjTypes, CardFuncComp,
-//		[&](UObject* Obj, AActor* Actor) {
-//			AMouseActor* CurMouse = Cast<AMouseActor>(Actor);
-//			if (IsValid(CurMouse) && CurMouse->GetCurrentHP() > 0.f)
-//			{
+				if (bKill)
+				{
+					TargetATK = MouseAc->GetTotalHP();
+				}
 
-//				ELineType CurLineType = CurMouse->GetMouseLineType();
+				if (UGameSystemFunction::HitMouse(
+					CardFuncComp->GetCardActor(),
+					TargetATK,
+					MouseAc,
+					this->CardDataTRB.Buffs,
+					this->CardDataTRB.AttackType
+				)
+					)
+				{
+					if (UFVMGameInstance::GetDebug())
+					{
+						UGameSystemFunction::FVMLog(__FUNCTION__,
+							TEXT("基于此范围所有的老鼠造成[爆炸伤害：") +
+							FString::SanitizeFloat(TargetATK) +
+							TEXT("]")
+						);
+					}
 
-//				switch (MouseCollisionType)
-//				{
-//				case EMouseCollisionType::MouseGround:
-//					if (CurLineType != ELineType::OnGround)
-//					{
-//						return;
-//					}
-//					break;
-//				case EMouseCollisionType::MouseSky:
-//					if (CurLineType != ELineType::Sky)
-//					{
-//						return;
-//					}
-//					break;
-//				case EMouseCollisionType::MouseUnder:
-//					if (CurLineType != ELineType::OnGround)
-//					{
-//						return;
-//					}
-//					break;
-//				//任何对象都可以
-//				default:break;
-//				}
+					//当前老鼠血量为0并且生产数量大于0
+					this->SpawnFlame(MouseAc, CardFuncComp);
+				}
+			}
+		}
+	}
 
-//				if (this->CardDataTRB.bConstLine)
-//				{
-//					if (CurMouse->GetMouseLine().Row != CardFuncComp->GetCardActor()->GetLine().Row)
-//					{
-//						return;
-//					}
-//				}
+	if (!bCollision)
+	{
+		if (IsValid(CardFuncComp->GetCardActor()->GetOverlapBoxComponent()))
+		{
+			CardFuncComp->GetCardActor()->GetOverlapBoxComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
 
-//				bool bKill = false;
-//				for (const EMouseTag& CurTag : this->CardDataTRB.MouseTag)
-//				{
-//					if (CurMouse->GetMouseTag() == CurTag)
-//					{
-//						bKill = true;
-//						break;
-//					}
-//				}
-
-//				FItem_Buff CurBuff = this->CardDataTRB.Buffs;
-//				float BombATK = this->CardDataTRB.BombATK;
-//				float BombATKRate = this->CardDataTRB.BombATKRate;
-//				float TargetATK =
-//					BombATK + BombATK * BombATKRate *
-//					CardFuncComp->GetCardActor()->GetCardGrade(CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName) *
-//					0.1f;
-
-//				if (bKill)
-//				{
-//					TargetATK = CurMouse->GetTotalHP();
-//				}
-
-//				if (UGameSystemFunction::HitMouse(
-//					CardFuncComp->GetCardActor(),
-//					TargetATK,
-//					CurMouse,
-//					CurBuff,
-//					this->CardDataTRB.AttackType
-//				)
-//					)
-//				{
-//					if (UFVMGameInstance::GetDebug())
-//					{
-//						UGameSystemFunction::FVMLog(__FUNCTION__,
-//							TEXT("基于此范围所有的老鼠造成[爆炸伤害：") +
-//							FString::SanitizeFloat(TargetATK) +
-//							TEXT("]")
-//						);
-//					}
-
-//					//当前老鼠血量为0并且生产数量大于0
-//					this->SpawnFlame(CurMouse, CardFuncComp);
-//				}
-//			}
-//		}
-//	);
-//}
+		if (IsValid(CardFuncComp->GetCardActor()->GetBoxComponent()))
+		{
+			CardFuncComp->GetCardActor()->GetBoxComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
+	}
+}
 
 void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncComp)
 {
 
 	this->bBomb = true;
 
-	this->ResourceLoad(CardFuncComp);
+	TArray<AMapMouseMesheManager*> MouseMesheManagers;
+	this->ResourceLoad(MouseMesheManagers,CardFuncComp);
 
 	if (IsValid(this->CurCheckMouse) && this->CurCheckMouse->GetCurrentHP() > 0.f)
 	{
@@ -667,7 +731,7 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 	}
 }
 
-void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
+void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
 {
 	if (IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
 	{
@@ -691,7 +755,7 @@ void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 		//生成对象
 		AFunctionActor* CurFunc = CardFuncComp->GetCardActor()->GetWorld()->
 			SpawnActor<AFunctionActor>(Obj);
-		CurFunc->OnInit(CardFuncComp->GetCardActor());
+		CurFunc->OnInit(CardFuncComp->GetCardActor(),MouseMesheManagers);
 	}
 
 	//播放爆炸音效
@@ -709,10 +773,10 @@ void UCardFunctionBombBase::ResourceLoad(UCardFunctionComponent* CardFuncComp)
 	}
 }
 
-
-
-
-
+const FCardFunctionBombImplementTRB& UCardFunctionBombBase::GetCardDaraTRB() const
+{
+	return this->CardDataTRB;
+}
 
 UCardFunctionBase* UCardFunctionBomb::MakeNewClass()
 {
@@ -759,19 +823,22 @@ bool UCardFunctionBombLine::OnAnimPlayEnd(class UCardFunctionComponent* CardFunc
 	return true;
 }
 
-UCardFunctionBase* UCardFunctionBombGridBase::MakeNewClass()
+UCardFunctionBase* UCardFunctionBombGridExtension::MakeNewClass()
 {
-	return NewObject<UCardFunctionBombGridBase>();
+	return NewObject<UCardFunctionBombGridExtension>();
 }
 
-bool UCardFunctionBombGridBase::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncComp)
+bool UCardFunctionBombGridExtension::OnAnimPlayEnd(class UCardFunctionComponent* CardFuncComp)
 {
 	if (this->bBomb)
 	{
 		return false;
 	}
 
-	this->CreateBombLine(CardFuncComp, false);
+	//卡片线路
+	const FLine& Line = CardFuncComp->GetCardActor()->GetLine();
+	//延展长度
+	this->CreateBombGridExtension(Line, this->GetCardDaraTRB().GridExtensionConfig, CardFuncComp, false);
 
 	return true;
 }
