@@ -473,8 +473,8 @@ void UCardFunctionBombBase::CreateBombGridExtension(
 	//遍历全部网格
 	for (AMapMouseMesheManager*& Meshe : MapMouseMeshes)
 	{
-		TMap<FString, AMouseActor*> Mouses = Meshe->GetCurMouseCopy();
-		for (auto& Mouses : Mouses)
+		TMap<FString, AMouseActor*> MapMouse = Meshe->GetCurMouseCopy();
+		for (const auto& Mouses : MapMouse)
 		{
 			bool bResult = false;
 			for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
@@ -732,7 +732,7 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 	}
 }
 
-void UCardFunctionBombBase::ResourceLoad(TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
+void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
 {
 	if (IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
 	{

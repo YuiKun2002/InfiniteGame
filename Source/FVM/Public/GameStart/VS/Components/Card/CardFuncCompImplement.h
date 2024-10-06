@@ -181,7 +181,7 @@ public:
 	void SpawnFlame(class AMouseActor* CurMouse, UCardFunctionComponent* CardFuncComp);
 	//资产加载
 	UFUNCTION()
-	void ResourceLoad(TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp);
+	void ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp);
 	//获取数据
 	const FCardFunctionBombImplementTRB& GetCardDaraTRB() const;
 private:
