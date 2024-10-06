@@ -731,7 +731,7 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 	}
 }
 
-void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
+void UCardFunctionBombBase::ResourceLoad(TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
 {
 	if (IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
 	{
