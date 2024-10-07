@@ -89,7 +89,7 @@ void UUIMesheWidthMagma::BoxOverlapBeginByAMapMeshe(AActor* _Actor)
 	ACardActor** _Reult = this->M_Card_Data.Find(-1);
 	if (_Reult && IsValid(*_Reult))
 	{
-		if ((*_Reult)->GetCardData().ItemName.EqualTo(MAGMACARDNAME))
+		if ((*_Reult)->GetCardData().ItemName.ToString().Equals(MAGMACARDNAME))
 		{
 			return;
 		}
@@ -188,7 +188,7 @@ void UUIMesheWidthMagma::PlayFinish(ACardActor* NewCard)
 			//设置MapMeshe网格更新
 			this->M_MapMeshUpdate.M_IsbUpdate = true;
 
-			if ((*_Reult)->GetCardData().ItemName.EqualTo(MAGMACARDNAME))
+			if ((*_Reult)->GetCardData().ItemName.ToString().Equals(MAGMACARDNAME))
 			{
 				//优先消耗棉花糖的血量
 				this->M_MapMeshUpdate.AddCardUpdateAt((*_Reult), 0);

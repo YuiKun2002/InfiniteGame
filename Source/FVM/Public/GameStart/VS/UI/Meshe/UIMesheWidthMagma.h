@@ -7,7 +7,7 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "UIMesheWidthMagma.generated.h"
 
-#define MAGMACARDNAME FText(TEXT("冰片"))
+#define MAGMACARDNAME FString(TEXT("冰片"))
 
 class ACardActor;
 

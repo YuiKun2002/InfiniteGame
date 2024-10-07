@@ -126,11 +126,11 @@ bool UVSManagerComponent::CreatePlayer(
 
 				if (UIMeshe->TestID(-1))
 				{
-					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("木盘子"));
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("柠檬片"));
 					UIMeshe->PlayCard(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 						, LoadClass<ACardActor>(0,
-							TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/木盘子.木盘子_C'")
+							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/柠檬片/BP_柠檬片.BP_柠檬片_C'")
 						), CardData, 0, false);
 				}
 			}break;
@@ -147,6 +147,19 @@ bool UVSManagerComponent::CreatePlayer(
 						), CardData, 0, false);
 				}
 			}break;
+			case ELineType::Magma:
+			{
+				if (UIMeshe->TestID(-1))
+				{
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("冰片"));
+					UIMeshe->PlayCard(
+						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
+						, LoadClass<ACardActor>(0,
+							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/冰片/BP_冰片.BP_冰片_C'")
+						), CardData, 0, false);
+				}
+			}
+			break;
 			default:
 			{
 				UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio");
@@ -160,7 +173,7 @@ bool UVSManagerComponent::CreatePlayer(
 
 			//AGamePlayer* PlayerIns = MesheActor->GetWorld()->SpawnActor<AGamePlayer>(LoadClass<AGamePlayer>(0,
 			//	TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C'")));
-		
+
 			//UIMeshe->SetPlayer(PlayerIns);
 			//AGameMapInstance::GetGameMapInstance()->SetPlayer(PlayerName, PlayerIns);
 
