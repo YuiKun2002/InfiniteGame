@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameStart/VS/UI/Meshe/UIMesheWidthMagma.h"
@@ -89,7 +89,7 @@ void UUIMesheWidthMagma::BoxOverlapBeginByAMapMeshe(AActor* _Actor)
 	ACardActor** _Reult = this->M_Card_Data.Find(-1);
 	if (_Reult && IsValid(*_Reult))
 	{
-		if ((*_Reult)->GetCardData().ItemName.ToString().Equals(TEXT("棉花糖")))
+		if ((*_Reult)->GetCardData().ItemName.EqualTo(MAGMACARDNAME))
 		{
 			return;
 		}
@@ -188,7 +188,7 @@ void UUIMesheWidthMagma::PlayFinish(ACardActor* NewCard)
 			//设置MapMeshe网格更新
 			this->M_MapMeshUpdate.M_IsbUpdate = true;
 
-			if ((*_Reult)->GetCardData().ItemName.ToString().Equals(TEXT("棉花糖")))
+			if ((*_Reult)->GetCardData().ItemName.EqualTo(MAGMACARDNAME))
 			{
 				//优先消耗棉花糖的血量
 				this->M_MapMeshUpdate.AddCardUpdateAt((*_Reult), 0);
