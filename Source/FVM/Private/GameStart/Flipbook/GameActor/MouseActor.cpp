@@ -1095,6 +1095,11 @@ void AMouseActor::MouseDeathed()
 
 	/*Spine Tag 老鼠死亡 Spine标记*/
 
+	//销毁水
+	for (UWaterSceneComponent*& Water : this->WaterComps)
+	{
+		Water->Dead();
+	}
 	//释放当前的所有攻击目标
 	this->SetCurrentAttackCard(nullptr);
 	//取消攻击

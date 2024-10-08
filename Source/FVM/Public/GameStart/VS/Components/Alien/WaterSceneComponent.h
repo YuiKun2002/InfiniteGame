@@ -19,6 +19,9 @@ public:
 	//当结束时
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnEnd();
+	//死亡时
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDead();
 	//设置渲染层级
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSetRenderLayer(const int32& Layer);
@@ -47,6 +50,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void End();
+
+	UFUNCTION(BlueprintCallable)
+	void Dead();
 
 protected:
 	// Called when the game starts

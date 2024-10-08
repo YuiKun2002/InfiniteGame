@@ -72,6 +72,15 @@ void UWaterSceneComponent::End()
 	}
 }
 
+void UWaterSceneComponent::Dead()
+{
+	if (IsValid(this->Water))
+	{
+		this->Water->OnDead();
+		this->Water = nullptr;
+	}
+}
+
 // Called when the game starts
 void UWaterSceneComponent::BeginPlay()
 {
