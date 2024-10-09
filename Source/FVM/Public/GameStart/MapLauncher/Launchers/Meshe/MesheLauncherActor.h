@@ -19,29 +19,29 @@ class FVM_API AMesheLauncherActor : public ASpineActor
 public:
 
 	//静态工程方法
-	static AMesheLauncherActor* MakeMesheLauncherActor(UObject* WorldContentObject, UClass* Res, AMapMeshe* MapMeshe, const FLine& Line, const FTransform& Trans);
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	static AMesheLauncherActor* MakeMesheLauncherActor(
+		UObject* WorldContentObject,
+		UClass* Res,
+		AMapMeshe* MapMeshe,
+		const FLine& Line,
+		const FTransform& Trans
+	);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Line")
-		FLine GetLine();
+	FLine GetLine();
 	//当前当前网格卡片数量
 	UFUNCTION(BlueprintCallable, Category = "Card")
-		int32 GetCardNums();
+	int32 GetCardNums();
 
 private:
 	//当前的线路
 	UPROPERTY()
-		FLine CurLine;
+	FLine CurLine;
 	//网格对象
 	UPROPERTY()
-		AMapMeshe* CurMapMeshe = nullptr;
+	AMapMeshe* CurMapMeshe = nullptr;
 	//UI网格对象
 	UPROPERTY()
-		UUI_MapMeshe* CurUI_MapMeshe = nullptr;
+	UUI_MapMeshe* CurUI_MapMeshe = nullptr;
 };

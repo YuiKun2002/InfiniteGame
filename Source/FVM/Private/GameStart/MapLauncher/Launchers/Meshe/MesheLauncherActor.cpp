@@ -24,23 +24,6 @@ AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldC
 	return NewMesheLauncherActor;
 }
 
-void AMesheLauncherActor::BeginPlay()
-{
-	//初始化UI网格
-	this->CurUI_MapMeshe = this->CurMapMeshe->GetUIMapMeshe();
-
-	Super::BeginPlay();
-
-
-}
-
-void AMesheLauncherActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-
-}
-
 FLine AMesheLauncherActor::GetLine()
 {
 	return this->CurLine;
