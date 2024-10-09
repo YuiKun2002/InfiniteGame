@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStart/Flipbook/GameActorFlipbookBase.h"
+#include "SpineActor.h"
 #include "GameStart/VS/UI/UI_MapMeshe.h"
 #include "GameStart/VS/MapMeshe.h"
 #include "MesheLauncherActor.generated.h"
@@ -12,7 +12,7 @@
  * 网格发射器角色对象
  */
 UCLASS()
-class FVM_API AMesheLauncherActor : public AGameActorFlipbookBase
+class FVM_API AMesheLauncherActor : public ASpineActor
 {
 	GENERATED_BODY()
 

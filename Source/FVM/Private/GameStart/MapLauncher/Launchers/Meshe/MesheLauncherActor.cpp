@@ -15,9 +15,9 @@ AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldC
 
 	NewMesheLauncherActor->CurMapMeshe = MapMeshe;
 
-	NewMesheLauncherActor->SetRenderLayer(7000);
+	NewMesheLauncherActor->SetRenderLayer(MapMeshe->GetTranslucency() + 21);
 
-	NewMesheLauncherActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
+	NewMesheLauncherActor->InitSpineShow();
 
 	UGameplayStatics::FinishSpawningActor(NewMesheLauncherActor, Trans);
 
