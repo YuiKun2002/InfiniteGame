@@ -17,6 +17,8 @@ AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldC
 
 	NewMesheLauncherActor->CurMapMeshe = MapMeshe;
 
+	NewMesheLauncherActor->CurUI_MapMeshe = MapMeshe->GetUIMapMeshe();
+
 	NewMesheLauncherActor->SetRenderLayer(MapMeshe->GetTranslucency() + 21);
 
 	NewMesheLauncherActor->InitSpineShow();
