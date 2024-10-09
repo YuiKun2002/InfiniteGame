@@ -60,7 +60,7 @@ void UMeshesLauncherComponent::SetMeshs(const TArray<FLine>& _Lines)
 	}
 }
 
-void UMeshesLauncherComponent::SetAnimationResPath_C(TSoftClassPtr<AGameActorFlipbookBase> _AnimRes)
+void UMeshesLauncherComponent::SetAnimationResPath_C(TSoftClassPtr<ASpineActor> _AnimRes)
 {
 	if (!_AnimRes.Get())
 	{
@@ -79,10 +79,17 @@ void UMeshesLauncherComponent::ApplySetting()
 		FTransform Trans;
 
 		Trans = Meshe.Key->GetTransform();
-		Trans.SetLocation(Trans.GetLocation() + FVector(-0.8f, 0.f, 10.f));
 
 		//生成对象
-		AMesheLauncherActor* CurActor = AMesheLauncherActor::MakeMesheLauncherActor(this->M_Owner->GetWorld(), this->M_AnimRes, Meshe.Key, Meshe.Key->GetLine(), Trans);
+		AMesheLauncherActor* CurActor = AMesheLauncherActor::MakeMesheLauncherActor(
+			this->M_Owner->GetWorld(),
+			this->M_AnimRes,
+			Meshe.Key,
+			Meshe.Key->GetLine(),
+			Trans
+		);
+
+		this->MesheLauncherActors.Emplace(CurActor);
 	}
 
 	this->M_Meshes.Empty();

@@ -9,7 +9,9 @@
 
 AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldContentObject, UClass* Res, AMapMeshe* MapMeshe, const FLine& Line, const FTransform& Trans)
 {
-	AMesheLauncherActor* NewMesheLauncherActor = Cast<AMesheLauncherActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(WorldContentObject, Res, Trans));
+	AMesheLauncherActor* NewMesheLauncherActor = Cast<AMesheLauncherActor>(
+		UGameplayStatics::BeginDeferredActorSpawnFromClass(WorldContentObject, Res, Trans)
+	);
 
 	NewMesheLauncherActor->CurLine = Line;
 
