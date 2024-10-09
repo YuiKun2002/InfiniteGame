@@ -28,7 +28,7 @@ private:
 	UClass* M_AnimRes = nullptr;
 	//动画
 	UPROPERTY()
-	TArray<AMesheLauncherActor*> MesheLauncherActors;
+	TArray<class AMesheLauncherActor*> MesheLauncherActors;
 private:
 	//是否提交申请
 	UPROPERTY()
