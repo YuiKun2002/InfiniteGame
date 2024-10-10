@@ -72,12 +72,12 @@ void AMagicMasterMouse::MouseInit()
 	this->bEnableAttakLine = true;
 	this->bUse = false;
 
-	
+
 	//设置动画
 	UTrackEntry* Track = this->SetAnimation(0,
 		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
-	BINDANIMATION(Track,this,&AMagicMasterMouse::AnimationPlayEnd);
+	BINDANIMATION(Track, this, &AMagicMasterMouse::AnimationPlayEnd);
 	this->SetTrackEntry(Track);
 }
 
@@ -119,7 +119,9 @@ void AMagicMasterMouse::AnimationPlayEnd(UTrackEntry* Track)
 					Cur->SetbIsHurt(true);
 					Cur->BeHit(Cur, CurReplyHp * -1.f, EFlyItemAttackType::Def);
 					//生成加血动画
-					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>();
+					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>(
+						HpAddtionBuffAnim.LoadSynchronous()
+					);
 					CurAnimObj->Init(Cur);
 				}
 			}
