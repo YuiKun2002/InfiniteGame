@@ -84,6 +84,7 @@ void AMagicMasterMouse::MouseInit()
 
 void AMagicMasterMouse::MouseTick(const float& DeltaTime)
 {
+	Super::MouseTick(DeltaTime);
 	if (this->bEnableAttakLine)
 	{
 		this->AddAttackLineFunc(UGameSystemFunction::GetCardCollisionBoxType(this->MECardCollisionType), DeltaTime);
