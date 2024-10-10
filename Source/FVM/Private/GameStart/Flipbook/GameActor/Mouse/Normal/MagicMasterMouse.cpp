@@ -119,9 +119,10 @@ void AMagicMasterMouse::AnimationPlayEnd(UTrackEntry* Track)
 					Cur->SetbIsHurt(true);
 					Cur->BeHit(Cur, CurReplyHp * -1.f, EFlyItemAttackType::Def);
 					//生成加血动画
-					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>(
-						HpAddtionBuffAnim.LoadSynchronous()
-					);
+					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->
+						SpawnActor<AMagicMasterHpAddtionBuff>(
+							HpAddtionBuffAnim.LoadSynchronous()
+						);
 					CurAnimObj->Init(Cur);
 				}
 			}
