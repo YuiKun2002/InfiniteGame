@@ -43,8 +43,7 @@ public:
 	virtual bool BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType) override;
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	UFUNCTION()
-	void AnimationPlayEnd(class UTrackEntry* Track);
+	void AnimationPlayEnd();
 private:
 	//是否启动攻击线
 	bool bEnableAttakLine = true;

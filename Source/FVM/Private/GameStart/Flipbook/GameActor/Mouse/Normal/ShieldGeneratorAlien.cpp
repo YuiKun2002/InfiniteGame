@@ -28,10 +28,8 @@ void AShieldGeneratorAlien::MouseInit()
 
 	//float curTemp = this->fUseWeaponTime - this->GetTotalHP() * 0.005;
 
-	this->MoveStart();
-
 	this->fUseShieldTime_ = this->fUseShieldTime;
-	this->fUseDelay = 2.5f; //curTemp > 3 ? curTemp : 3.f;
+	this->fUseDelay = this->fUseWeaponTime; //curTemp > 3 ? curTemp : 3.f;
 	this->fReplySelfHp_ = this->fReplySelfHp + this->GetTotalHP() * 0.005;
 
 	this->bEnableAttakLine = true;
@@ -41,8 +39,6 @@ void AShieldGeneratorAlien::MouseInit()
 	UTrackEntry* Track = this->SetAnimation(0,
 		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
-	BINDANIMATION(Track, this, &AShieldGeneratorAlien::AnimationPlayEnd);
-	this->SetTrackEntry(Track);
 
 	this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -78,8 +74,7 @@ void AShieldGeneratorAlien::MouseTick(const float& DeltaTime)
 				UTrackEntry* Track = this->SetAnimation(0,
 					this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 					true);
-				BINDANIMATION(Track, this, &AShieldGeneratorAlien::AnimationPlayEnd);
-				this->SetTrackEntry(Track);
+				this->fUseDelay = this->fUseWeaponTime;
 			}
 		}
 	}
@@ -95,8 +90,7 @@ void AShieldGeneratorAlien::MoveingUpdate(float DeltaTime)
 		this->fUseDelay -= DeltaTime;
 	}
 	else {
-		float curTemp = this->fUseWeaponTime - this->GetTotalHP() * 0.005;
-		this->fUseDelay = curTemp > 3 ? curTemp : 3.f;
+		this->fUseDelay = this->fUseWeaponTime;
 		this->MoveStop();
 		this->bEnableAttakLine = false;
 		this->bUse = true;
@@ -105,6 +99,7 @@ void AShieldGeneratorAlien::MoveingUpdate(float DeltaTime)
 			this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
 		);
 		this->SetTrackEntry(nullptr);
+		this->AnimationPlayEnd();
 		return;
 	}
 
@@ -126,12 +121,10 @@ bool AShieldGeneratorAlien::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFl
 				this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				this->BodyComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 				this->CurShieldAnimObj->Destroy();
-
+				this->fUseDelay = this->fUseWeaponTime;
 				UTrackEntry* Track = this->SetAnimation(0,
 					this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 					true);
-				BINDANIMATION(Track, this, &AShieldGeneratorAlien::AnimationPlayEnd);
-				this->SetTrackEntry(Track);
 			}
 
 			return true;
@@ -167,7 +160,7 @@ void AShieldGeneratorAlien::MouseDeathed()
 	}
 }
 
-void AShieldGeneratorAlien::AnimationPlayEnd(class UTrackEntry* Track)
+void AShieldGeneratorAlien::AnimationPlayEnd()
 {
 	if (this->GetCurrentHP() <= 0.f)
 	{
@@ -185,6 +178,11 @@ void AShieldGeneratorAlien::AnimationPlayEnd(class UTrackEntry* Track)
 
 		//停止移动
 		this->MoveStop();
+
+		if (UFVMGameInstance::GetDebug())
+		{
+			this->ShieldComp->SetHiddenInGame(false);
+		}
 
 		//开启护盾
 		this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
