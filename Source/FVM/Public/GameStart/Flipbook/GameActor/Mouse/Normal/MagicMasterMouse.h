@@ -38,11 +38,12 @@ public:
 		TSoftObjectPtr<UPaperFlipbook> AddHPAnim;
 };
 
+//加血动画
 UCLASS()
-class FVM_API AMagicMasterHpAddtionBuff : public AGameActorFlipbookBase {
+class FVM_API AMagicMasterHpAddtionBuff : public ASpineActor {
 	GENERATED_BODY()
 public:
-	void Init(AMouseActor* MouseActor,TSoftObjectPtr<UPaperFlipbook> Anim);
+	void Init(AMouseActor* MouseActor);
 	virtual void Tick(float DeltaTime) override;
 private:
 	UPROPERTY()
@@ -52,23 +53,13 @@ private:
 	float time = 0.f;
 };
 
+
+//治疗外星人
 UCLASS()
-class FVM_API AMagicMasterMouse : public ANormalBase
+class FVM_API AMagicMasterMouse : public ANormalCapsuleBase
 {
 	GENERATED_BODY()
 public:
-	//网格碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* MMesheComponent = nullptr;
-	//身体碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class USphereComponent* MBodyComponent = nullptr;
-	//魔笛动画显示位置
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UFlipbookBaseComponent* WepaonAnimLocation = nullptr;
-	//老鼠动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠")
-		FMagicMasterResourceStruct AnimRes;
 	//使用魔笛武器的冷却时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠")
 		float fUseWeaponTime = 15.f;
@@ -82,28 +73,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠")
 		ECardCollisionType MECardCollisionType = ECardCollisionType::E_CardActor2;
 public:
-	AMagicMasterMouse();
 	//初始化
 	virtual void BeginPlay() override;
 	virtual void MouseInit() override;
-	//更新
-	virtual void Tick(float DeltaTime) override;
 	virtual void MouseTick(const float& DeltaTime) override;
 	//动画播放完毕
-	void OnAnimationPlayEnd();
-	//更新状态
-	void UpdateState();
+	UFUNCTION()
+	void AnimationPlayEnd(class UTrackEntry* Track);
 public:
-	//老鼠开始移动
-	virtual void MoveingBegin() override;
 	//移动逻辑函数
 	virtual void MoveingUpdate(float DeltaTime) override;
-	//当老鼠被命中时受到的伤害数值
-	virtual bool BeHit(UObject* CurHitMouseObj,float HurtValue, EFlyItemAttackType AttackType) override;
-	//老鼠开始攻击
-	virtual void AttackedBegin() override;
-	//老鼠攻击结束
-	virtual void AttackedEnd() override;
 	//当老鼠死亡时
 	virtual void MouseDeathed() override;
 private:
