@@ -642,7 +642,7 @@ bool AMouseActor::AttackCard()
 		//设置当前攻击该卡片的老鼠
 		this->GetCurrentAttackCard()->SetCurrentAttackSelfMouse(this);
 		//播放【啃】BGM
-		UFVMGameInstance::PlayBGM_S_Static(TEXT("Eat"), TEXT("ItemAudio"));
+		//UFVMGameInstance::PlayBGM_S_Static(TEXT("Eat"), TEXT("ItemAudio"));
 		//当卡片死亡时
 		if (this->GetCurrentAttackCard()->UpdateCardState(this->GetCurrentATK(), 0.f))
 		{
