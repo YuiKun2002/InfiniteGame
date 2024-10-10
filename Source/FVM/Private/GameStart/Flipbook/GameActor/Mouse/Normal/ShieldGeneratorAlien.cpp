@@ -36,9 +36,7 @@ void AShieldGeneratorAlien::MouseInit()
 	this->bUse = false;
 
 	//设置动画
-	this->SetAnimation(0,
-		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-		true);
+	this->PlayWalk();
 
 	this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -47,18 +45,14 @@ void AShieldGeneratorAlien::AttackedBegin()
 {
 	Super::AttackedBegin();
 
-	this->SetAnimation(0,
-		this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-		true);
+	this->PlayIdle();
 }
 
 void AShieldGeneratorAlien::MoveingBegin()
 {
 	Super::MoveingBegin();
 
-	this->SetAnimation(0,
-		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-		true);
+	this->PlayWalk();
 }
 
 void AShieldGeneratorAlien::MouseTick(const float& DeltaTime)
@@ -89,9 +83,7 @@ void AShieldGeneratorAlien::MouseTick(const float& DeltaTime)
 				this->bEnableAttakLine = true;
 				this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				this->BodyComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-				UTrackEntry* Track = this->SetAnimation(0,
-					this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true);
+				this->PlayWalk();
 				this->fUseDelay = this->fUseWeaponTime;
 			}
 		}
@@ -112,11 +104,7 @@ void AShieldGeneratorAlien::MoveingUpdate(float DeltaTime)
 		this->MoveStop();
 		this->bEnableAttakLine = false;
 		this->bUse = true;
-		//播放Idle
-		this->SetAnimation(0,
-			this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
-		);
-		this->SetTrackEntry(nullptr);
+		this->PlayIdle();
 		this->AnimationPlayEnd();
 		return;
 	}
@@ -140,9 +128,7 @@ bool AShieldGeneratorAlien::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFl
 				this->BodyComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 				this->CurShieldAnimObj->Destroy();
 				this->fUseDelay = this->fUseWeaponTime;
-				UTrackEntry* Track = this->SetAnimation(0,
-					this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
-					true);
+				this->PlayWalk();
 			}
 
 			return true;
@@ -223,4 +209,28 @@ void AShieldGeneratorAlien::AnimationPlayEnd()
 	}
 
 	this->AddAttackCardUpdate();
+}
+
+void AShieldGeneratorAlien::PlayIdle()
+{
+	if (this->State != 0)
+	{
+		this->State = 0;
+		//播放Idle
+		this->SetAnimation(0,
+			this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+	}
+}
+
+void AShieldGeneratorAlien::PlayWalk()
+{
+	if (this->State != 1)
+	{
+		this->State = 1;
+		//播放Idle
+		this->SetAnimation(0,
+			this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+	}
 }

@@ -47,6 +47,9 @@ public:
 	//动画播放完毕
 	void AnimationPlayEnd();
 private:
+	void PlayIdle();
+	void PlayWalk();
+private:
 	//是否启动攻击线
 	bool bEnableAttakLine = true;
 	//是否处于创建动画状态
@@ -59,4 +62,6 @@ private:
 	//护盾
 	UPROPERTY()
 	ASpineActor* CurShieldAnimObj;
+	//状态
+	int32 State = -1;
 };
