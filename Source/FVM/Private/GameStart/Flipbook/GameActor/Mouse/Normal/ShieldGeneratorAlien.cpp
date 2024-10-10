@@ -52,9 +52,9 @@ void AShieldGeneratorAlien::AttackedBegin()
 		true);
 }
 
-void AShieldGeneratorAlien::AttackedEnd()
+void AShieldGeneratorAlien::MoveingBegin()
 {
-	Super::AttackedEnd();
+	Super::MoveingBegin();
 
 	this->SetAnimation(0,
 		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),

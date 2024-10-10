@@ -39,7 +39,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void MouseInit() override;
 	virtual void AttackedBegin() override;
-	virtual void AttackedEnd() override;
+	virtual void MoveingBegin() override;
 	virtual void MouseTick(const float& DeltaTime) override;
 	virtual void MoveingUpdate(float DeltaTime) override;
 	virtual bool BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType) override;
