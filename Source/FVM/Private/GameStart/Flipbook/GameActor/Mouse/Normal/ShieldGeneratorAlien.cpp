@@ -36,11 +36,29 @@ void AShieldGeneratorAlien::MouseInit()
 	this->bUse = false;
 
 	//设置动画
-	UTrackEntry* Track = this->SetAnimation(0,
+	this->SetAnimation(0,
 		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
 
 	this->ShieldComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AShieldGeneratorAlien::AttackedBegin()
+{
+	Super::AttackedBegin();
+
+	this->SetAnimation(0,
+		this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+		true);
+}
+
+void AShieldGeneratorAlien::AttackedEnd()
+{
+	Super::AttackedEnd();
+
+	this->SetAnimation(0,
+		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+		true);
 }
 
 void AShieldGeneratorAlien::MouseTick(const float& DeltaTime)
@@ -199,6 +217,7 @@ void AShieldGeneratorAlien::AnimationPlayEnd()
 					this->ShieldAnim.LoadSynchronous()
 				);
 			this->CurShieldAnimObj->SetActorLocation(this->GetActorLocation());
+			this->CurShieldAnimObj->InitSpineShow();
 			this->CurShieldAnimObj->SetRenderLayer(8000);
 		}
 	}
