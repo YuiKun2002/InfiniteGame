@@ -27,6 +27,9 @@ void AShieldGeneratorAlien::MouseInit()
 	Super::MouseInit();
 
 	//float curTemp = this->fUseWeaponTime - this->GetTotalHP() * 0.005;
+
+	this->MoveStart();
+
 	this->fUseShieldTime_ = this->fUseShieldTime;
 	this->fUseDelay = 2.5f; //curTemp > 3 ? curTemp : 3.f;
 	this->fReplySelfHp_ = this->fReplySelfHp + this->GetTotalHP() * 0.005;
