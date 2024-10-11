@@ -231,7 +231,8 @@ public:
 		FLine MouseLine,//线路
 		const ELineType& MouseLineType,//类型
 		EMouseTag NewTag = EMouseTag::NormalGround,//老鼠标记
-		bool bAddManager = true//添加到老鼠管理器【如果不添加请慎用】
+		bool bAddManager = true,//添加到老鼠管理器【如果不添加请慎用】,
+		FString AlienName = TEXT("Tag")
 	);
 	//通过老鼠名称[数据表中存在的]创建一只老鼠
 	UFUNCTION(BlueprintCallable)

@@ -203,6 +203,9 @@ public:
 	//老鼠名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠名称")
 	FString MouseObjName;
+	//外星人名字
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠名称")
+	FString AlienName;
 	//老鼠入水淹没百分比
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "水中属性")
 	float MouseInWaterRate = 1.f;

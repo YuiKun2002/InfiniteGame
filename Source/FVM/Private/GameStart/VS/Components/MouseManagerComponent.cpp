@@ -647,6 +647,8 @@ AMouseActor* UMouseSpawnManager::SpawnMouse(
 	AMouseActor* CurNewMouse = Comp->GetOwner()->GetWorld()->SpawnActor<AMouseActor>(NewClass, Trans);
 	if (IsValid(CurNewMouse))
 	{
+		//设置名称
+		CurNewMouse->AlienName = MouseData.M_MouseName;
 		//设置老鼠标记
 		CurNewMouse->SetMouseTag(MouseData.M_MouseTag);
 		//设置老鼠死亡时，是否直接结束游戏
@@ -694,7 +696,8 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 	const FVector& Location, float HP, float ATK, float Speed, FLine MouseLine,
 	const ELineType& MouseLineType,
 	EMouseTag NewTag,
-	bool bAddManager
+	bool bAddManager,
+	FString AlienName
 )
 {
 	if (!UGameSystemFunction::LoadRes(MouseClass))
@@ -710,6 +713,8 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 
 	if (IsValid(CurNewMouse))
 	{
+		//设置名称
+		CurNewMouse->AlienName = AlienName;
 		//设置老鼠标记
 		CurNewMouse->SetMouseTag(NewTag);
 		//设置老鼠基础速度
@@ -813,6 +818,8 @@ bool UMouseSpawnManager::MakeNewMouseByName(UDataTable* MouseDataTable, FString 
 
 			if (IsValid(CurNewMouse))
 			{
+				//设置名称
+				CurNewMouse->AlienName = MouseName;
 				//设置老鼠标记
 				CurNewMouse->SetMouseTag(CurData.M_MouseTag);
 				//设置老鼠基础速度
