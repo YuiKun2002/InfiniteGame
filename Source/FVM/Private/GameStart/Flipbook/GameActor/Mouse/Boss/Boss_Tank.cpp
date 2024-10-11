@@ -110,7 +110,7 @@ void UBoss_Tank_AttackLaser::PlayAttackAnim()
 	{
 		//播放攻击动画
 		UTrackEntry* Track = this->Boss->SetAnimation(0,
-			this->Boss->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+			this->Boss->LaserAttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
 			true);
 		//绑定发射事件
 		Track->AnimationEvent.AddDynamic(this, &UBoss_Tank_AttackLaser::Launch);
@@ -121,7 +121,7 @@ void UBoss_Tank_AttackLaser::PlayAttackAnim()
 	else {
 		//播放攻击动画
 		UTrackEntry* Track = this->Boss->SetAnimation(0,
-			this->Boss->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
+			this->Boss->LaserAttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(),
 			true);
 		//绑定发射事件
 		Track->AnimationEvent.AddDynamic(this, &UBoss_Tank_AttackLaser::Launch);
