@@ -602,6 +602,8 @@ void AMouseActor::SetTrackEntry(UTrackEntry* NewTrackEntry)
 	{
 		this->CurAnimTrackEntry->AnimationComplete.Clear();
 		this->CurAnimTrackEntry->AnimationComplete.RemoveAll(this);
+		this->CurAnimTrackEntry->AnimationEvent.Clear();
+		this->CurAnimTrackEntry->AnimationEvent.RemoveAll(this);
 	}
 
 	this->CurAnimTrackEntry = NewTrackEntry;
