@@ -8,31 +8,11 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameSystem/GameMapStructManager.h"
 #include "GameStart/VS/GameMapInstance.h"
-#include <Components/SphereComponent.h>
+#include <Components/Capsulecomponent.h>
 #include <Components/BoxComponent.h>
 #include "Data/GameLogSubsystem.h"
 #include "GameStart/VS/MapMeshe.h"
 #include "SpineActor.h"
-
-AFlyCatchMouse::AFlyCatchMouse()
-{
-	this->MMesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("FCMouseMeshComp"));
-	this->MBodyComponent = CreateDefaultSubobject<USphereComponent>(TEXT("FCMouseBodyComp"));
-
-	//this->CurCardAnim = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FCCardAnimComp"));
-
-	//设置依附
-	this->MMesheComponent->SetupAttachment(this->GetRootComponent());
-	this->MBodyComponent->SetupAttachment(this->MMesheComponent);
-
-	//卡片动画
-	//this->CurCardAnim->SetupAttachment(this->GetRenderComponent());
-}
-
-void AFlyCatchMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 {
@@ -78,8 +58,8 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				//切换陆地形态
 				this->GetMouseManager()->ChangeMouseLineType(this,
 					this->GetMouseLine().Row, ELineType::OnGround,
-					this->MMesheComponent,
-					this->MBodyComponent
+					this->MesheComp,
+					this->BodyComp
 				);
 
 				//切换目标线路
@@ -128,7 +108,9 @@ void AFlyCatchMouse::BeginPlay()
 		this->CurCardAnim->SetAnimationClear();
 	}*/
 
-	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
 }
@@ -144,8 +126,8 @@ void AFlyCatchMouse::MouseInit()
 	this->GetMouseManager()->ChangeMouseLineType(this,
 		this->GetMouseLine().Row,
 		ELineType::Sky,
-		this->MMesheComponent,
-		this->MBodyComponent
+		this->MesheComp,
+		this->BodyComp
 	);
 
 	//初始化位置
@@ -246,31 +228,25 @@ void AFlyCatchMouse::MouseInit()
 	this->SetMouseDeath(true);
 }
 
-void AFlyCatchMouse::MoveingUpdate(float DeltaTime)
-{
-	Super::MoveingUpdate(DeltaTime);
-}
-
-bool AFlyCatchMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType)
-{
-	return Super::BeHit(CurHitMouseObj, _HurtValue, AttackType);
-}
 
 void AFlyCatchMouse::MouseDeathed()
 {
 	Super::MouseDeathed();
 
 	//关闭碰撞
-	this->ClosedBoxComponent(this->MMesheComponent);
-	this->ClosedBoxComponent(this->MBodyComponent);
+	this->ClosedBoxComponent(this->MesheComp);
+	this->ClosedBoxComponent(this->BodyComp);
 
 	this->bEnter = false;
 	this->bExit = false;
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		//this->SetPlayAnimation(nullptr);
-		//this->CurCardAnim->SetAnimationClear();
+		UTrackEntry* Trac = this->SetAnimation(0,
+			this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
+		this->SetTrackEntry(Trac);
 	}
 
 	if (IsValid(this->CurFlag))
@@ -284,8 +260,8 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 	if (this->GetCurrentHP() > 0.f)
 	{
 		//关闭碰撞
-		this->ClosedBoxComponent(this->MMesheComponent);
-		this->ClosedBoxComponent(this->MBodyComponent);
+		this->ClosedBoxComponent(this->MesheComp);
+		this->ClosedBoxComponent(this->BodyComp);
 
 		//获取防御卡动画
 		if (IsValid(CurUI))

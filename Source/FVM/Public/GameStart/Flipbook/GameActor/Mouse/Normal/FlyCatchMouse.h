@@ -39,33 +39,20 @@ public:
 };
 
 UCLASS()
-class FVM_API AFlyCatchMouse : public ANormalBase
+class FVM_API AFlyCatchMouse : public ANormalCapsuleBase
 {
 	GENERATED_BODY()
 public:
-	AFlyCatchMouse();
-	//Tick 更新
-	virtual void Tick(float DeltaTime) override;
 	virtual void MouseTick(const float& DeltaTime) override;
 	//初始化
 	virtual void BeginPlay() override;
 	//老鼠初始化
 	virtual void MouseInit() override;
-	//移动(每0.02ms自动调用(允许移动的情况下))
-	virtual void MoveingUpdate(float DeltaTime) override;
-	//当老鼠被命中时受到的伤害数值(前提是isHurt为true  调用一次(一般由FlyitemActor命中时调用))
-	virtual bool BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType) override;
 	//当老鼠死亡时(当设置老鼠SetMouseDeath(true)时调用一次)
 	virtual void MouseDeathed() override;
 	//动画播放完毕
 	void OnAnimationPlayEnd();
 public:
-	//网格碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UBoxComponent* MMesheComponent = nullptr;
-	//身体碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USphereComponent* MBodyComponent = nullptr;
 	//卡片动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ASpineActor* CurCardAnim = nullptr;
