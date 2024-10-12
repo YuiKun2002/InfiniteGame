@@ -71,12 +71,17 @@ private:
 	//对应的抓去位置
 	UPROPERTY()
 	class UUI_MapMeshe* CurUI = nullptr;
+	//开始抓取
+	UPROPERTY()
+	bool bCatch = false;
 	//时间
 	UPROPERTY()
 	float fToGroundTime_ = 1.f;
 	//是否可以出现
 	UPROPERTY()
 	bool bEnter = false;
+	UPROPERTY()
+	bool bEnterA = false;
 	//退场
 	UPROPERTY()
 	bool bExit = false;

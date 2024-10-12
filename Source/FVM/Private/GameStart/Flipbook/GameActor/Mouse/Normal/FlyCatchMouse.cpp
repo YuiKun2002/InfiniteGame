@@ -18,6 +18,11 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 {
 	Super::MouseTick(DeltaTime);
 
+	if (this->bCatch)
+	{
+		return;
+	}
+
 	if (this->bEnter)
 	{
 		if (this->DealyTime > 0.f)
@@ -52,6 +57,8 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				BINDANIMATION(Trac, this, &AFlyCatchMouse::AnimationPlayEnd);
 				this->SetTrackEntry(Trac);
 
+				this->bCatch = true;
+
 				//切换陆地形态
 				this->GetMouseManager()->ChangeMouseLineType(this,
 					this->GetMouseLine().Row, ELineType::OnGround,
@@ -78,6 +85,16 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 
 	if (this->bExit)
 	{
+		if (!this->bEnterA)
+		{
+			this->bEnterA = true;
+			//播放退场
+			this->SetAnimation(0,
+				this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+			);
+			this->SetTrackEntry(nullptr);
+		}
+
 		if (this->fToGroundTime_ > 0.f)
 		{
 			this->fToGroundTime_ -= DeltaTime;
@@ -100,22 +117,17 @@ void AFlyCatchMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*if (IsValid(this->CurCardAnim))
-	{
-		this->CurCardAnim->SetAnimationClear();
-	}*/
-
 	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
 	this->MesheComp->AddLocalOffset(this->CollisionOffset);
 	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
-	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
 }
 
 void AFlyCatchMouse::MouseInit()
 {
 	Super::MouseInit();
 
+	this->bEnterA = false;
+	this->bCatch = false;
 	this->bEnter = false;
 	this->bExit = false;
 
@@ -217,7 +229,7 @@ void AFlyCatchMouse::MouseInit()
 				UClass* CurFlagClass = UGameSystemFunction::LoadRes(this->AnimRes.FlagClass);
 				if (IsValid(CurFlagClass))
 				{
-					
+
 					return;
 				}
 				else {
@@ -244,6 +256,8 @@ void AFlyCatchMouse::MouseDeathed()
 	this->ClosedBoxComponent(this->MesheComp);
 	this->ClosedBoxComponent(this->BodyComp);
 
+	this->bEnterA = false;
+	this->bCatch = false;
 	this->bEnter = false;
 	this->bExit = false;
 
@@ -259,8 +273,10 @@ void AFlyCatchMouse::MouseDeathed()
 
 void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 {
-	if (this->GetCurrentHP() > 0.f)
+	if (this->GetCurrentHP() > 0.f && this->bCatch)
 	{
+		this->bCatch = false;
+
 		//关闭碰撞
 		this->ClosedBoxComponent(this->MesheComp);
 		this->ClosedBoxComponent(this->BodyComp);
@@ -285,22 +301,6 @@ void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 				this->CurCatchCard = nullptr;
 			}
 		}
-		
-		/*
-		//设置防御卡动画
-		if (IsValid(this->CurCatchCard))
-		{
-			this->CurCardAnim->SetAnimation(0,
-				this->CurCatchCard->GetCurrentAnimationName(0),
-				true
-			);
-			this->CurCardAnim->SetRenderLayer(this->GetTranslucentSortPriority() - 1);
-			this->CurCardAnim->SetAnimationTimeScale(0, 0.f);
-		}
-		else {
-			this->CurCardAnim->SetAnimationClear(0);
-		}
-		*/
 
 		//消灭防御卡	
 		if (IsValid(this->CurCatchCard))
@@ -310,14 +310,9 @@ void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 			UResourceManagerComponent::ResourceAddBadCard();
 		}
 
-		//播放退场
-		UTrackEntry* Trac = this->SetAnimation(0,
-			this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
-		);
-		this->SetTrackEntry(Trac);
-
 		this->fToGroundTime_ = this->fToGroundTime;
 		this->bExit = true;
+		this->bEnter = false;
 		//对齐坐标
 		this->CurLocation.Z = 1000.f;
 		this->CurExitLocation = this->GetActorLocation();
