@@ -43,7 +43,9 @@ UCLASS()
 class FVM_API AMagicMasterHpAddtionBuff : public ASpineActor {
 	GENERATED_BODY()
 public:
+	UFUNCTION(BlueprintCallable)
 	void Init(AMouseActor* MouseActor);
+
 	virtual void Tick(float DeltaTime) override;
 private:
 	UPROPERTY()
