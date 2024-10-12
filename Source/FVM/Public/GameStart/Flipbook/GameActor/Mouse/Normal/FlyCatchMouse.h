@@ -51,14 +51,12 @@ public:
 	//当老鼠死亡时(当设置老鼠SetMouseDeath(true)时调用一次)
 	virtual void MouseDeathed() override;
 	//动画播放完毕
-	void OnAnimationPlayEnd();
+	UFUNCTION()
+	void AnimationPlayEnd(class UTrackEntry* Track);
 public:
 	//卡片动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ASpineActor* CurCardAnim = nullptr;
-	//动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FFlyCatchMouseResourceStruct AnimRes;
 private:
 	//当前抓去的卡片
 	UPROPERTY()
@@ -66,9 +64,6 @@ private:
 	//对应的抓去位置
 	UPROPERTY()
 		class UUI_MapMeshe* CurUI = nullptr;
-	//标记
-	UPROPERTY()
-		AFlyCatchMouseFlag* CurFlag = nullptr;
 	//延迟出现的时间
 	UPROPERTY()
 		float DealyTime = 3.f;

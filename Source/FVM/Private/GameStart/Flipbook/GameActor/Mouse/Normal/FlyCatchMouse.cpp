@@ -40,20 +40,17 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 			else {
 				this->bEnter = false;
 
-				if (IsValid(this->CurFlag))
-				{
-					this->CurFlag->Destroy();
-				}
-
 				//落地
 				this->SetActorLocation(
 					CurUI->GetMapMeshe()->GetActorLocation()
 				);
 
 				//播放抓取动画
-				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Catch), true);
-
-				this->SetAnimation(0,TEXT("SpineTag"),true);
+				UTrackEntry* Trac = this->SetAnimation(0,
+					this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+				);
+				BINDANIMATION(Trac, this, &AFlyCatchMouse::AnimationPlayEnd);
+				this->SetTrackEntry(Trac);
 
 				//切换陆地形态
 				this->GetMouseManager()->ChangeMouseLineType(this,
@@ -201,25 +198,28 @@ void AFlyCatchMouse::MouseInit()
 
 			if (IsValid(this->CurUI))
 			{
+				//设置老鼠位置
+				this->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation() + FVector(0.f, 0.f, 1000.f));
+				this->CurLocation = this->GetActorLocation();
+				this->DealyTime = 3.f;
+				this->fToGroundTime = 1.f;
+				this->bEnter = true;
+
+				/*
 				//创建标记
 				UClass* CurFlagClass = UGameSystemFunction::LoadRes(this->AnimRes.FlagClass);
 				if (IsValid(CurFlagClass))
 				{
-					//设置老鼠位置
-					this->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation() + FVector(0.f, 0.f, 1000.f));
-					this->CurLocation = this->GetActorLocation();
-					this->CurFlag = this->GetWorld()->SpawnActor<AFlyCatchMouseFlag>(CurFlagClass);
-					this->CurFlag->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation());
-					this->CurFlag->SetRenderLayer(9999);
-					this->DealyTime = 3.f;
-					this->fToGroundTime = 1.f;
-					this->bEnter = true;
+					
 					return;
 				}
 				else {
 					this->SetMouseDeath(true);
 					return;
 				}
+				return;
+				*/
+
 				return;
 			}
 		}
@@ -248,14 +248,9 @@ void AFlyCatchMouse::MouseDeathed()
 		BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
 		this->SetTrackEntry(Trac);
 	}
-
-	if (IsValid(this->CurFlag))
-	{
-		this->CurFlag->Destroy();
-	}
 }
 
-void AFlyCatchMouse::OnAnimationPlayEnd()
+void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 {
 	if (this->GetCurrentHP() > 0.f)
 	{
@@ -309,11 +304,10 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 		}
 
 		//播放退场
-		//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Exit), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		UTrackEntry* Trac = this->SetAnimation(0,
+			this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		this->SetTrackEntry(Trac);
 
 		this->fToGroundTime = 1.f;
 		this->bExit = true;
