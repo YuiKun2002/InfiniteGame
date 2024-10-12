@@ -46,15 +46,13 @@ void AMachineMouse::AttackedBegin()
 void AMachineMouse::AttackedEnd()
 {
 	Super::AttackedEnd();
-
-	this->PlayWalk();
 }
 
 void AMachineMouse::MoveingBegin()
 {
 	Super::MoveingBegin();
 
-	this->PlayWalk();
+	
 }
 
 void AMachineMouse::MoveingUpdate(float DeltaTime)
@@ -110,6 +108,8 @@ void AMachineMouse::AnimationPlayEnd(class UTrackEntry* Track)
 	}
 
 	this->AddAttackCardUpdate();
+
+	this->PlayWalk();
 }
 
 void AMachineMouse::PlayWalk()
@@ -136,7 +136,7 @@ void AMachineMouse::PlayAttack()
 			this->State = 1;
 
 			UTrackEntry* Track = this->SetAnimation(0,
-				this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+				this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
 			BINDANIMATION(Track, this, &AMachineMouse::AnimationPlayEnd);
 			this->SetTrackEntry(Track);
 		}
