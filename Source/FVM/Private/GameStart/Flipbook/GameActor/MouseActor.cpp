@@ -736,7 +736,7 @@ void AMouseActor::CloseInWaterTimeLine()
 	}
 }
 
-void AMouseActor::AddAttackLine(
+bool AMouseActor::AddAttackLine(
 	const FVector& _BeginOffset,
 	const FVector& _EndOffset,
 	FColor _Color,
@@ -748,7 +748,7 @@ void AMouseActor::AddAttackLine(
 	//如果强行移动，则不会进行攻击
 	if (this->bForceMoveOtherLine && this->bEnableForceMove)
 	{
-		return;
+		return false;
 	}
 
 	//添加射线
@@ -773,16 +773,17 @@ void AMouseActor::AddAttackLine(
 			this->SetCurrentAttackCard(CurCard);
 			this->SetbIsAttack(true);
 			this->MoveStop();
+			return true;
 		}
 		else {
-
+			return false;
 		}
 	}
 	else {
 
 		if (!this->GetbIsAttack())
 		{
-			return;
+			return false;
 		}
 
 		this->SetCurrentAttackCard(nullptr);
@@ -798,9 +799,11 @@ void AMouseActor::AddAttackLine(
 		}
 
 	}
+
+	return false;
 }
 
-void AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, const float& DeltaTime, bool DirectionFront)
+bool AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, const float& DeltaTime, bool DirectionFront)
 {
 	if (this->fAttackLineDelay > 0.f)
 	{
@@ -816,14 +819,12 @@ void AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, cons
 				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
 				)
 			{
-				this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
+				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
 					FVector(0.f, 15.f, this->fMouseInWaterZ + 15.f),
 					FColor::Red, CollisionType, DeltaTime, DirectionFront);
-
-				return;
 			}
 
-			this->AddAttackLine(FVector::ZeroVector,
+			return this->AddAttackLine(FVector::ZeroVector,
 				FVector(0.f, 15.f, 0.f),
 				FColor::Red, CollisionType, DeltaTime, DirectionFront);
 		}
@@ -834,18 +835,18 @@ void AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, cons
 				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
 				)
 			{
-				this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
+				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
 					FVector(0.f, -15.f, this->fMouseInWaterZ + 15.f),
 					FColor::Red, CollisionType, DeltaTime, DirectionFront);
-
-				return;
 			}
 
-			this->AddAttackLine(FVector::ZeroVector,
+			return this->AddAttackLine(FVector::ZeroVector,
 				FVector(0.f, -15.f, 0.f),
 				FColor::Red, CollisionType, DeltaTime, DirectionFront);
 		}
 	}
+
+	return false;
 }
 
 void AMouseActor::AddAttackCardUpdate()

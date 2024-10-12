@@ -444,7 +444,7 @@ public:
 public:
 	//添加攻击线条
 	UFUNCTION(BlueprintCallable)
-	void AddAttackLine(
+	bool AddAttackLine(
 		const FVector& _BeginOffset,
 		const FVector& _EndOffset,
 		FColor _Color,
@@ -453,7 +453,7 @@ public:
 		bool DirectionFront = true
 	);
 	UFUNCTION(BlueprintCallable)
-	void AddAttackLineFunc(
+	bool AddAttackLineFunc(
 		const ECollisionChannel& CollisionType,
 		const float& DeltaTime,
 		bool DirectionFront = true
