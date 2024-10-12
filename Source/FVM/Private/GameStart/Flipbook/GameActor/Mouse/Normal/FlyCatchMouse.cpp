@@ -119,6 +119,11 @@ void AFlyCatchMouse::MouseInit()
 	this->bEnter = false;
 	this->bExit = false;
 
+	UTrackEntry* Trac = this->SetAnimation(0,
+		this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+	);
+	this->SetTrackEntry(Trac);
+
 	//切换空中形态
 	this->GetMouseManager()->ChangeMouseLineType(this,
 		this->GetMouseLine().Row,
