@@ -46,13 +46,15 @@ void AMachineMouse::AttackedBegin()
 void AMachineMouse::AttackedEnd()
 {
 	Super::AttackedEnd();
+
+	this->PlayWalk();
 }
 
 void AMachineMouse::MoveingBegin()
 {
 	Super::MoveingBegin();
 
-	
+	this->PlayWalk();
 }
 
 void AMachineMouse::MoveingUpdate(float DeltaTime)
