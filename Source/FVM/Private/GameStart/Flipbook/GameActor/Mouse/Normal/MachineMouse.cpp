@@ -50,6 +50,13 @@ void AMachineMouse::AttackedEnd()
 	this->PlayWalk();
 }
 
+void AMachineMouse::MoveingBegin()
+{
+	Super::MoveingBegin();
+
+	this->PlayWalk();
+}
+
 void AMachineMouse::MoveingUpdate(float DeltaTime)
 {
 	Super::MoveingUpdate(DeltaTime);
@@ -73,7 +80,7 @@ void AMachineMouse::MouseDeathed()
 			ACardActor* Card = Cast<ACardActor>(Hit.GetActor());
 			if (IsValid(Card))
 			{
-				Card->UpdateCardState(99999999.f);
+				Card->UpdateCardState(9999999.f);
 				Card->KillCard();
 				UResourceManagerComponent::ResourceAddBadCard();
 			}
@@ -107,25 +114,31 @@ void AMachineMouse::AnimationPlayEnd(class UTrackEntry* Track)
 
 void AMachineMouse::PlayWalk()
 {
-	if (this->State != 0)
+	if (!this->GetbIsAttack())
 	{
-		this->State = 0;
+		if (this->State != 0)
+		{
+			this->State = 0;
 
-		UTrackEntry* Track = this->SetAnimation(0,
-			this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
-		this->SetTrackEntry(Track);
+			UTrackEntry* Track = this->SetAnimation(0,
+				this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+			this->SetTrackEntry(Track);
+		}
 	}
 }
 
 void AMachineMouse::PlayAttack()
 {
-	if (this->State != 1)
+	if (this->GetbIsAttack())
 	{
-		this->State = 1;
+		if (this->State != 1)
+		{
+			this->State = 1;
 
-		UTrackEntry* Track = this->SetAnimation(0,
-			this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
-		BINDANIMATION(Track, this, &AMachineMouse::AnimationPlayEnd);
-		this->SetTrackEntry(Track);
+			UTrackEntry* Track = this->SetAnimation(0,
+				this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+			BINDANIMATION(Track, this, &AMachineMouse::AnimationPlayEnd);
+			this->SetTrackEntry(Track);
+		}
 	}
 }

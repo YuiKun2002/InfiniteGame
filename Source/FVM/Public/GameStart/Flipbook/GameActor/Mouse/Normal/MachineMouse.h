@@ -62,6 +62,8 @@ public:
 	virtual void AttackedBegin() override;
 	//攻击结束
 	virtual void AttackedEnd() override;
+	//开始移动
+	virtual void MoveingBegin() override;
 	//移动(每0.02ms自动调用(允许移动的情况下))
 	virtual void MoveingUpdate(float DeltaTime) override;
 	//当老鼠死亡时(当设置老鼠SetMouseDeath(true)时调用一次)
