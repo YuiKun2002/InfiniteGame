@@ -26,15 +26,15 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 			return;
 		}
 		else {
-			if (this->fToGroundTime > 0.f)
+			if (this->fToGroundTime_ > 0.f)
 			{
-				this->fToGroundTime -= DeltaTime;
+				this->fToGroundTime_ -= DeltaTime;
 
 				//设置位置
 				this->SetActorLocation(
 					UKismetMathLibrary::VLerp(this->CurLocation,
 						CurUI->GetMapMeshe()->GetActorLocation(),
-						(1.f - this->fToGroundTime))
+						1.f - (this->fToGroundTime_ / this->fToGroundTime))
 				);
 			}
 			else {
@@ -78,14 +78,14 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 
 	if (this->bExit)
 	{
-		if (this->fToGroundTime > 0.f)
+		if (this->fToGroundTime_ > 0.f)
 		{
-			this->fToGroundTime -= DeltaTime;
+			this->fToGroundTime_ -= DeltaTime;
 			//设置位置
 			this->SetActorLocation(
 				UKismetMathLibrary::VLerp(this->CurExitLocation,
 					this->CurLocation,
-					1.f - this->fToGroundTime)
+					1.f - (this->fToGroundTime_ / this->fToGroundTime))
 			);
 		}
 		else {
@@ -118,6 +118,8 @@ void AFlyCatchMouse::MouseInit()
 
 	this->bEnter = false;
 	this->bExit = false;
+
+	this->fToGroundTime_ = this->fToGroundTime;
 
 	UTrackEntry* Trac = this->SetAnimation(0,
 		this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
@@ -207,7 +209,7 @@ void AFlyCatchMouse::MouseInit()
 				this->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation() + FVector(0.f, 0.f, 1000.f));
 				this->CurLocation = this->GetActorLocation();
 				this->DealyTime = 3.f;
-				this->fToGroundTime = 1.f;
+				this->fToGroundTime_ = this->fToGroundTime;
 				this->bEnter = true;
 
 				/*
@@ -314,7 +316,7 @@ void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 		);
 		this->SetTrackEntry(Trac);
 
-		this->fToGroundTime = 1.f;
+		this->fToGroundTime_ = this->fToGroundTime;
 		this->bExit = true;
 		//对齐坐标
 		this->CurLocation.Z = 1000.f;
