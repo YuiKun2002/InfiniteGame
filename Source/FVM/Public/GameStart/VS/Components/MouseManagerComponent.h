@@ -39,6 +39,7 @@ public:
 	AMouseActor* FindMouse(const FString& MouseName);
 	//排序老鼠位置
 	void SortMouseByTick(const float& _Tick);
+public:
 	//获取陆地最前老鼠
 	AMouseActor* GetMouseTopByGorund() const;
 	//获取地下最前老鼠
@@ -62,6 +63,10 @@ public:
 private:
 	//排序老鼠最前位置
 	AMouseActor* SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses);
+	//移除
+	bool RemoveMouseIns(TMap<FString, AMouseActor*>& MouseMap, AMouseActor* _CurMouse);
+	//通过名称移除
+	bool RemoveMouseInsByName(TMap<FString, AMouseActor*>& MouseMap, const FString& MouseName);
 private:
 	//更新Tick的时间延迟
 	UPROPERTY()
@@ -91,6 +96,9 @@ private:
 	//飞行老鼠
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
 	TMap<FString, AMouseActor*> CurMouseSky;
+	//水上老鼠
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
+	TMap<FString, AMouseActor*> CurMouseOnWater;
 };
 
 //当回合数发生改变时触发
@@ -351,10 +359,21 @@ public:
 	static bool ChangeLine(const FString& MouseObjName, const int32& CurRow, const int32& TargetRow);
 	//切换路线【不需要需要手动设置SetMouseLine】
 	UFUNCTION(BlueprintCallable)
-	static bool ForceChangeLine(const FString& MouseObjName, const int32& CurRow, const int32& TargetRow, const int32& TargetCol);
+	static bool ForceChangeLine(
+		const FString& MouseObjName,
+		const int32& CurRow,
+		const int32& TargetRow,
+		const int32& TargetCol
+	);
 	//切换老鼠的类型
 	UFUNCTION(BlueprintCallable)
-	static bool ChangeMouseLineType(AMouseActor* _CurMouse, int32 CurRow, ELineType TargetType, class UBoxComponent* CurCollision = nullptr, class UShapeComponent* CurBodyCollision = nullptr);
+	static bool ChangeMouseLineType(
+		AMouseActor* _CurMouse,
+		int32 CurRow,
+		ELineType TargetType,
+		class UBoxComponent* CurCollision = nullptr,
+		class UShapeComponent* CurBodyCollision = nullptr
+	);
 	//获取所有存在的老鼠
 	UFUNCTION(BlueprintCallable)
 	static void GetAllMouse(TArray<AMouseActor*>& OutAllMouse);

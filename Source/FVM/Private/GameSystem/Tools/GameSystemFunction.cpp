@@ -826,12 +826,18 @@ ETraceTypeQuery UGameSystemFunction::GetMouseCollisionTraceType(EMouseCollisionT
 {
 	switch (_EMouseCollisionType)
 	{
+		//陆地
 	case EMouseCollisionType::MouseGround:
 		return ETraceTypeQuery::TraceTypeQuery4;
+		//空中
 	case EMouseCollisionType::MouseSky:
 		return ETraceTypeQuery::TraceTypeQuery5;
+		//地下
 	case EMouseCollisionType::MouseUnder:
 		return ETraceTypeQuery::TraceTypeQuery6;
+		//水上
+	case EMouseCollisionType::MouseOnWater:
+		return ETraceTypeQuery::TraceTypeQuery12;
 	default:
 		return ETraceTypeQuery::TraceTypeQuery11;
 	}
@@ -845,6 +851,7 @@ ECollisionChannel UGameSystemFunction::GetMouseCollisionBoxTypeByELineType(ELine
 	case ELineType::OnGround:return ECollisionChannel::ECC_GameTraceChannel2; break;
 	case ELineType::Sky:return ECollisionChannel::ECC_GameTraceChannel3; break;
 	case ELineType::Underground:return ECollisionChannel::ECC_GameTraceChannel4; break;
+	case ELineType::OnWater:return ECollisionChannel::ECC_GameTraceChannel10; break;
 	default:
 		return ECollisionChannel::ECC_GameTraceChannel9;
 	}
@@ -859,6 +866,7 @@ ETraceTypeQuery UGameSystemFunction::GetMouseCollisionTraceTypeByELineType(ELine
 	case ELineType::OnGround:return ETraceTypeQuery::TraceTypeQuery4;; break;
 	case ELineType::Sky:return ETraceTypeQuery::TraceTypeQuery5; break;
 	case ELineType::Underground:return ETraceTypeQuery::TraceTypeQuery6; break;
+	case ELineType::OnWater:return ETraceTypeQuery::TraceTypeQuery12; break;
 	default:
 		return ETraceTypeQuery::TraceTypeQuery11;
 	}
@@ -873,6 +881,7 @@ ECollisionChannel UGameSystemFunction::GetMouseCollisionBoxTypeByLineType(ELineT
 	case ELineTraceType::E_MouseGround:return ECollisionChannel::ECC_GameTraceChannel2; break;
 	case ELineTraceType::E_MouseSky:return ECollisionChannel::ECC_GameTraceChannel3; break;
 	case ELineTraceType::E_MouseUnder:return ECollisionChannel::ECC_GameTraceChannel4; break;
+	case ELineTraceType::E_MouseWater:return ECollisionChannel::ECC_GameTraceChannel10; break;
 	default:
 		return ECollisionChannel::ECC_GameTraceChannel9;
 		break;

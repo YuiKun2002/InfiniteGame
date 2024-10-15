@@ -164,6 +164,8 @@ enum class EMouseCollisionType : uint8 {
 	MouseSky UMETA(DisplayName = "MouseSky"),
 	//地下老鼠
 	MouseUnder UMETA(DisplayName = "MouseUnder"),
+	//水上单位
+	MouseOnWater UMETA(DisplayName = "MouseOnWater"),
 	//任何老鼠对象(表示全部)
 	MouseActor UMETA(DisplayName = "MouseActor"),
 };
