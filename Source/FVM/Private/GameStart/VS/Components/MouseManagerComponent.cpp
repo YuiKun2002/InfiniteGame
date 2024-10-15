@@ -223,6 +223,7 @@ TMap<FString, AMouseActor*> UMouseLineManager::GetMouseAll()
 	Temp.Append(this->GetMouseGround());
 	Temp.Append(this->GetMouseUnderGround());
 	Temp.Append(this->GetMouseSky());
+	Temp.Append(this->CurMouseOnWater);
 	return Temp;
 }
 
@@ -235,6 +236,8 @@ bool UMouseLineManager::GetMouseExist()
 		this->CurMouseUnderGround.Num() == 0
 		&&
 		this->CurMouseSky.Num() == 0
+		&&
+		this->CurMouseOnWater.Num() == 0
 		)
 	{
 		return false;
@@ -249,6 +252,7 @@ void UMouseLineManager::KillAllMouse()
 	CurMouses.Append(this->CurMouseGround);
 	CurMouses.Append(this->CurMouseUnderGround);
 	CurMouses.Append(this->CurMouseSky);
+	CurMouses.Append(this->CurMouseOnWater);
 
 	for (auto const CurMouse : CurMouses)
 	{
@@ -266,6 +270,7 @@ void UMouseLineManager::KillAllMouse()
 	this->CurMouseGround.Empty();
 	this->CurMouseUnderGround.Empty();
 	this->CurMouseSky.Empty();
+	this->CurMouseOnWater.Empty();
 }
 
 AMouseActor* UMouseLineManager::SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses)

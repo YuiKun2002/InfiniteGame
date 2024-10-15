@@ -134,10 +134,10 @@ void UUIMesheWidthOnWater::UpdateCardsLocation(ACardActor* SingleCard /*= nullpt
 		SingleCard->SetActorLocation(this->GetMapMeshe()->GetActorLocation());
 		if (CurLayer == -1)
 		{
-			SingleCard->AddActorLocalOffset(FVector(0.f, 0.f, 5.f));
+			SingleCard->AddActorLocalOffset(FVector(0.f, 0.f, MesheWidthOnWaterCardOffset));
 		}
 		else {
-			SingleCard->AddActorLocalOffset(FVector(0.f, 0.f, 12.f));
+			SingleCard->AddActorLocalOffset(FVector(0.f, 0.f, MesheWidthOnWaterOtherCardOffset));
 		}
 	}
 	else {
@@ -149,10 +149,10 @@ void UUIMesheWidthOnWater::UpdateCardsLocation(ACardActor* SingleCard /*= nullpt
 				Cur.Value->SetActorLocation(this->GetMapMeshe()->GetActorLocation());
 				if (CurLayer == -1)
 				{
-					Cur.Value->AddActorLocalOffset(FVector(0.f, 0.f, 5.f));
+					Cur.Value->AddActorLocalOffset(FVector(0.f, 0.f,MesheWidthOnWaterCardOffset));
 				}
 				else {
-					Cur.Value->AddActorLocalOffset(FVector(0.f, 0.f, 12.f));
+					Cur.Value->AddActorLocalOffset(FVector(0.f, 0.f, MesheWidthOnWaterOtherCardOffset));
 				}
 			}
 		}

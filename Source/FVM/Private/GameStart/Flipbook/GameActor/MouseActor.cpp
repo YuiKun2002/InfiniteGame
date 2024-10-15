@@ -819,8 +819,8 @@ bool AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, cons
 				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
 				)
 			{
-				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
-					FVector(0.f, 15.f, this->fMouseInWaterZ + 15.f),
+				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
+					FVector(0.f, 15.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
 					FColor::Red, CollisionType, DeltaTime, DirectionFront);
 			}
 
@@ -835,8 +835,8 @@ bool AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, cons
 				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
 				)
 			{
-				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + 15.f),
-					FVector(0.f, -15.f, this->fMouseInWaterZ + 15.f),
+				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
+					FVector(0.f, -15.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
 					FColor::Red, CollisionType, DeltaTime, DirectionFront);
 			}
 

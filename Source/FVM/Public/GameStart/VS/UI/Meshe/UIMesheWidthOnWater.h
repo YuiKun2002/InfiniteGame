@@ -6,8 +6,11 @@
 #include "GameStart/VS/UI/UI_MapMeshe.h"
 #include "UIMesheWidthOnWater.generated.h"
 
+#define MesheWidthOnWaterCardOffset 0.f
+#define MesheWidthOnWaterOtherCardOffset 6.f
+
 /**
- *
+ *水上网格
  */
 UCLASS()
 class FVM_API UUIMesheWidthOnWater : public UUI_MapMeshe

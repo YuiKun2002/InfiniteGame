@@ -23,7 +23,7 @@ class UMouseManagerComponent;
 class UBoxComponent;
 
 #define SpineMouseDeath TEXT("Death")
-
+#define AttackLineOnWaterOffset 15.f
 
 #define  BINDANIMATION(Anim,Object,Func)\
 	Anim->AnimationComplete.AddDynamic(\
