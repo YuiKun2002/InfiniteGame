@@ -1756,6 +1756,31 @@ bool UMouseManagerComponent::ChangeMouseLineType(
 	return false;
 }
 
+bool UMouseManagerComponent::ChangeMouseLineTypeToChannel(AMouseActor* _CurMouse, int32 CurRow, ELineType TargetType)
+{
+	if (
+		CurRow < AGameMapInstance::GetGameMapInstance()->
+		M_MouseManagerComponent->MouseLineManager.Num()
+		)
+	{
+		AMouseActor* CurMouse = AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->
+			MouseLineManager[CurRow]->FindMouse(UKismetSystemLibrary::GetObjectName(_CurMouse));
+
+		if (IsValid(CurMouse) && CurMouse->GetCurrentHP() > 0.f)
+		{
+			if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->MouseLineManager[CurRow]->
+				RemoveMouse(CurMouse)
+				)
+			{
+				//切换线路类型
+				CurMouse->SetMouseLineType(TargetType);
+				UMouseManagerComponent::AddMouse(CurMouse, CurRow, false);
+			}
+		}
+	}
+	return false;
+}
+
 void UMouseManagerComponent::GetAllMouse(TArray<AMouseActor*>& OutAllMouse)
 {
 	for (UMouseLineManager* CurLineMan :

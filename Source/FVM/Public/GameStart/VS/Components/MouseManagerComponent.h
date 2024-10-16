@@ -374,6 +374,12 @@ public:
 		class UBoxComponent* CurCollision = nullptr,
 		class UShapeComponent* CurBodyCollision = nullptr
 	);
+	//切换老鼠的类型直接到通道
+	static bool ChangeMouseLineTypeToChannel(
+		AMouseActor* _CurMouse,
+		int32 CurRow,
+		ELineType TargetType
+	);
 	//获取所有存在的老鼠
 	UFUNCTION(BlueprintCallable)
 	static void GetAllMouse(TArray<AMouseActor*>& OutAllMouse);
