@@ -78,8 +78,9 @@ void UUI_Weapons::InitWeapons()
 
 
 	FPlayerEquipWeapon& Weapon = UFVMGameInstance::GetPlayerStructManager_Static()->PlayerEquipWeaponData;
-	
-	bool bA,bB;
+
+	bool bA = false;
+	bool bB = false;
 	//加载玩家装备的武器
 	if (Weapon.bMainEquip)
 	{
@@ -111,7 +112,7 @@ void UUI_Weapons::InitWeapons()
 				bB = true;
 				break;
 			}
-		}	
+		}
 	}
 
 	if (!bB)
