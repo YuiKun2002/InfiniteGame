@@ -479,7 +479,7 @@ void UGameMapUI_MouseViewEditor::SelectRoundNodeWithMouseNode(UMouseViewEditorRo
 	this->OnSelectMouseNode(this->MouseViewEditorRoundNodeGrid->MouseConfigNode);
 }
 
-void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode)
+void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode, bool bRemove)
 {
 	if (IsValid(this->MouseViewEditorRoundNodeGrid))
 	{
@@ -500,25 +500,28 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 				this->MouseViewEditorRoundNodeGrid->RowIndex//通过行得到老鼠节点【Y轴】
 			];
 
-				//判断之前是否有数据
-				if (!ConfigNode.CurMouseName.Equals(TEXT("")))
+				if (bRemove)
 				{
-					//添加老鼠数量
-					int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
-					int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
-					if (Count)
+					//判断之前是否有数据
+					if (!ConfigNode.CurMouseName.Equals(TEXT("")))
 					{
-						int32 TCount = (*Count - 1);
-						if (TCount <= 0)
+						//添加老鼠数量
+						int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
+						int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
+						if (Count)
 						{
-							CurMouseConfig.ValidKeyID.Emplace(ID);
-							CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
-							CurMouseConfig.AllMouseKeyListMap.Remove(ID);
-							CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
-							
-						}
-						else {
-							CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+							int32 TCount = (*Count - 1);
+							if (TCount <= 0)
+							{
+								CurMouseConfig.ValidKeyID.Emplace(ID);
+								CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
+								CurMouseConfig.AllMouseKeyListMap.Remove(ID);
+								CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
+
+							}
+							else {
+								CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+							}
 						}
 					}
 				}

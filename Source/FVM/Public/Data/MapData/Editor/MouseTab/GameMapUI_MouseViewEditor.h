@@ -197,7 +197,7 @@ public:
 		void SelectRoundNodeWithMouseNode(UMouseViewEditorRoundNodeGrid* CurMouseViewEditorRoundNodeGrid);
 	//更新当前被选择的节点
 	UFUNCTION(BlueprintCallable)
-		void UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode);
+		void UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode,bool bRemove = false);
 	//当选择了一个节点时
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnSelectMouseNode(FMouseConfigNode Node);
