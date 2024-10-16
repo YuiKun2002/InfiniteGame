@@ -107,10 +107,10 @@ void ULockingAttackComponent::LoadResource()
 
 void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 {
-	//重新检测外星人【动态变动】
-	if (CheckLineAlien(this->CardActor->GetLine().Row))
+	if (IsValid(this->CurrentAlien) && !this->CurrentAlien->GetMouseIsDeath())
 	{
-		if (IsValid(CurrentAlien) && !CurrentAlien->GetMouseIsDeath())
+		//重新检测外星人【动态变动】
+		if (CheckLineAlien(this->CurrentAlien->GetMouseLine().Row))
 		{
 			FTransform Trans;
 			Trans.SetLocation(CurrentAlien->GetActorLocation());
@@ -127,12 +127,10 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 			NewBullet->Init();
 			NewBullet->HitMouse_OverlapBegin(CurrentAlien);
 		}
+		else {
+			this->CurrentAlien = nullptr;
+		}
 	}
-	else {
-		this->CurrentAlien = nullptr;
-	}
-
-	
 }
 
 void ULockingAttackComponent::PlayAttackAnimation()
