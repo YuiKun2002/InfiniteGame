@@ -236,14 +236,16 @@ void UGameMapUI_MouseViewEditor::Node_RemoveCurRound()
 {
 
 	//移除回合数据
-	if (this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig.Num() < this->CurRoundIndex
+	if (this->CurRoundIndex < this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig.Num()
 		&&
 		this->CurRoundIndex >= 0
 		)
 	{
-		FRondWidthMouseConfig& Config = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex];
+		FRondWidthMouseConfig& Config = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+			this->CurRoundIndex
+		];
 		for (FTimeNodeWidthRound& Round : Config.CurNode)
-		{		
+		{
 			this->RemoveNodeData(Round.CurNode);
 		}
 	}
@@ -370,19 +372,26 @@ void UGameMapUI_MouseViewEditor::Node_RemoveCurRoundNode()
 	}
 
 	//移除节点数据
-	if (this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode.Num() < this->CurRoundNodeIndex
-		&&
-		this->CurRoundNodeIndex >= 0
-		)
+	if (this->CurRoundNodeIndex < this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+		this->CurRoundIndex
+	].CurNode.Num()
+			&&
+			this->CurRoundNodeIndex >= 0
+			)
 	{
 		//移除当前节点全部的外星人
-		FTimeNodeWidthRound& Node = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode[this->CurRoundNodeIndex];
+		FTimeNodeWidthRound& Node = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+			this->CurRoundIndex
+		].CurNode[this->CurRoundNodeIndex];
 		//移除节点数据	
 		this->RemoveNodeData(Node.CurNode);
 	}
 
 	//移除回合节点
-	this->Remove(this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode, this->CurRoundNodeIndex);
+	this->Remove(
+		this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode,
+		this->CurRoundNodeIndex
+	);
 
 	this->GameMapUI_MouseTab->UpdateView();
 
