@@ -234,6 +234,20 @@ void UGameMapUI_MouseViewEditor::Node_AddNewCurRound()
 
 void UGameMapUI_MouseViewEditor::Node_RemoveCurRound()
 {
+
+	//移除回合数据
+	if (this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig.Num() < this->CurRoundIndex
+		&&
+		this->CurRoundIndex >= 0
+		)
+	{
+		FRondWidthMouseConfig& Config = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex];
+		for (FTimeNodeWidthRound& Round : Config.CurNode)
+		{		
+			this->RemoveNodeData(Round.CurNode);
+		}
+	}
+
 	//移除波
 	this->Remove(this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig, this->CurRoundIndex);
 
@@ -353,6 +367,18 @@ void UGameMapUI_MouseViewEditor::Node_RemoveCurRoundNode()
 	if (this->CurRoundIndex >= this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig.Num())
 	{
 		return;
+	}
+
+	//移除节点数据
+	if (this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode.Num() < this->CurRoundNodeIndex
+		&&
+		this->CurRoundNodeIndex >= 0
+		)
+	{
+		//移除当前节点全部的外星人
+		FTimeNodeWidthRound& Node = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode[this->CurRoundNodeIndex];
+		//移除节点数据	
+		this->RemoveNodeData(Node.CurNode);
 	}
 
 	//移除回合节点
@@ -626,6 +652,47 @@ void UGameMapUI_MouseViewEditor::UpdateLevelItems()
 		}
 
 		i++;
+	}
+}
+
+void UGameMapUI_MouseViewEditor::RemoveNodeData(TArray<FTimeNode>& InputFTimeNodes)
+{
+	FMouseConfig& CurMouseConfig = this->GetGameMapUIMouseTab()->GetConfigRef();
+
+	//遍历时间轴节点
+	for (FTimeNode& Node : InputFTimeNodes)
+	{
+		//遍历外星人节点
+		for (FMouseConfigNode& ConfigNode : Node.CurMouseNode)
+		{
+			//判断之前是否有数据【是否存放外星人】
+			if (!ConfigNode.CurMouseName.Equals(TEXT("")))
+			{
+				//将名称转换为ID
+				int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
+				int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
+				if (Count)
+				{
+					int32 TCount = (*Count - 1);
+					if (TCount <= 0)
+					{
+						CurMouseConfig.ValidKeyID.Emplace(ID);
+						CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
+						CurMouseConfig.AllMouseKeyListMap.Remove(ID);
+						CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
+					}
+					else {
+						CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+					}
+				}
+			}
+
+			ConfigNode.CurMouseName = TEXT("");
+			ConfigNode.CurMouseLine.Row = -1;
+			ConfigNode.CurMouseLine.Col = -1;
+			ConfigNode.IgnoreRows.Empty();
+			ConfigNode.LevelItems.Empty();
+		}
 	}
 }
 

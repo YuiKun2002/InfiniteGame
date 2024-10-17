@@ -36,29 +36,29 @@ class FVM_API UGameMapUI_MouseViewLevelItemView : public UUserWidget
 {
 	GENERATED_BODY()
 
-		friend class UGameMapUI_MouseViewEditor;
+	friend class UGameMapUI_MouseViewEditor;
 
 
 public:
 
 	virtual bool Initialize() override;
 
-	void Init(FString Name, FSoftObjectPath Img,UGameMapUI_MouseViewEditor* Class);
+	void Init(FString Name, FSoftObjectPath Img, UGameMapUI_MouseViewEditor* Class);
 
 public:
 	UFUNCTION()
-		void Remove();
+	void Remove();
 
 private:
 
 	UPROPERTY()
-		UGameMapUI_MouseViewEditor* GameMapUI_MouseViewEditor = nullptr;
+	UGameMapUI_MouseViewEditor* GameMapUI_MouseViewEditor = nullptr;
 
 	UPROPERTY()
-		FString ItemName;
+	FString ItemName;
 
 	UPROPERTY()
-		UButton* Butt = nullptr;
+	UButton* Butt = nullptr;
 
 };
 
@@ -69,7 +69,7 @@ class FVM_API UGameMapUI_MouseViewLevelItem : public UUserWidget
 {
 	GENERATED_BODY()
 
-		friend class UGameMapUI_MouseViewEditor;
+	friend class UGameMapUI_MouseViewEditor;
 
 public:
 
@@ -80,21 +80,21 @@ public:
 public:
 
 	UFUNCTION(BlueprintCallable)
-		void AddLevelItem();
+	void AddLevelItem();
 
 private:
 
 	UPROPERTY()
-		UGameMapUI_MouseViewEditor* GameMapUI_MouseViewEditor = nullptr;
+	UGameMapUI_MouseViewEditor* GameMapUI_MouseViewEditor = nullptr;
 
 	UPROPERTY()
-		UTextBlock* ItemNameText = nullptr;
+	UTextBlock* ItemNameText = nullptr;
 
 	UPROPERTY()
-		UButton* Butt = nullptr;
+	UButton* Butt = nullptr;
 
 	UPROPERTY()
-		FSoftObjectPath ImgRes;
+	FSoftObjectPath ImgRes;
 };
 
 
@@ -104,7 +104,7 @@ class FVM_API UGameMapUI_MouseViewEditor : public UUserWidget
 {
 	GENERATED_BODY()
 
-		friend class UMouseViewEditorRoundNodeGrid;
+	friend class UMouseViewEditorRoundNodeGrid;
 	friend class UMouseViewSelectMousePanel;
 	friend class UMouseViewSelectMouseItem;
 	friend class UGameMapUI_MouseViewEditor;
@@ -117,25 +117,25 @@ public:
 
 	//初始化编辑数据
 	UFUNCTION(BlueprintCallable)
-		void InitMouseViewEditor(UFVMEditUI_GameMapEdit* Class, UGameMapUI_MouseTab* OwnerClass);
+	void InitMouseViewEditor(UFVMEditUI_GameMapEdit* Class, UGameMapUI_MouseTab* OwnerClass);
 
 	//开初始化
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnInit();
+	void OnInit();
 public:
 	//获取编辑器
 	UFUNCTION(BlueprintCallable)
-		UFVMEditUI_GameMapEdit* GetEditor();
+	UFVMEditUI_GameMapEdit* GetEditor();
 	//获取老鼠选项
 	UFUNCTION(BlueprintCallable)
-		UGameMapUI_MouseTab* GetMouseTab();
+	UGameMapUI_MouseTab* GetMouseTab();
 private:
 	//初始化最小子节点
 	void InitRoundNodeGrid();
 
 	//更新文本
 	UFUNCTION(BlueprintCallable)
-		void UpdateText();
+	void UpdateText();
 
 	//检查最小子节点数量是否正确
 	void CheckTimeNodeCount();
@@ -148,81 +148,83 @@ private:
 private:
 	//添加波
 	UFUNCTION(BlueprintCallable)
-		void Node_AddNewCurRound();
+	void Node_AddNewCurRound();
 	//删除当前波
 	UFUNCTION(BlueprintCallable)
-		void Node_RemoveCurRound();
+	void Node_RemoveCurRound();
 	//倒退波索引
 	UFUNCTION(BlueprintCallable)
-		void LastCurRound();
+	void LastCurRound();
 	//前进波索引
 	UFUNCTION(BlueprintCallable)
-		void NextCurRound();
+	void NextCurRound();
 
 	//添加节点
 	UFUNCTION(BlueprintCallable)
-		void Node_AddNewRoundNode();
+	void Node_AddNewRoundNode();
 	//删除当前节点
 	UFUNCTION(BlueprintCallable)
-		void Node_RemoveCurRoundNode();
+	void Node_RemoveCurRoundNode();
 	//倒退节点索引
 	UFUNCTION(BlueprintCallable)
-		void LastCurRoundNode();
+	void LastCurRoundNode();
 	//前进节点索引
 	UFUNCTION(BlueprintCallable)
-		void NextCurRoundNode();
+	void NextCurRoundNode();
 
 
 	//设置老鼠生成完毕是否自动进入下一个回合
 	UFUNCTION(BlueprintCallable)
-		void SetAllMouseSpawnFinishAutoNext(bool Enable);
+	void SetAllMouseSpawnFinishAutoNext(bool Enable);
 	UFUNCTION(BlueprintCallable)
-		bool GetAllMouseSpawnFinishAutoNext();
+	bool GetAllMouseSpawnFinishAutoNext();
 
 	//设置进入下一个回合的准备时间
 	UFUNCTION(BlueprintCallable)
-		void SetInNextRoundTime(float InNdexTime);
+	void SetInNextRoundTime(float InNdexTime);
 	UFUNCTION(BlueprintCallable)
-		float GetInNextRoundTime();
+	float GetInNextRoundTime();
 
 	//设置当前波是否需要钥匙
 	UFUNCTION(BlueprintCallable)
-		void SetCurRoundKey(FRoundKey Key);
+	void SetCurRoundKey(FRoundKey Key);
 	UFUNCTION(BlueprintCallable)
-		FRoundKey GetCurRoundKey();
+	FRoundKey GetCurRoundKey();
 
 public:
 	//选择一个最小子节点中的老鼠节点
 	UFUNCTION(BlueprintCallable)
-		void SelectRoundNodeWithMouseNode(UMouseViewEditorRoundNodeGrid* CurMouseViewEditorRoundNodeGrid);
+	void SelectRoundNodeWithMouseNode(UMouseViewEditorRoundNodeGrid* CurMouseViewEditorRoundNodeGrid);
 	//更新当前被选择的节点
 	UFUNCTION(BlueprintCallable)
-		void UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode,bool bRemove = false);
+	void UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode, bool bRemove = false);
 	//当选择了一个节点时
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSelectMouseNode(FMouseConfigNode Node);
+	void OnSelectMouseNode(FMouseConfigNode Node);
 	//当选择的节点无效时
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSelectMouseNodeIsNull();
+	void OnSelectMouseNodeIsNull();
 
 
 	//老鼠节点移除模式
 	UFUNCTION(BlueprintCallable)
-		void EnableMouseNodeRemove();
+	void EnableMouseNodeRemove();
 
 	//老鼠节点开启
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnMouseNodeRemoveOpen();
+	void OnMouseNodeRemoveOpen();
 
 	//老鼠节点关闭
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnMouseNodeRemoveClose();
+	void OnMouseNodeRemoveClose();
 
 public:
 	//初始化掉落物
 	void InitLevelItems();
 	//更新当前的掉落物显示
 	void UpdateLevelItems();
+	//移除节点数据
+	void RemoveNodeData(TArray<FTimeNode>& InputFTimeNodes);
 private:
 	template<class T>
 	void Remove(TArray<T>& Array, int32& Index)
@@ -240,8 +242,12 @@ private:
 			//如果波数量小于等于索引
 			if (Array.Num() <= Index)
 			{
-				//数组最后一个索引将等于现在的索引
-				Index = Array.Num() - 1;
+				if (Index == Array.Num())
+				{
+					//数组最后一个索引将等于现在的索引
+					Index = Array.Num() - 1;
+				}
+
 				//索引永远不为负
 				if (Index < 0)
 				{
@@ -292,56 +298,56 @@ public:
 private:
 	//编辑器
 	UPROPERTY()
-		UFVMEditUI_GameMapEdit* FVMEditUI_GameMapEdit = nullptr;
+	UFVMEditUI_GameMapEdit* FVMEditUI_GameMapEdit = nullptr;
 	//老鼠选项卡
 	UPROPERTY()
-		UGameMapUI_MouseTab* GameMapUI_MouseTab = nullptr;
+	UGameMapUI_MouseTab* GameMapUI_MouseTab = nullptr;
 	//老鼠选择界面
 	UPROPERTY()
-		UMouseViewSelectMousePanel* MouseViewSelectMousePanel = nullptr;
+	UMouseViewSelectMousePanel* MouseViewSelectMousePanel = nullptr;
 	//当前被选择了的老鼠配置节点
 	UPROPERTY()
-		UMouseViewEditorRoundNodeGrid* MouseViewEditorRoundNodeGrid = nullptr;
+	UMouseViewEditorRoundNodeGrid* MouseViewEditorRoundNodeGrid = nullptr;
 private:
 	//背景图片
 	UPROPERTY()
-		UImage* MapBg = nullptr;
+	UImage* MapBg = nullptr;
 	//子回合节点的最小子节点
 	UPROPERTY()
-		UUniformGridPanel* RoundNodeGridPanel = nullptr;
+	UUniformGridPanel* RoundNodeGridPanel = nullptr;
 	//回合掉落物总界面
 	UPROPERTY()
-		UUniformGridPanel* LevelItemsGridPanel = nullptr;
+	UUniformGridPanel* LevelItemsGridPanel = nullptr;
 	//是否启动老鼠移除模式
 	UPROPERTY()
-		bool bEnableMouseNodeRemove = false;
+	bool bEnableMouseNodeRemove = false;
 private:
 	//总波数
 	UPROPERTY()
-		int32 TotalRound = 0;
+	int32 TotalRound = 0;
 	UPROPERTY()
-		UTextBlock* Text_TotalRoundCount = nullptr;
+	UTextBlock* Text_TotalRoundCount = nullptr;
 	//当前第x波
 	UPROPERTY()
-		int32 CurRoundIndex = 0;
+	int32 CurRoundIndex = 0;
 	UPROPERTY()
-		UTextBlock* Text_CurRoundIndex = nullptr;
+	UTextBlock* Text_CurRoundIndex = nullptr;
 	//总节点数
 	UPROPERTY()
-		int32 TotalRoundNode = 0;
+	int32 TotalRoundNode = 0;
 	UPROPERTY()
-		UTextBlock* Text_TotalRoundNodeCount = nullptr;
+	UTextBlock* Text_TotalRoundNodeCount = nullptr;
 	//当前节点索引
 	UPROPERTY()
-		int32 CurRoundNodeIndex = 0;
+	int32 CurRoundNodeIndex = 0;
 	UPROPERTY()
-		UTextBlock* Text_CurRoundNodeIndex = nullptr;
+	UTextBlock* Text_CurRoundNodeIndex = nullptr;
 private:
 	//需要显示的掉落物品
 	UPROPERTY()
-		TArray<FSoftObjectPath> LevelItemList;
+	TArray<FSoftObjectPath> LevelItemList;
 	//所有界面显示的容器
 	UPROPERTY()
-		UHorizontalBox* CurShowLevelItemListPanel = nullptr;
+	UHorizontalBox* CurShowLevelItemListPanel = nullptr;
 
 };
