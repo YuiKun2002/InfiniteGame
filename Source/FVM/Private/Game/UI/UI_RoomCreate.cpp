@@ -126,6 +126,7 @@ void UUI_RoomCreate::Room1()
 	UGameMapStructManager* Cur = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager();
 	Cur->LevelConfig = this->SourceData;
 	Cur->LevelConfig.ItemsValue += 4.5;
+	Cur->LevelConfig.bSpecialModeEnable = false;
 	//移除忽略项目
 	for (const FString& CurIg : this->SourceData.IgnoreItems)
 	{
@@ -149,7 +150,7 @@ void UUI_RoomCreate::Room4()
 	}
 	Cur->LevelConfig.ItemsCountRate = 1;
 	Cur->LevelConfig.ItemsValue += 150.f * 0.1f;
-
+	Cur->LevelConfig.bSpecialModeEnable = true;
 	this->Easy->SetIsEnabled(true);
 	this->Hard->SetIsEnabled(false);
 }

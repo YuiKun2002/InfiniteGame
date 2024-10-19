@@ -282,6 +282,9 @@ public:
 	//高亮显示个数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HiLightCount = 1;
+	//开启特殊模式
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSpecialModeEnable = false;
 };
 
 

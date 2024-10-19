@@ -419,7 +419,26 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 			if (RoundConfig.RoundKey.Enable)
 			{
 				//创建徽章或者钥匙交换UI
+				UGameMapStructManager* Cur = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager();
+				if (Cur->LevelConfig.bSpecialModeEnable)
+				{
+					AGameMapInstance::GetGameMapInstance()->PlaySound(
+						AGameMapInstance::GetGameMapInstance()->GetGameMapStructManager()->LevelConfig.LevelUpMusic
+					);
 
+					//继续游戏
+					//AGameMapInstance::GetVSManagerComponent_Static()->SetGameContinue();
+
+					//进入下一个回合
+					AGameMapInstance::GetMouseManagerComponent_Static()->ForceNextRound();
+					AGameMapInstance::GetMouseManagerComponent_Static()->ShowMouseUI(
+						AGameMapInstance::GetMouseManagerComponent_Static()->M_UMouseStructManager->GetRoundTotal()
+					);
+				}
+				else {
+					UVSManagerComponent::GameWin();
+				}
+				/*
 				//暂停游戏
 				AGameMapInstance::GetVSManagerComponent_Static()->SetGamePause();
 				//创建UI
@@ -467,7 +486,7 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 				else {
 					UVSManagerComponent::GameWin();
 				}
-
+				*/
 				return;
 			}
 			else {
