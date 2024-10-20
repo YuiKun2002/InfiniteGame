@@ -549,60 +549,50 @@ void UMouseStateDef::ModeDefState()
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			if (this->State != 1)
-			{
-				//播放攻击动画
-				UTrackEntry* Track = this->Get()->SetAnimation(0,
-					this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
-				);
-				BINDANIMATION(Track, this, &UMouseStateDef::OnAnimationComplet);
-				this->Get()->SetTrackEntry(Track);
-
-				this->State = 1;
-			}
+			this->PlayAttack();
 		}
 		else {
-			if (this->State != 0)
-			{
-				//播放行走动画
-				UTrackEntry* Track = this->Get()->SetAnimation(0,
-					this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
-				);
-				this->Get()->SetTrackEntry(Track);
-
-				this->State = 0;
-			}
+			this->PlayWalk();
 		}
 	}//[当生命值小于等于总生命值的40% && 老鼠生命值大于0]
 	else if (this->Get()->GetCurrentHP() <= this->Get()->GetTotalHP() * 0.4f && this->Get()->GetCurrentHP() > 0.f)
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			if (this->State != 3)
-			{
-				//播放攻击动画
-				UTrackEntry* Track = this->Get()->SetAnimation(0,
-					this->Get()->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true
-				);
-				BINDANIMATION(Track, this, &UMouseStateDef::OnAnimationComplet);
-				this->Get()->SetTrackEntry(Track);
-
-				this->State = 3;
-			}
+			this->PlayAttack();
 		}
 		else {
-			if (this->State != 2)
-			{
-				//播放行走动画
-				UTrackEntry* Track = this->Get()->SetAnimation(0,
-					this->Get()->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true
-				);
-				this->Get()->SetTrackEntry(Track);
-
-
-				this->State = 2;
-			}
+			this->PlayWalk();
 		}
+	}
+}
+
+void UMouseStateDef::PlayWalk()
+{
+	if (this->State != 0)
+	{
+		//播放行走动画
+		UTrackEntry* Track = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		this->Get()->SetTrackEntry(Track);
+
+		this->State = 0;
+	}
+}
+
+void UMouseStateDef::PlayAttack()
+{
+	if (this->State != 1)
+	{
+		//播放攻击动画
+		UTrackEntry* Track = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		BINDANIMATION(Track, this, &UMouseStateDef::OnAnimationComplet);
+		this->Get()->SetTrackEntry(Track);
+
+		this->State = 1;
 	}
 }
 

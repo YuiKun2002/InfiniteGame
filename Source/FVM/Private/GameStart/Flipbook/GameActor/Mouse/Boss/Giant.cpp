@@ -5,6 +5,7 @@
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include <Components/BoxComponent.h>
 #include <Components/Capsulecomponent.h>
+
 void AGiantAlien::BeginPlay()
 {
 	Super::BeginPlay();

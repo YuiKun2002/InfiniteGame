@@ -295,6 +295,10 @@ public:
 protected:
 	//默认模式状态
 	void ModeDefState();
+	//播放移动动画
+	void PlayWalk();
+	//播放攻击动画
+	void PlayAttack();
 };
 
 //带装饰的模式
