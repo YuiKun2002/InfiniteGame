@@ -201,6 +201,28 @@ public:
 	FSoftObjectPath Item3;
 };
 
+
+USTRUCT(BlueprintType)
+struct FLevelItem
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY()
+	int32 ItemID = 0;
+	UPROPERTY()
+	int32 ItemCount = 0;
+};
+
+//关卡道具配置
+USTRUCT(BlueprintType)
+struct FLevelItemConfig
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY()
+	TArray<FLevelItem> Items;
+};
+
 //关卡配置
 USTRUCT(BlueprintType)
 struct FLevelConfig
@@ -285,6 +307,9 @@ public:
 	//开启特殊模式
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bSpecialModeEnable = false;
+	//当前关卡掉落的道具
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLevelItemConfig LevelItemConfig;
 };
 
 

@@ -364,10 +364,10 @@ void UVSManagerComponent::GameOver()
 	this->M_UI_GameOver->AddToViewport();
 	if (M_Win)
 	{
-		this->M_UI_GameOver->ShowOver1();
+		this->M_UI_GameOver->ShowOver1(M_Win);
 	}
-	this->M_UI_GameOver->ShowOver2(M_Win);
-	this->M_UI_GameOver->ShowOver3();
+	//this->M_UI_GameOver->ShowOver2(M_Win);
+	//this->M_UI_GameOver->ShowOver3();
 
 	//播放音乐
 	if (M_Win)

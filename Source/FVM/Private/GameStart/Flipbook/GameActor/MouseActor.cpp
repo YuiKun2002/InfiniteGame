@@ -128,6 +128,17 @@ void AMouseActor::MouseKill()
 	//生成死亡个数
 	UResourceManagerComponent::ResourceAddKillMouse(this->MouseObjName);
 
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		UGameSystemFunction::FVMLog(__FUNCTION__,
+			FString(UGameSystemFunction::GetObjectName(this) + TEXT("死亡,") +
+				FString::FromInt(this->GetTotalHP()) + TEXT("总血量")
+			)
+		);
+	}
+
+	/*
 	if (IsValid(MouseManager))
 	{
 		//生成专属掉落物品
@@ -173,15 +184,7 @@ void AMouseActor::MouseKill()
 	else {
 		this->Destroy();
 	}
-
-	if (UFVMGameInstance::GetDebug())
-	{
-		UGameSystemFunction::FVMLog(__FUNCTION__,
-			FString(UGameSystemFunction::GetObjectName(this) + TEXT("死亡,") +
-				FString::FromInt(this->GetTotalHP()) + TEXT("总血量")
-			)
-		);
-	}
+	*/
 }
 
 bool AMouseActor::UpdateHP(float _HurtValue)
