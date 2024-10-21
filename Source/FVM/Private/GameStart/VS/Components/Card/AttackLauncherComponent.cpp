@@ -111,6 +111,8 @@ void UAttackLauncherComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCat
 	{
 		this->TargetIdleAnimationNames[CurName] = IdleName.GetDefaultObject()->GetCategoryName().ToString();
 	}
+
+	this->PlayIdleAnimation();
 }
 
 void UAttackLauncherComponent::PlayAttackAnimation()
