@@ -84,9 +84,9 @@ void UCardAttackComponent::LoadResource()
 	);
 
 	//播放发呆动画
-	this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true);
+	this->SetTrackEntry(this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true));
 
-	this->SetTrackEntry(nullptr);
+	UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片动画名称：")) + this->GetIdleAnimName());
 }
 
 void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
@@ -99,17 +99,12 @@ void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategor
 {
 	Super::ReInitDefIdleAnimName(IdleName);
 
-	this->AttackCardActor->SetEmptyAnimation(0, 0.f);
-	this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true);
-
-	UE_LOG(LogTemp, Error, TEXT("CardAnim %s"), *this->GetIdleAnimName());
+	this->SetTrackEntry(this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true));
 }
 
 void UCardAttackComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
-
-	UE_LOG(LogTemp, Error, TEXT("CardAnim %s"), *this->GetAttackAnimName());
 
 	//播放动画
 	UTrackEntry* Track = this->AttackCardActor->SetAnimation(0, this->GetAttackAnimName(), true);
@@ -123,7 +118,7 @@ void UCardAttackComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true);
+	this->SetTrackEntry(this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true));
 }
 
 void UCardAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
