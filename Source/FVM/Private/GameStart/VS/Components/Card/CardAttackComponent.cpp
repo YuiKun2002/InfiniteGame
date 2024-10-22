@@ -86,7 +86,7 @@ void UCardAttackComponent::LoadResource()
 	//播放发呆动画
 	this->SetTrackEntry(this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true));
 
-	UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片动画名称：")) + this->GetIdleAnimName());
+	//UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片动画名称：")) + this->GetIdleAnimName());
 }
 
 void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
