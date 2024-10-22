@@ -101,10 +101,14 @@ void UAttackLauncherComponent::InitLaunchBulletByDef(
 	{
 		//添加默认Idle动画
 		this->TargetIdleAnimationNames.Emplace(IdleName.GetDefaultObject()->GetCategoryName().ToString());
+
+		UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片默认动画有效：")) + this->GetIdleAnimName());
 	}
 	else {
 		//添加默认Idle动画
 		this->TargetIdleAnimationNames.Emplace(SpineCardAnimationState_Idle);
+
+		UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片默认动画无效：")) + this->GetIdleAnimName());
 	}
 }
 
