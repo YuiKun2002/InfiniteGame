@@ -27,7 +27,7 @@ UCardDefenceComponent::UCardDefenceComponent()
 
 void UCardDefenceComponent::UpdateState()
 {
-	if (this->DefenceCardActor)
+	if (IsValid(this->DefenceCardActor))
 	{
 		//获取到卡片生命值
 		const float& HPTop = this->DefenceCardActor->GetTotalHP();
@@ -38,9 +38,14 @@ void UCardDefenceComponent::UpdateState()
 			//第一状态
 			if (IsValid(this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()))
 			{
-				this->DefenceCardActor->SetAnimation(0,
-					this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
-					, true);
+				if (this->State != 0)
+				{
+					this->State = 0;
+					this->DefenceCardActor->SetAnimation(0,
+						this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
+						, true);
+				}
+
 			}
 		}
 		else if (HP >= HPTop * (0.3f) && HP < HPTop * (0.6f))
@@ -48,21 +53,28 @@ void UCardDefenceComponent::UpdateState()
 			//第二状态
 			if (IsValid(this->DefenceCardActor->CardActor_DefAnim2.GetDefaultObject()))
 			{
-				this->DefenceCardActor->AddAnimation(0,
-					this->DefenceCardActor->CardActor_DefAnim2.GetDefaultObject()->GetCategoryName().ToString()
-					, true, 0.1f);
+				if (this->State != 1)
+				{
+					this->State = 1;
+					this->DefenceCardActor->AddAnimation(0,
+						this->DefenceCardActor->CardActor_DefAnim2.GetDefaultObject()->GetCategoryName().ToString()
+						, true, 0.1f);
+				}
 			}
 		}
 		else {
 			//第三状态
 			if (IsValid(this->DefenceCardActor->CardActor_DefAnim3.GetDefaultObject()))
 			{
-				this->DefenceCardActor->AddAnimation(0,
-					this->DefenceCardActor->CardActor_DefAnim3.GetDefaultObject()->GetCategoryName().ToString()
-					, true, 0.1f);
+				if (this->State != 2)
+				{
+					this->State = 2;
+					this->DefenceCardActor->AddAnimation(0,
+						this->DefenceCardActor->CardActor_DefAnim3.GetDefaultObject()->GetCategoryName().ToString()
+						, true, 0.1f);
+				}
 			}
 		}
-
 	}
 }
 
@@ -70,9 +82,13 @@ void UCardDefenceComponent::LoadResource()
 {
 	if (IsValid(this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()))
 	{
-		this->DefenceCardActor->SetAnimation(0,
-			this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
-			, true);
+		if (this->State != 0)
+		{
+			this->State = 0;
+			this->DefenceCardActor->SetAnimation(0,
+				this->DefenceCardActor->CardActor_DefAnim1.GetDefaultObject()->GetCategoryName().ToString()
+				, true);
+		}
 	}
 }
 
@@ -124,6 +140,10 @@ void UCardDefenceComponent::Death()
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("防御类型的卡片死亡"));
 	}
 
+
+
+	/*
+
 	//获取卡片数据
 	const FItemCardDefence& CardData = this->DefenceCardActor->GetDefenceCardData();
 
@@ -148,8 +168,12 @@ void UCardDefenceComponent::Death()
 		Flip->GetMyActor()->SetFlipbook(Cast<UPaperFlipbook>(CardData.M_DeathBombAnimFlipbookPath.TryLoad()));
 		Flip->SetAnimationPlayEndDestroy();
 	}
+	*/
 
-	//是否开启了死亡爆炸
+	/*
+
+
+		//是否开启了死亡爆炸
 	if (CardData.M_bEnableDeathBomb)
 	{
 		TArray<FHitResult> Hits;
@@ -189,6 +213,9 @@ void UCardDefenceComponent::Death()
 			}
 		}
 	}
+
+
+	*/
 }
 
 

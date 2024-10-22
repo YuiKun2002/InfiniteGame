@@ -28,7 +28,7 @@ void UAttackLauncherComponent::BeginPlay()
 
 void UAttackLauncherComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime,TickType,ThisTickFunction);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UAttackLauncherComponent::LoadResource()
@@ -66,7 +66,11 @@ void UAttackLauncherComponent::Spawn()
 
 void UAttackLauncherComponent::SpawnBullet(AFlyItemActor* NewBullet) {}
 
-void UAttackLauncherComponent::InitLaunchBulletByDef(TSoftClassPtr<AFlyItemActor> BulletRes)
+void UAttackLauncherComponent::InitLaunchBulletByDef(
+	TSoftClassPtr<AFlyItemActor> BulletRes,
+	const TSubclassOf<class UAssetCategoryName>& IdleName,
+	const TSubclassOf<class UAssetCategoryName>& AttackName
+)
 {
 	if (this->bInit)
 	{
@@ -79,13 +83,29 @@ void UAttackLauncherComponent::InitLaunchBulletByDef(TSoftClassPtr<AFlyItemActor
 		BulletRes,
 		1));
 
-	//初始化默认子弹资源[默认子弹，默认动画] 添加默认攻击动作
-	this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
-		BulletRes,
-		SpineCardAnimationState_Attack));
+	if (IsValid(AttackName.GetDefaultObject()))
+	{
+		//初始化默认子弹资源[默认子弹，默认动画] 添加默认攻击动作
+		this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
+			BulletRes,
+			AttackName.GetDefaultObject()->GetCategoryName().ToString()));
+	}
+	else {
+		//初始化默认子弹资源[默认子弹，默认动画] 添加默认攻击动作
+		this->OtherItems.Emplace(FCardOtherItem(this->Pool.Num() - 1, 100,
+			BulletRes,
+			SpineCardAnimationState_Attack));
+	}
 
-	//添加默认Idle动画
-	this->TargetIdleAnimationNames.Emplace(SpineCardAnimationState_Idle);
+	if (IsValid(IdleName.GetDefaultObject()))
+	{
+		//添加默认Idle动画
+		this->TargetIdleAnimationNames.Emplace(IdleName.GetDefaultObject()->GetCategoryName().ToString());
+	}
+	else {
+		//添加默认Idle动画
+		this->TargetIdleAnimationNames.Emplace(SpineCardAnimationState_Idle);
+	}
 }
 
 void UAttackLauncherComponent::ReInitDefAttackAnimName(TSubclassOf<class UAssetCategoryName> AttackName)
@@ -111,8 +131,6 @@ void UAttackLauncherComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCat
 	{
 		this->TargetIdleAnimationNames[CurName] = IdleName.GetDefaultObject()->GetCategoryName().ToString();
 	}
-
-	this->PlayIdleAnimation();
 }
 
 void UAttackLauncherComponent::PlayAttackAnimation()

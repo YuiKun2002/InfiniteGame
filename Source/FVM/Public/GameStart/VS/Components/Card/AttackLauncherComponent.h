@@ -91,7 +91,9 @@ public:
 	//初始化默认子弹对象
 	UFUNCTION(BlueprintCallable)
 	void InitLaunchBulletByDef(
-		TSoftClassPtr<AFlyItemActor> BulletRes
+		TSoftClassPtr<AFlyItemActor> BulletRes,
+		const TSubclassOf<class UAssetCategoryName>& IdleName = nullptr,
+		const TSubclassOf<class UAssetCategoryName>& AttackName = nullptr
 	);
 
 	//重新初始化默认攻击动画名称
