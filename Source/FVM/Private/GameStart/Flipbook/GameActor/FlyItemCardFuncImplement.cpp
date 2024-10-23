@@ -24,6 +24,14 @@ void UFlyItemReboundCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCar
 		return;
 	}
 
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
 	);
@@ -87,6 +95,14 @@ UFlyItemCardFunc* UFlyItemBuffCardFunc::MakeNewClass()
 
 void UFlyItemBuffCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFunctionTriggerImplementTRB CardData, AFlyItemActor* CurFlyItem)
 {
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
 	);
@@ -120,7 +136,17 @@ void UFlyItemAcrossCardFunc::Execute(
 	FCardFunctionTriggerImplementTRB CardData,
 	AFlyItemActor* CurFlyItem
 )
-{
+{	
+	
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
+
 	if (CurFlyItem->GetActor_CardFunction_Component() == Cast<UActorComponent>(CardFuncComp))
 	{
 		return;
@@ -239,11 +265,14 @@ void UFlyItemAcrossCardFunc::Execute(
 			_FlyActor->GetCardActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));*/
 
 			_FlyActor->SetRotation(180.f);
-			//_FlyActor->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
-
 			CurSComp->SetMoveDirection(EShootDirection::ELeft);
 		}
 		break;
+		case  EShootDirection::ERight:
+		{
+			_FlyActor->SetRotation(0.f);
+			CurSComp->SetMoveDirection(EShootDirection::ERight);
+		}break;
 		//其他则排除按照原方向
 		default:CurSComp->SetMoveDirection(_Comp->GetMoveDirection()); break;
 		}
@@ -265,6 +294,14 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 {
 	if (IsValid(CurFlyItem))
 	{
+		if (CurFlyItem->GetFlyConstraintLine())
+		{
+			if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+			{
+				return;
+			}
+		}
+
 		//获取射击组件（原来的子弹）
 		UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 			CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())

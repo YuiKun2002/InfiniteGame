@@ -105,12 +105,6 @@ UUI_MapMeshe* UCardFunctionComponent::GetCardMeshe()
 
 void UCardFunctionComponent::EventTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//卡片休息
-	if (!this->FunctionCardActor->GetCardDay() && this->FunctionCardActor->GetMapDay())
-	{
-		return;
-	}
-
 	if (IsValid(OtherActor))
 	{
 
