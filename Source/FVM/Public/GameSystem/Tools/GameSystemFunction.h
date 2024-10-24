@@ -147,6 +147,11 @@ public:
 	static int32 GetRandomRange(int32 Random_Min = 0, int32 RandomNums = 100);
 	//返回一个概率结果[Min,Max]
 	static float GetRandomRangeFloat(float Random_Min = 0.f, float RandomNums = 100.f);
+
+	UFUNCTION(BlueprintPure)
+	static float GetGCD_f(int32 X,int32 Y);
+	UFUNCTION(BlueprintPure)
+	static FVector2D GetScale(int32 X,int32 Y);
 public:
 	//选项卡选择功能
 	UFUNCTION(BlueprintCallable)

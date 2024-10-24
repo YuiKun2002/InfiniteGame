@@ -24,6 +24,9 @@
 
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetStringLibrary.h>
+
+#include <iomanip>
 
 FDateTime UGameSystemFunction::GameSystem_Time;
 FDateTime UGameSystemFunction::GameSystem_Time_Now;
@@ -177,6 +180,42 @@ int32 UGameSystemFunction::GetRandomRange(int32 Random_Min, int32 RandomNums)
 float UGameSystemFunction::GetRandomRangeFloat(float Random_Min, float RandomNums)
 {
 	return UGameSystemFunction::Random_Now.FRandRange(Random_Min, RandomNums);
+}
+
+float UGameSystemFunction::GetGCD_f(int32 X, int32 Y)
+{
+	if (X % Y == 0)
+	{
+		return Y;
+	}
+
+	return GetGCD_f(Y, X % Y);
+}
+
+FVector2D UGameSystemFunction::GetScale(int32 X, int32 Y)
+{
+	int32 Max = X;
+	int32 Min = Y;
+	if (Max < Y)
+	{
+		Max = Y;
+		Min = X;
+	}
+
+	// 10 9 3 1  以9为基数
+	float Target9 = Max * 9.f / Min;
+	constexpr int Accuracy = 10;
+	const int BigRoundResult = FMath::RoundToInt(Target9 * Accuracy);
+	const FString IntPart = FString::FromInt(BigRoundResult / Accuracy);
+	const FString DigPart = FString::FromInt(
+		BigRoundResult > 0 ? BigRoundResult % Accuracy : (-1) * BigRoundResult % Accuracy
+	);
+
+	float TargetValue = UKismetStringLibrary::Conv_StringToFloat(IntPart + TEXT(".") + DigPart);
+
+	UE_LOG(LogTemp, Error, TEXT("%s"), *FString::SanitizeFloat(TargetValue));
+
+	return FVector2D(TargetValue, 9.f);
 }
 
 void UGameSystemFunction::TabSelect(const TArray<UButton*>& _ButtonArrays, const  FString& _UniformPath, const  TArray<FString>& _DefButtonStyle, const TArray<FString>& _ClickButtonStyle, int32 _Index)
