@@ -78,6 +78,11 @@ void UCardLauncherComponent::SetAttackModEnabled(bool _value)
 	this->M_BeginAttackMod = _value;
 }
 
+bool UCardLauncherComponent::GetAttackModEnabled() const
+{
+	return this->M_BeginAttackMod;
+}
+
 void UCardLauncherComponent::OnAnimationPlayEnd()
 {
 	//攻击模式状态
@@ -98,12 +103,14 @@ void UCardLauncherComponent::SetTrackEntry(class UTrackEntry* Track)
 	{
 		this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
 	}
-	else {
-		return;
-	}
 
 	this->AnimTrackEntry = nullptr;
 	this->AnimTrackEntry = Track;
+}
+
+class UTrackEntry* UCardLauncherComponent::GetTrackEntry()
+{
+	return this->AnimTrackEntry;
 }
 
 //发射个数，攻击速度，首次攻击延迟，每次攻击延迟

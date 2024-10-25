@@ -250,7 +250,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		AGameMapInstance* M_AGameMapInstance = nullptr;
 	//卡片碰撞
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 		UBoxComponent* M_CardTypeBoxCollision = nullptr;
 private:
 	//生命类

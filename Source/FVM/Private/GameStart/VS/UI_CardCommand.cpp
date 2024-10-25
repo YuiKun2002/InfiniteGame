@@ -29,7 +29,7 @@ void UUI_CardCommand::EradicateCard()
 {
 	if (this->M_MapMeshe)
 	{
-		M_MapMeshe->EradicateCard();
+		M_MapMeshe->EradicateCard(true);
 
 		AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(LoadClass<AGameActorFlipbookBase>(0, TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/BPEradicate.BPEradicate_C'")), this->M_MapMeshe->M_MapMesheTransform);
 		Eradicate_->SetAnimationPlayEndDestroy();

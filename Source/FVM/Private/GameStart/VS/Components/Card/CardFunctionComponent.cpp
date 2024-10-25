@@ -50,28 +50,16 @@ void UCardFunctionComponent::BeginPlay()
 	//获取卡片格子
 	this->M_CardMapMeshe = this->FunctionCardActor->GetUIMapMesh();
 
-	//播放默认动画
-	/*if (UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml))
-	{
-		this->FunctionCardActor->SetPlayAnimation(
-			UGameSystemFunction::LoadRes(this->FunctionCardActor->CardActor_DefAniml)
-		);
-	}*/
-
 	UTrackEntry* Track = this->FunctionCardActor->SetAnimation(
 		0,
-		SpineAnimationState_BurgerCard_Idle,
+		this->FunctionCardActor->GetIdleAnimName(),
 		true
 	);
 
 	Track->AnimationComplete.AddDynamic(
 		this, &UCardFunctionComponent::OnAnimationPlayEnd
 	);
-
-	//绑定动画播放完毕函数
-	//this->FunctionCardActor->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(
-	//	this, &UCardFunctionComponent::OnAnimationPlayEnd
-	//);
+	this->SetTrackEntry(Track);
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunction(this);
@@ -117,12 +105,6 @@ UUI_MapMeshe* UCardFunctionComponent::GetCardMeshe()
 
 void UCardFunctionComponent::EventTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//卡片休息
-	if (!this->FunctionCardActor->GetCardDay() && this->FunctionCardActor->GetMapDay())
-	{
-		return;
-	}
-
 	if (IsValid(OtherActor))
 	{
 
@@ -149,5 +131,21 @@ void UCardFunctionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunctionUpdate(this, DeltaTime);
+}
+
+void UCardFunctionComponent::SetTrackEntry(UTrackEntry* NewTrackEntry)
+{
+	if (IsValid(this->CurTrackEntry))
+	{
+		this->CurTrackEntry->AnimationComplete.RemoveAll(this);
+	}
+
+	this->CurTrackEntry = nullptr;
+	this->CurTrackEntry = NewTrackEntry;
+}
+
+UTrackEntry* UCardFunctionComponent::GetTrackEntry()
+{
+	return this->CurTrackEntry;
 }
 

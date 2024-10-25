@@ -3,6 +3,9 @@
 
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
+#include "GameStart/Flipbook/GameActor/FlyItemActor.h"
+#include "SpineBoneFollowerComponent.h"
+#include "SpineSkeletonRendererComponent.h"
 
 #include "GameStart/VS/Components/PlayerWeapon/FirstWeaponProjectionComponent.h"
 
@@ -19,46 +22,54 @@ APlayerFirstWeapon::APlayerFirstWeapon()
 {
 	this->M_UFirstWeaponProjectionComponent = CreateDefaultSubobject<UFirstWeaponProjectionComponent>(TEXT("FristWeapon_Projection"));
 	this->BulletLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("FristWeapon_BulletLocationComp"));
-	this->BulletLocationComp->SetupAttachment(this->GetRootComponent());
+	this->BoneFollowerComp = CreateDefaultSubobject<USpineBoneFollowerComponent>(TEXT("FristWeapon_SpineBoneFollowerComponent"));
+	this->BulletLocationComp->SetupAttachment(this->GetPointComponent());
 }
 
-void APlayerFirstWeapon::InitWeaponData(UPlayerStructManager* _Player, const FString& _WeaponName, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
+void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& WeaponData, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
 {
-	FPlayerWeaponFirst TempData;
-
-	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
-	//获取基础数据(从数据库中查询具体数据)
-	for (const auto& Data : Cache->GetWeaponFirst())
-	{
-		if (Data.M_FEquipment.ItemName.ToString().Equals(_WeaponName))
-		{
-			TempData = Data.M_FEquipment;
-
-			if (UFVMGameInstance::GetDebug())
-			{
-				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器数据查询成功，并且赋值"));
-			}
-
-			break;
-		}
-	}
-
-	//初始化名称
-	if (_Player->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_bUse)
-	{
-		//查询角色武器库数据
-
-	}
-
-	this->M_FFPlayerWeaponFirstData = TempData;
+	this->M_FFPlayerWeaponFirstData = WeaponData;
 
 	if (UFVMGameInstance::GetDebug())
 	{
 		UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("计算射线位置"));
 	}
 
+	//交换坐标
+	FVector PointLocation = this->GetPointComponent()->GetRelativeLocation();
+	this->GetPointComponent()->SetRelativeLocation(
+		FVector(
+			PointLocation.Y,
+			PointLocation.X,
+			PointLocation.Z
+		)
+	);
+
+	FVector BulletLocation = this->BulletLocationComp->GetRelativeLocation();
+	this->BulletLocationComp->SetRelativeLocation(
+		FVector(
+			BulletLocation.Y,
+			BulletLocation.X,
+			BulletLocation.Z
+		)
+	);
+
+	this->BoneFollowerComp->Target = Player;
+	this->BoneFollowerComp->BoneName = TEXT("hand1");
+
+	this->BoneFollowerComp->UseComponentTransform = false;
+	this->BoneFollowerComp->UsePosition = true;
+	this->BoneFollowerComp->UseRotation = false;
+	this->BoneFollowerComp->UseScale = false;
+
+	//初始化显示
+	this->InitSpineShow();
+
+	//初始化渲染层级
+	this->SetRenderLayer(Player->GetSpineRenderLayer() + 1);
+
 	//计算射线目标位置
-	for (const auto& LineTrace : this->M_FFPlayerWeaponFirstData.M_LineTraceSettings)
+	for (const auto& LineTrace : this->WeaponLineTraceSettings)
 	{
 		UGameSystemFunction::CalculateLineTracePosition(
 			_MapMeshe->GetActorLocation(),
@@ -69,21 +80,10 @@ void APlayerFirstWeapon::InitWeaponData(UPlayerStructManager* _Player, const FSt
 		);
 	}
 
-
-	//初始化动画数据
-	this->M_Anim_FirstWeaponDef = LoadObject<UPaperFlipbook>(0,
-		*this->M_FFPlayerWeaponFirstData.M_WeaponDef_Path.ToString()
-		);
-
-	this->M_Anim_FirstWeaponAttack = LoadObject<UPaperFlipbook>(0,
-		*this->M_FFPlayerWeaponFirstData.M_WeaponAttack_Path.ToString()
-		);
-
-
 	this->M_UFirstWeaponProjectionComponent->LoadResource();
 }
 
-const FPlayerWeaponFirst& APlayerFirstWeapon::GetPlayerFirstWeaponData()
+const FMainWeaponData& APlayerFirstWeapon::GetPlayerFirstWeaponData()
 {
 	return this->M_FFPlayerWeaponFirstData;
 }
@@ -91,7 +91,6 @@ const FPlayerWeaponFirst& APlayerFirstWeapon::GetPlayerFirstWeaponData()
 void APlayerFirstWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void APlayerFirstWeapon::Tick(float DeltaTime)
@@ -101,32 +100,22 @@ void APlayerFirstWeapon::Tick(float DeltaTime)
 
 void APlayerFirstWeapon::MeshMoveUpdate(float DeltaTime, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
 {
-	this->M_FirstWeaponLineTraceSettings.Empty();
+	//this->M_FirstWeaponLineTraceSettings.Empty();
 
-	//计算射线目标位置
-	for (const auto& LineTrace : this->M_FFPlayerWeaponFirstData.M_LineTraceSettings)
-	{
-		UGameSystemFunction::CalculateLineTracePosition(
-		_MapMeshe->GetActorLocation(), 
-		_UI_MapMeshe->GetLine(),
-		_UI_MapMeshe, LineTrace, this->M_FirstWeaponLineTraceSettings
-		);
-	}
+	////计算射线目标位置
+	//for (const auto& LineTrace : this->M_FFPlayerWeaponFirstData.M_LineTraceSettings)
+	//{
+	//	UGameSystemFunction::CalculateLineTracePosition(
+	//	_MapMeshe->GetActorLocation(), 
+	//	_UI_MapMeshe->GetLine(),
+	//	_UI_MapMeshe, LineTrace, this->M_FirstWeaponLineTraceSettings
+	//	);
+	//}
 }
 
 void APlayerFirstWeapon::SetPlayeActor(AGamePlayer* _Player)
 {
 	this->M_AGamePlayer = _Player;
-}
-
-void APlayerFirstWeapon::PlayerDef_Anim()
-{
-	this->SetPlayAnimation(this->M_Anim_FirstWeaponDef);
-}
-
-void APlayerFirstWeapon::PlayerAttack_Anim()
-{
-	this->SetPlayAnimation(this->M_Anim_FirstWeaponAttack);
 }
 
 USceneComponent* APlayerFirstWeapon::GetBulletLocationComp()

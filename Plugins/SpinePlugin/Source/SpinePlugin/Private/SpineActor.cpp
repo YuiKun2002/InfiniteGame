@@ -57,15 +57,20 @@ UTrackEntry* ASpineActor::GetCurrentAnimationTrackEntry(int32 TrackIndex) const
 
 FRotator ASpineActor::GetRotation() const
 {
-	return this->AnimRenderComp->GetRelativeRotation();
+	return this->PointComp->GetRelativeRotation();
 }
 
-FLinearColor ASpineActor::GetRenderColor() const
+FLinearColor ASpineActor::GetSpineRenderColor() const
 {
 	return this->AnimRenderComp->Color;
 }
 
-int32 ASpineActor::GetRenderLayer() const
+int32 ASpineActor::GetSpineRenderLayer()
+{
+	return this->GetRenderLayer();
+}
+
+int32 ASpineActor::GetRenderLayer()
 {
 	return this->mRenderLayer;
 }
@@ -122,7 +127,7 @@ void ASpineActor::SetAnimationClear(int32 TrackIndex)
 	}
 }
 
-void ASpineActor::SetRenderColor(FLinearColor SpineColor)
+void ASpineActor::SetSpineRenderColor(FLinearColor SpineColor)
 {
 	this->AnimRenderComp->Color = SpineColor;
 }
@@ -140,6 +145,7 @@ void ASpineActor::SetRenderLayer(int32 RenderLayer)
 	}
 
 	this->mRenderLayer = RenderLayer;
+	this->AnimRenderComp->SetTranslucentSortPriority(RenderLayer);
 }
 
 void ASpineActor::InitSpineShow()
@@ -163,11 +169,9 @@ void ASpineActor::InitSpineShow()
 void ASpineActor::SetRotation(float Angle)
 {
 	//设置旋转角度
-	this->AnimRenderComp->SetRelativeRotation(
-		FRotator(
-			Angle,
-			this->AnimRenderComp->GetRelativeRotation().Yaw,
-			this->AnimRenderComp->GetRelativeRotation().Roll
-		)
-	);
+	FTransform Trans = this->PointComp->GetComponentToWorld();
+	FRotationConversionCache a;
+	Trans.SetRotation(a.RotatorToQuat(FRotator(0.f, 0.f, Angle)));
+
+	this->PointComp->SetWorldTransform(Trans);
 }

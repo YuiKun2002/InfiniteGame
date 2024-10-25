@@ -1,10 +1,12 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "FunctionCardActor.generated.h"
+
+#define SpineAnimationState_FuncCard_DefAnimation TEXT("Idle")
 
 #define SpineAnimationState_SpawnCard_Def TEXT("Def")
 #define SpineAnimationState_SpawnCard_DefSpawn TEXT("DefSpawn")
@@ -97,7 +99,7 @@ class FVM_API AFunctionActor : public AActor
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnInit(class AFunctionCardActor* CurCardActor);
+	void OnInit(class AFunctionCardActor* CurCardActor,const TArray<class AMapMouseMesheManager*>& MouseMesheManagers);
 };
 
 
@@ -140,12 +142,13 @@ public:
 	//获取当前正在执行的功能
 	UFUNCTION(BlueprintCallable)
 	UCardFunctionBase* GetCurrentExecuteCardFuncClass();
-
-
+	//获取Idle动画名称
+	UFUNCTION(BlueprintPure)
+	FString GetIdleAnimName();
 public:
-	//默认动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftObjectPtr<UPaperFlipbook> CardActor_DefAniml;
+	//默认动画名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画名称")
+	TSubclassOf<UAssetCategoryName> FunCardIdleAnimName;
 public:
 
 	virtual void BeginPlay() override;
@@ -171,4 +174,5 @@ private:
 	//当前卡片功能触发死亡
 	UPROPERTY()
 	TArray<class UCardFunctionBase*> CardFunctionClassInstanceOnDeathQueue;
+
 };

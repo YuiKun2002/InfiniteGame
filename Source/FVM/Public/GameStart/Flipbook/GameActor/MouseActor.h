@@ -8,7 +8,11 @@
 #include <Components/BoxComponent.h>
 #include "GameStart/VS/MapBaseType.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "GameSystem/GameDataSubsystem.h"
+#include "SpineSkeletonAnimationComponent.h"
+#include "GameSystem/Item/Card/CardBaseStruct.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
+#include "GameStart/VS/Components/Alien/WaterSceneComponent.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "MouseActor.generated.h"
 
@@ -19,6 +23,15 @@ class UMouseManagerComponent;
 class UBoxComponent;
 
 #define SpineMouseDeath TEXT("Death")
+#define AttackLineOnWaterOffset 15.f
+#define AlienInTimeLineRes TEXT("CurveFloat'/Game/Resource/SpineData/外星人动画/出场/BP_AlienCurve.BP_AlienCurve'")
+#define InWaterTimeLineRes TEXT("CurveFloat'/Game/Resource/BP/GameStart/Item/Mouse/Curve/MouseInWater.MouseInWater'")
+
+#define  BINDANIMATION(Anim,Object,Func)\
+	Anim->AnimationComplete.AddDynamic(\
+	Object,\
+	Func\
+	)\
 
 //障碍物对象
 UCLASS()
@@ -172,6 +185,7 @@ public:
 };
 
 class AMouseActor;
+class UCurveFloat;
 
 //老鼠基本类型
 UENUM()
@@ -182,6 +196,8 @@ enum class EMouseBaseType : uint8
 	Other //其他
 };
 
+
+
 UCLASS()
 class FVM_API AMouseActor : public ASpineActor
 {
@@ -190,6 +206,9 @@ public:
 	//老鼠名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠名称")
 	FString MouseObjName;
+	//外星人名字
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠名称")
+	FString AlienName;
 	//老鼠入水淹没百分比
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "水中属性")
 	float MouseInWaterRate = 1.f;
@@ -220,9 +239,9 @@ public:
 	//老鼠的位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* M_MousePosition = nullptr;
-	//老鼠入水的动画
+	//出场曲线
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UFlipbookBaseComponent* InWaterAnim = nullptr;
+	UCurveFloat* CurveIn = nullptr;
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)
@@ -302,6 +321,9 @@ public:
 	//获取当前的不透明度
 	UFUNCTION(BlueprintCallable)
 	float GetColorOpacity() const;
+	//获取轨道动画
+	UFUNCTION(BlueprintCallable)
+	UTrackEntry* GetTrackEntry();
 public:
 	//设置老鼠标记
 	UFUNCTION(BlueprintCallable)
@@ -388,6 +410,9 @@ public:
 		class UPrimitiveComponent* _MouseBodyOverlap,
 		ECollisionChannel _MouseType
 	);
+	//设置轨道动画
+	UFUNCTION(BlueprintCallable)
+	void SetTrackEntry(UTrackEntry* NewTrackEntry);
 public:
 	//进入网格
 	UFUNCTION(BlueprintCallable)
@@ -425,7 +450,7 @@ public:
 public:
 	//添加攻击线条
 	UFUNCTION(BlueprintCallable)
-	void AddAttackLine(
+	bool AddAttackLine(
 		const FVector& _BeginOffset,
 		const FVector& _EndOffset,
 		FColor _Color,
@@ -434,7 +459,7 @@ public:
 		bool DirectionFront = true
 	);
 	UFUNCTION(BlueprintCallable)
-	void AddAttackLineFunc(
+	bool AddAttackLineFunc(
 		const ECollisionChannel& CollisionType,
 		const float& DeltaTime,
 		bool DirectionFront = true
@@ -442,7 +467,9 @@ public:
 	//添加老鼠检测，卡片
 	UFUNCTION(BlueprintCallable)
 	void AddAttackCardUpdate();
-
+	//添加水组件
+	UFUNCTION(BlueprintCallable)
+	void AddWaterComponent(UWaterSceneComponent* WaterComp);
 public:
 	//老鼠目前的行为
 
@@ -553,8 +580,17 @@ private:
 	//入水的时间轴
 	UPROPERTY()
 	class UTimeLineClass* InWaterTimeLine = nullptr;
+	//时间线管理
+	UPROPERTY()
+	class UTimeLineClass* AlienInTimeLine = nullptr;
+	//动画轨道
+	UPROPERTY()
+	UTrackEntry* CurAnimTrackEntry = nullptr;
 protected:
 	//入水开启或者关闭
 	UPROPERTY()
 	bool bInWaterAnimState = true;
+	//水动画
+	UPROPERTY()
+	TArray<UWaterSceneComponent*> WaterComps;
 };

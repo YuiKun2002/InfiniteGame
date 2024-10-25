@@ -16,11 +16,21 @@ class FVM_API ANormalBase : public AMouseActor
 {
 	GENERATED_BODY()
 public:
+	//盒体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠属性")
+	FVector BoxCompSize = FVector(20.f);
+	//盒体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠属性")
+	FVector CollisionOffset = FVector(0.f, 0.f, 17.f);
+	//身体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "老鼠属性")
+	FVector BodyCollisionOffset = FVector(0.f, 0.f, 17.f);
+public:
 	ANormalBase();
 
 	//设置扶梯移动
 	UFUNCTION(BlueprintCallable)
-		void SetEscalatorMove(int32 NextTranslucenty, bool bEnbale = true);
+	void SetEscalatorMove(int32 NextTranslucenty, bool bEnbale = true);
 public:
 	//老鼠目前的行为
 	virtual void SetMouseMoveOtherLineFunc(FLine NewLine) override;
@@ -70,36 +80,36 @@ public:
 public:
 	//死亡时是否是爆炸
 	UPROPERTY()
-		bool M_MouseDeathByBomb = false;
+	bool M_MouseDeathByBomb = false;
 private:
 	//冰块
 	UPROPERTY()
-		AActor* IceBlock = nullptr;
+	AActor* IceBlock = nullptr;
 	//启动扶梯移动
 	UPROPERTY()
-		bool bEnableEscalatorMove = false;
+	bool bEnableEscalatorMove = false;
 	//时间启动顺序
 	UPROPERTY()
-		bool bTimePlay = true;
+	bool bTimePlay = true;
 	//当前被记录的z高度
 	UPROPERTY()
-		float fConstZValue = 0.f;
+	float fConstZValue = 0.f;
 	UPROPERTY()
-		float fCurZValue = 0.f;
+	float fCurZValue = 0.f;
 	//固定移动时间
 	UPROPERTY()
-		float fConstMoveTime = 0.5f;
+	float fConstMoveTime = 0.5f;
 	UPROPERTY()
-		float fMoveTime = 0.f;
+	float fMoveTime = 0.f;
 	//速度基数
 	UPROPERTY()
-		float fSpeedBaseValue = 0.f;
+	float fSpeedBaseValue = 0.f;
 	//设置渲染层
 	UPROPERTY()
-		int32 iNextTranslucenty = 0;
+	int32 iNextTranslucenty = 0;
 	//开启强行降落
 	UPROPERTY()
-		bool bForceCloseEscalator = false;
+	bool bForceCloseEscalator = false;
 };
 
 //自带球体碰撞
@@ -110,10 +120,27 @@ class FVM_API ANormalSphereBase : public ANormalBase
 public:
 	//检查碰撞
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* MMeshe = nullptr;
+	class UBoxComponent* MMeshe = nullptr;
 	//重叠碰撞
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class USphereComponent* MBody = nullptr;
+	class USphereComponent* MBody = nullptr;
 public:
 	ANormalSphereBase();
+};
+
+//自带胶囊体碰撞
+UCLASS()
+class FVM_API ANormalCapsuleBase : public ANormalBase
+{
+	GENERATED_BODY()
+public:
+	//检查碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* MesheComp = nullptr;
+	//重叠碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* BodyComp = nullptr;
+public:
+	ANormalCapsuleBase();
+	virtual void BeginPlay() override;
 };

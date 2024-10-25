@@ -126,11 +126,11 @@ bool UVSManagerComponent::CreatePlayer(
 
 				if (UIMeshe->TestID(-1))
 				{
-					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("木盘子"));
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("柠檬片"));
 					UIMeshe->PlayCard(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 						, LoadClass<ACardActor>(0,
-							TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/木盘子.木盘子_C'")
+							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/柠檬片/BP_柠檬片.BP_柠檬片_C'")
 						), CardData, 0, false);
 				}
 			}break;
@@ -147,6 +147,19 @@ bool UVSManagerComponent::CreatePlayer(
 						), CardData, 0, false);
 				}
 			}break;
+			case ELineType::Magma:
+			{
+				if (UIMeshe->TestID(-1))
+				{
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("冰片"));
+					UIMeshe->PlayCard(
+						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
+						, LoadClass<ACardActor>(0,
+							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/冰片/BP_冰片.BP_冰片_C'")
+						), CardData, 0, false);
+				}
+			}
+			break;
 			default:
 			{
 				UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio");
@@ -154,61 +167,63 @@ bool UVSManagerComponent::CreatePlayer(
 			}
 
 
-			AGamePlayer* PlayerIns = MesheActor->GetWorld()->SpawnActor<AGamePlayer>(LoadClass<AGamePlayer>(0,
-				TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C'")));
-
+			AGameMapInstance::GetGameMapInstance()->SpawnPlayerToMeshe(MesheActor, UIMeshe);
 			//添加ID
 			UIMeshe->IdAdd(0, nullptr);
-			UIMeshe->SetPlayer(PlayerIns);
-			AGameMapInstance::GetGameMapInstance()->SetPlayer(PlayerName, PlayerIns);
 
-			//设置旋转
-			PlayerIns->SetActorRotation(FRotator(0.f, 90.f, 0.f));
-			//初始化网格
-			PlayerIns->InitMeshe(UIMeshe, MesheActor);
+			//AGamePlayer* PlayerIns = MesheActor->GetWorld()->SpawnActor<AGamePlayer>(LoadClass<AGamePlayer>(0,
+			//	TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C'")));
 
-			if (bMainPlayer)
-			{
-				//初始化角色形象
-				PlayerIns->InitPlayerData();
-				//初始化武器
-				PlayerIns->InitPlayerWeapon();
-			}
-			else {
+			//UIMeshe->SetPlayer(PlayerIns);
+			//AGameMapInstance::GetGameMapInstance()->SetPlayer(PlayerName, PlayerIns);
 
-				//设置新套装
-				PlayerIns->SetPlayerSuit(NewSuit);
+			////设置旋转
+			//PlayerIns->SetActorRotation(FRotator(0.f, 90.f, 0.f));
+			////初始化网格
+			//PlayerIns->InitMeshe(UIMeshe, MesheActor);
 
-				UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
-				//设置武器
-				for (const auto& Data : Cache->GetWeaponFirst())
-				{
-					if (Data.M_FEquipment.ItemName.ToString().Equals(FirstWeaponName))
-					{
-						PlayerIns->LoadPlayerFirstWeapon(
-							FirstWeaponName,
-							Data.M_FEquipment.M_WeaponClassPath.ToString()
-						);
-						break;
-					}
-				}
+			//if (bMainPlayer)
+			//{
+			//	//初始化角色形象
+			//	PlayerIns->InitPlayerData();
+			//	//初始化武器
+			//	PlayerIns->InitPlayerWeapon();
+			//}
+			//else {
 
-				//武器无效
-				if (!PlayerIns->PlayerFirstWeaponIsValid())
-				{
-					return false;
-				}
-			}
+			//	//设置新套装
+			//	PlayerIns->SetPlayerSuit(NewSuit);
 
-			//初始化排序
-			PlayerIns->SetPlayerTranslucency(UIMeshe);
-			//更新角色位置
-			MesheActor->UpdatePlayerLocation();
+			//	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+			//	//设置武器
+			//	for (const auto& Data : Cache->GetWeaponFirst())
+			//	{
+			//		if (Data.M_FEquipment.ItemName.ToString().Equals(FirstWeaponName))
+			//		{
+			//			PlayerIns->LoadPlayerFirstWeapon(
+			//				FirstWeaponName,
+			//				Data.M_FEquipment.M_WeaponClassPath.ToString()
+			//			);
+			//			break;
+			//		}
+			//	}
 
-			//更新网格碰撞
-			UIMeshe->UpdateAllCardsCollision();
-			//更新角色位置
-			UIMeshe->GetMapMeshe()->UpdatePlayerLocation();
+			//	//武器无效
+			//	if (!PlayerIns->PlayerFirstWeaponIsValid())
+			//	{
+			//		return false;
+			//	}
+			//}
+
+			////初始化排序
+			//PlayerIns->SetPlayerTranslucency(UIMeshe);
+			////更新角色位置
+			//MesheActor->UpdatePlayerLocation();
+
+			////更新网格碰撞
+			//UIMeshe->UpdateAllCardsCollision();
+			////更新角色位置
+			//UIMeshe->GetMapMeshe()->UpdatePlayerLocation();
 
 			//添加角色头像UI
 			UUI_GamePlayerHead* UIPlayerHead = CreateWidget<UUI_GamePlayerHead>(
@@ -216,6 +231,7 @@ bool UVSManagerComponent::CreatePlayer(
 				LoadClass<UUI_GamePlayerHead>(nullptr,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BP_PlayerHead.BP_PlayerHead_C'"))
 			);
+
 			UIPlayerHead->Init(bMainPlayer, PlayerHead, PlayerGrade, PlayerName);
 			AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->M_UUI_CardBar->AddPlayerInfor(UIPlayerHead);
 
@@ -344,14 +360,15 @@ void UVSManagerComponent::GameOver()
 	}
 
 	//结算界面
-	this->M_UI_GameOver = CreateWidget<UUI_GameOver>(this->GetWorld(), LoadClass<UUI_GameOver>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/UI_GameOver.UI_GameOver_C'")));
+	this->M_UI_GameOver = CreateWidget<UUI_GameOver>(this->GetWorld(), LoadClass<UUI_GameOver>(0,
+		TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BPUI_GameOver.BPUI_GameOver_C'")));
 	this->M_UI_GameOver->AddToViewport();
 	if (M_Win)
 	{
-		this->M_UI_GameOver->ShowOver1();
+		this->M_UI_GameOver->ShowOver1(M_Win);
 	}
-	this->M_UI_GameOver->ShowOver2(M_Win);
-	this->M_UI_GameOver->ShowOver3();
+	//this->M_UI_GameOver->ShowOver2(M_Win);
+	//this->M_UI_GameOver->ShowOver3();
 
 	//播放音乐
 	if (M_Win)

@@ -9,6 +9,7 @@ void ADaLiShenMissile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	this->InitSpineShow();
 }
 
 void ADaLiShenMissile::Tick(float DeltaTime)
@@ -16,10 +17,16 @@ void ADaLiShenMissile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (this->M_CurrentTime > 0.f)
+	{
 		this->M_CurrentTime -= DeltaTime;
+	}
 	else
+	{
 		if (!this->M_Result)
+		{
 			this->M_Result = true;
+		}
+	}
 
 }
 
@@ -36,7 +43,7 @@ void ADaLiShenMissile::InitLocation()
 	this->M_Current = this->GetActorLocation();
 
 	//设置旋转
-	this->SetFlipbookPitchRotation(180.f);
+	this->SetRotation(180.f);
 }
 
 void ADaLiShenMissile::UpdatePosition(float value)

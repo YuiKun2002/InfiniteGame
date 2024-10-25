@@ -187,15 +187,40 @@ public:
 
 
 	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+
 
 	//背包 _防御卡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FItemCard> M_PlayerItems_Card;
+	//背包_材料
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FMaterialBase> M_PlayerItems_Material;
+
+	//武器列表
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FMainWeaponData> M_PlayerItems_Weapon;
+	//角色已经装备的武器
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FPlayerEquipWeapon PlayerEquipWeaponData;
+
+	//角色列表
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FItemHeroBase> M_PlayerItems_Heroes;
+	//当前选择的角色
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemHeroBase PlayerData;
+
+
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
+	/*-----------------------防御卡 + 装备------------------------*/
 	//背包_装备
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FEquipmentBase> M_PlayerItems_Equipment;
 
-	/*-----------------------防御卡 + 装备------------------------*/
+
 
 
 	/*-----------------------装备区域的ID存储库------------------------*/
@@ -209,9 +234,6 @@ public:
 
 
 	/*-----------------------材料 + 邮件 + 技能书------------------------*/
-	//背包_材料
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FMaterialBase> M_PlayerItems_Material;
 	//背包邮件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FMail> M_PlayerMails;
@@ -240,7 +262,7 @@ public:
 public:
 	//设置全局缓存子系统
 	UFUNCTION(BlueprintCallable)
-	void SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem);
+	void SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem, const FString& Token);
 	//设置角色临时ID
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerID(const FString& TempID);

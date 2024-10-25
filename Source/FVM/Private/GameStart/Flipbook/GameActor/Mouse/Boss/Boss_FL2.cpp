@@ -267,7 +267,7 @@ void UFLB_ReverseHP::AnimPlayEnd()
 
 			//生成加血动画
 			AMagicMasterHpAddtionBuff* CurAnimObj = this->GetA()->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>();
-			CurAnimObj->Init(this->GetA(), this->GetA()->AnimA_HP);
+			CurAnimObj->Init(this->GetA());
 
 			if (this->UseCount <= 0)
 			{

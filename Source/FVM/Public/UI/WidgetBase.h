@@ -95,7 +95,7 @@ public:
 	static void SetButtonStyle(UButton* _ButtonComponent, FString _ButtonTexturePath, bool _bRefresh = false);
 	//设置按钮风格
 	UFUNCTION(BlueprintCallable)
-	static void SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh = false);
+	static void SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh = false, bool bStyleDef = true);
 	//设置一个图片的原始大小赋予盒子大小
 	UFUNCTION(BlueprintCallable)
 	static void SetBoxResetSize(USizeBox* _USizeBoxComponent, FString _ButtonTexturePath);

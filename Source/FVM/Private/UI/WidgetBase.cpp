@@ -168,7 +168,7 @@ void UWidgetBase::SetButtonStyle(UButton* _ButtonComponent, FString _ButtonTextu
 	}
 }
 
-void UWidgetBase::SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh /*= false*/)
+void UWidgetBase::SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<class UTexture2D> Texture, bool _bRefresh, bool bStyleDef)
 {
 	if (_ButtonComponent)
 	{
@@ -181,10 +181,20 @@ void UWidgetBase::SetButtonStyleSoft(UButton* _ButtonComponent, TSoftObjectPtr<c
 		FButtonStyle _Style = _ButtonComponent->WidgetStyle;
 		FSlateBrush _Normal, _Hovered, _Pressed, _Dis;
 
-		_Normal.TintColor = FSlateColor(FLinearColor(FVector4(1.f, 1.f, 1.f, 1.f)));
-		_Hovered.TintColor = FSlateColor(FLinearColor(FVector4(.7f, .7f, .7f, 1.f)));
-		_Pressed.TintColor = FSlateColor(FLinearColor(FVector4(.5f, .5f, .5f, 1.f)));
-		_Dis.TintColor = FSlateColor(FLinearColor(FVector4(.3f, .3f, .3f, 1.f)));
+		if (bStyleDef)
+		{
+			_Normal.TintColor = FSlateColor(FLinearColor(FVector4(1.f, 1.f, 1.f, 1.f)));
+			_Hovered.TintColor = FSlateColor(FLinearColor(FVector4(.7f, .7f, .7f, 1.f)));
+			_Pressed.TintColor = FSlateColor(FLinearColor(FVector4(.5f, .5f, .5f, 1.f)));
+			_Dis.TintColor = FSlateColor(FLinearColor(FVector4(.3f, .3f, .3f, 1.f)));
+		}
+		else {
+			_Normal.TintColor = FSlateColor(FLinearColor(FVector4(1.f, 1.f, 1.f, 1.f)));
+			_Hovered.TintColor = FSlateColor(FLinearColor(FVector4(1.f, 1.f, 1.f, 1.f)));
+			_Pressed.TintColor = FSlateColor(FLinearColor(FVector4(.5f, .5f, .5f, 1.f)));
+			_Dis.TintColor = FSlateColor(FLinearColor(FVector4(.3f, .3f, .3f, 1.f)));
+		}
+
 
 		_Normal.DrawAs = ESlateBrushDrawType::Image;
 		_Hovered.DrawAs = ESlateBrushDrawType::Image;

@@ -117,6 +117,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual bool ReturnPool() override;
 	//动画播放完成
+	UFUNCTION()
 	void AnimComplete(UTrackEntry* Track);
 	//初始化
 	void Init();
@@ -130,6 +131,9 @@ public:
 	//可击打类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | AttackType")
 	TArray<ELineType> M_AttackType;
+	//可击打卡片类型【优先级最高】
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | AttackType")
+	ECardCollisionType M_AttackCardType = ECardCollisionType::E_None;
 	//携带的buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | AddBuffer")
 	FItem_Buff M_FItem_Buff;
@@ -183,9 +187,9 @@ public:
 	//设置线路
 	UFUNCTION(BlueprintCallable)
 	void SetLine(int32 _line);
-	//设置老鼠Actor
+	//设置对象Actor
 	UFUNCTION(BlueprintCallable)
-	void SetMouseActorLocation(AActor* _MouseActor);
+	void SetObjectActorLocation(AActor* _MouseActor);
 	//设置目标击中状态
 	UFUNCTION(BlueprintCallable)
 	void SetTargetHitState(bool _Value);
@@ -198,6 +202,9 @@ public:
 	//设置动画轨道
 	UFUNCTION()
 	void SetTrackEntry(class UTrackEntry* Track);
+	//设置上次的对象
+	UFUNCTION(BlueprintCallable)
+	void SetLastObjectActor(AActor* ObjectActor);
 public:
 	//添加Buff
 	void AddBuff(TMap<Buff_Infor, float>& _buffers);
@@ -238,15 +245,17 @@ public:
 	//当前飞行物是否可以被影响
 	UFUNCTION(BlueprintCallable)
 	bool GetFlyInfluence();
-	//获取老鼠的位置
+	//获取对象的位置
 	UFUNCTION(BlueprintCallable)
-	FVector GetMouseActorLocation();
+	FVector GetObjectActorLocation();
 	//获取buff
 	UFUNCTION(BlueprintCallable)
 	FItem_Buff& GetBuff();
-	//获取老鼠ActorLocation
+	//获取对象的ActorLocation
 	UFUNCTION(BlueprintCallable)
-	AActor* const GetMouseActor();
+	AActor* const GetObjectActor();
+	UFUNCTION(BlueprintCallable)
+	AActor* const GetLastObjectActor();
 	//获取可以攻击的类型
 	UFUNCTION(BlueprintCallable)
 	TArray<ELineType>& GetAttackType();
@@ -312,6 +321,9 @@ public:
 	//与老鼠发生重叠
 	UFUNCTION(BlueprintCallable)
 	void HitMouse_OverlapBegin(AActor* _Mouse);
+	//与卡片发生重叠
+	UFUNCTION(BlueprintCallable)
+	void HitCard_OverlapBegin(AActor* _Card);
 public:
 	//当飞行物开始时与其他对象重叠
 	UFUNCTION()
@@ -332,15 +344,15 @@ public:
 		int32 OtherBodyIndex
 	);
 private:
-	//老鼠的位置
+	//击中对象的位置
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	AActor* M_MouseActorLocation = nullptr;
-	//当前击中的老鼠
+	AActor* M_ObjectActorLocation = nullptr;
+	//当前击中的对象
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	AMouseActor* M_CurrentHitMouseActor = nullptr;
-	//上一次击中的老鼠
+	AActor* M_CurrentHitObjectActor = nullptr;
+	//上一次击中的对象
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	AMouseActor* M_LastHitMouseActor = nullptr;
+	AActor* M_LastHitObjectActor = nullptr;
 	//飞行物数据
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FlyItem_PropertyData M_FlyData;

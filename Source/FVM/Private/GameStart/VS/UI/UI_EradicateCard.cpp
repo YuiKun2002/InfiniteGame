@@ -19,11 +19,15 @@ bool UUI_EradicateCard::Initialize()
 void UUI_EradicateCard::Select()
 {
 	UWidgetBase::SetImageColor(this->M_EradicateImage, FVector(0.3f));
+
+	this->OnSelect();
 }
 
 void UUI_EradicateCard::Cancel()
 {
 	UWidgetBase::SetImageColor(this->M_EradicateImage, FVector(1.f));
+
+	this->OnCancel();
 }
 
 UImage* UUI_EradicateCard::GetBG()

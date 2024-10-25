@@ -52,8 +52,8 @@ void UResourceManagerComponent::EnableAutoFlameSpawn(const float& _SpawnTime)
 
 void UResourceManagerComponent::AddFlameNum(const int32& _Value)
 {
-	if (this->M_FlameNum + _Value > 1000000)
-		this->M_FlameNum = 1000000;
+	if (this->M_FlameNum + _Value > 9999)
+		this->M_FlameNum = 9999;
 	else
 		this->M_FlameNum += _Value;
 }

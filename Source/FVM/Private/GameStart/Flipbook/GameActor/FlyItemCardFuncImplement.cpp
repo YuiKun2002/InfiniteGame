@@ -24,9 +24,17 @@ void UFlyItemReboundCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCar
 		return;
 	}
 
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	if (_Comp)
 	{
@@ -87,9 +95,17 @@ UFlyItemCardFunc* UFlyItemBuffCardFunc::MakeNewClass()
 
 void UFlyItemBuffCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFunctionTriggerImplementTRB CardData, AFlyItemActor* CurFlyItem)
 {
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	if (_Comp)
 	{
@@ -120,7 +136,17 @@ void UFlyItemAcrossCardFunc::Execute(
 	FCardFunctionTriggerImplementTRB CardData,
 	AFlyItemActor* CurFlyItem
 )
-{
+{	
+	
+	if (CurFlyItem->GetFlyConstraintLine())
+	{
+		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+		{
+			return;
+		}
+	}
+
+
 	if (CurFlyItem->GetActor_CardFunction_Component() == Cast<UActorComponent>(CardFuncComp))
 	{
 		return;
@@ -129,13 +155,15 @@ void UFlyItemAcrossCardFunc::Execute(
 	//获取射击组件（原来的子弹）
 	UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 		CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
 
 	//没有该组件
 	if (!_Comp)
 	{
 		return;
 	}
+
+	EShootDirection CurMoveDirection = _Comp->GetMoveDirection();
 
 	if (UFVMGameInstance::GetDebug())
 	{
@@ -146,7 +174,7 @@ void UFlyItemAcrossCardFunc::Execute(
 
 	//获取资源组件
 	UResourceManagerComponent* CurComp = AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent;
-	
+
 	//飞行物子弹对象
 	//UClass* FlyActor_Class = nullptr;
 	//FlyActor_Class = UGameSystemFunction::LoadRes(CardData.AcrossBulletClass);
@@ -190,16 +218,17 @@ void UFlyItemAcrossCardFunc::Execute(
 	}
 
 	//预创建飞行物
-	AFlyItemActor* _FlyActor = Cast<AFlyItemActor>(First->GetObjectActor());
+	AActor* CurActor = First->GetObjectActor();
+	AFlyItemActor* _FlyActor = Cast<AFlyItemActor>(CurActor);
 	//设置功能组件数据(防止某些功能重复使用)
 	_FlyActor->SetActor_CardFunction_Component(Cast<UActorComponent>(CardFuncComp));
-	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	//获取数据
 	CurFlyItem->FlyItemActorSwap(_FlyActor);
 	_FlyActor->Init();
-	_FlyActor->OnInit();
+
+	_FlyActor->SetActorTransform(CurFlyItem->GetActorTransform());
 	CurFlyItem->SetActorLocation(FVector::ZeroVector);
-	CurFlyItem->ReturnPool();
+
 	////完成生成
 	//AFlyItemActor* Finish_Class = Cast<AFlyItemActor>(
 	//	UGameplayStatics::FinishSpawningActor(_FlyActor,
@@ -209,33 +238,41 @@ void UFlyItemAcrossCardFunc::Execute(
 	//获取射击组件（新的子弹）
 	UShootLineComponent* CurSComp = Cast<UShootLineComponent>(
 		_FlyActor->GetComponentByClass(UShootLineComponent::StaticClass())
-		);
+	);
+
+	CurFlyItem->ReturnPool();
 
 	if (IsValid(CurSComp))
 	{
-		switch (CurSComp->GetMoveDirection())
+		switch (CurMoveDirection)
 		{
 			//如果是上下或者带有角度的对象  统一右边发射并且统一 位置
 		case EShootDirection::EDown:
 		case EShootDirection::EUp:
 		{
 			//设置旋转
-			_FlyActor->SetRotation(0.f);
+			//_FlyActor->SetRotation(0.f);
 			_FlyActor->SetActorLocation(CardFuncComp->GetCardActor()->GetActorLocation());
 			CurSComp->SetMoveDirection(EShootDirection::ERight);
 		}
 		break;
 		case EShootDirection::ELeft:
 		{
-			//FVector LocalPos = _FlyActor->GetMyActor()->GetRelativeLocation();
-			//LocalPos.Y *= -1.f;
+			/*FVector LocalPos = _FlyActor->GetCardActor()->GetRelativeLocation();
+			LocalPos.Y *= -1.f;
 
-			//_FlyActor->GetMyActor()->SetRelativeLocation(LocalPos);
-			//_FlyActor->GetMyActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));
+			_FlyActor->GetCardActor()->SetRelativeLocation(LocalPos);
+			_FlyActor->GetCardActor()->SetRelativeScale3D(FVector(-1.f, 1.f, 1.f));*/
 
+			_FlyActor->SetRotation(180.f);
 			CurSComp->SetMoveDirection(EShootDirection::ELeft);
 		}
 		break;
+		case  EShootDirection::ERight:
+		{
+			_FlyActor->SetRotation(0.f);
+			CurSComp->SetMoveDirection(EShootDirection::ERight);
+		}break;
 		//其他则排除按照原方向
 		default:CurSComp->SetMoveDirection(_Comp->GetMoveDirection()); break;
 		}
@@ -257,10 +294,18 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 {
 	if (IsValid(CurFlyItem))
 	{
+		if (CurFlyItem->GetFlyConstraintLine())
+		{
+			if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
+			{
+				return;
+			}
+		}
+
 		//获取射击组件（原来的子弹）
 		UShootLineComponent* _Comp = Cast<UShootLineComponent>(
 			CurFlyItem->GetComponentByClass(UShootLineComponent::StaticClass())
-			);
+		);
 
 		//没有该组件
 		if (!_Comp)
@@ -271,7 +316,7 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 		//当前伤害加成数值
 		float CurRate = CardData.ATK +
 			CardFuncComp->GetCardActor()->GetCardGrade(
-			CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
+				CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 			) *
 			CardData.ATKRate * 0.1f;
 
@@ -280,7 +325,7 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 			UGameSystemFunction::FVMLog(__FUNCTION__,
 				FString(
 					FString::FromInt(CardFuncComp->GetCardActor()->GetCardGrade(
-					CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())
+						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString())
 					) +
 					TEXT("级【") + CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString() +
 					TEXT("】遇到管线类的子弹：子弹攻击力增强：") +

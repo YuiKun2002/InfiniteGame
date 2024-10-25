@@ -10,10 +10,6 @@ class ACardActor;
 class ADefenceCardActor;
 class UPaperFlipbook;
 
-#define CardDefenceAnimState_Full TEXT("Full")
-#define CardDefenceAnimState_Damage TEXT("Damage")
-#define CardDefenceAnimState_Low TEXT("Low")
-
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UCardDefenceComponent : public UActorComponent
 {
@@ -24,21 +20,21 @@ public:
 
 	//更新状态
 	UFUNCTION(BlueprintCallable)
-		void UpdateState();
+	void UpdateState();
 
 	//加载资源
 	UFUNCTION(BlueprintCallable)
-		void LoadResource();
+	void LoadResource();
 public:
 	//受到伤害时
 	UFUNCTION()
-		void BeHurt(class AMouseActor* CurMouseActor);
+	void BeHurt(class AMouseActor* CurMouseActor);
 	//受到伤害时
 	UFUNCTION()
-		void HpChange(float ATK_Value, float UpHP_Value);
+	void HpChange(float ATK_Value, float UpHP_Value);
 	//死亡时
 	UFUNCTION()
-		void Death();
+	void Death();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -50,5 +46,8 @@ public:
 private:
 	//防御卡
 	UPROPERTY()
-		ADefenceCardActor* DefenceCardActor = nullptr;
+	ADefenceCardActor* DefenceCardActor = nullptr;
+	//状态
+	UPROPERTY()
+	int32 State = -1;
 };

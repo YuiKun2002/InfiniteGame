@@ -90,6 +90,7 @@ void UVaRestSubsystem::CallTagURL(
 	EVaRestRequestContentType ContentType,
 	FName Tag,
 	UVaRestJsonObject* VaRestJson,
+	const FString& Token,
 	const FVaRestCallTagDelegate& Callback)
 {
 	if (VaRestJson == nullptr)
@@ -99,6 +100,7 @@ void UVaRestSubsystem::CallTagURL(
 
 	UVaRestRequestJSON* Request = ConstructVaRestRequest();
 	Request->SetRequestTag(Tag);
+	Request->SetHeader(TEXT("infinite-Token"), Token);
 	Request->SetVerb(Verb);
 	Request->SetContentType(ContentType);
 	Request->SetRequestObject(VaRestJson);

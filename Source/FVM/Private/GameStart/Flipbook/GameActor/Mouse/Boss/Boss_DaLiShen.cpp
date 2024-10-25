@@ -147,7 +147,6 @@ void ABoss_DaLiShen::Update_Attack_1(float DeltaTime)
 
 			//创建第一颗导弹
 			ADaLiShenMissile* const LocalObj = this->GetWorld()->SpawnActor<ADaLiShenMissile>(LoadClass<ADaLiShenMissile>(0, TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Mouse/boss/DaLiShen/MyDaLiShenMissile.MyDaLiShenMissile_C'")), this->GetActorTransform());
-			LocalObj->InitRotation();
 			LocalObj->AddActorLocalOffset(FVector(5.f, 30.f, 0.f));
 			LocalObj->SetTarget(AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->GetMapMeshLocation(SRandRow, SRandCol));
 			LocalObj->SetRenderLayer(8000);
@@ -171,7 +170,6 @@ void ABoss_DaLiShen::Update_Attack_1(float DeltaTime)
 
 				//创建后面的导弹
 				ADaLiShenMissile* const LocalObj = this->GetWorld()->SpawnActor<ADaLiShenMissile>(LoadClass<ADaLiShenMissile>(0, TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Mouse/boss/DaLiShen/MyDaLiShenMissile.MyDaLiShenMissile_C'")), this->GetActorTransform());
-				LocalObj->InitRotation();
 				LocalObj->AddActorLocalOffset(FVector(5.f, Locations[Attack_2_CurrentCount], 0.f));
 				LocalObj->SetTarget(AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->GetMapMeshLocation(SRandRow, SRandCol));
 				LocalObj->SetRenderLayer(8000);

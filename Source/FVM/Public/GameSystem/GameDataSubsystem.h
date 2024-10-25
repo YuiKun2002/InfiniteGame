@@ -22,6 +22,7 @@
 #define GLOBALASSET_EQUIP FName(TEXT("GlobalAsset_Equip"))
 #define GLOBALASSET_SHOP FName(TEXT("GlobalAsset_Shop"))
 #define GLOBALASSET_TEXTURE_RESOURCE FName(TEXT("GlobalAsset_Texture_Resource"))
+#define GLOBALASSET_LEVELTEXTURE_RESOURCE FName(TEXT("GlobalAsset_LevelTexture_Resource"))
 #define GLOBALASSET_CARD_RESOURCE FName(TEXT("GlobalAsset_Card_Resource"))
 
  /*
@@ -29,11 +30,20 @@
 
 	 如果需要修改，请修改【数据表DT_GameUserInterface】【蓝图实现BP_xxxx_CateName】【C++的UI宏名称】
  */
+ //全局UI集合
 #define UI_GLOBALUINAME FName(TEXT("Global"))
+//地图UI集合
 #define UI_WORLDMAPUINAME FName(TEXT("WorldMap"))
+//背包UI集合
 #define UI_BAGUINAME FName(TEXT("Bag"))
+//商城UI集合
 #define UI_SHOPUINAME FName(TEXT("Shop"))
+//实验室UI集合
 #define UI_LABSUINAME FName(TEXT("Labs"))
+//英雄UI集合
+#define UI_HEROESUINAME FName(TEXT("Heroes"))
+//武器UI集合
+#define UI_WEAPONSUINAME FName(TEXT("Weapons"))
 
 
  //可视化名字类型分类[蓝图实现，全局的宏]
@@ -132,7 +142,10 @@ public:
 	void AddGameDataAssetCache(FName Name, UGameDataAssetCache* CacheIns);
 	//获取缓存对象
 	UFUNCTION(BlueprintPure, Category = "游戏数据子系统 | 缓存对象")
-	UGameDataAssetCache* GetGameDataAssetCache(FName Name);
+	UGameDataAssetCache* GetGameDataAssetCacheByDef(FName Name);
+	//获取缓存对象
+	UFUNCTION(BlueprintPure, Category = "游戏数据子系统 | 缓存对象")
+	static UGameDataAssetCache* GetGameDataAssetCacheByName(TSubclassOf<UAssetCategoryName> Name);
 public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Deinitialize() override;
@@ -159,7 +172,7 @@ CacheClassType* GetGameDataAssetCache(FName Name)
 		return nullptr;
 	}
 
-	UGameDataAssetCache* CurCache = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(Name);
+	UGameDataAssetCache* CurCache = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCacheByDef(Name);
 	if (IsValid(CurCache))
 	{
 		CacheClassType* CurCacheType = Cast<CacheClassType>(CurCache);

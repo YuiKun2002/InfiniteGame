@@ -1,4 +1,4 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
 #include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
@@ -126,6 +126,11 @@ UCardFunctionBase* AFunctionCardActor::GetCurrentExecuteCardFuncClass()
 	}
 
 	return nullptr;
+}
+
+FString AFunctionCardActor::GetIdleAnimName()
+{
+	return FunCardIdleAnimName.GetDefaultObject()->GetCategoryName().ToString();
 }
 
 void AFunctionCardActor::BeginPlay()

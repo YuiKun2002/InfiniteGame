@@ -23,36 +23,39 @@ class FVM_API UMouseViewSelectMouseItem : public UUserWidget
 {
 	GENERATED_BODY()
 
-		friend class UGameMapUI_MouseViewEditor;
+	friend class UGameMapUI_MouseViewEditor;
 	friend class UMouseViewSelectMousePanel;
 
 public:
 
 	virtual bool Initialize() override;
 
-	void InitSelectMouseItem(class UMouseViewSelectMousePanel* SelectMousePanel, const FMouse_Data& Data);
+	void InitSelectMouseItem(class UGameMapUI_MouseTab* MouseTab,class UMouseViewSelectMousePanel* SelectMousePanel, const FMouse_Data& Data);
 
 	UFUNCTION(BlueprintCallable)
-		void Select();
+	void Select();
 
 	UFUNCTION(BlueprintCallable)
-		void Cancel();
+	void Cancel();
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSelect(FMouse_Data Data);
+	void OnSelect(FMouse_Data Data);
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnCancel();
+	void OnCancel();
 private:
 	//选择项的按钮
 	UPROPERTY()
-		UButton* CurButton = nullptr;
+	UButton* CurButton = nullptr;
 	//当前项的老鼠数据
 	UPROPERTY()
-		FMouse_Data MouseData;
+	FMouse_Data MouseData;
 	//老鼠选择界面
 	UPROPERTY()
-		UMouseViewSelectMousePanel* CurSelectMousePanel = nullptr;
+	UMouseViewSelectMousePanel* CurSelectMousePanel = nullptr;
+	//老鼠选项卡
+	UPROPERTY()
+	class UGameMapUI_MouseTab* CurMouseTab = nullptr;
 };
 
 
@@ -64,7 +67,7 @@ class FVM_API UMouseViewSelectMousePanel : public UUserWidget
 {
 	GENERATED_BODY()
 
-		friend class UGameMapUI_MouseViewEditor;
+	friend class UGameMapUI_MouseViewEditor;
 	friend class UMouseViewSelectMouseItem;
 
 public:
@@ -74,39 +77,42 @@ public:
 	void InitMouseViewSelectMousePanel();
 
 	UFUNCTION(BlueprintCallable)
-		void ShowType(const FString& _Type);
+	void ShowType(const FString& _Type);
 
 public:
 
 	//当选择老鼠项时
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnSelect(FMouseConfigNode _NewNode);
+	void OnSelect(FMouseConfigNode _NewNode);
 
 	//当取消选择时
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnCancel();
+	void OnCancel();
 
 	//设置新的老鼠节点配置
 	UFUNCTION(BlueprintCallable)
-		void SetNewMouseNode(FMouseConfigNode MouseNode);
+	void SetNewMouseNode(FMouseConfigNode MouseNode);
 	//获取当前老鼠的节点配置
 	UFUNCTION(BlueprintCallable)
-		FMouseConfigNode GetMouseNode();
+	FMouseConfigNode GetMouseNode();
 
 	//获取当前的选择项
 	UFUNCTION(BlueprintCallable)
-		UMouseViewSelectMouseItem* GetMouseViewSelectMouseItem();
+	UMouseViewSelectMouseItem* GetMouseViewSelectMouseItem();
 private:
 	//显示选择老鼠的容器
 	UPROPERTY()
-		UUniformGridPanel* UniformGridPanel = nullptr;
+	UUniformGridPanel* UniformGridPanel = nullptr;
 	//所有老鼠的数据
 	UPROPERTY()
-		UDataTable* AllMouseDataTable = nullptr;
+	UDataTable* AllMouseDataTable = nullptr;
 	//当前选择的老鼠项
 	UPROPERTY()
-		UMouseViewSelectMouseItem* CurSelectMouseItem = nullptr;
+	UMouseViewSelectMouseItem* CurSelectMouseItem = nullptr;
 	//当前老鼠统一节点设置
 	UPROPERTY()
-		FMouseConfigNode CurUnifromMouseNodeSetting;
+	FMouseConfigNode CurUnifromMouseNodeSetting;
+	//编辑器
+	UPROPERTY()
+	UGameMapUI_MouseViewEditor* GameMapUI_MouseViewEditor = nullptr;
 };

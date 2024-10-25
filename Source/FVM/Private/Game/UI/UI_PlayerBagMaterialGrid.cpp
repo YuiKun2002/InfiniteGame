@@ -183,8 +183,6 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisBlueprint()
 	//禁用当前按钮
 	this->GetButton()->SetIsEnabled(false);
 
-	//this->MaterialBaseCopyData;
-
 	//请求数据
 	this->M_UUI_PlayerSynthesis->OnSelectCardBlueprintDataRequest(
 		this->M_UUI_PlayerSynthesis->GetMakeCardFunction(),

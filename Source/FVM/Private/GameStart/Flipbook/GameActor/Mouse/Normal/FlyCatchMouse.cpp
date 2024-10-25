@@ -8,35 +8,20 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameSystem/GameMapStructManager.h"
 #include "GameStart/VS/GameMapInstance.h"
-#include <Components/SphereComponent.h>
+#include <Components/Capsulecomponent.h>
 #include <Components/BoxComponent.h>
 #include "Data/GameLogSubsystem.h"
 #include "GameStart/VS/MapMeshe.h"
 #include "SpineActor.h"
 
-AFlyCatchMouse::AFlyCatchMouse()
-{
-	this->MMesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("FCMouseMeshComp"));
-	this->MBodyComponent = CreateDefaultSubobject<USphereComponent>(TEXT("FCMouseBodyComp"));
-
-	//this->CurCardAnim = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FCCardAnimComp"));
-
-	//设置依附
-	this->MMesheComponent->SetupAttachment(this->GetRootComponent());
-	this->MBodyComponent->SetupAttachment(this->MMesheComponent);
-
-	//卡片动画
-	//this->CurCardAnim->SetupAttachment(this->GetRenderComponent());
-}
-
-void AFlyCatchMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 {
 	Super::MouseTick(DeltaTime);
+
+	if (this->bCatch)
+	{
+		return;
+	}
 
 	if (this->bEnter)
 	{
@@ -46,24 +31,19 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 			return;
 		}
 		else {
-			if (this->fToGroundTime > 0.f)
+			if (this->fToGroundTime_ > 0.f)
 			{
-				this->fToGroundTime -= DeltaTime;
+				this->fToGroundTime_ -= DeltaTime;
 
 				//设置位置
 				this->SetActorLocation(
 					UKismetMathLibrary::VLerp(this->CurLocation,
 						CurUI->GetMapMeshe()->GetActorLocation(),
-						(1.f - this->fToGroundTime))
+						1.f - (this->fToGroundTime_ / this->fToGroundTime))
 				);
 			}
 			else {
 				this->bEnter = false;
-
-				if (IsValid(this->CurFlag))
-				{
-					this->CurFlag->Destroy();
-				}
 
 				//落地
 				this->SetActorLocation(
@@ -71,15 +51,19 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 				);
 
 				//播放抓取动画
-				//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Catch), true);
+				UTrackEntry* Trac = this->SetAnimation(0,
+					this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+				);
+				BINDANIMATION(Trac, this, &AFlyCatchMouse::AnimationPlayEnd);
+				this->SetTrackEntry(Trac);
 
-				this->SetAnimation(0,TEXT("SpineTag"),true);
+				this->bCatch = true;
 
 				//切换陆地形态
 				this->GetMouseManager()->ChangeMouseLineType(this,
 					this->GetMouseLine().Row, ELineType::OnGround,
-					this->MMesheComponent,
-					this->MBodyComponent
+					this->MesheComp,
+					this->BodyComp
 				);
 
 				//切换目标线路
@@ -101,14 +85,24 @@ void AFlyCatchMouse::MouseTick(const float& DeltaTime)
 
 	if (this->bExit)
 	{
-		if (this->fToGroundTime > 0.f)
+		if (!this->bEnterA)
 		{
-			this->fToGroundTime -= DeltaTime;
+			this->bEnterA = true;
+			//播放退场
+			this->SetAnimation(0,
+				this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+			);
+			this->SetTrackEntry(nullptr);
+		}
+
+		if (this->fToGroundTime_ > 0.f)
+		{
+			this->fToGroundTime_ -= DeltaTime;
 			//设置位置
 			this->SetActorLocation(
 				UKismetMathLibrary::VLerp(this->CurExitLocation,
 					this->CurLocation,
-					1.f - this->fToGroundTime)
+					1.f - (this->fToGroundTime_ / this->fToGroundTime))
 			);
 		}
 		else {
@@ -123,29 +117,33 @@ void AFlyCatchMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*if (IsValid(this->CurCardAnim))
-	{
-		this->CurCardAnim->SetAnimationClear();
-	}*/
-
-	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AFlyCatchMouse::OnAnimationPlayEnd);
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 }
 
 void AFlyCatchMouse::MouseInit()
 {
 	Super::MouseInit();
 
+	this->bEnterA = false;
+	this->bCatch = false;
 	this->bEnter = false;
 	this->bExit = false;
+
+	this->fToGroundTime_ = this->fToGroundTime;
+
+	UTrackEntry* Trac = this->SetAnimation(0,
+		this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+	);
+	this->SetTrackEntry(Trac);
 
 	//切换空中形态
 	this->GetMouseManager()->ChangeMouseLineType(this,
 		this->GetMouseLine().Row,
 		ELineType::Sky,
-		this->MMesheComponent,
-		this->MBodyComponent
+		this->MesheComp,
+		this->BodyComp
 	);
 
 	//初始化位置
@@ -219,25 +217,28 @@ void AFlyCatchMouse::MouseInit()
 
 			if (IsValid(this->CurUI))
 			{
+				//设置老鼠位置
+				this->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation() + FVector(0.f, 0.f, 1000.f));
+				this->CurLocation = this->GetActorLocation();
+				this->DealyTime = 3.f;
+				this->fToGroundTime_ = this->fToGroundTime;
+				this->bEnter = true;
+
+				/*
 				//创建标记
 				UClass* CurFlagClass = UGameSystemFunction::LoadRes(this->AnimRes.FlagClass);
 				if (IsValid(CurFlagClass))
 				{
-					//设置老鼠位置
-					this->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation() + FVector(0.f, 0.f, 1000.f));
-					this->CurLocation = this->GetActorLocation();
-					this->CurFlag = this->GetWorld()->SpawnActor<AFlyCatchMouseFlag>(CurFlagClass);
-					this->CurFlag->SetActorLocation(this->CurUI->GetMapMeshe()->GetActorLocation());
-					this->CurFlag->SetRenderLayer(9999);
-					this->DealyTime = 3.f;
-					this->fToGroundTime = 1.f;
-					this->bEnter = true;
+
 					return;
 				}
 				else {
 					this->SetMouseDeath(true);
 					return;
 				}
+				return;
+				*/
+
 				return;
 			}
 		}
@@ -246,46 +247,39 @@ void AFlyCatchMouse::MouseInit()
 	this->SetMouseDeath(true);
 }
 
-void AFlyCatchMouse::MoveingUpdate(float DeltaTime)
-{
-	Super::MoveingUpdate(DeltaTime);
-}
-
-bool AFlyCatchMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType)
-{
-	return Super::BeHit(CurHitMouseObj, _HurtValue, AttackType);
-}
 
 void AFlyCatchMouse::MouseDeathed()
 {
 	Super::MouseDeathed();
 
 	//关闭碰撞
-	this->ClosedBoxComponent(this->MMesheComponent);
-	this->ClosedBoxComponent(this->MBodyComponent);
+	this->ClosedBoxComponent(this->MesheComp);
+	this->ClosedBoxComponent(this->BodyComp);
 
+	this->bEnterA = false;
+	this->bCatch = false;
 	this->bEnter = false;
 	this->bExit = false;
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		//this->SetPlayAnimation(nullptr);
-		//this->CurCardAnim->SetAnimationClear();
-	}
-
-	if (IsValid(this->CurFlag))
-	{
-		this->CurFlag->Destroy();
+		UTrackEntry* Trac = this->SetAnimation(0,
+			this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
+		this->SetTrackEntry(Trac);
 	}
 }
 
-void AFlyCatchMouse::OnAnimationPlayEnd()
+void AFlyCatchMouse::AnimationPlayEnd(UTrackEntry* Track)
 {
-	if (this->GetCurrentHP() > 0.f)
+	if (this->GetCurrentHP() > 0.f && this->bCatch)
 	{
+		this->bCatch = false;
+
 		//关闭碰撞
-		this->ClosedBoxComponent(this->MMesheComponent);
-		this->ClosedBoxComponent(this->MBodyComponent);
+		this->ClosedBoxComponent(this->MesheComp);
+		this->ClosedBoxComponent(this->BodyComp);
 
 		//获取防御卡动画
 		if (IsValid(CurUI))
@@ -307,22 +301,6 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 				this->CurCatchCard = nullptr;
 			}
 		}
-		
-		/*
-		//设置防御卡动画
-		if (IsValid(this->CurCatchCard))
-		{
-			this->CurCardAnim->SetAnimation(0,
-				this->CurCatchCard->GetCurrentAnimationName(0),
-				true
-			);
-			this->CurCardAnim->SetRenderLayer(this->GetTranslucentSortPriority() - 1);
-			this->CurCardAnim->SetAnimationTimeScale(0, 0.f);
-		}
-		else {
-			this->CurCardAnim->SetAnimationClear(0);
-		}
-		*/
 
 		//消灭防御卡	
 		if (IsValid(this->CurCatchCard))
@@ -332,15 +310,9 @@ void AFlyCatchMouse::OnAnimationPlayEnd()
 			UResourceManagerComponent::ResourceAddBadCard();
 		}
 
-		//播放退场
-		//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Exit), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
-
-		this->fToGroundTime = 1.f;
+		this->fToGroundTime_ = this->fToGroundTime;
 		this->bExit = true;
+		this->bEnter = false;
 		//对齐坐标
 		this->CurLocation.Z = 1000.f;
 		this->CurExitLocation = this->GetActorLocation();

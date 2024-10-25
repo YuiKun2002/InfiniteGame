@@ -56,6 +56,9 @@ public:
 	//物品描述
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText M_ItemDescribe;
+	//物品ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString M_ItemID;
 	//物品价格
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString M_ItemPirceText;
@@ -65,6 +68,16 @@ public:
 	//购买一次发送道具的数量[针对(券)购买]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 M_BuyCountSendNums = 1;
+public:
+	//默认商城数据
+	UPROPERTY()
+	FItemPrice ItemPriceData;
+	//进行支付的时候
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPay(FItemPrice Price);
+	//更新货币
+	UFUNCTION(BlueprintCallable)
+	void UpdateCoinText();
 public:
 	//默认商城数据
 	UPROPERTY()

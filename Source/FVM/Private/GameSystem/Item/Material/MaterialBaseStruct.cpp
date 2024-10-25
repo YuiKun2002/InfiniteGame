@@ -215,7 +215,7 @@ bool UMaterialBaseStruct::SearchMaterailFromDataTable(const FString& _MaterailNa
 
 	UMaterialDataAssetCache* UCache =
 		Cast<UMaterialDataAssetCache>(
-			UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(GLOBALASSET_MATERIAL)
+			UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCacheByDef(GLOBALASSET_MATERIAL)
 		);
 
 	if (!IsValid(UCache))

@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/SpriteActor.h"
 #include "Kismet/KismetMathLibrary.h"
 
+#include <Components/Capsulecomponent.h>
 #include <Components/SphereComponent.h>
 #include <Components/BoxComponent.h>
 
@@ -331,13 +332,11 @@ void ANormalBase::BeginPlay()
 
 void ANormalBase::PlayBombEffAnim()
 {
-	/*this->SetPlayAnimation(
-		LoadObject<UPaperFlipbook>(0,
-			TEXT("PaperFlipbook'/Game/Resource/Texture/Sprite/VS/Sprite/Mouse/Other/FB_MouseBombEff.FB_MouseBombEff'"))
-	);*/
-
-	this->SetAnimation(0, TEXT("SpineTag"), true);
-
+	UTrackEntry* Trac = this->SetAnimation(0,
+		this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+	);
+	BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
+	this->SetTrackEntry(Trac);
 }
 
 bool ANormalBase::GetMouseDeathByBomb() const
@@ -371,4 +370,25 @@ ANormalSphereBase::ANormalSphereBase()
 
 	this->MMeshe->SetupAttachment(this->GetRootComponent());
 	this->MBody->SetupAttachment(this->MMeshe);
+}
+
+ANormalCapsuleBase::ANormalCapsuleBase()
+{
+	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
+
+	//设置依附
+	this->MesheComp->SetupAttachment(this->GetPointComponent());
+	this->BodyComp->SetupAttachment(this->GetPointComponent());
+}
+
+void ANormalCapsuleBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		this->MesheComp->SetHiddenInGame(false);
+		this->BodyComp->SetHiddenInGame(false);
+	}
 }

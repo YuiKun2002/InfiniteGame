@@ -6,6 +6,7 @@
 #include <Components/TextBlock.h>
 #include <Components/CanvasPanel.h>
 #include "Game/UI/Tips/UI_ShopPayTip.h"
+#include "GameSystem/GameUserInterfaceSubsystem.h"
 #include <Components/CanvasPanelSlot.h>
 
 bool UUI_ShopGrid::Initialize()
@@ -23,18 +24,33 @@ void UUI_ShopGrid::PlayAnimation_1()
 
 void UUI_ShopGrid::ShowPayPanel()
 {
-	UUI_ShopPayTip* _PayWidget = CreateWidget<UUI_ShopPayTip>(this, LoadClass<UUI_ShopPayTip>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/Game/UI/UI_Tip/UI_BuyItem_Tip.UI_BuyItem_Tip_C'")));
-	_PayWidget->M_ItemName = this->M_FItemPrice.M_ItemName;
-	_PayWidget->M_ItemPirceText = FString::FromInt(this->M_FItemPrice.M_ItemPrice);
-	_PayWidget->M_ItemDescribe = this->M_FItemPrice.M_ItemDescirbe;
-	_PayWidget->M_ItemMoneyType = this->M_FItemPrice.M_ItemMoneyTypeName;
-	//赋值价格数据
-	_PayWidget->M_FItemPrice = this->M_FItemPrice;
+	UUI_ShopPayTip* _PayWidget = Cast<UUI_ShopPayTip>(
+		UGameSystemFunction::GetUserInterInstanceByName(UI_GLOBALUINAME)->GetUI(TEXT("Pay"))
+	);
+
+	//物品数据
+	_PayWidget->ItemPriceData = this->M_FItemPrice;
+	_PayWidget->ItemPriceData.M_ItemNums = 1;
+
+	////物品名称
+	//_PayWidget->M_ItemName = this->M_FItemPrice.M_ItemName;
+	////物品价格
+	//_PayWidget->M_ItemPirceText = FString::FromInt(this->M_FItemPrice.M_ItemPrice);
+	////物品ID
+	//_PayWidget->M_ItemID = this->M_FItemPrice.M_ItemID;
+	////物品描述
+	//_PayWidget->M_ItemDescribe = this->M_FItemPrice.M_ItemDescirbe;
+	////货币类型
+	//_PayWidget->M_ItemMoneyType = this->M_FItemPrice.M_ItemMoneyTypeName;
+	////赋值价格数据
+	//_PayWidget->M_FItemPrice = this->M_FItemPrice;
 	//绑定玩家金额更新函数
 	if (this->M_UUI_Shop)
+	{
 		_PayWidget->SetShopUI(this->M_UUI_Shop);
+	}
 	//显示
-	_PayWidget->AddToViewport();
+	_PayWidget->AddToViewport(500);
 }
 
 UButton* UUI_ShopGrid::GetBuyItemButton()

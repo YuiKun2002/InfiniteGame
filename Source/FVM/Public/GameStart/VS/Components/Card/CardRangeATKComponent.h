@@ -30,25 +30,24 @@ public:
 	virtual void InitCondition() override;
 public:
 	//资源加载
-	UFUNCTION(BlueprintCallable)
-		virtual void LoadResource() override;
+	virtual void LoadResource() override;
 	//范围检测
 	UFUNCTION(BlueprintCallable)
-		bool CheckMouse(FHitResult& OutResult);
+	bool CheckMouse(FHitResult& OutResult);
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 private:
 	//卡片拥有者
 	UPROPERTY()
-		ARangeATKCardActor* RangeATKCardActor = nullptr;
+	ARangeATKCardActor* RangeATKCardActor = nullptr;
 	//当前存在的老鼠
 	UPROPERTY()
-		TArray<AMouseActor*> M_Mouses;
+	TArray<AMouseActor*> M_Mouses;
 	//当前存活时间
 	UPROPERTY()
-		float M_CurrentTime = 0.f;
+	float M_CurrentTime = 0.f;
 	//老鼠检测延迟
 	UPROPERTY()
-		float CheckMouseDelay = 0.5f;
+	float CheckMouseDelay = 0.5f;
 };

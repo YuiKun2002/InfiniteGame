@@ -8,6 +8,9 @@
 #include "Data/MapData/Editor/EditorTab/GameMapUI_EditorTab.h"
 #include "Data/MapData/Editor/LevelTab/GameMapUI_LevelItemsTab.h"
 
+#if WITH_EDITOR
+#include "FileHelpers.h"
+#endif
 
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
@@ -72,8 +75,8 @@ void UFVMEditUI_GameMapEdit::InitGameMapData()
 	//加载数据表
 	this->GameMapData = LoadObject<UDataTable>(
 		this,
-		TEXT("DataTable'/Game/Resource/BP/Data/MapData/GameMapData.GameMapData'")
-		);
+		TEXT("DataTable'/Game/Resource/BP/Data/MapData/DT_GameMapDataList.DT_GameMapDataList'")
+	);
 
 	//初始化列表数据
 	this->InitGameMapListItems();
@@ -119,8 +122,12 @@ void UFVMEditUI_GameMapEdit::InitEditorConfig()
 
 void UFVMEditUI_GameMapEdit::InitCurEditConfig()
 {
-	FGameMapData* const Cur = this->GameMapData->FindRow<FGameMapData>(this->CurEditRowName, TEXT("GameMapData"));
-	this->CurEditData = *Cur;
+	FGameMapDataList* const Cur = this->GameMapData->FindRow<FGameMapDataList>(this->CurEditRowName, TEXT("GameMapData"));
+	UMapDataStructAsset* Data = Cur->MapDataTable.LoadSynchronous();
+	if (IsValid(Data))
+	{
+		this->CurEditData = Data->Data;
+	}
 }
 
 void UFVMEditUI_GameMapEdit::LoadConfig()
@@ -147,19 +154,27 @@ void UFVMEditUI_GameMapEdit::SaveConfig()
 	this->CurEditData.M_FMouseConfig = MouseConfig;
 
 	/*保存配置*/
-	FGameMapData* const CurRow = this->GameMapData->FindRow<FGameMapData>(this->CurEditRowName, TEXT("GameMapData"));
+	FGameMapDataList* const CurRow = this->GameMapData->FindRow<FGameMapDataList>(this->CurEditRowName, TEXT("GameMapData"));
 	if (CurRow)
 	{
-		*CurRow = this->CurEditData;
-		UPackage* Package = FindPackage(nullptr, *FPackageName::FilenameToLongPackageName(this->GameMapData->GetPathName()));
+		UMapDataStructAsset* Data = CurRow->MapDataTable.LoadSynchronous();
+		if (IsValid(Data))
+		{
+			Data->Data = this->CurEditData;
+
+		}
+		UPackage* Package = FindPackage(nullptr,
+			*FPackageName::FilenameToLongPackageName(CurRow->MapDataTable->GetPathName())
+		);
 		if (Package)
 		{
+			#if WITH_EDITOR
+			Package->MarkPackageDirty();
 			Package->SetDirtyFlag(true);
-
-			this->SaveCurPakage();
+			#endif
 		}
 	}
-
+	this->SaveCurPakage();
 	//缓存配置
 	this->LoadConfig();
 }

@@ -201,6 +201,28 @@ public:
 	FSoftObjectPath Item3;
 };
 
+
+USTRUCT(BlueprintType)
+struct FLevelItem
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY()
+	int32 ItemID = 0;
+	UPROPERTY()
+	int32 ItemCount = 0;
+};
+
+//关卡道具配置
+USTRUCT(BlueprintType)
+struct FLevelItemConfig
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY()
+	TArray<FLevelItem> Items;
+};
+
 //关卡配置
 USTRUCT(BlueprintType)
 struct FLevelConfig
@@ -282,6 +304,12 @@ public:
 	//高亮显示个数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HiLightCount = 1;
+	//开启特殊模式
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSpecialModeEnable = false;
+	//当前关卡掉落的道具
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLevelItemConfig LevelItemConfig;
 };
 
 
@@ -384,6 +412,18 @@ public:
 	//当前波数【根据关卡波数配置决定只解析多少】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FRondWidthMouseConfig> CurRoundConfig;
+	//所有老鼠名称Key集合
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, int32> AllMouseListMap;
+	//所有老鼠IDKey集合
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FString> AllMouseKeyListMap;
+	//使用的老鼠数量
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, int32> UseMouseKeyListCountMap;
+	//有效的Key
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> ValidKeyID;
 };
 
 

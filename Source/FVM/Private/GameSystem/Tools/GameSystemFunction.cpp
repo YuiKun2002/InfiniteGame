@@ -24,6 +24,9 @@
 
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetStringLibrary.h>
+
+#include <iomanip>
 
 FDateTime UGameSystemFunction::GameSystem_Time;
 FDateTime UGameSystemFunction::GameSystem_Time_Now;
@@ -177,6 +180,44 @@ int32 UGameSystemFunction::GetRandomRange(int32 Random_Min, int32 RandomNums)
 float UGameSystemFunction::GetRandomRangeFloat(float Random_Min, float RandomNums)
 {
 	return UGameSystemFunction::Random_Now.FRandRange(Random_Min, RandomNums);
+}
+
+float UGameSystemFunction::GetGCD_f(int32 X, int32 Y)
+{
+	if (X % Y == 0)
+	{
+		return Y;
+	}
+
+	return GetGCD_f(Y, X % Y);
+}
+
+void UGameSystemFunction::GetScale(
+	const int32& X,
+	const int32& Y,
+	FString& OutScaleX,
+	FString& OutScaleY
+)
+{
+	int32 Max = X;
+	int32 Min = Y;
+	if (Max < Y)
+	{
+		Max = Y;
+		Min = X;
+	}
+
+	// 10 9 3 1  以9为基数
+	float Target9 = Max * 9.f / Min;
+	constexpr int Accuracy = 10;
+	const int BigRoundResult = FMath::RoundToInt(Target9 * Accuracy);
+	const FString IntPart = FString::FromInt(BigRoundResult / Accuracy);
+	const FString DigPart = FString::FromInt(
+		BigRoundResult > 0 ? BigRoundResult % Accuracy : (-1) * BigRoundResult % Accuracy
+	);
+
+	OutScaleX = IntPart + TEXT(".") + DigPart;
+	OutScaleY = TEXT("9");
 }
 
 void UGameSystemFunction::TabSelect(const TArray<UButton*>& _ButtonArrays, const  FString& _UniformPath, const  TArray<FString>& _DefButtonStyle, const TArray<FString>& _ClickButtonStyle, int32 _Index)
@@ -429,6 +470,7 @@ EGameVsMap UGameSystemFunction::GetPlayerLastInMap()
 
 void UGameSystemFunction::ResetDataTable(class UDataTable* _datatable)
 {
+#if WITH_EDITOR
 	for (const auto& Name : _datatable->GetRowNames())
 	{
 		FItemCard* CardData = nullptr;
@@ -468,6 +510,7 @@ void UGameSystemFunction::ResetDataTable(class UDataTable* _datatable)
 	}
 
 	_datatable->MarkPackageDirty();
+#endif
 }
 
 FString UGameSystemFunction::GetObjectName(const UObject* Obj)
@@ -530,20 +573,25 @@ bool UGameSystemFunction::AddLineTrance(
 	TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
 )
 {
+	return UGameSystemFunction::AddLineTrance(World, CurLoca + BeginOffset, CurLoca + EndOffset, CC, InputObj, Func);
+}
+
+bool UGameSystemFunction::AddLineTrance(const UWorld* World, const FVector& Begin, const FVector& End, ECollisionChannel CC, UObject* InputObj, TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func)
+{
 	//添加射线
 	FHitResult Hit;
 
 	if (UFVMGameInstance::GetDebug())
 	{
 		DrawDebugLine(World,
-			CurLoca + BeginOffset,
-			CurLoca + EndOffset,
+			Begin,
+			End,
 			FColor(1.f, 0.f, 0.f, 1.f), false, 5.f);
 	}
 
 	if (World->LineTraceSingleByChannel(Hit,
-		CurLoca + BeginOffset,
-		CurLoca + EndOffset,
+		Begin,
+		End,
 		CC))
 	{
 		Func(InputObj, Hit.GetActor());
@@ -819,12 +867,18 @@ ETraceTypeQuery UGameSystemFunction::GetMouseCollisionTraceType(EMouseCollisionT
 {
 	switch (_EMouseCollisionType)
 	{
+		//陆地
 	case EMouseCollisionType::MouseGround:
 		return ETraceTypeQuery::TraceTypeQuery4;
+		//空中
 	case EMouseCollisionType::MouseSky:
 		return ETraceTypeQuery::TraceTypeQuery5;
+		//地下
 	case EMouseCollisionType::MouseUnder:
 		return ETraceTypeQuery::TraceTypeQuery6;
+		//水上
+	case EMouseCollisionType::MouseOnWater:
+		return ETraceTypeQuery::TraceTypeQuery12;
 	default:
 		return ETraceTypeQuery::TraceTypeQuery11;
 	}
@@ -838,6 +892,7 @@ ECollisionChannel UGameSystemFunction::GetMouseCollisionBoxTypeByELineType(ELine
 	case ELineType::OnGround:return ECollisionChannel::ECC_GameTraceChannel2; break;
 	case ELineType::Sky:return ECollisionChannel::ECC_GameTraceChannel3; break;
 	case ELineType::Underground:return ECollisionChannel::ECC_GameTraceChannel4; break;
+	case ELineType::OnWater:return ECollisionChannel::ECC_GameTraceChannel10; break;
 	default:
 		return ECollisionChannel::ECC_GameTraceChannel9;
 	}
@@ -852,6 +907,7 @@ ETraceTypeQuery UGameSystemFunction::GetMouseCollisionTraceTypeByELineType(ELine
 	case ELineType::OnGround:return ETraceTypeQuery::TraceTypeQuery4;; break;
 	case ELineType::Sky:return ETraceTypeQuery::TraceTypeQuery5; break;
 	case ELineType::Underground:return ETraceTypeQuery::TraceTypeQuery6; break;
+	case ELineType::OnWater:return ETraceTypeQuery::TraceTypeQuery12; break;
 	default:
 		return ETraceTypeQuery::TraceTypeQuery11;
 	}
@@ -866,6 +922,7 @@ ECollisionChannel UGameSystemFunction::GetMouseCollisionBoxTypeByLineType(ELineT
 	case ELineTraceType::E_MouseGround:return ECollisionChannel::ECC_GameTraceChannel2; break;
 	case ELineTraceType::E_MouseSky:return ECollisionChannel::ECC_GameTraceChannel3; break;
 	case ELineTraceType::E_MouseUnder:return ECollisionChannel::ECC_GameTraceChannel4; break;
+	case ELineTraceType::E_MouseWater:return ECollisionChannel::ECC_GameTraceChannel10; break;
 	default:
 		return ECollisionChannel::ECC_GameTraceChannel9;
 		break;

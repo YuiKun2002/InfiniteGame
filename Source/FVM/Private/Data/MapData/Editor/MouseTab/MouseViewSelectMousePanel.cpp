@@ -21,9 +21,10 @@ bool UMouseViewSelectMouseItem::Initialize()
 	return true;
 }
 
-void UMouseViewSelectMouseItem::InitSelectMouseItem(UMouseViewSelectMousePanel* SelectMousePanel, const FMouse_Data& Data)
+void UMouseViewSelectMouseItem::InitSelectMouseItem(UGameMapUI_MouseTab* MouseTab, UMouseViewSelectMousePanel* SelectMousePanel, const FMouse_Data& Data)
 {
 	this->CurSelectMousePanel = SelectMousePanel;
+	this->CurMouseTab = MouseTab;
 	this->MouseData = Data;
 
 	FButtonStyle Style;
@@ -56,6 +57,7 @@ void UMouseViewSelectMouseItem::Select()
 	this->OnSelect(this->MouseData);
 
 	this->CurSelectMousePanel->CurSelectMouseItem = this;
+
 	FMouseConfigNode NewMouseNode;
 	NewMouseNode.CurMouseName = this->MouseData.M_Mouse.M_MouseName;
 	this->CurSelectMousePanel->CurUnifromMouseNodeSetting = NewMouseNode;
@@ -120,15 +122,14 @@ void UMouseViewSelectMousePanel::ShowType(const FString& _Type)
 		{
 			//得到项
 			UMouseViewSelectMouseItem* CurViewItem = Cast<UMouseViewSelectMouseItem>(this->UniformGridPanel->GetChildAt(i));
-			CurViewItem->InitSelectMouseItem(this, CurValidData[i]);
+			CurViewItem->InitSelectMouseItem(GameMapUI_MouseViewEditor->GetMouseTab(), this, CurValidData[i]);
 			CurViewItem->SetVisibility(ESlateVisibility::Visible);
 		}
 		else {
 			UMouseViewSelectMouseItem* CurViewItem = CreateWidget<UMouseViewSelectMouseItem>(this,
 				LoadClass<UMouseViewSelectMouseItem>(nullptr,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BPUI_MouseViewSelectItem.BPUI_MouseViewSelectItem_C'")));
-
-			CurViewItem->InitSelectMouseItem(this, CurValidData[i]);
+			CurViewItem->InitSelectMouseItem(GameMapUI_MouseViewEditor->GetMouseTab(), this, CurValidData[i]);
 			this->UniformGridPanel->AddChildToUniformGrid(CurViewItem, i / 3, i % 3);
 		}
 	}

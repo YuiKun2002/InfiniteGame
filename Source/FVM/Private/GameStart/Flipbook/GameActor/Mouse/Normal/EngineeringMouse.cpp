@@ -3,7 +3,7 @@
 
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/EngineeringMouse.h"
 #include <Components/BoxComponent.h>
-#include <Components/SphereComponent.h>
+#include <Components/Capsulecomponent.h>
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/VS/UI/UI_MapMeshe.h"
@@ -11,21 +11,6 @@
 #include "GameStart/VS/Components/MesheControllComponent.h"
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include "GameStart/VS/MapMeshe.h"
-
-AEngineeringMouse::AEngineeringMouse()
-{
-	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
-	this->CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
-
-	//设置依附
-	this->MesheComp->SetupAttachment(this->GetRootComponent());
-	this->CollisionComp->SetupAttachment(this->MesheComp);
-}
-
-void AEngineeringMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 void AEngineeringMouse::MouseTick(const float& DeltaTime)
 {
@@ -77,14 +62,13 @@ void AEngineeringMouse::MouseTick(const float& DeltaTime)
 		else {
 			this->AtkDelay = 0.2f;
 
-			TArray<FHitResult> Res;
-			if (UGameSystemFunction::AddSphereTraceMulti(
-				this, Res, FVector(0.f, 0.f, 15.f), FVector(0.f, 0.f, 15.f), 20.f,
-				UGameSystemFunction::GetCardCollisionTraceType(ECardCollisionType::E_CardActor)))
-			{
-				for (const FHitResult& CurHit : Res)
-				{
-					ACardActor* CurCard = Cast<ACardActor>(CurHit.GetActor());
+			UGameSystemFunction::AddLineTrance(
+				this->GetWorld(),
+				this->GetActorLocation(), FVector(0.f, -10.f, 0.f), FVector(0.f, 10.f, 0.f),
+				UGameSystemFunction::GetCardCollisionBoxType(ECardCollisionType::E_CardActor), this,
+				[](UObject* OwnerActor, AActor* Card) {
+					AEngineeringMouse* Mouse = Cast<AEngineeringMouse>(OwnerActor);
+					ACardActor* CurCard = Cast<ACardActor>(Card);
 					if (IsValid(CurCard) && CurCard->GetCurrentHP() > 0.f)
 					{
 						if (CurCard->GetCardData().M_ECardCollisionType == ECardCollisionType::E_CardActor2)
@@ -103,14 +87,24 @@ void AEngineeringMouse::MouseTick(const float& DeltaTime)
 								UResourceManagerComponent::ResourceAddBadCard();
 							}
 
-							this->SetbIsHurt(true);
-							this->BeHit(CurCard,this->GetTotalHP(), EFlyItemAttackType::Def);
-							this->bCheck = false;
+							Mouse->SetbIsHurt(true);
+							Mouse->BeHit(CurCard, Mouse->GetTotalHP(), EFlyItemAttackType::Def);
+							Mouse->bCheck = false;
 							return;
 						}
 					}
+				});
+
+			/*TArray<FHitResult> Res;
+			if (UGameSystemFunction::AddSphereTraceMulti(
+				this, Res, FVector(0.f, 0.f, 15.f), FVector(0.f, 0.f, 15.f), 20.f,
+				UGameSystemFunction::GetCardCollisionTraceType(ECardCollisionType::E_CardActor)))
+			{
+				for (const FHitResult& CurHit : Res)
+				{
+
 				}
-			}
+			}*/
 		}
 	}
 
@@ -149,12 +143,14 @@ void AEngineeringMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameSystemFunction::InitMouseMeshe(this->MesheComp, this->CollisionComp);
+	//初始化碰撞网格位置
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->CollisionOffset);
 
-	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AEngineeringMouse::AnimPlayEnd);
 	this->Meshe = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AEngineeringMouse::MouseInit()
@@ -169,6 +165,10 @@ void AEngineeringMouse::MouseInit()
 
 	this->ReadyBulletTime = 0;//this->ReadyNewMouseTime;
 	this->ProjectileBulletTime = this->ShootNewBulletTime;
+
+	//播放移动动画
+	UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+	this->SetTrackEntry(Track);
 }
 
 void AEngineeringMouse::MoveingUpdate(float DeltaTime)
@@ -184,7 +184,11 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 
 		if (this->GetActorLocation().Y < 425.f - (55.f * this->BeginMoveGrid))
 		{
+			//移动停止
 			this->MoveStop();
+			//播放动画【等待动画】
+			this->PlayIdleAnim();
+			//开始移动完成
 			this->bBeginMove = true;
 			return;
 		}
@@ -212,9 +216,9 @@ void AEngineeringMouse::MoveingUpdate(float DeltaTime)
 void AEngineeringMouse::MouseDeathed()
 {
 	//this->GetRenderComponent()->OnAnimationPlayEnd.Unbind();
-		
+
 	this->MesheComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	this->CollisionComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->bCheck = false;
 	this->bProjStart = false;
 
@@ -223,13 +227,13 @@ void AEngineeringMouse::MouseDeathed()
 	if (!this->GetPlayPlayBombEffAnim())
 	{
 		//播放死亡动画
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Death), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AMouseActor::AlienDeadAnimationCompelet);
+		this->SetTrackEntry(Track);
 	}
 }
 
-void AEngineeringMouse::AnimPlayEnd()
+void AEngineeringMouse::AnimPlayEnd(UTrackEntry* TrackEntry)
 {
 	if (!this->bBeginMove)
 	{
@@ -241,10 +245,13 @@ void AEngineeringMouse::AnimPlayEnd()
 		return;
 	}
 
+	//动画结束允许移动
 	this->bMove = true;
 
+	//如果处于发射模式
 	if (this->bShoot)
 	{
+		//查询一次网格
 		for (int32 i = 0; i < this->Meshe->GetMapMeshRowAndCol().Col; i++)
 		{
 			AMapMeshe* CurMapMeshe = this->Meshe->GetMesh(this->GetMouseLine().Row, i);
@@ -254,7 +261,7 @@ void AEngineeringMouse::AnimPlayEnd()
 				{
 					if (CurMapMeshe->GetUIMapMeshe()->GetCardDatas().Num())
 					{
-						//检测是否允许移动				
+						//检测有卡片，禁止移动			
 						this->bMove = false;
 						break;
 					}
@@ -263,37 +270,32 @@ void AEngineeringMouse::AnimPlayEnd()
 		}
 	}
 
+	//允许移动
 	if (this->bMove)
 	{
 		this->MoveStart();
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Def1), true);
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		this->PlayMoveAnim();
 	}
 	else {
+		//禁止移动
 		this->MoveStop();
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->Anim.Wait));
-
-		this->SetAnimation(0,TEXT("SpineTag"),true);
+		this->PlayIdleAnim();
 	}
 
+	//子弹有效，禁止移动，允许射击
 	if (this->bValidBullet && !this->bMove && this->bShoot)
 	{
+		//发射时间小于0
 		if (this->ProjectileBulletTime <= 0.f)
 		{
+			//进行发射，开启当前发射状态
 			this->ProjectileBulletTime = this->ShootNewBulletTime;
 			this->ReadyBulletTime = this->ReadyNewBulletTime;
 			this->bCurShoot = true;
 			this->bValidBullet = false;
 
-			//发射新老鼠
-			/*this->SetPlayAnimationOnce(
-				UGameSystemFunction::LoadRes(this->Anim.Shoot),
-				UGameSystemFunction::LoadRes(this->Anim.Wait)
-			);*/
-
-			this->SetAnimation(0,TEXT("SpineTag"),true);
-			this->SetAnimation(0,TEXT("SpineTag"),true);
+			//播放发射动画
+			this->PlayAttackAnim();
 
 			if (this->bCurShoot)
 			{
@@ -316,13 +318,12 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 	//生成投射物体
 	FTransform Trans;
-	Trans.SetLocation(this->GetActorLocation());
-
+	Trans.SetLocation(this->GetLauncherPoint());
 	//生成子弹对象
 	AEngineeringPrjBullet* CurProj = this->GetWorld()->SpawnActor<AEngineeringPrjBullet>(
 		this->TargetCreateBullet.Get(),
 		Trans
-		);
+	);
 
 	if (IsValid(CurProj))
 	{
@@ -353,7 +354,7 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 
 						//CurProj->SetFlipbookPitchRotation(90.f);
 						CurProj->SetRenderLayer(9999);
-						CurProj->CInit(CurMapMeshe->GetActorLocation(), CurCard);
+						CurProj->CInit(CurMapMeshe->GetActorLocation(), this->GetLauncherPoint(), CurCard);
 						return;
 					}
 				}
@@ -364,14 +365,73 @@ void AEngineeringMouse::ProjectileBullet(const FLine& CurLine)
 	}
 }
 
+FVector AEngineeringMouse::GetLauncherPoint()
+{
+	/*return FVector(
+		this->GetActorLocation().X,
+		this->GetActorLocation().Y + this->GetPointComponent()->GetRelativeLocation().X + this->LauncherBulletPointComp->GetRelativeLocation().X,
+		this->GetActorLocation().Z + this->GetPointComponent()->GetRelativeLocation().Z + this->LauncherBulletPointComp->GetRelativeLocation().Z
+	);
+	*/
+
+	return this->GetActorLocation() +
+		this->GetPointComponent()->GetRelativeLocation() +
+		this->LauncherBulletPointComp->GetRelativeLocation();
+}
+
+void AEngineeringMouse::PlayIdleAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.IdleAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.IdleDamageAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+}
+
+void AEngineeringMouse::PlayMoveAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+}
+
+void AEngineeringMouse::PlayAttackAnim()
+{
+	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
+	{
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+	else {
+		UTrackEntry* Track = this->SetAnimation(0, this->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AEngineeringMouse::AnimPlayEnd);
+		this->SetTrackEntry(Track);
+	}
+}
+
 AEngineeringPrjBullet::AEngineeringPrjBullet()
 {
 	this->bInit = false;
 }
 
-void AEngineeringPrjBullet::CInit(const FVector& TargetLocation, const TArray<class ACardActor*>& TargetHitCard)
+void AEngineeringPrjBullet::CInit(const FVector& TargetLocation, const FVector& CurLocation, const TArray<class ACardActor*>& TargetHitCard)
 {
-	this->Init(TargetLocation, TargetHitCard);
+	this->Init(TargetLocation, CurLocation, TargetHitCard);
 	this->bInit = true;
 }
 

@@ -26,7 +26,7 @@ class FVM_API UMouseLineManager : public UObject
 {
 	GENERATED_BODY()
 
-		friend class UMouseManagerComponent;
+	friend class UMouseManagerComponent;
 
 public:
 	//添加老鼠
@@ -39,6 +39,7 @@ public:
 	AMouseActor* FindMouse(const FString& MouseName);
 	//排序老鼠位置
 	void SortMouseByTick(const float& _Tick);
+public:
 	//获取陆地最前老鼠
 	AMouseActor* GetMouseTopByGorund() const;
 	//获取地下最前老鼠
@@ -62,35 +63,42 @@ public:
 private:
 	//排序老鼠最前位置
 	AMouseActor* SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses);
+	//移除
+	bool RemoveMouseIns(TMap<FString, AMouseActor*>& MouseMap, AMouseActor* _CurMouse);
+	//通过名称移除
+	bool RemoveMouseInsByName(TMap<FString, AMouseActor*>& MouseMap, const FString& MouseName);
 private:
 	//更新Tick的时间延迟
 	UPROPERTY()
-		float UpdateTickTime = 0.2f;
+	float UpdateTickTime = 0.2f;
 	UPROPERTY()
-		float CurTime = 0.f;
+	float CurTime = 0.f;
 	//老鼠时间暂停
 	UPROPERTY()
-		bool bMouseTimePause = false;
+	bool bMouseTimePause = false;
 
 	//陆地最前老鼠
 	UPROPERTY(EditAnywhere)
-		AMouseActor* CurMouseGroundTop = nullptr;
+	AMouseActor* CurMouseGroundTop = nullptr;
 	//地下最前老鼠
 	UPROPERTY(EditAnywhere)
-		AMouseActor* CurMouseUnderGroundTop = nullptr;
+	AMouseActor* CurMouseUnderGroundTop = nullptr;
 	//空中最前老鼠
 	UPROPERTY(EditAnywhere)
-		AMouseActor* CurMouseSkyTop = nullptr;
+	AMouseActor* CurMouseSkyTop = nullptr;
 
 	//陆地老鼠
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
-		TMap<FString, AMouseActor*> CurMouseGround;
+	TMap<FString, AMouseActor*> CurMouseGround;
 	//地下老鼠
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
-		TMap<FString, AMouseActor*> CurMouseUnderGround;
+	TMap<FString, AMouseActor*> CurMouseUnderGround;
 	//飞行老鼠
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
-		TMap<FString, AMouseActor*> CurMouseSky;
+	TMap<FString, AMouseActor*> CurMouseSky;
+	//水上老鼠
+	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
+	TMap<FString, AMouseActor*> CurMouseOnWater;
 };
 
 //当回合数发生改变时触发
@@ -144,60 +152,60 @@ public:
 private:
 	//启动时间计时
 	UPROPERTY()
-		bool bEnable = false;
+	bool bEnable = false;
 
 	//启动进入下一个回合的计时
 	UPROPERTY()
-		bool bEnableNextRound = false;
+	bool bEnableNextRound = false;
 	//当前进入下一个回合的时间
 	UPROPERTY()
-		float CurNextRoundTime = 0.f;
+	float CurNextRoundTime = 0.f;
 	//进入下一个回合的总时间
 	UPROPERTY()
-		float CurNextRoundTotalTime = 0.f;
+	float CurNextRoundTotalTime = 0.f;
 	//是否继续更新当前回合的节点
 	UPROPERTY()
-		bool bUpdateCurNode = true;
+	bool bUpdateCurNode = true;
 
 	//进入下一个回合时检测是否还有老鼠存在
 	UPROPERTY()
-		bool bEnableCheckMouseExist = false;
+	bool bEnableCheckMouseExist = false;
 	//开始下一个回合是否是最后一个会的检测
 	UPROPERTY()
-		bool bEnableCheckNextRoundIsEnd = false;
+	bool bEnableCheckNextRoundIsEnd = false;
 	//当前回合是否是最后一个回合
 	UPROPERTY()
-		bool bCurRoundIsEnd = false;
+	bool bCurRoundIsEnd = false;
 
 	//是否将所有老鼠全部生成完毕
 	UPROPERTY()
-		bool bCurAllMouseSpawnEnd = false;
+	bool bCurAllMouseSpawnEnd = false;
 
 	//分钟
 	UPROPERTY()
-		int32 Minute = 0;
+	int32 Minute = 0;
 	//秒钟
 	UPROPERTY()
-		int32 Second = 0;
+	int32 Second = 0;
 	//当前时间流动
 	UPROPERTY()
-		float CurTime = 0.f;
+	float CurTime = 0.f;
 	//总时间流动
 	UPROPERTY()
-		float AllTime = 0.f;
+	float AllTime = 0.f;
 private:
 	//最小节点索引
 	UPROPERTY()
-		int32 TimeNodeIndex = 0;
+	int32 TimeNodeIndex = 0;
 	//最小大节点索引，它决定了使用那个最小节点组
 	UPROPERTY()
-		int32 TimeNodeRoundIndex = 0;
+	int32 TimeNodeRoundIndex = 0;
 	//大节点索引,它决定了当前是第多少波
 	UPROPERTY()
-		int32 RoundIndex = 0;
+	int32 RoundIndex = 0;
 	//当前回合
 	UPROPERTY()
-		int32 CurRoundIndex = 0;
+	int32 CurRoundIndex = 0;
 };
 
 
@@ -209,38 +217,39 @@ class UMouseSpawnManager : public UObject
 public:
 	//生成老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* SpawnMouse(
-			class UMouseManagerComponent* Comp,
-			const FString& _MousePath,//老鼠的类路径
-			const FLine& Line,//线路
-			const int32& RowMax,//最大行
-			bool DeathFroceGameWin,//死亡就游戏结束
-			const TArray<FString>& Items,//掉落物
-			const FMouseBase& MouseData//老鼠数据
-		);
+	AMouseActor* SpawnMouse(
+		class UMouseManagerComponent* Comp,
+		const FString& _MousePath,//老鼠的类路径
+		const FLine& Line,//线路
+		const int32& RowMax,//最大行
+		bool DeathFroceGameWin,//死亡就游戏结束
+		const TArray<FString>& Items,//掉落物
+		const FMouseBase& MouseData//老鼠数据
+	);
 public:
 	//创建一只老鼠
 	UFUNCTION(BlueprintCallable)
-		static AMouseActor* MakeNewMouseByClass(
-			class UMouseManagerComponent* Comp,
-			const TSoftClassPtr<AMouseActor>& MouseClass,//资源
-			const FVector& Location,
-			float HP,//血量
-			float ATK,//攻击力
-			float Speed,//速度
-			FLine MouseLine,//线路
-			const ELineType& MouseLineType,//类型
-			EMouseTag NewTag = EMouseTag::NormalGround,//老鼠标记
-			bool bAddManager = true//添加到老鼠管理器【如果不添加请慎用】
-		);
+	static AMouseActor* MakeNewMouseByClass(
+		class UMouseManagerComponent* Comp,
+		const TSoftClassPtr<AMouseActor>& MouseClass,//资源
+		const FVector& Location,
+		float HP,//血量
+		float ATK,//攻击力
+		float Speed,//速度
+		FLine MouseLine,//线路
+		const ELineType& MouseLineType,//类型
+		EMouseTag NewTag = EMouseTag::NormalGround,//老鼠标记
+		bool bAddManager = true,//添加到老鼠管理器【如果不添加请慎用】,
+		FString AlienName = TEXT("Tag")
+	);
 	//通过老鼠名称[数据表中存在的]创建一只老鼠
 	UFUNCTION(BlueprintCallable)
-		static bool MakeNewMouseByName(
-			UDataTable* MouseDataTable,
-			FString MouseName,
-			FLine Line,
-			FVector Location = FVector::ZeroVector
-		);
+	static bool MakeNewMouseByName(
+		UDataTable* MouseDataTable,
+		FString MouseName,
+		FLine Line,
+		FVector Location = FVector::ZeroVector
+	);
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -248,17 +257,17 @@ class FVM_API UMouseManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-		friend class UMouseLineManager;
+	friend class UMouseLineManager;
 
 public:
 	static UMouseManagerComponent* M_S_CurrentClass;
 public:
 	//老鼠管理器
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UMouseStructManager* M_UMouseStructManager = nullptr;
+	UMouseStructManager* M_UMouseStructManager = nullptr;
 	//老鼠回合和Boss的血量UI
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UUI_MouseRound* M_UUI_MouseRound = nullptr;
+	UUI_MouseRound* M_UUI_MouseRound = nullptr;
 public:
 	// Sets default values for this component's properties
 	UMouseManagerComponent();
@@ -274,107 +283,124 @@ public:
 public:
 	//游戏开始
 	UFUNCTION(BlueprintCallable)
-		void GameStart();
+	void GameStart();
 	//游戏结束
 	UFUNCTION(BlueprintCallable)
-		void GameOver();
+	void GameOver();
 	//当回合数更新时
 	UFUNCTION()
-		void OnRoundNodeChangedCallback();
+	void OnRoundNodeChangedCallback();
 	//当前回合末尾
 	UFUNCTION()
-		void OnCurRoundEndCallback();
+	void OnCurRoundEndCallback();
 	//下一个回合开始初始化【提示：最后一波 UI】
 	UFUNCTION()
-		void InitNextRoundCallBack();
+	void InitNextRoundCallBack();
 public:
 	//显示UI【波数UI】
 	UFUNCTION(BlueprintCallable)
-		void ShowMouseUI(int32 Round);
+	void ShowMouseUI(int32 Round);
 	//移除UI【波数UI】
 	UFUNCTION(BlueprintCallable)
-		void RemoveMouseUI();
+	void RemoveMouseUI();
 	//更新进度值
 	UFUNCTION(BlueprintCallable)
-		void UpdateRoundProgress();
+	void UpdateRoundProgress();
 	//强行进入下一个回合
 	UFUNCTION(BlueprintCallable)
-		void ForceNextRound();
+	void ForceNextRound();
 	//强行进入需要带钥匙开启的回合或者直接到最后一个回合的末尾
 	UFUNCTION(BlueprintCallable)
-		void ForceNextEndRound();
+	void ForceNextEndRound();
 	//是否是最后一个回合
 	UFUNCTION(BlueprintCallable)
-		bool IsEndRound();
+	bool IsEndRound();
 	//老鼠是否生成完毕
 	UFUNCTION(BlueprintCallable)
-		bool IsMouseSpawnEnd();
+	bool IsMouseSpawnEnd();
 	//当前回合是否存在老鼠
 	UFUNCTION(BlueprintCallable)
-		bool IsMouseExist();
+	bool IsMouseExist();
 	//获取线路个数
 	UFUNCTION(BlueprintCallable)
-		const int32 GetLineCount() const;
+	const int32 GetLineCount() const;
 	//获取时间
 	UFUNCTION(BlueprintCallable)
-		int32 GetCurTime();
+	int32 GetCurTime();
 	//获取当前回合
 	UFUNCTION(BlueprintCallable)
-		int32 GetCurRound();
+	int32 GetCurRound();
 	//获取线路最前的老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* const GetLineTopFirstMouse(const int32 _LineIndex);
+	AMouseActor* const GetLineTopFirstMouse(const int32 _LineIndex);
 	//获取TopFirst老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* const GetTopFirstMouse();
+	AMouseActor* const GetTopFirstMouse();
 	//更具类型获取最前的老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* const GetTopMouseByType(const ELineType& LineType);
+	AMouseActor* const GetTopMouseByType(const ELineType& LineType);
 	//获取线路管理器
 	UFUNCTION(BlueprintCallable)
-		UMouseLineManager* GetMouseLineManager(int32 Row);
+	UMouseLineManager* GetMouseLineManager(int32 Row);
 	//获取当前总波
 	UFUNCTION(BlueprintCallable)
-		int32 GetCurrentRoundTotal() const;
+	int32 GetCurrentRoundTotal() const;
 	//将当前老鼠从线路管理器中移除，被移除的老鼠不再被管理器管理
 	UFUNCTION(BlueprintCallable)
-		static void RemoveMouse(AMouseActor* _CurMouse);
+	static void RemoveMouse(AMouseActor* _CurMouse);
 	//添加老鼠
 	UFUNCTION(BlueprintCallable)
-		static void AddMouse(AMouseActor* _CurMouse, const int32& Row, bool bInit = true);
+	static void AddMouse(AMouseActor* _CurMouse, const int32& Row, bool bInit = true);
 	//测试是否老鼠生成则死亡
 	UFUNCTION(BlueprintCallable)
-		static bool TestMouseSpawnDeath();
+	static bool TestMouseSpawnDeath();
 	//切换路线【需要手动设置SetMouseLine】
 	UFUNCTION(BlueprintCallable)
-		static bool ChangeLine(const FString& MouseObjName, const int32& CurRow, const int32& TargetRow);
+	static bool ChangeLine(const FString& MouseObjName, const int32& CurRow, const int32& TargetRow);
 	//切换路线【不需要需要手动设置SetMouseLine】
 	UFUNCTION(BlueprintCallable)
-		static bool ForceChangeLine(const FString& MouseObjName, const int32& CurRow, const int32& TargetRow, const int32& TargetCol);
+	static bool ForceChangeLine(
+		const FString& MouseObjName,
+		const int32& CurRow,
+		const int32& TargetRow,
+		const int32& TargetCol
+	);
 	//切换老鼠的类型
 	UFUNCTION(BlueprintCallable)
-		static bool ChangeMouseLineType(AMouseActor* _CurMouse, int32 CurRow, ELineType TargetType, class UBoxComponent* CurCollision = nullptr, class UShapeComponent* CurBodyCollision = nullptr);
+	static bool ChangeMouseLineType(
+		AMouseActor* _CurMouse,
+		int32 CurRow,
+		ELineType TargetType,
+		class UBoxComponent* CurCollision = nullptr,
+		class UShapeComponent* CurBodyCollision = nullptr
+	);
+	//切换老鼠的类型直接到通道
+	static bool ChangeMouseLineTypeToChannel(
+		AMouseActor* _CurMouse,
+		int32 CurRow,
+		ELineType TargetType
+	);
 	//获取所有存在的老鼠
 	UFUNCTION(BlueprintCallable)
-		static void GetAllMouse(TArray<AMouseActor*>& OutAllMouse);
+	static void GetAllMouse(TArray<AMouseActor*>& OutAllMouse);
 	//设置老鼠死亡
 	UFUNCTION(BlueprintCallable)
-		void SetMouseSpawnKill();
+	void SetMouseSpawnKill();
 	//设置老鼠时间暂停
 	UFUNCTION(BlueprintCallable)
-		void SetMouseTimePause();
+	void SetMouseTimePause();
 	//获取当前生成的老鼠所在行
 	UFUNCTION(BlueprintCallable)
-		int32 GetCurrentSpawnMouseRow();
+	int32 GetCurrentSpawnMouseRow();
 public:
 	/*对象池*/
 
 	//获取灼烧buff的对象池管理器
 	UFUNCTION(BlueprintCallable)
-		UObjectPoolManager* GetBurnBuffFxObjPoolManager();
+	UObjectPoolManager* GetBurnBuffFxObjPoolManager();
 	//获取凝固buff的对象池管理器
 	UFUNCTION(BlueprintCallable)
-		UObjectPoolManager* GetSolidifBuffFxObjPoolManager();
+	UObjectPoolManager* GetSolidifBuffFxObjPoolManager();
 protected:
 	//初始化老鼠配置
 	void InitMouseStructManager();
@@ -402,20 +428,23 @@ private:
 private:
 	//老鼠线路管理器
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
-		TArray<UMouseLineManager*> MouseLineManager;
+	TArray<UMouseLineManager*> MouseLineManager;
 	//时间计时器
 	UPROPERTY()
-		UMouseTimeManager* MouseTimeManager = nullptr;
+	UMouseTimeManager* MouseTimeManager = nullptr;
 	//老鼠生成器
 	UPROPERTY()
-		UMouseSpawnManager* MouseSpawnManager = nullptr;
+	UMouseSpawnManager* MouseSpawnManager = nullptr;
 	//所有的老鼠数据集合
 	UPROPERTY()
-		TArray<FMouse_Data> AllMouseData;
+	TArray<FMouse_Data> AllMouseData;
 	//对象池管理器[灼烧buff对象池]
 	UPROPERTY()
-		UObjectPoolManager* BurnBuffFxObjPoolManager = nullptr;
+	UObjectPoolManager* BurnBuffFxObjPoolManager = nullptr;
 	//对象池管理器[凝固buff对象池]
 	UPROPERTY()
-		UObjectPoolManager* SolidiBuffFxObjPoolManager = nullptr;
+	UObjectPoolManager* SolidiBuffFxObjPoolManager = nullptr;
+	//老鼠路径集合
+	UPROPERTY()
+	TMap<FString, FMouseBase> MousePaths;
 };

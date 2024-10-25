@@ -17,6 +17,7 @@ class UFVMEditUI_GameMapEdit;
 class UGameMapUI_MapViewCardItem;
 class UGameMapUI_MapViewCardViewPanel;
 
+class USizeBox;
 class UImage;
 class UTextBlock;
 class UVerticalBox;
@@ -154,7 +155,9 @@ public:
 		void UpdateNewRowAndCol(int32 NewRow, int32 NewCol, FVector2D FirstGridLocation);
 
 private:
-
+	//           557
+	//FVector2D(-527.f, -190.f);
+	FVector2D Offset = FVector2D(0,0);
 	//渲染网格
 	void RenderMeshe();
 
@@ -171,6 +174,9 @@ private:
 	//地图背景
 	UPROPERTY()
 		UImage* Bg = nullptr;
+
+	UPROPERTY()
+		USizeBox* BgBox = nullptr;
 
 	//卡片选择界面
 	UPROPERTY()

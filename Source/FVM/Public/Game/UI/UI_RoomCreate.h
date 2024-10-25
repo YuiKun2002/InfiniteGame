@@ -30,7 +30,7 @@ public:
 	void SetData(FString SNumber, FString SRoomName, int32 ISex);
 
 	UFUNCTION(BlueprintCallable)
-		void Select();
+	void Select();
 
 	void Cancel();
 public:
@@ -40,19 +40,19 @@ public:
 private:
 	//当前角色性别
 	UPROPERTY()
-		UImage* SexImg = nullptr;
+	UImage* SexImg = nullptr;
 	//选择框
 	UPROPERTY()
-		UImage* SelectBoxImg = nullptr;
+	UImage* SelectBoxImg = nullptr;
 	//房间号
 	UPROPERTY()
-		UTextBlock* RoomNumberText = nullptr;
+	UTextBlock* RoomNumberText = nullptr;
 	//房间名称
 	UPROPERTY()
-		UTextBlock* RoomNameText = nullptr;
+	UTextBlock* RoomNameText = nullptr;
 	//房间对象
 	UPROPERTY()
-		class UUI_RoomCreate* CurRoom = nullptr;
+	class UUI_RoomCreate* CurRoom = nullptr;
 };
 
 UCLASS()
@@ -65,28 +65,37 @@ public:
 	virtual bool Initialize() override;
 
 	UFUNCTION(BlueprintCallable)
-		void Init(FString MapName);
-
-	UFUNCTION()
-		UUI_RoomCreateRoomListItem* Gen(FString RoomName);
+	void Init(FString MapName);
 private:
 	//地图背景
 	UPROPERTY()
-		UImage* MapBg = nullptr;
+	UImage* MapBg = nullptr;
 	//默认老鼠显示
 	UPROPERTY()
-		UImage* MouseDefImg = nullptr;
-	//显示列表
-	UPROPERTY()
-		UVerticalBox* ShowRoomList = nullptr;
+	UImage* MouseDefImg = nullptr;
 public:
+	
+	//地图标题
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* MapTitle;
+
+	//简单选项
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Easy;
+
+	//困难选项
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UButton* Hard;
+
 	UPROPERTY()
-		TArray<UUI_RoomCreateRoomListItem*> Alls;
+	TArray<UUI_RoomCreateRoomListItem*> Alls;
 	UPROPERTY()
-		FLevelConfig SourceData;
+	FLevelConfig SourceData;
 public:
+	//房间1
+	UFUNCTION(BlueprintCallable)
 	void Room1();
-	void Room2();
-	void Room3();
+	//房间2
+	UFUNCTION(BlueprintCallable)
 	void Room4();
 };

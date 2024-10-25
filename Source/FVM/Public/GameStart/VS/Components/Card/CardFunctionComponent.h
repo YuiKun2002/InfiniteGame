@@ -63,7 +63,14 @@ public:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
+	UFUNCTION()
+	void SetTrackEntry(UTrackEntry* NewTrackEntry);
+	UFUNCTION()
+	UTrackEntry* GetTrackEntry();
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
+	UPROPERTY()
+	UTrackEntry* CurTrackEntry = nullptr;
 };

@@ -184,7 +184,7 @@ void UCardBaseStruct::GetAllCardsByType(ECardType _Type, TArray<FItemCard*>& _Ou
 {
 	//获取缓存数据
 	UCardDataAssetCache* Cache = Cast<UCardDataAssetCache>(
-		UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCache(GLOBALASSET_CARD)
+		UGameDataSubsystem::GetGameDataSubsystemStatic()->GetGameDataAssetCacheByDef(GLOBALASSET_CARD)
 	);
 
 	if (!IsValid(Cache))

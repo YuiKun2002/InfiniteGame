@@ -16,19 +16,19 @@ struct FMachineMouseResourceStruct {
 public:
 	//正常形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> Def;
+	TSoftObjectPtr<UPaperFlipbook> Def;
 	//正常形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> DefLow;
+	TSoftObjectPtr<UPaperFlipbook> DefLow;
 	//正常形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> Idle;
+	TSoftObjectPtr<UPaperFlipbook> Idle;
 	//正常形态(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> IdleLow;
+	TSoftObjectPtr<UPaperFlipbook> IdleLow;
 	//死亡(No Attack)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftObjectPtr<UPaperFlipbook> Death;
+	TSoftObjectPtr<UPaperFlipbook> Death;
 };
 
 //机器鼠爆炸动画
@@ -38,52 +38,49 @@ class FVM_API AMachineBombAnim : public AGameActorFlipbookBase
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnInit();
+	void OnInit();
 };
 
 UCLASS()
-class FVM_API AMachineMouse : public ANormalBase
+class FVM_API AMachineMouse : public ANormalCapsuleBase
 {
 	GENERATED_BODY()
 public:
-	AMachineMouse();
-	//Tick 更新
-	virtual void Tick(float DeltaTime) override;
+	//爆炸范围
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float BombRadius = 20.f;
+	//检测卡片类型
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ECardCollisionType CheckCardType = ECardCollisionType::E_CardActor2;
+public:
 	virtual void MouseTick(const float& DeltaTime) override;
 	//初始化
 	virtual void BeginPlay() override;
 	//老鼠初始化
 	virtual void MouseInit() override;
+	//攻击
+	virtual void AttackedBegin() override;
+	//攻击结束
+	virtual void AttackedEnd() override;
+	//开始移动
+	virtual void MoveingBegin() override;
 	//移动(每0.02ms自动调用(允许移动的情况下))
 	virtual void MoveingUpdate(float DeltaTime) override;
-	//当老鼠被命中时受到的伤害数值(前提是isHurt为true  调用一次(一般由FlyitemActor命中时调用))
-	virtual bool BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType) override;
 	//当老鼠死亡时(当设置老鼠SetMouseDeath(true)时调用一次)
 	virtual void MouseDeathed() override;
-	//进入网格时
-	virtual void InMapMeshe(ELineType CurLineType) override;
 	//动画播放完毕
-	void OnAnimationPlayEnd();
-	//更新状态
-	void UpdateState();
-public:
-	//网格碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class UBoxComponent* MMesheComponent = nullptr;
-	//身体碰撞组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class USphereComponent* MBodyComponent = nullptr;
-	//动画
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FMachineMouseResourceStruct AnimRes;
-	//爆炸类
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSoftClassPtr<AMachineBombAnim> BombClass;
+	UFUNCTION()
+	void AnimationPlayEnd(class UTrackEntry* Track);
+	//播放走
+	void PlayWalk();
+	//播放攻击
+	void PlayAttack();
+	//生成爆炸
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawnBomb();
 private:
 	UPROPERTY()
-		bool bBomb = false;
+	int32 State = -1;
 	UPROPERTY()
-		float bTime = 0.2f;
-	UPROPERTY()
-		FVector Offset = FVector::ZeroVector;
+	bool bAttackLine = true;
 };

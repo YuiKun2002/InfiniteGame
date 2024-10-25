@@ -45,9 +45,9 @@ void UUI_MouseRound::InitFlag(const int32& _RoundTotal)
 
 		UCanvasPanelSlot* CurSlot = this->M_FlagBox->AddChildToCanvas(CurFlag);
 
-		CurSlot->SetSize(FVector2D(24.f, 29.f));
+		CurSlot->SetSize(FVector2D(35.f, 35.f));
 		//设置位置
-		CurFlag->SetRenderTranslation(FVector2D(UKismetMathLibrary::Lerp(0.f, 280.f, 1.f - (i * 1.f) / _RoundTotal), 0));
+		CurFlag->SetRenderTranslation(FVector2D(UKismetMathLibrary::Lerp(0.f, 830.f, 1.f - (i * 1.f) / _RoundTotal), 0));
 	}
 }
 

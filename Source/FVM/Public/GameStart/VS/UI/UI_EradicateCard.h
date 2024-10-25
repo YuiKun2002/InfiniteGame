@@ -19,18 +19,23 @@ class FVM_API UUI_EradicateCard : public UWidgetBase
 	GENERATED_BODY()
 private:
 	UPROPERTY()
-		UImage* M_EradicateImage = nullptr;
+	UImage* M_EradicateImage = nullptr;
 	UPROPERTY()
-		UImage* M_EradicateHead = nullptr;
+	UImage* M_EradicateHead = nullptr;
 public:
 	virtual bool Initialize() override;
 public:
 	//选择
 	UFUNCTION(BlueprintCallable)
-		void Select();
+	void Select();
 	//取消
 	UFUNCTION(BlueprintCallable)
-		void Cancel();
+	void Cancel();
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSelect();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnCancel();
 public:
 	//获取背景图
 	UImage* GetBG();

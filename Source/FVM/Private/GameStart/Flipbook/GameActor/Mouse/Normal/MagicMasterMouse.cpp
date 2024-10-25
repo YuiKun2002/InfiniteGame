@@ -9,10 +9,10 @@
 #include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/MapMeshe.h"
 #include <Components/BoxComponent.h>
-#include <Components/SphereComponent.h>
+#include <Components/Capsulecomponent.h>
 
 
-void AMagicMasterHpAddtionBuff::Init(AMouseActor* MouseActor, TSoftObjectPtr<UPaperFlipbook> Anim)
+void AMagicMasterHpAddtionBuff::Init(AMouseActor* MouseActor)
 {
 	if (IsValid(MouseActor))
 	{
@@ -20,11 +20,9 @@ void AMagicMasterHpAddtionBuff::Init(AMouseActor* MouseActor, TSoftObjectPtr<UPa
 
 		this->SetLifeSpan(1.5f);
 		this->time = this->CTime;
-		this->InitRotation();
-		this->SetPlayAnimation(UGameSystemFunction::LoadRes(Anim));
+		this->InitSpineShow();
 		this->SetRenderLayer(this->CurMouse->GetRenderLayer() + 5);
 		this->SetActorLocation(this->CurMouse->GetActorLocation() + FVector(0.f, 0.f, 20.f));
-		this->SetAnimationPlayEndDestroy();
 	}
 	else {
 		this->Destroy();
@@ -49,24 +47,15 @@ void AMagicMasterHpAddtionBuff::Tick(float DeltaTime)
 	}
 }
 
-AMagicMasterMouse::AMagicMasterMouse()
-{
-
-	this->MMesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComponent"));
-	this->MBodyComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BodyComponent"));
-	this->WepaonAnimLocation = CreateDefaultSubobject<UFlipbookBaseComponent>(TEXT("WepaonAnimLocationComponent"));
-
-	//设置依附
-	this->MMesheComponent->SetupAttachment(this->GetRootComponent());
-	this->MBodyComponent->SetupAttachment(this->MMesheComponent);
-	this->WepaonAnimLocation->SetupAttachment(this->GetRenderComponent());
-}
 
 void AMagicMasterMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
+	//初始化碰撞网格位置
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMagicMasterMouse::OnAnimationPlayEnd);
 }
@@ -83,26 +72,26 @@ void AMagicMasterMouse::MouseInit()
 	this->bEnableAttakLine = true;
 	this->bUse = false;
 
-	//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
-	this->SetAnimation(0, TEXT("SpineTag"), true);
 
-	this->WepaonAnimLocation->SetPlayAnimation(nullptr);
+	//设置动画
+	UTrackEntry* Track = this->SetAnimation(0,
+		this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(),
+		true);
+	BINDANIMATION(Track, this, &AMagicMasterMouse::AnimationPlayEnd);
+	this->SetTrackEntry(Track);
 }
 
-void AMagicMasterMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 void AMagicMasterMouse::MouseTick(const float& DeltaTime)
 {
+	Super::MouseTick(DeltaTime);
 	if (this->bEnableAttakLine)
 	{
 		this->AddAttackLineFunc(UGameSystemFunction::GetCardCollisionBoxType(this->MECardCollisionType), DeltaTime);
 	}
 }
 
-void AMagicMasterMouse::OnAnimationPlayEnd()
+void AMagicMasterMouse::AnimationPlayEnd(UTrackEntry* Track)
 {
 	if (this->GetCurrentHP() <= 0.f)
 	{
@@ -112,8 +101,6 @@ void AMagicMasterMouse::OnAnimationPlayEnd()
 	//使用魔笛
 	if (this->bUse)
 	{
-		this->WepaonAnimLocation->SetPlayAnimation(nullptr);
-
 		this->MoveStart();
 		this->bUse = false;
 		this->bEnableAttakLine = true;
@@ -133,51 +120,20 @@ void AMagicMasterMouse::OnAnimationPlayEnd()
 					Cur->SetbIsHurt(true);
 					Cur->BeHit(Cur, CurReplyHp * -1.f, EFlyItemAttackType::Def);
 					//生成加血动画
-					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->SpawnActor<AMagicMasterHpAddtionBuff>();
-					CurAnimObj->Init(Cur, this->AnimRes.AddHPAnim);
+					AMagicMasterHpAddtionBuff* CurAnimObj = this->GetWorld()->
+						SpawnActor<AMagicMasterHpAddtionBuff>(
+							HpAddtionBuffAnim.LoadSynchronous()
+						);
+					CurAnimObj->Init(Cur);
 				}
 			}
 		}
 
 	}
 
-	this->UpdateState();
 	this->AddAttackCardUpdate();
 }
 
-void AMagicMasterMouse::UpdateState()
-{
-	if (this->GetCurrentHP() <= 0.f)
-	{
-		return;
-	}
-
-	if (this->bUse)
-	{
-		return;
-	}
-
-	bool bAtk = this->GetbIsAttack();
-
-	if (bAtk)
-	{
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Attack));
-
-		this->SetAnimation(0, TEXT("SpineTag"), true);
-	}
-	else {
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle));
-
-		this->SetAnimation(0, TEXT("SpineTag"), true);
-	}
-}
-
-void AMagicMasterMouse::MoveingBegin()
-{
-	Super::MoveingBegin();
-
-	this->UpdateState();
-}
 
 void AMagicMasterMouse::MoveingUpdate(float DeltaTime)
 {
@@ -194,42 +150,10 @@ void AMagicMasterMouse::MoveingUpdate(float DeltaTime)
 		this->MoveStop();
 		this->bEnableAttakLine = false;
 		this->bUse = true;
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Use));
-
-		this->SetAnimation(0, TEXT("SpineTag"), true);
-
-		this->WepaonAnimLocation->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.UseAnim));
 		return;
 	}
 
-	//this->AddActorLocalOffset(FVector(0.f, DeltaTime * -this->M_Proper_State.M_CurrentMoveSpeed, 0.f));
 	this->UpdateMove(DeltaTime);
-}
-
-bool AMagicMasterMouse::BeHit(UObject* CurHitMouseObj, float HurtValue, EFlyItemAttackType AttackType)
-{
-	if (!Super::BeHit(CurHitMouseObj, HurtValue, AttackType))
-	{
-		return false;
-	}
-
-	this->UpdateState();
-
-	return true;
-}
-
-void AMagicMasterMouse::AttackedBegin()
-{
-	Super::AttackedBegin();
-
-	this->UpdateState();
-}
-
-void AMagicMasterMouse::AttackedEnd()
-{
-	Super::AttackedEnd();
-
-	this->UpdateState();
 }
 
 void AMagicMasterMouse::MouseDeathed()
@@ -238,15 +162,17 @@ void AMagicMasterMouse::MouseDeathed()
 	this->bUse = false;
 
 	//关闭碰撞
-	this->ClosedBoxComponent(this->MMesheComponent);
-	this->ClosedBoxComponent(this->MBodyComponent);
+	this->ClosedBoxComponent(this->MesheComp);
+	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Super::MouseDeathed();
 
 	if (!this->GetPlayPlayBombEffAnim())
 	{
-		//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
-
-		this->SetAnimation(0, TEXT("SpineTag"), true);
+		UTrackEntry* Trac = this->SetAnimation(0,
+			this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		BINDANIMATION(Trac, this, &AMouseActor::AlienDeadAnimationCompelet);
+		this->SetTrackEntry(Trac);
 	}
 }

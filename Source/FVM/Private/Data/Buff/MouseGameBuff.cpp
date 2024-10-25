@@ -84,7 +84,7 @@ void UBuffMouseObject::UpdateMaterial()
 	//灼烧
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Burn))
 	{
-		this->GetBuffChar()->SetRenderColor(FLinearColor(
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
 			1.f, 0.2f, 0.f, this->GetBuffChar()->GetColorOpacity())
 		);
 
@@ -106,7 +106,7 @@ void UBuffMouseObject::UpdateMaterial()
 	//加速
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Accelerate))
 	{
-		this->GetBuffChar()->SetRenderColor(FLinearColor(
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
 			1.f, 0.f, 0.f, this->GetBuffChar()->GetColorOpacity())
 		);
 
@@ -114,7 +114,7 @@ void UBuffMouseObject::UpdateMaterial()
 	}
 
 	//使用默认颜色
-	this->GetBuffChar()->SetRenderColor(FLinearColor(
+	this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
 		1.f, 1.f, 1.f, this->GetBuffChar()->GetColorOpacity())
 	);
 }

@@ -92,10 +92,11 @@ public:
 	FRotator GetRotation() const;
 	//获取颜色
 	UFUNCTION(BlueprintPure)
-	FLinearColor GetRenderColor() const;
+	FLinearColor GetSpineRenderColor() const;
 	//获取渲染层级
 	UFUNCTION(BlueprintPure)
-	int32 GetRenderLayer() const;
+	int32 GetSpineRenderLayer();
+	virtual int32 GetRenderLayer();
 public:
 	//设置动画
 	UFUNCTION(BlueprintCallable)
@@ -126,7 +127,7 @@ public:
 	void SetAnimationClear(int32 TrackIndex = -1);
 	//设置渲染的颜色
 	UFUNCTION(BlueprintCallable)
-	void SetRenderColor(FLinearColor SpineColor);
+	void SetSpineRenderColor(FLinearColor SpineColor);
 	//设置渲染层级
 	UFUNCTION(BlueprintCallable)
 	void SetSpineRenderLayer(int32 RenderLayer);

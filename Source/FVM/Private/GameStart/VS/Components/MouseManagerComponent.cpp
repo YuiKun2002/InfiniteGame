@@ -38,6 +38,9 @@ void UMouseLineManager::AddMouse(const FString& MouseName, AMouseActor* _CurMous
 	{
 		switch (_CurMouse->GetMouseLineType())
 		{
+		case ELineType::OnWater://添加到水上
+			this->CurMouseOnWater.Emplace(MouseName, _CurMouse);
+			break;
 		case ELineType::Sky://添加到空中
 			this->CurMouseSky.Emplace(MouseName, _CurMouse);
 			break;
@@ -56,22 +59,15 @@ bool UMouseLineManager::RemoveMouse(AMouseActor* _CurMouse)
 		{
 		case ELineType::Sky://从空中移除
 		{
-			if (this->CurMouseSky.Contains(UKismetSystemLibrary::GetObjectName(_CurMouse)))
-			{
-				this->CurMouseSky.Remove(UKismetSystemLibrary::GetObjectName(_CurMouse));
-
-				return true;
-			}
+			return RemoveMouseIns(this->CurMouseSky, _CurMouse);
 		}
-		break;
+		case ELineType::OnWater://从水中移除
+		{
+			return RemoveMouseIns(this->CurMouseOnWater, _CurMouse);
+		}
 		default://从陆地移除【默认老鼠行】
 		{
-			if (this->CurMouseGround.Contains(UKismetSystemLibrary::GetObjectName(_CurMouse)))
-			{
-				this->CurMouseGround.Remove(UKismetSystemLibrary::GetObjectName(_CurMouse));
-
-				return true;
-			}
+			return RemoveMouseIns(this->CurMouseGround, _CurMouse);
 		}
 		break;
 		}
@@ -79,7 +75,8 @@ bool UMouseLineManager::RemoveMouse(AMouseActor* _CurMouse)
 
 	if (UFVMGameInstance::GetDebug())
 	{
-		UE_LOG(LogTemp, Error, TEXT("【%s】老鼠移除失败，不知本行"), *UKismetSystemLibrary::GetObjectName(_CurMouse));
+		UE_LOG(LogTemp, Error, TEXT("【%s】老鼠移除失败，不知本行"),
+			*UKismetSystemLibrary::GetObjectName(_CurMouse));
 	}
 
 	return false;
@@ -87,22 +84,23 @@ bool UMouseLineManager::RemoveMouse(AMouseActor* _CurMouse)
 
 bool UMouseLineManager::RemoveMouseByName(const FString& MouseName)
 {
-	if (this->CurMouseGround.Contains(MouseName))
+	if (this->RemoveMouseInsByName(this->CurMouseGround, MouseName))
 	{
-		this->CurMouseGround.Remove(MouseName);
-
 		return true;
 	}
-	if (this->CurMouseUnderGround.Contains(MouseName))
-	{
-		this->CurMouseUnderGround.Remove(MouseName);
 
+	if (this->RemoveMouseInsByName(this->CurMouseOnWater, MouseName))
+	{
 		return true;
 	}
-	if (this->CurMouseSky.Contains(MouseName))
-	{
-		this->CurMouseSky.Remove(MouseName);
 
+	if (this->RemoveMouseInsByName(this->CurMouseUnderGround, MouseName))
+	{
+		return true;
+	}
+
+	if (this->RemoveMouseInsByName(this->CurMouseSky, MouseName))
+	{
 		return true;
 	}
 
@@ -118,6 +116,18 @@ AMouseActor* UMouseLineManager::FindMouse(const FString& MouseName)
 	}
 
 	CurMouse = this->CurMouseSky.Find(MouseName);
+	if (CurMouse)
+	{
+		return *CurMouse;
+	}
+
+	CurMouse = this->CurMouseUnderGround.Find(MouseName);
+	if (CurMouse)
+	{
+		return *CurMouse;
+	}
+
+	CurMouse = this->CurMouseOnWater.Find(MouseName);
 	if (CurMouse)
 	{
 		return *CurMouse;
@@ -213,6 +223,7 @@ TMap<FString, AMouseActor*> UMouseLineManager::GetMouseAll()
 	Temp.Append(this->GetMouseGround());
 	Temp.Append(this->GetMouseUnderGround());
 	Temp.Append(this->GetMouseSky());
+	Temp.Append(this->CurMouseOnWater);
 	return Temp;
 }
 
@@ -225,6 +236,8 @@ bool UMouseLineManager::GetMouseExist()
 		this->CurMouseUnderGround.Num() == 0
 		&&
 		this->CurMouseSky.Num() == 0
+		&&
+		this->CurMouseOnWater.Num() == 0
 		)
 	{
 		return false;
@@ -239,6 +252,7 @@ void UMouseLineManager::KillAllMouse()
 	CurMouses.Append(this->CurMouseGround);
 	CurMouses.Append(this->CurMouseUnderGround);
 	CurMouses.Append(this->CurMouseSky);
+	CurMouses.Append(this->CurMouseOnWater);
 
 	for (auto const CurMouse : CurMouses)
 	{
@@ -256,6 +270,7 @@ void UMouseLineManager::KillAllMouse()
 	this->CurMouseGround.Empty();
 	this->CurMouseUnderGround.Empty();
 	this->CurMouseSky.Empty();
+	this->CurMouseOnWater.Empty();
 }
 
 AMouseActor* UMouseLineManager::SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses)
@@ -321,6 +336,31 @@ AMouseActor* UMouseLineManager::SortMouseTopLocation(TMap<FString, AMouseActor*>
 
 	return CurTop;
 }
+
+bool UMouseLineManager::RemoveMouseIns(TMap<FString, AMouseActor*>& MouseMap, AMouseActor* _CurMouse)
+{
+	if (MouseMap.Contains(UKismetSystemLibrary::GetObjectName(_CurMouse)))
+	{
+		MouseMap.Remove(UKismetSystemLibrary::GetObjectName(_CurMouse));
+
+		return true;
+	}
+
+	return false;
+}
+
+bool UMouseLineManager::RemoveMouseInsByName(TMap<FString, AMouseActor*>& MouseMap, const FString& MouseName)
+{
+	if (MouseMap.Contains(MouseName))
+	{
+		MouseMap.Remove(MouseName);
+
+		return true;
+	}
+
+	return false;
+}
+
 //-----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -379,7 +419,26 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 			if (RoundConfig.RoundKey.Enable)
 			{
 				//创建徽章或者钥匙交换UI
+				UGameMapStructManager* Cur = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager();
+				if (Cur->LevelConfig.bSpecialModeEnable)
+				{
+					AGameMapInstance::GetGameMapInstance()->PlaySound(
+						AGameMapInstance::GetGameMapInstance()->GetGameMapStructManager()->LevelConfig.LevelUpMusic
+					);
 
+					//继续游戏
+					//AGameMapInstance::GetVSManagerComponent_Static()->SetGameContinue();
+
+					//进入下一个回合
+					AGameMapInstance::GetMouseManagerComponent_Static()->ForceNextRound();
+					AGameMapInstance::GetMouseManagerComponent_Static()->ShowMouseUI(
+						AGameMapInstance::GetMouseManagerComponent_Static()->M_UMouseStructManager->GetRoundTotal()
+					);
+				}
+				else {
+					UVSManagerComponent::GameWin();
+				}
+				/*
 				//暂停游戏
 				AGameMapInstance::GetVSManagerComponent_Static()->SetGamePause();
 				//创建UI
@@ -387,7 +446,7 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 					CreateWidget<UUI_MouseRoundUpTip>(MouseManagerComponent->GetWorld(),
 						LoadClass<UUI_MouseRoundUpTip>(0,
 							TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/UI_MouseRoundUpTips.UI_MouseRoundUpTips_C'")
-							));
+						));
 
 				bool bRe = false;
 				if (RoundConfig.RoundKey.KeyName.Equals(TEXT("")))
@@ -427,7 +486,7 @@ void UMouseTimeManager::UpdateTime(const float& _tick, UMouseManagerComponent* c
 				else {
 					UVSManagerComponent::GameWin();
 				}
-
+				*/
 				return;
 			}
 			else {
@@ -647,6 +706,8 @@ AMouseActor* UMouseSpawnManager::SpawnMouse(
 	AMouseActor* CurNewMouse = Comp->GetOwner()->GetWorld()->SpawnActor<AMouseActor>(NewClass, Trans);
 	if (IsValid(CurNewMouse))
 	{
+		//设置名称
+		CurNewMouse->AlienName = MouseData.M_MouseName;
 		//设置老鼠标记
 		CurNewMouse->SetMouseTag(MouseData.M_MouseTag);
 		//设置老鼠死亡时，是否直接结束游戏
@@ -694,7 +755,8 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 	const FVector& Location, float HP, float ATK, float Speed, FLine MouseLine,
 	const ELineType& MouseLineType,
 	EMouseTag NewTag,
-	bool bAddManager
+	bool bAddManager,
+	FString AlienName
 )
 {
 	if (!UGameSystemFunction::LoadRes(MouseClass))
@@ -706,10 +768,12 @@ AMouseActor* UMouseSpawnManager::MakeNewMouseByClass(
 	Trans.SetLocation(FVector(2000.f, 0.f, 0.f));
 	AMouseActor* CurNewMouse = Comp->GetOwner()->GetWorld()->SpawnActor<AMouseActor>(
 		UGameSystemFunction::LoadRes(MouseClass), Trans
-		);
+	);
 
 	if (IsValid(CurNewMouse))
 	{
+		//设置名称
+		CurNewMouse->AlienName = AlienName;
 		//设置老鼠标记
 		CurNewMouse->SetMouseTag(NewTag);
 		//设置老鼠基础速度
@@ -809,10 +873,12 @@ bool UMouseSpawnManager::MakeNewMouseByName(UDataTable* MouseDataTable, FString 
 
 			AMouseActor* CurNewMouse = AGameMapInstance::GetGameMapInstance()->GetWorld()->SpawnActor<AMouseActor>(
 				Cast<UClass>(CurData.ItemTarget_ActorFilePath.TryLoad()), Trans
-				);
+			);
 
 			if (IsValid(CurNewMouse))
 			{
+				//设置名称
+				CurNewMouse->AlienName = MouseName;
 				//设置老鼠标记
 				CurNewMouse->SetMouseTag(CurData.M_MouseTag);
 				//设置老鼠基础速度
@@ -1023,13 +1089,27 @@ const UMouseTimeManager* const UMouseManagerComponent::GetMouseTimeManager()
 
 bool UMouseManagerComponent::GetMousePathByName(const FString& MouseName, FString& OutMousePath, FMouseBase& OutData)
 {
+	FMouseBase* CurPath = this->MousePaths.Find(MouseName);
+	if (CurPath)
+	{
+		OutData = *CurPath;
+		OutMousePath = (*CurPath).ItemTarget_ActorFilePath.ToString();
+		return true;
+	}
+
+	const FMouseConfig& CurConfig = this->M_UMouseStructManager->GetMouseConfig();
+
+	FString CurName = *CurConfig.AllMouseKeyListMap.Find(FCString::Atoi(*MouseName));
+
 	for (const auto& Cur : this->AllMouseData)
 	{
-		if (Cur.M_Mouse.M_MouseName.Equals(MouseName))
+		if (Cur.M_Mouse.M_MouseName.Equals(CurName))
 		{
 			OutMousePath = Cur.M_Mouse.ItemTarget_ActorFilePath.ToString();
 
 			OutData = Cur.M_Mouse;
+
+			this->MousePaths.Emplace(MouseName, Cur.M_Mouse);
 
 			return true;
 		}
@@ -1070,10 +1150,15 @@ void UMouseManagerComponent::OnRoundNodeChangedCallback()
 					//老鼠的资产路径
 					FString CurMousePath;
 					FMouseBase MouseData;
+
+					if (Cur.CurMouseName.Equals(TEXT("")))
+					{
+						continue;
+					}
+
 					//拿到路径并且生成老鼠
 					if (this->GetMousePathByName(Cur.CurMouseName, CurMousePath, MouseData))
 					{
-
 						//当前最新的老鼠
 						AMouseActor* CurMouse = nullptr;
 
@@ -1174,7 +1259,7 @@ void UMouseManagerComponent::InitNextRoundCallBack()
 		this->GetWorld(),
 		LoadClass<UUserWidget>(0,
 			TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/Tips/UI_MouseRoundTips.UI_MouseRoundTips_C'")
-			));
+		));
 	MouseRoundTip->AddToViewport();
 
 	//更新进度值
@@ -1237,7 +1322,7 @@ void UMouseManagerComponent::ShowMouseUI(int32 Round)
 			this->GetWorld(),
 			LoadClass<UUI_MouseRound>(0,
 				TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/UIMouseRound.UIMouseRound_C'")
-				));
+			));
 
 		this->M_UUI_MouseRound->AddToViewport();
 	}
@@ -1562,7 +1647,7 @@ void UMouseManagerComponent::AddMouse(AMouseActor* _CurMouse, const int32& Row, 
 			if (bInit)
 			{
 				_CurMouse->MouseInit();
-				_CurMouse->GetMouseManager()->CurSpawnRow = Row;	
+				_CurMouse->GetMouseManager()->CurSpawnRow = Row;
 			}
 		}
 	}
@@ -1625,7 +1710,13 @@ bool UMouseManagerComponent::ForceChangeLine(const FString& MouseObjName, const 
 	return bRe;
 }
 
-bool UMouseManagerComponent::ChangeMouseLineType(AMouseActor* _CurMouse, int32 CurRow, ELineType TargetType, UBoxComponent* CurCollision, UShapeComponent* CurBodyCollision)
+bool UMouseManagerComponent::ChangeMouseLineType(
+	AMouseActor* _CurMouse,
+	int32 CurRow,
+	ELineType TargetType,
+	UBoxComponent* CurCollision,
+	UShapeComponent* CurBodyCollision
+)
 {
 	if (
 		CurRow < AGameMapInstance::GetGameMapInstance()->
@@ -1637,7 +1728,9 @@ bool UMouseManagerComponent::ChangeMouseLineType(AMouseActor* _CurMouse, int32 C
 
 		if (IsValid(CurMouse) && CurMouse->GetCurrentHP() > 0.f)
 		{
-			if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->MouseLineManager[CurRow]->RemoveMouse(CurMouse))
+			if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->MouseLineManager[CurRow]->
+				RemoveMouse(CurMouse)
+				)
 			{
 				//切换线路类型
 				CurMouse->SetMouseLineType(TargetType);
@@ -1648,7 +1741,8 @@ bool UMouseManagerComponent::ChangeMouseLineType(AMouseActor* _CurMouse, int32 C
 					CurCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 					//老鼠对象开启
 					CurCollision->SetCollisionResponseToChannel(
-						UGameSystemFunction::GetMouseCollisionBoxTypeByLineType(ELineTraceType::E_MouseVisibility),
+						UGameSystemFunction::GetMouseCollisionBoxTypeByLineType(
+							ELineTraceType::E_MouseVisibility),
 						ECollisionResponse::ECR_Block
 					);
 					//设置对应的路线碰撞位置
@@ -1675,6 +1769,31 @@ bool UMouseManagerComponent::ChangeMouseLineType(AMouseActor* _CurMouse, int32 C
 				UMouseManagerComponent::AddMouse(CurMouse, CurRow, false);
 
 				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool UMouseManagerComponent::ChangeMouseLineTypeToChannel(AMouseActor* _CurMouse, int32 CurRow, ELineType TargetType)
+{
+	if (
+		CurRow < AGameMapInstance::GetGameMapInstance()->
+		M_MouseManagerComponent->MouseLineManager.Num()
+		)
+	{
+		AMouseActor* CurMouse = AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->
+			MouseLineManager[CurRow]->FindMouse(UKismetSystemLibrary::GetObjectName(_CurMouse));
+
+		if (IsValid(CurMouse) && CurMouse->GetCurrentHP() > 0.f)
+		{
+			if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->MouseLineManager[CurRow]->
+				RemoveMouse(CurMouse)
+				)
+			{
+				//切换线路类型
+				CurMouse->SetMouseLineType(TargetType);
+				UMouseManagerComponent::AddMouse(CurMouse, CurRow, false);
 			}
 		}
 	}

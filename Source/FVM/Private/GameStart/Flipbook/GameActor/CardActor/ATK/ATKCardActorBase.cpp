@@ -56,7 +56,21 @@ float AATKCardActorBase::GetCurrentSecondAttackDelay()
 
 FVector AATKCardActorBase::GetBulletLauncherLocation()
 {
-	return this->GetActorLocation() + this->BulletLauncherPointComp->GetRelativeLocation();
+	return
+		//卡片的位置
+		this->GetActorLocation() +
+		//卡片点位位置
+		FVector(
+			this->GetPointComponent()->GetRelativeLocation().Y,
+			this->GetPointComponent()->GetRelativeLocation().X,
+			this->GetPointComponent()->GetRelativeLocation().Z
+		) +
+		//子弹发射位置
+		FVector(
+			this->BulletLauncherPointComp->GetRelativeLocation().Y,
+			this->BulletLauncherPointComp->GetRelativeLocation().X,
+			this->BulletLauncherPointComp->GetRelativeLocation().Z
+		);
 }
 
 FATKCardActorLineTrace& AATKCardActorBase::GetLineTracePosition()

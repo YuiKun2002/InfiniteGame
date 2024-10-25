@@ -51,6 +51,11 @@ const TMap<FString, AMouseActor*>& AMapMouseMesheManager::GetCurMouse() const
 	return this->M_CurMouses;
 }
 
+TMap<FString, AMouseActor*> AMapMouseMesheManager::GetCurMouseCopy()
+{
+	return this->M_CurMouses;
+}
+
 void AMapMouseMesheManager::SetLine(FLine Line)
 {
 	this->M_Line = Line;
@@ -388,7 +393,7 @@ void AMapMeshe::CopyUIMapMesheData(AMapMeshe* MapMeshe, UUI_MapMeshe* UIMapMeshe
 				AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 				, LoadClass<ACardActor>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/木盘子.木盘子_C'")
-					), CardData, 0, false);
+				), CardData, 0, false);
 		}
 	}break;
 	case ELineType::Underwater:
@@ -401,7 +406,7 @@ void AMapMeshe::CopyUIMapMesheData(AMapMeshe* MapMeshe, UUI_MapMeshe* UIMapMeshe
 				AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 				, LoadClass<ACardActor>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/苏打气泡.苏打气泡_C'")
-					), CardData, 0, false);
+				), CardData, 0, false);
 		}
 	}break;
 	case ELineType::Magma:
@@ -414,7 +419,7 @@ void AMapMeshe::CopyUIMapMesheData(AMapMeshe* MapMeshe, UUI_MapMeshe* UIMapMeshe
 				AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 				, LoadClass<ACardActor>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/棉花糖.棉花糖_C'")
-					), CardData, 0, false);
+				), CardData, 0, false);
 		}
 	}break;
 	default: {

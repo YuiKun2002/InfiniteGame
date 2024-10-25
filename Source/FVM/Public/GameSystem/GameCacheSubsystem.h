@@ -89,6 +89,9 @@ public:
 	//请求缓存子系统
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UGameCacheSubsystem* GameCacheSubsystem = nullptr;
+	//是否保存
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSaveCache = true;
 public:
 	//初始化
 	UFUNCTION(BlueprintImplementableEvent)
@@ -150,7 +153,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameCacheRequestAction")
 	static UGameAsyncRequest* GameAsyncRequest(
 		FString URL,
-		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask
+		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask,
+		bool bSaveCache = true
 	);
 
 	virtual void AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request) override;
@@ -168,7 +172,8 @@ public:
 	static UGameAsyncJsonRequest* GameAsyncJsonRequest(
 		FString URL,
 		FString Json,
-		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask
+		TSubclassOf<UGameCacheAsyncRequestFunction> RequestTask,
+		bool bSaveCache = true
 	);
 
 	virtual void AsyncRequestCompletFunc(FName Tag, UVaRestRequestJSON* Request) override;
@@ -194,7 +199,7 @@ public:
 	);
 
 	UFUNCTION(BlueprintCallable)
-	void RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave);
+	UGameCache* RequestComplet(FName Tag, UVaRestRequestJSON* Request, bool bSave);
 
 	//标签
 	UFUNCTION(BlueprintPure)
@@ -202,7 +207,24 @@ public:
 
 	UGameCache* GetGameCache_Im(FName Tag);
 
+	//设置token
+	UFUNCTION(BlueprintCallable)
+	void SetToken(const FString& Token);
+
+	//设置模式
+	UFUNCTION(BlueprintCallable)
+	static void SetNetMode(bool bEnable);
+	//获取网络模式
+	UFUNCTION(BlueprintPure)
+	static bool GetNetMode();
 private:
+	//缓存
 	UPROPERTY()
 	TMap<FName, UGameCache*> GameCache;
+	//请求token
+	UPROPERTY()
+	FString PlayerAccountToken;
+
+	//网络模式
+	static bool NetMode;
 };

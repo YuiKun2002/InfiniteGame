@@ -174,6 +174,9 @@ bool UCardManagerComponent::SelectCurrentActor(const FString& _CardName, bool Fo
 	//设置当前卡片状态为选择
 	this->GetUICard(this->M_CurrentSelectCardName)->SetCardSelect(true);
 
+	//显示提示网格
+	AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->ShowTipMeshe(Data->M_ELineType);
+	
 	return true;
 }
 
@@ -260,6 +263,8 @@ void UCardManagerComponent::CancelSelect()
 
 	//清空名称
 	this->M_CurrentSelectCardName.Empty();
+
+	AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->CloseTipMeshe();
 }
 
 void UCardManagerComponent::SelectEradicate()

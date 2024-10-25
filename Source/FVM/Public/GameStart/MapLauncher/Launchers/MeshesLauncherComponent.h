@@ -8,10 +8,10 @@
 #include "MeshesLauncherComponent.generated.h"
 
 class AMapMeshe;
+class ASpineActor;
 class UPaperFlipbook;
 class UPaperFlipbookComponent;
 class UPaperSprite;
-class AGameActorFlipbookBase;
 class AMapLauncherBase;
 
 
@@ -22,17 +22,20 @@ class FVM_API UMeshesLauncherComponent : public UActorComponent
 private:
 	//需要被发射的网格
 	UPROPERTY()
-		TMap<AMapMeshe*, AGameActorFlipbookBase*> M_Meshes;
+	TMap<AMapMeshe*, ASpineActor*> M_Meshes;
 	//动画资源
 	UPROPERTY()
-		UClass* M_AnimRes = nullptr;
+	UClass* M_AnimRes = nullptr;
+	//动画
+	UPROPERTY()
+	TArray<class AMesheLauncherActor*> MesheLauncherActors;
 private:
 	//是否提交申请
 	UPROPERTY()
-		bool M_IsbApply = false;
+	bool M_IsbApply = false;
 	//发射器
 	UPROPERTY()
-		AMapLauncherBase* M_Owner = nullptr;
+	AMapLauncherBase* M_Owner = nullptr;
 public:
 	// Sets default values for this component's properties
 	UMeshesLauncherComponent();
@@ -48,11 +51,11 @@ public:
 public:
 	//设置网格坐标
 	UFUNCTION(BlueprintCallable)
-		void SetMeshs(const TArray<FLine>& _Lines);
+	void SetMeshs(const TArray<FLine>& _Lines);
 	//设置动画资源
 	UFUNCTION(BlueprintCallable)
-		void SetAnimationResPath_C(TSoftClassPtr<AGameActorFlipbookBase> _AnimRes);
+	void SetAnimationResPath_C(TSoftClassPtr<ASpineActor> _AnimRes);
 	//应用设置
 	UFUNCTION(BlueprintCallable)
-		void ApplySetting();
+	void ApplySetting();
 };

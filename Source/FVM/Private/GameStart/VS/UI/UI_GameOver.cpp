@@ -31,86 +31,27 @@ bool UUI_GameOver::Initialize()
 	return true;
 }
 
-void UUI_GameOver::ShowOver1()
+void UUI_GameOver::ShowOver1(bool bWin)
 {
-	const TMap<FString, int32>& CurResource = UResourceManagerComponent::GetResource();
-
 	//获得关卡配置
 	const FLevelConfig& LevelConfig = UFVMGameInstance::GetFVMGameInstance()->GetGameMapStructManager()->LevelConfig;
-
-	TMap<FString, int32> Coins;
-	Coins.Emplace(FString(TEXT("金币")), 0);
-	Coins.Emplace(FString(TEXT("礼券")), 1);
-	Coins.Emplace(FString(TEXT("点券")), 2);
-	Coins.Emplace(FString(TEXT("威望")), 3);
-
 	//添加显示UI
 	int32 i = 0;
-	for (const auto& Item : CurResource)
+	for (const auto& Item : LevelConfig.LevelItemConfig.Items)
 	{
-		this->MaterialNames.Emplace(Item.Key);
-
-		const FSoftObjectPath* CurPath = LevelConfig.LevelItems.Find(Item.Key);
-		if (CurPath)
+		UUI_LevelItem* LevelItem = CreateWidget<UUI_LevelItem>(this, LoadClass<UUI_LevelItem>(nullptr,
+			TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BPUI_LevelItem.BPUI_LevelItem_C'")));
+		if (IsValid(LevelItem))
 		{
-			UUI_LevelItem* LevelItem = CreateWidget<UUI_LevelItem>(this, LoadClass<UUI_LevelItem>(nullptr,
-				TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BPUI_LevelItem.BPUI_LevelItem_C'")));
-
-			LevelItem->Init(*CurPath, Item.Value);
-
-			this->LevelItemsPanel->AddChildToUniformGrid(LevelItem, i / 16, i % 16);
+			LevelItem->Init(Item.ItemID, Item.ItemCount);
 		}
-		else {
-			if (Item.Key.Equals(TEXT("金币")))
-			{
-				CoinText->SetText(FText::FromString(FString::FromInt(Item.Value)));
-			}
-			else
-			{
-				if (UFVMGameInstance::GetDebug())
-				{
-					UGameSystemFunction::FVMLog(__FUNCTION__, Item.Key + TEXT("掉落物不存在，请检查关卡配置!!"));
-				}
-			}
-		}
-
-		//优先发送货币资源
-		//发送[货币]
-		if (UFVMGameInstance::GetPlayerStructManager_Static()->SendCoin(Item.Key, Item.Value))
-		{
-			if (UFVMGameInstance::GetDebug())
-			{
-				UGameSystemFunction::FVMLog(__FUNCTION__, Item.Key + TEXT("货币发送成功：") +
-					FString::FromInt(Item.Value));
-			}
-		}
-		else {
-			//发送道具[材料]
-			if (!UGameSystemFunction::SendMaterialToPlayerBag(Item.Key, Item.Value, false))
-			{
-				//发送[装备]
-				if (!UGameSystemFunction::SendEquipmentToPlayerBag(Item.Key, Item.Value, false))
-				{
-					//发送[防御卡]
-					if (!UGameSystemFunction::SendCardToPlayerBag(Item.Key, 0))
-					{
-						if (UFVMGameInstance::GetDebug())
-						{
-							UGameSystemFunction::FVMLog(__FUNCTION__, Item.Key +
-								TEXT("掉落物不存在，请检查关卡配置!!"));
-						}
-					}
-				}
-			}
-		}
-
-		if (Item.Key.Equals(TEXT("金币")))
-		{
-			continue;
-		}
+		this->LevelItemsPanel->AddChildToUniformGrid(LevelItem, i / 7, i % 7);
 		i++;
 	}
 
+	//游戏结束
+	this->OnGameOver(LevelConfig.LevelName, LevelConfig.bSpecialModeEnable, bWin);
+	//保存
 	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("关卡结束，保存进度1")));
 }
 
@@ -207,8 +148,18 @@ bool UUI_LevelItem::Initialize()
 	return true;
 }
 
-void UUI_LevelItem::Init(const FSoftObjectPath& _path, const int32& Count)
+void UUI_LevelItem::Init(int32 ID, const int32& Count)
 {
-	this->ItemHead->SetBrushFromTexture(Cast<UTexture2D>(_path.TryLoad()));
-	this->ItemCountText->SetText(FText::FromString(TEXT("x") + FString::FromInt(Count)));
+	FSoftObjectPath Obj;
+	if (UItemBaseStruct::GetTextureResource(
+		ID,
+		Obj
+	))
+	{
+		this->ItemHead->SetBrushFromTexture(
+			Cast<UTexture2D>(Obj.TryLoad())
+		);
+	}
+
+	this->ItemCountText->SetText(FText::FromString(FString::FromInt(Count)));
 }

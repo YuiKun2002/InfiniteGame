@@ -11,9 +11,6 @@ class UPaperFlipbook;
 class AFlyItemActor;
 class AMouseActor;
 
-#define SpineCardAnimationState_Idle TEXT("01_idle")
-#define SpineCardAnimationState_Attack TEXT("02_attack")
-
 /*
 	攻击卡片基础功能
 	【一般直线攻击卡片】小笼包，三线，双向等这种类型的基础卡片
@@ -32,12 +29,12 @@ public:
 	//Tick
 	virtual void Tick(float DeltaSeconds) override;
 public:
-	//卡片发呆动画
+	//卡片默认动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftClassPtr<class UAssetCategoryName> CardActor_Idle;
+	TSoftClassPtr<UAssetCategoryName> CardActor_IdleAnimName;
 	//卡片攻击动画
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 动画")
-	TSoftClassPtr<class UAssetCategoryName> CardActor_Attack;
+	TSoftClassPtr<UAssetCategoryName> CardActor_AttackAnimName;
 	//卡片攻击的子弹
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 子弹对象类")
 	TSoftClassPtr<AFlyItemActor> CardActor_BulletClassObj;

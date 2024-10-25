@@ -63,6 +63,8 @@ public:
 	virtual	void Init();
 	virtual void MouseTick(const float& DeltaTime);
 	virtual void MoveingUpdate(const float& DeltaTime);
+	virtual void AttackedBegin();
+	virtual void AttackedEnd();
 	virtual void BeHit(UObject* CurHitMouseObj, float& _HurtValue, EFlyItemAttackType AttackType);
 	virtual void ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime);
 	virtual void InMapMeshe(ELineType CurLineType);
@@ -117,14 +119,14 @@ private:
 	UPROPERTY()
 		float M_TickRate = 1.f;
 public:
-	//更新
-	virtual void MouseTick(const float& DeltaTime);
 	//初始化
 	virtual void BeginPlay() override;
 	//老鼠初始化(Base BeginPlay自动调用一次)
 	virtual void MouseInit() override;
 	//初始化boss进度条
 	virtual void InitBoss(const FString& Name, const FString& BossCode) override;
+	//更新
+	virtual void MouseTick(const float& DeltaTime);
 public:
 	//基本老鼠类型
 	virtual EMouseBaseType GetMouseBaseType() override;
@@ -158,6 +160,10 @@ public:
 
 	//动画播放结束
 	void BossAnimPlayEnd();
+
+	//动画播放结束
+	UFUNCTION()
+	void OnBossAnimPlayEnd(class UTrackEntry* Track);
 public:
 	//淡入淡出
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "动画 | 淡入淡出曲线")
@@ -237,4 +243,30 @@ public:
 		USphereComponent* MBody = nullptr;
 public:
 	ABossSphereBase();
+};
+
+//自胶囊体碰撞
+UCLASS()
+class FVM_API ABossCapsuleBase : public ABossBase
+{
+	GENERATED_BODY()
+public:
+	//检查碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* MesheComp = nullptr;
+	//重叠碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* BodyComp = nullptr;
+	//盒体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BOSS外星人属性")
+	FVector BoxCompSize = FVector(20.f);
+	//盒体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BOSS外星人属性")
+	FVector CollisionOffset = FVector(0.f, 0.f, 17.f);
+	//身体碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BOSS外星人属性")
+	FVector BodyCollisionOffset = FVector(0.f, 0.f, 17.f);
+public:
+	ABossCapsuleBase();
+	virtual void BeginPlay() override;
 };

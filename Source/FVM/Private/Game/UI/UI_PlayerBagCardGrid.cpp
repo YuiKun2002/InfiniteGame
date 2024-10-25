@@ -107,29 +107,31 @@ void UUI_PlayerBagCardGrid::ShowCardDetails()
 
 void UUI_PlayerBagCardGrid::SelectCurrentCard()
 {
-	if (UUI_GamePrepare::M_GamePrepareStatic)
+	UUI_GamePrepare* GamePrepare = Cast<UUI_GamePrepare>(this->M_UI_Other);
+	if (IsValid(GamePrepare))
 	{
-		if (UUI_GamePrepare::M_GamePrepareStatic->GetSelectCardNums() > 17)
+		if (GamePrepare->GetSelectCardNums() > 17)
 		{
 			UWidgetBase::CreateTipWidget(TEXT("最多选择18张防御卡"));
 			return;
 		}
 
-		UUI_GamePrepare::M_GamePrepareStatic->SelectCard(this->CopyData.ItemName.ToString(), this->CopyData);
-		UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.Emplace(this->CopyData);
+		GamePrepare->SelectCard(this->CopyData);
+		GamePrepare->M_CardDatas_Copy.Emplace(this->CopyData);
 	}
 }
 
 void UUI_PlayerBagCardGrid::RemoveCurrentSelectCard()
 {
-	if (UUI_GamePrepare::M_GamePrepareStatic)
+	UUI_GamePrepare* GamePrepare = Cast<UUI_GamePrepare>(this->M_UI_Other);
+	if (IsValid(GamePrepare))
 	{
 		this->RemoveFromParent();
 
 		//调用代理
 		this->OnRemoveCurrentSelectCard();
 
-		for (auto FCardDataPP = UUI_GamePrepare::M_GamePrepareStatic->M_CardDatas_Copy.CreateIterator(); FCardDataPP; FCardDataPP++)
+		for (auto FCardDataPP = GamePrepare->M_CardDatas_Copy.CreateIterator(); FCardDataPP; FCardDataPP++)
 		{
 			if (this->CopyData.ItemName.EqualTo((*FCardDataPP).ItemName))
 			{
@@ -138,9 +140,9 @@ void UUI_PlayerBagCardGrid::RemoveCurrentSelectCard()
 			}
 		}
 
-		TArray<FString> Names = { this->CopyData.ItemName.ToString() };
-		UUI_GamePrepare::M_GamePrepareStatic->SetCardEnable(Names, true);
-		UUI_GamePrepare::M_GamePrepareStatic->CancelCardNum();
+		TArray<int32> Names = { this->CopyData.M_ItemID };
+		GamePrepare->SetCardEnable(Names, true);
+		GamePrepare->CancelCardNum();
 	}
 }
 

@@ -9,36 +9,23 @@
 
 AMesheLauncherActor* AMesheLauncherActor::MakeMesheLauncherActor(UObject* WorldContentObject, UClass* Res, AMapMeshe* MapMeshe, const FLine& Line, const FTransform& Trans)
 {
-	AMesheLauncherActor* NewMesheLauncherActor = Cast<AMesheLauncherActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(WorldContentObject, Res, Trans));
+	AMesheLauncherActor* NewMesheLauncherActor = Cast<AMesheLauncherActor>(
+		UGameplayStatics::BeginDeferredActorSpawnFromClass(WorldContentObject, Res, Trans)
+	);
 
 	NewMesheLauncherActor->CurLine = Line;
 
 	NewMesheLauncherActor->CurMapMeshe = MapMeshe;
 
-	NewMesheLauncherActor->SetRenderLayer(7000);
+	NewMesheLauncherActor->CurUI_MapMeshe = MapMeshe->GetUIMapMeshe();
 
-	NewMesheLauncherActor->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
+	NewMesheLauncherActor->SetRenderLayer(MapMeshe->GetTranslucency() + 21);
+
+	NewMesheLauncherActor->InitSpineShow();
 
 	UGameplayStatics::FinishSpawningActor(NewMesheLauncherActor, Trans);
 
 	return NewMesheLauncherActor;
-}
-
-void AMesheLauncherActor::BeginPlay()
-{
-	//初始化UI网格
-	this->CurUI_MapMeshe = this->CurMapMeshe->GetUIMapMeshe();
-
-	Super::BeginPlay();
-
-
-}
-
-void AMesheLauncherActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-
 }
 
 FLine AMesheLauncherActor::GetLine()

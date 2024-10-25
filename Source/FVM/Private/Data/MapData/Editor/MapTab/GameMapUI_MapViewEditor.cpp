@@ -10,6 +10,7 @@
 #include "Paper2D/Classes/PaperFlipbook.h"
 
 #include <Components/TextBlock.h>
+#include <Components/SizeBox.h>
 #include <Components/Button.h>
 #include <Components/VerticalBox.h>
 #include <Components/EditableTextBox.h>
@@ -193,13 +194,13 @@ void UGameMapUI_MapMesheItem::UpdateCardView()
 			(this,
 				LoadClass<UGameMapUI_MapViewCardViewPanel>(0,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BPUI_MaoViewCardAnim.BPUI_MaoViewCardAnim_C'")
-					)
-				);
+				)
+			);
 
 		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(
 			FName(CardViewData.CardName),
 			TEXT("FCardFCardpreViewHeadData")
-			);
+		);
 
 		if (CurData)
 		{
@@ -212,7 +213,7 @@ void UGameMapUI_MapMesheItem::UpdateCardView()
 			//设置显示层级
 			CurSlot->SetZOrder(CurData->M_CardpreViewHead.CardLayer + 3);
 			//设置偏移
-			CardViewPanel->SetRenderTranslation(CurData->M_CardpreViewHead.CardViewOffset + FVector2D(45.f,0.f));
+			CardViewPanel->SetRenderTranslation(CurData->M_CardpreViewHead.CardViewOffset + FVector2D(45.f, 0.f));
 			CardViewPanel->SetRenderScale(CurData->M_CardpreViewHead.CardViewScale);
 			//添加缓存区
 			this->MapViewCardViews.Emplace(CardViewPanel);
@@ -228,6 +229,7 @@ bool UGameMapUI_MapViewEditor::Initialize()
 
 	this->MeshePanel = Cast<UCanvasPanel>(this->GetWidgetFromName(FName(TEXT("CanvasPanel_40"))));
 	this->Bg = Cast<UImage>(this->GetWidgetFromName(FName(TEXT("Image_54"))));
+	this->BgBox = Cast<USizeBox>(this->GetWidgetFromName(FName(TEXT("SizeBox_65"))));
 	this->CardsPanel = Cast<UUniformGridPanel>(this->GetWidgetFromName(FName(TEXT("CardsPanel"))));
 
 	return true;
@@ -247,9 +249,20 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 	this->GameMapUI_MapTab = CurGameMapUI_MapTab;
 
 	//设置背景
-	Bg->SetBrushResourceObject(CurGameMapUI_MapTab->GetEditor()->GetCurEditData().M_FLevelConfig.LevelBGHead.TryLoad());
+	TSoftObjectPtr<UTexture2D> SoftImg(CurGameMapUI_MapTab->GetEditor()->GetCurEditData().M_FLevelConfig.LevelBGHead);
+	UTexture2D* Img = SoftImg.LoadSynchronous();
+	if (IsValid(Img))
+	{
+		Bg->SetBrushFromTexture(Img);
+		this->OnInit(CurGameMapUI_MapTab->GetConfig());
+		UE_LOG(LogTemp, Error, TEXT("%d %d"), Img->GetSizeX(), Img->GetSizeY());
+		this->BgBox->SetWidthOverride(Img->GetSizeX());
+		this->BgBox->SetHeightOverride(Img->GetSizeY());
+		this->Offset.X = int32(Img->GetSizeX() / 2) * -1 + 30; // 30 32  是网格大小的一半
+		this->Offset.Y = int32(Img->GetSizeY() / 2) * -1 + 32;
 
-	this->OnInit(CurGameMapUI_MapTab->GetConfig());
+		this->RenderMeshe();
+	}
 
 	//初始化卡片选择
 	//this->CardsPanel
@@ -295,10 +308,10 @@ void UGameMapUI_MapViewEditor::InitMapViewEditor(UGameMapUI_MapTab* CurGameMapUI
 			this,
 			LoadClass<UGameMapUI_MapViewCardItem>(0,
 				TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BPUI_MapViewCardItem.BPUI_MapViewCardItem_C'"))
-			);
+		);
 
 		FCard_FCardpreViewHead_Data* CurData = CardsTab->FindRow<FCard_FCardpreViewHead_Data>(
-		FName(Card.ItemName.ToString()), TEXT("FCardFCardpreViewHeadData")
+			FName(Card.ItemName.ToString()), TEXT("FCardFCardpreViewHeadData")
 		);
 		if (CurData)
 		{
@@ -332,7 +345,7 @@ void UGameMapUI_MapViewEditor::UpdateMeshe(FMesheCol MesheCol, int32 Row, int32 
 
 	Cast<UGameMapUI_MapMesheItem>(
 		this->MeshePanel->GetChildAt(Row * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[0].M_Col.Num() + Col)
-		)->UpdateConfig(MesheCol);
+	)->UpdateConfig(MesheCol);
 
 	this->RenderMeshe();
 }
@@ -350,7 +363,7 @@ void UGameMapUI_MapViewEditor::UniformSelectChangeMeshe(int32 Row, int32 Col, FM
 
 				Cast<UGameMapUI_MapMesheItem>(
 					this->MeshePanel->GetChildAt(Row * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[Row].M_Col.Num() + ColIndex)
-					)->UpdateConfig(MesheCol);
+				)->UpdateConfig(MesheCol);
 
 				ColIndex++;
 			}
@@ -369,7 +382,7 @@ void UGameMapUI_MapViewEditor::UniformSelectChangeMeshe(int32 Row, int32 Col, FM
 
 					Cast<UGameMapUI_MapMesheItem>(
 						this->MeshePanel->GetChildAt(RowIndex * this->GameMapUI_MapTab->GetConfigRef().M_Meshe[RowIndex].M_Col.Num() + Col)
-						)->UpdateConfig(MesheCol);
+					)->UpdateConfig(MesheCol);
 
 
 					RowIndex++;
@@ -403,7 +416,7 @@ void UGameMapUI_MapViewEditor::UpdateWiewIndex(const int32& Row, const int32& Co
 
 void UGameMapUI_MapViewEditor::UpdateNewRowAndCol(int32 NewRow, int32 NewCol, FVector2D FirstGridLocation)
 {
-	if (NewRow < 0 || NewCol < 0 || NewRow > 12 || NewCol > 12)
+	if (NewRow < 0 || NewCol < 0 || NewRow > 20 || NewCol > 20)
 	{
 		return;
 	}
@@ -486,7 +499,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 				//设置位置
 				FVector2D Location = this->GameMapUI_MapTab->GetConfigRef().M_FirstRowMesheLocation;
 				//UI偏移
-				Location -= FVector2D(-527.f, -190.f);
+				Location -= Offset;
 
 				Location.X += CurCol.M_PaddingCol * Col;
 				Location.Y -= CurRow.M_PaddingRow * Row;
@@ -500,7 +513,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 					this,
 					LoadClass<UGameMapUI_MapMesheItem>(nullptr,
 						TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MapTab/BP_MapViewEditorMesheItem.BP_MapViewEditorMesheItem_C'"))
-					);
+				);
 
 				CurMeshe->Row = Row;
 				CurMeshe->Col = Col;
@@ -511,7 +524,7 @@ void UGameMapUI_MapViewEditor::RenderMeshe()
 				//设置位置
 				FVector2D Location = this->GameMapUI_MapTab->GetConfigRef().M_FirstRowMesheLocation;
 				//UI偏移
-				Location -= FVector2D(-527.f, -190.f);
+				Location -= Offset;
 
 				Location.X += CurCol.M_PaddingCol * Col;
 				Location.Y -= CurRow.M_PaddingRow * Row;

@@ -50,7 +50,7 @@ void AFlyItemActor::InitCollision()
 	this->M_SphereCollision->SetCollisionObjectType(ECC_Pawn);
 	this->M_SphereCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	this->M_SphereCollision->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AFlyItemActor::BeginPlay()
@@ -100,29 +100,16 @@ void AFlyItemActor::PoolCreate(class UObjectPoolManager* PoolManager)
 	this->SetActorTickEnabled(false);
 	this->bReturnPool = true;
 	this->OnReturn();
-	//关闭碰撞
-	if (IsValid(this->M_SphereCollision))
-	{
-		this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
 }
 
 void AFlyItemActor::PoolInit(class UObjectPoolManager* PoolManager)
 {
-	//开启碰撞
-	if (IsValid(this->M_SphereCollision))
-	{
-		this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	}
-
 	this->SetActorHiddenInGame(false);
 	this->SetActorTickEnabled(true);
 	this->bReturnPool = false;
 	this->SetTargetHitState(false);
-	this->M_CurrentHitMouseActor = nullptr;
+	this->M_CurrentHitObjectActor = nullptr;
 	this->bFirstHitResult = false;
-
-
 	this->OnPoolInit();
 }
 
@@ -137,18 +124,21 @@ bool AFlyItemActor::ReturnPool()
 		return true;
 	}
 
+	this->M_ObjectActorLocation = nullptr;
+	this->M_CurrentHitObjectActor = nullptr;
+	this->M_LastHitObjectActor = nullptr;
+	this->bFirstHitResult = false;
+	this->M_AActorComponent_CardFunction = nullptr;
 	this->CurReturnTime = this->ReturnTime;
-	this->M_LastHitMouseActor = nullptr;
+	this->SetTrackEntry(nullptr);
+	this->SetActor_CardFunction_Component(nullptr);
+	this->SetTargetHitState(false);
 	this->SetActorLocation(FVector(-1000.f, 0.f, 0.f));
 	this->SetActorHiddenInGame(true);
 	this->SetActorTickEnabled(false);
 
-
 	//关闭碰撞
-	if (IsValid(this->M_SphereCollision))
-	{
-		this->M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
+	this->SetCollisionEnabled(false);
 
 	if (IsValid(this->CurPoolManager))
 	{
@@ -165,6 +155,7 @@ bool AFlyItemActor::ReturnPool()
 
 void AFlyItemActor::AnimComplete(UTrackEntry* Track)
 {
+	this->SetTrackEntry(nullptr);
 	this->ReturnPool();
 }
 
@@ -192,12 +183,13 @@ void AFlyItemActor::Init()
 	//}
 
 	//播放飞行动画
-	this->SetTrackEntry(
-		this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemDefAnimName, true)
-	);
+	this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemDefAnimName, true);
+	this->SetTrackEntry(nullptr);
+
 
 	this->M_AActorComponent_CardFunction = nullptr;
 	this->SetTargetHitState(false);
+
 
 	//获取指定的组件
 	for (UActorComponent* Comp : this->GetComponents())
@@ -213,6 +205,10 @@ void AFlyItemActor::Init()
 			break;
 		}
 	}
+
+	this->OnInit();
+
+	this->SetCollisionEnabled(true);
 }
 
 void AFlyItemActor::SetFloatModeEnable(bool _Value)
@@ -251,11 +247,11 @@ void AFlyItemActor::SetLine(int32 _line)
 	this->M_FlyData.M_Line = _line;
 }
 
-FVector AFlyItemActor::GetMouseActorLocation()
+FVector AFlyItemActor::GetObjectActorLocation()
 {
 	//老鼠对象失效,则让子弹全部失效
 
-	if (!IsValid(this->M_MouseActorLocation))
+	if (!IsValid(this->M_ObjectActorLocation))
 	{
 		return AGameMapInstance::GetGameMapInstance()->
 			GetMesheControllComponent()->GetMapMeshCurrentRight(
@@ -264,13 +260,13 @@ FVector AFlyItemActor::GetMouseActorLocation()
 	}
 
 	//如果位置存在
-	if (Cast<AMouseActor>(this->M_MouseActorLocation)->M_MousePosition)
+	if (Cast<AMouseActor>(this->M_ObjectActorLocation)->M_MousePosition)
 	{
-		return  Cast<AMouseActor>(this->M_MouseActorLocation)->M_MousePosition->GetComponentLocation();
+		return  Cast<AMouseActor>(this->M_ObjectActorLocation)->M_MousePosition->GetComponentLocation();
 	}
 	else
 	{
-		return this->M_MouseActorLocation->GetActorLocation();
+		return this->M_ObjectActorLocation->GetActorLocation();
 	}
 }
 
@@ -279,9 +275,14 @@ FItem_Buff& AFlyItemActor::GetBuff()
 	return this->M_FItem_Buff;
 }
 
-AActor* const AFlyItemActor::GetMouseActor()
+AActor* const AFlyItemActor::GetObjectActor()
 {
-	return this->M_MouseActorLocation;
+	return this->M_ObjectActorLocation;
+}
+
+AActor* const AFlyItemActor::GetLastObjectActor()
+{
+	return this->M_LastHitObjectActor;
 }
 
 TArray<ELineType>& AFlyItemActor::GetAttackType()
@@ -313,20 +314,16 @@ void AFlyItemActor::SetTrackEntry(class UTrackEntry* Track)
 {
 	if (IsValid(this->AnimTrackEntry))
 	{
-		if (this->AnimTrackEntry == Track)
-		{
-			return;
-		}
-		else {
-			this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
-		}
-	}
-	else {
-		return;
+		this->AnimTrackEntry->AnimationComplete.RemoveAll(this);
+		this->AnimTrackEntry->AnimationComplete.Clear();
 	}
 
-	this->AnimTrackEntry = nullptr;
 	this->AnimTrackEntry = Track;
+}
+
+void AFlyItemActor::SetLastObjectActor(AActor* ObjectActor)
+{
+	this->M_LastHitObjectActor = ObjectActor;
 }
 
 void AFlyItemActor::PlayAnim_Fly()
@@ -339,6 +336,9 @@ void AFlyItemActor::PlayAnim_Fly()
 
 void AFlyItemActor::PlayAnim_Split()
 {
+	//关闭碰撞
+	this->SetCollisionEnabled(false);
+
 	bool bResult = this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName.Equals(TEXT("None"));
 	if (bResult)
 	{
@@ -347,7 +347,7 @@ void AFlyItemActor::PlayAnim_Split()
 	}
 
 	//播放Split动画
-	UTrackEntry* Trac = this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName, false);
+	UTrackEntry* Trac = this->SetAnimation(0, this->M_FlyItem_Property_AnimRes.FlyItemSplitAnimName, true);
 	if (Trac->GetTrackEntry())
 	{
 		//函数绑定
@@ -356,20 +356,20 @@ void AFlyItemActor::PlayAnim_Split()
 		this->SetTrackEntry(Trac);
 	}
 	else {
+		this->SetTrackEntry(nullptr);
 		this->ReturnPool();
 	}
 }
 
 void AFlyItemActor::HitEnd(UPrimitiveComponent* _UBoxComp)
 {
-	if (_UBoxComp)
-	{
-		_UBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
 }
 
 void AFlyItemActor::Hit()
 {
+	//执行蓝图层的事件
+	this->OnHit(this->M_FlyCondition.M_FlyItemAttackType);
+
 	this->bFirstHitResult = true;
 
 	//播放BGM
@@ -384,9 +384,6 @@ void AFlyItemActor::Hit()
 		this->CreateStaticItem(ResPath_C);
 	}
 
-	//执行蓝图层的事件
-	this->OnHit(this->M_FlyCondition.M_FlyItemAttackType);
-
 	//如果子弹类型不是穿透类型
 	if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
 	{
@@ -395,9 +392,6 @@ void AFlyItemActor::Hit()
 			//设置击中状态
 			this->SetTargetHitState(true);
 		}
-
-		//关闭碰撞
-		M_SphereCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//播放Split动画
 		this->PlayAnim_Split();
@@ -449,7 +443,6 @@ void AFlyItemActor::CreateStaticItem(TSoftClassPtr<AFlyItemActor> CurFlyItemActo
 	_TargetActor->SetATK(this->GetSecondATK());
 	_TargetActor->SetSecondATK(this->GetSecondATK());
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 	//AFlyItemActor* Finish = Cast<AFlyItemActor>(UGameplayStatics::FinishSpawningActor(Item, Trans));
 
@@ -535,13 +528,12 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	FTransform Trans = this->GetTransform();
 	Trans.SetLocation(Trans.GetLocation() + Offset);
 	_TargetActor->SetActorTransform(Trans);
-	_TargetActor->SetMouseActorLocation(this->M_MouseActorLocation);
+	_TargetActor->SetObjectActorLocation(this->M_ObjectActorLocation);
 	_TargetActor->SetATK(this->M_FlyData.ATK);
 	_TargetActor->SetSecondATK(this->M_FlyData._SecondATK);
 	_TargetActor->SetLine(this->M_FlyData.M_Line + _LineOffset);
 	_TargetActor->SetFlyConstraintLine(_IsbConstaintLine);
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 	/*AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(
 		this->GetWorld(), UGameSystemFunction::LoadRes(_FlyActorPath_C), Trans)
@@ -561,22 +553,38 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	default:; break;
 	}
 
-	//获取指定的组件
-	for (UActorComponent* Comp : _TargetActor->GetComponents())
+	UShootLineComponent* CurSComp = Cast<UShootLineComponent>(
+		_TargetActor->GetComponentByClass(UShootLineComponent::StaticClass())
+	);
+
+	if (IsValid(CurSComp))
 	{
-		if (Cast<UShootLineComponent>(Comp))
+		CurSComp->SetTargetNode(_Node);
+		CurSComp->SetMoveDirection(_Node.M_EShootDirection);
+
+		//如果是浮动模式则不受行限制
+		if (this->M_bFloatMode)
 		{
-			Cast<UShootLineComponent>(Comp)->SetTargetNode(_Node);
-
-			//如果是浮动模式则不受行限制
-			if (this->M_bFloatMode)
-			{
-				_TargetActor->SetFlyConstraintLine(false);
-			}
-
-			break;
+			_TargetActor->SetFlyConstraintLine(false);
 		}
 	}
+
+	////获取指定的组件
+	//for (UActorComponent* Comp : _TargetActor->GetComponents())
+	//{
+	//	if (Cast<UShootLineComponent>(Comp))
+	//	{
+	//		Cast<UShootLineComponent>(Comp)->SetTargetNode(_Node);
+
+	//		//如果是浮动模式则不受行限制
+	//		if (this->M_bFloatMode)
+	//		{
+	//			_TargetActor->SetFlyConstraintLine(false);
+	//		}
+
+	//		break;
+	//	}
+	//}
 }
 
 void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
@@ -611,14 +619,13 @@ void AFlyItemActor::CreateFlyActor_ShootLine_Slash(
 
 	//新生成的对象设置自定义拥有者(CardActor)
 	_TargetActor->SetActorTransform(Trans);
-	_TargetActor->SetMouseActorLocation(this->M_MouseActorLocation);
+	_TargetActor->SetObjectActorLocation(this->M_ObjectActorLocation);
 	_TargetActor->SetATK(this->M_FlyData.ATK);
 	_TargetActor->SetSecondATK(this->M_FlyData._SecondATK);
 	_TargetActor->SetFlyConstraintLine(false);
 	_TargetActor->AddActorLocalOffset(Offset);
 	_TargetActor->SetActorRelativeRotation(FRotator(0.f, 0.f, _RotationAngle));
 	_TargetActor->Init();
-	_TargetActor->OnInit();
 
 
 	/*AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(
@@ -648,12 +655,14 @@ AFlyItemActor* AFlyItemActor::FlyItemActorSwap(AFlyItemActor* _FlyActor)
 	if (IsValid(_FlyActor))
 	{
 		//新生成的对象设置自定义拥有者(CardActor)
-		_FlyActor->M_MouseActorLocation = this->M_MouseActorLocation;
+		_FlyActor->M_AttackType = this->M_AttackType;
+		_FlyActor->M_AttackCardType = this->M_AttackCardType;
+		_FlyActor->M_ObjectActorLocation = this->M_ObjectActorLocation;
 		_FlyActor->M_FlyData.ATK = this->M_FlyData.ATK;
 		_FlyActor->M_FlyData.CurATK = this->M_FlyData.CurATK;
 		_FlyActor->M_FlyData._SecondATK = this->M_FlyData._SecondATK;
 		_FlyActor->M_FlyData.M_Line = this->M_FlyData.M_Line;
-		_FlyActor->M_AttackType = this->M_AttackType;
+		_FlyActor->M_LastHitObjectActor = this->M_LastHitObjectActor;
 		//_FlyActor->InitRotation();
 		_FlyActor->SetFlyConstraintLine(this->M_FlyCondition.M_bConstraintLine);
 		return  _FlyActor;
@@ -679,7 +688,7 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 	//老鼠对象
 	if (AMouseActor* Mouse = Cast<AMouseActor>(_Mouse))
 	{
-		if (this->M_LastHitMouseActor == Mouse)
+		if (this->M_LastHitObjectActor == Mouse)
 		{
 			return;
 		}
@@ -699,7 +708,7 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 		if (!this->M_FlyCondition.M_bStaticFlyItem)
 		{
 			//当前用于老鼠对象则跳出
-			if (this->M_CurrentHitMouseActor)
+			if (this->M_CurrentHitObjectActor)
 			{
 				return;
 			}
@@ -760,10 +769,10 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 				if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
 				{
 					//设置当前击中的老鼠
-					this->M_CurrentHitMouseActor = Mouse;
+					this->M_CurrentHitObjectActor = Mouse;
 				}
 				//上一次击中的老鼠
-				this->M_LastHitMouseActor = Mouse;
+				this->M_LastHitObjectActor = Mouse;
 				//飞行物击中
 				this->Hit();
 				//设置老鼠状态->被击中
@@ -778,10 +787,10 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 					if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
 					{
 						//设置当前击中的老鼠
-						this->M_CurrentHitMouseActor = Mouse;
+						this->M_CurrentHitObjectActor = Mouse;
 					}
 					//上一次击中的老鼠
-					this->M_LastHitMouseActor = Mouse;
+					this->M_LastHitObjectActor = Mouse;
 					//飞行物击中
 					this->Hit();
 					//设置老鼠状态->被击中
@@ -806,10 +815,117 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 	}
 }
 
+void AFlyItemActor::HitCard_OverlapBegin(AActor* _Card)
+{
+	//卡片对象
+	if (ACardActor* Card = Cast<ACardActor>(_Card))
+	{
+		if (this->M_LastHitObjectActor == _Card)
+		{
+			return;
+		}
+
+		if (Card->GetCurrentHP() < 0.f)
+		{
+			return;
+		}
+
+		//判断是（约束本行）并且 当前行和行不匹配
+		if (this->GetFlyConstraintLine() && Card->GetLine().Row != this->GetLine())
+		{
+			return;
+		}
+
+		//非静态对象
+		if (!this->M_FlyCondition.M_bStaticFlyItem)
+		{
+			//当前拥有卡片对象则跳出
+			if (this->M_CurrentHitObjectActor)
+			{
+				return;
+			}
+		}
+
+		bool bHit = false;
+		if (this->M_AttackCardType == ECardCollisionType::E_CardActor)
+		{
+			bHit = true;
+		}
+		else if (Card->GetCardData().M_ECardCollisionType == this->M_AttackCardType)
+		{
+			bHit = true;
+		}
+
+		if (bHit)
+		{
+			float bCurHP = Card->GetCurrentHP();
+
+			//Mouse->BeHit(this, this->GetCurATK(), this->M_FlyCondition.M_FlyItemAttackType)
+			//被命中传入伤害数值
+			if (!Card->UpdateCardState(this->GetCurATK(), 0.f))
+			{
+				if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
+				{
+					//设置当前击中的卡片
+					this->M_CurrentHitObjectActor = Card;
+				}
+				//上一次击中的老鼠
+				this->M_LastHitObjectActor = Card;
+				//飞行物击中
+				this->Hit();
+				//设置老鼠状态->被击中
+				//Card->SetbIsHurt(true);
+				//解析Buff信息
+				//Card->ParseBuff_Information(this->M_FItem_Buff);
+			}
+			else {
+				//执行了BeHit修改了血量后，返回false，此时判断是否是最后一击
+				if (bCurHP > 0.f)
+				{
+					if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
+					{
+						//设置当前击中的老鼠
+						this->M_CurrentHitObjectActor = Card;
+					}
+					//上一次击中的老鼠
+					this->M_LastHitObjectActor = Card;
+					//飞行物击中
+					this->Hit();
+					//卡片死亡
+					Card->KillCard();
+					//设置老鼠状态->被击中
+					//Mouse->SetbIsHurt(true);
+					//解析Buff信息
+					//Mouse->ParseBuff_Information(this->M_FItem_Buff);
+				}
+			}
+
+			if (UFVMGameInstance::GetDebug())
+			{
+				UE_LOG(
+					LogTemp,
+					Error,
+					TEXT("(%s)击中[%s]造成伤害 %.2f"),
+					*UGameSystemFunction::GetObjectName(this),
+					*UGameSystemFunction::GetObjectName(Card),
+					this->GetCurATK()
+				);
+			}
+		}
+	}
+}
+
 void AFlyItemActor::OnBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//与老鼠重叠
-	this->HitMouse_OverlapBegin(OtherActor);
+	if (this->M_AttackCardType == ECardCollisionType::E_None)
+	{
+		//与老鼠重叠
+		this->HitMouse_OverlapBegin(OtherActor);
+	}
+	else {
+		this->HitCard_OverlapBegin(OtherActor);
+	}
+
 }
 
 void AFlyItemActor::OnBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -830,9 +946,9 @@ void AFlyItemActor::AddBuff(Buff_Infor& _buff, const float& _time)
 	this->M_FItem_Buff.M_Buffers.Emplace(_buff, _time);
 }
 
-void AFlyItemActor::SetMouseActorLocation(AActor* _MouseActor)
+void AFlyItemActor::SetObjectActorLocation(AActor* _MouseActor)
 {
-	this->M_MouseActorLocation = _MouseActor;
+	this->M_ObjectActorLocation = _MouseActor;
 }
 
 void AFlyItemActor::AddAttackType(ELineType _type)

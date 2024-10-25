@@ -389,6 +389,9 @@ void ACardActor::BeginPlay()
 	this->bCollisionActive = true;
 	this->bCollisionState = true;
 
+	this->M_CardTypeBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+	this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
 	this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(
 		UGameSystemFunction::GetCardCollisionBoxType(
 			this->GetCardData().M_ECardCollisionType), ECollisionResponse::ECR_Block);
@@ -485,14 +488,14 @@ void ACardActor::UpdateCardEnableState()
 		//如果没有设置则设置卡片颜色
 		if (!this->M_bColorSet)
 		{
-			this->SetRenderColor(SPINE_COLOR_DARK);
+			this->SetSpineRenderColor(SPINE_COLOR_DARK);
 			this->M_bColorSet = true;
 		}
 	}
 	else {
 		if (this->M_bColorSet)
 		{
-			this->SetRenderColor(SPINE_COLOR_WHITE);
+			this->SetSpineRenderColor(SPINE_COLOR_WHITE);
 			this->M_bColorSet = false;
 			this->CardActive();
 		}
@@ -581,6 +584,9 @@ void ACardActor::SetCardCollisonState(bool bActive)
 		{
 			this->bCollisionActive = true;
 			this->bCollisionState = true;
+
+			this->M_CardTypeBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,ECollisionResponse::ECR_Overlap);
 
 			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(
 				UGameSystemFunction::GetCardCollisionBoxType(this->GetCardData().M_ECardCollisionType),

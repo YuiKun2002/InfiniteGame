@@ -42,7 +42,7 @@ void UGameMapUI_MouseViewEditor::InitMouseViewEditor(UFVMEditUI_GameMapEdit* Cla
 	this->GameMapUI_MouseTab = OwnerClass;
 
 	this->MouseViewSelectMousePanel = Cast<UMouseViewSelectMousePanel>(this->GetWidgetFromName(FName(TEXT("UMouseViewSelectMousePanel"))));
-
+	this->MouseViewSelectMousePanel->GameMapUI_MouseViewEditor = this;
 	//初始化格子节点
 	this->InitRoundNodeGrid();
 	//初始化老鼠选择项
@@ -75,7 +75,7 @@ void UGameMapUI_MouseViewEditor::InitRoundNodeGrid()
 				LoadClass<UMouseViewEditorRoundNodeGrid>(
 					nullptr,
 					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BP_MouseEditorGrid.BP_MouseEditorGrid_C'")
-					));
+				));
 
 			//初始化数据
 			CurGrid->InitEditorRoundNodeGrid(Row, Col, this);
@@ -155,28 +155,28 @@ void UGameMapUI_MouseViewEditor::CheckTimeNodeCount()
 			this->CurRoundNodeIndex
 		];
 
-			//当前回合节点中的最小子节点个数是否有20个
-			if (CurTimeNode.CurNode.Num() < 20)
-			{
-				const FGameMapStruct& CurGameMapData = this->FVMEditUI_GameMapEdit->GetCurEditData().M_FGameMapStruct;
+	//当前回合节点中的最小子节点个数是否有20个
+	if (CurTimeNode.CurNode.Num() < 20)
+	{
+		const FGameMapStruct& CurGameMapData = this->FVMEditUI_GameMapEdit->GetCurEditData().M_FGameMapStruct;
 
-				//差多少补多少
-				int32 Result = 20 - CurTimeNode.CurNode.Num();
-				for (int32 i = 0; i < Result; i++)
-				{
-					FTimeNode CurLocalTimeNode;
+		//差多少补多少
+		int32 Result = 20 - CurTimeNode.CurNode.Num();
+		for (int32 i = 0; i < Result; i++)
+		{
+			FTimeNode CurLocalTimeNode;
 
-					TArray<FMouseConfigNode> CurMouseNodes;
-					CurMouseNodes.SetNum(CurGameMapData.M_Meshe.Num());
+			TArray<FMouseConfigNode> CurMouseNodes;
+			CurMouseNodes.SetNum(CurGameMapData.M_Meshe.Num());
 
-					CurLocalTimeNode.CurMouseNode = CurMouseNodes;
+			CurLocalTimeNode.CurMouseNode = CurMouseNodes;
 
-					CurTimeNode.CurNode.Emplace(CurLocalTimeNode);
-				}
+			CurTimeNode.CurNode.Emplace(CurLocalTimeNode);
+		}
 
-				//更新数据表视图
-				this->GameMapUI_MouseTab->UpdateView();
-			}
+		//更新数据表视图
+		this->GameMapUI_MouseTab->UpdateView();
+	}
 }
 
 void UGameMapUI_MouseViewEditor::UpdateView()
@@ -234,6 +234,22 @@ void UGameMapUI_MouseViewEditor::Node_AddNewCurRound()
 
 void UGameMapUI_MouseViewEditor::Node_RemoveCurRound()
 {
+
+	//移除回合数据
+	if (this->CurRoundIndex < this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig.Num()
+		&&
+		this->CurRoundIndex >= 0
+		)
+	{
+		FRondWidthMouseConfig& Config = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+			this->CurRoundIndex
+		];
+		for (FTimeNodeWidthRound& Round : Config.CurNode)
+		{
+			this->RemoveNodeData(Round.CurNode);
+		}
+	}
+
 	//移除波
 	this->Remove(this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig, this->CurRoundIndex);
 
@@ -355,8 +371,27 @@ void UGameMapUI_MouseViewEditor::Node_RemoveCurRoundNode()
 		return;
 	}
 
+	//移除节点数据
+	if (this->CurRoundNodeIndex < this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+		this->CurRoundIndex
+	].CurNode.Num()
+			&&
+			this->CurRoundNodeIndex >= 0
+			)
+	{
+		//移除当前节点全部的外星人
+		FTimeNodeWidthRound& Node = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+			this->CurRoundIndex
+		].CurNode[this->CurRoundNodeIndex];
+		//移除节点数据	
+		this->RemoveNodeData(Node.CurNode);
+	}
+
 	//移除回合节点
-	this->Remove(this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode, this->CurRoundNodeIndex);
+	this->Remove(
+		this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex].CurNode,
+		this->CurRoundNodeIndex
+	);
 
 	this->GameMapUI_MouseTab->UpdateView();
 
@@ -479,17 +514,18 @@ void UGameMapUI_MouseViewEditor::SelectRoundNodeWithMouseNode(UMouseViewEditorRo
 	this->OnSelectMouseNode(this->MouseViewEditorRoundNodeGrid->MouseConfigNode);
 }
 
-void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode)
+void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNode NewNode, bool bRemove)
 {
 	if (IsValid(this->MouseViewEditorRoundNodeGrid))
 	{
+
 		//写入数据
 		{
 			//获取老鼠配置
 			FMouseConfig& CurMouseConfig = this->GetGameMapUIMouseTab()->GetConfigRef();
 
 			//覆写当前节点的老鼠
-			CurMouseConfig.CurRoundConfig[
+			FMouseConfigNode& ConfigNode = CurMouseConfig.CurRoundConfig[
 				this->GetCurRoundIndex() //回合
 			].CurNode[
 				this->GetCurRoundNodeIndex()//回合节点
@@ -497,7 +533,35 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 				this->MouseViewEditorRoundNodeGrid->ColIndex //通过列得到时间节点【x轴】
 			].CurMouseNode[
 				this->MouseViewEditorRoundNodeGrid->RowIndex//通过行得到老鼠节点【Y轴】
-			] = NewNode;
+			];
+
+				if (bRemove)
+				{
+					//判断之前是否有数据
+					if (!ConfigNode.CurMouseName.Equals(TEXT("")))
+					{
+						//添加老鼠数量
+						int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
+						int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
+						if (Count)
+						{
+							int32 TCount = (*Count - 1);
+							if (TCount <= 0)
+							{
+								CurMouseConfig.ValidKeyID.Emplace(ID);
+								CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
+								CurMouseConfig.AllMouseKeyListMap.Remove(ID);
+								CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
+
+							}
+							else {
+								CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+							}
+						}
+					}
+				}
+
+				ConfigNode = NewNode;
 		}
 
 		this->MouseViewEditorRoundNodeGrid->MouseConfigNode = NewNode;
@@ -597,6 +661,47 @@ void UGameMapUI_MouseViewEditor::UpdateLevelItems()
 		}
 
 		i++;
+	}
+}
+
+void UGameMapUI_MouseViewEditor::RemoveNodeData(TArray<FTimeNode>& InputFTimeNodes)
+{
+	FMouseConfig& CurMouseConfig = this->GetGameMapUIMouseTab()->GetConfigRef();
+
+	//遍历时间轴节点
+	for (FTimeNode& Node : InputFTimeNodes)
+	{
+		//遍历外星人节点
+		for (FMouseConfigNode& ConfigNode : Node.CurMouseNode)
+		{
+			//判断之前是否有数据【是否存放外星人】
+			if (!ConfigNode.CurMouseName.Equals(TEXT("")))
+			{
+				//将名称转换为ID
+				int32 ID = FCString::Atoi(*ConfigNode.CurMouseName);
+				int32* Count = CurMouseConfig.UseMouseKeyListCountMap.Find(ID);
+				if (Count)
+				{
+					int32 TCount = (*Count - 1);
+					if (TCount <= 0)
+					{
+						CurMouseConfig.ValidKeyID.Emplace(ID);
+						CurMouseConfig.AllMouseListMap.Remove(*CurMouseConfig.AllMouseKeyListMap.Find(ID));
+						CurMouseConfig.AllMouseKeyListMap.Remove(ID);
+						CurMouseConfig.UseMouseKeyListCountMap.Remove(ID);
+					}
+					else {
+						CurMouseConfig.UseMouseKeyListCountMap.Emplace(ID, TCount);
+					}
+				}
+			}
+
+			ConfigNode.CurMouseName = TEXT("");
+			ConfigNode.CurMouseLine.Row = -1;
+			ConfigNode.CurMouseLine.Col = -1;
+			ConfigNode.IgnoreRows.Empty();
+			ConfigNode.LevelItems.Empty();
+		}
 	}
 }
 

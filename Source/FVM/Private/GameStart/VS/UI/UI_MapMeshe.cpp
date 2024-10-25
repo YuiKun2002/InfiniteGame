@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
+#include "GameStart/VS/Components/ResourceManagerComponent.h"
 
 #include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/Components/VSManagerComponent.h"
@@ -54,7 +55,7 @@ void UUI_MapMeshe::PlayCard(
 
 	ACardActor* Card = Cast <ACardActor>(
 		UGameplayStatics::BeginDeferredActorSpawnFromClass(this->M_MapMeshe->GetWorld(), _CardRes, Trans)
-		);
+	);
 
 	//卡片无效
 	if (!IsValid(Card))
@@ -66,6 +67,8 @@ void UUI_MapMeshe::PlayCard(
 		return;
 	}
 
+	//设置名称
+	Card->CardActor_Name = _CardData.ItemName;
 	//设置线路
 	Card->SetLine(this->GetLine());
 	//设置UIMapMesh
@@ -170,7 +173,7 @@ void UUI_MapMeshe::PlayFinish(ACardActor* NewCard)
 		LoadClass<AActor>(
 			0,
 			TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/PlayGroundAnim/BP_放置动画.BP_放置动画_C'")
-			)
+		)
 	);
 
 	CurAnim->SetActorLocation(NewCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
@@ -190,8 +193,6 @@ bool UUI_MapMeshe::PlayPlayer()
 		TEXT("")
 	))
 	{
-		AGameMapInstance::GetGameMapInstance()->SetGameStartNow();
-		AGameMapInstance::GetGameMapInstance()->OnPlayPlayerDelegate.Broadcast();
 		return true;
 	}
 
@@ -523,7 +524,7 @@ FLine UUI_MapMeshe::GetLine()
 	return this->M_Line;
 }
 
-bool UUI_MapMeshe::EradicateCard()
+bool UUI_MapMeshe::EradicateCard(bool Recovery)
 {
 	//销毁顺序
 	TArray<int8> M_Card_Layer = { 5,4,2,0,1,-1,3 };
@@ -546,7 +547,11 @@ bool UUI_MapMeshe::EradicateCard()
 		if (_Reult && IsValid(*_Reult))
 		{
 			(*_Reult)->KillCard();
-
+			if (Recovery)
+			{
+				int32 Value = (*_Reult)->GetCardData().M_CardPrice * 0.1f;
+				UResourceManagerComponent::GetResourceManagerComponent()->AddFlameNum(Value);
+			}
 			return true;
 		}
 	}
@@ -658,6 +663,25 @@ bool UUI_MapMeshe::CheckCurMesheEnabled()
 	}
 }
 
+bool UUI_MapMeshe::CheckCard()
+{
+	if (this->GetPlayer())
+	{
+		if (this->M_Card_Data.Num() > 1)
+		{
+			return true;
+		}
+	}
+	else {
+		if (this->M_Card_Data.Num() > 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 TArray<UObject*> UUI_MapMeshe::GetUIMesheEnabledObjs()
 {
 	TArray<UObject*> CurObjs;
@@ -763,23 +787,25 @@ bool UUI_MapMeshe::CreateCard(
 		//如果选择了铲卡
 		if (_CardMComp->M_CurrentSelectEradicate)
 		{
-			this->EradicateCard();
+			this->EradicateCard(true);
 			_CardMComp->CancelEradicate();
 
-			AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
+			/*铲卡*/
+
+			/*AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 				LoadClass<AGameActorFlipbookBase>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/BPEradicate.BPEradicate_C'")
-					),
+				),
 				this->M_MapMesheTransform);
 
 			Eradicate_->SetAnimationPlayEndDestroy();
-			Eradicate_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
+			Eradicate_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));*/
 
 			switch (this->M_ELineType)
 			{
 			case ELineType::OnWater:
-			case ELineType::Underwater: {UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio"); }break;
-			default: {UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio"); }break;
+			case ELineType::Underwater: { UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio"); }break;
+			default: { UFVMGameInstance::PlayBGM_S_Static("PlayCardToGround", "ItemAudio"); }break;
 
 			}
 			return false;
@@ -967,6 +993,20 @@ void UUI_MapMeshe::CardTypeDebug(const FString& _CardName, ELineType _LineType)
 	}
 }
 
+AEradicateActor* UUI_MapMeshe::ShowEradicate()
+{
+	AEradicateActor* Eradicate = this->GetWorld()->SpawnActor<AEradicateActor>(LoadClass<AActor>(0,
+		TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/Eradicate/BP_Eradicate.BP_Eradicate_C'")));
+	Eradicate->UIMeshe = this;
+	Eradicate->SetActorLocation(FVector(
+		500.f,
+		this->M_MapMesheTransform.GetLocation().Y,
+		this->M_MapMesheTransform.GetLocation().Z
+	));
+	return Eradicate;
+	//UE_LOG(LogTemp,Error,TEXT("%f %f %f"),this->M_MapMesheTransform.GetLocation().X,this->M_MapMesheTransform.GetLocation().Y,this->M_MapMesheTransform.GetLocation().Z);
+}
+
 int32 UUI_MapMeshe::GetTranslucency()
 {
 	return this->M_Translucency;
@@ -976,7 +1016,7 @@ int32 UUI_MapMeshe::GetCharTranslucency()
 {
 	if (this->bHasChar)
 	{
-		return this->M_PlayerIns->GetTranslucency();
+		return this->M_PlayerIns->GetPlayerRenderLayerToCardLayer();
 	}
 
 	return this->GetTranslucency();

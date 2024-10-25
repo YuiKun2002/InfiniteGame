@@ -25,24 +25,11 @@ void UCardSpawnComponent::LoadResource()
 {
 	Super::LoadResource();
 
-	if (!this->CurSpawnCardActor)
+	if (!IsValid(this->CurSpawnCardActor))
 	{
+		this->SetTickableWhenPaused(false);
 		return;
 	}
-
-	this->M_Resource.M_UPaperFlipbook_Idle = UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1);
-	this->M_Resource.M_UPaperFlipbook_Spawn = UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_SpawnAnim1);
-	this->M_Resource.M_UPaperFlipbook_Spawn_Up = UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_UpAnim);
-
-	//播放默认动画
-	/*this->CurSpawnCardActor->GetRenderComponent()->SetFlipbook(
-		UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1)
-	);*/
-	this->CurSpawnCardActor->SetAnimation(
-		0,
-		SpineAnimationState_SpawnCard_Spawn,
-		true);
-
 
 	//初始化基础数据以及生成器
 	const FItemCardSpawn& CurData = this->CurSpawnCardActor->GetSpawnCardData();
@@ -61,13 +48,19 @@ void UCardSpawnComponent::LoadResource()
 		//生产速度
 		CurData.M_SpawnSpeed,
 		//生产延迟【等待生产动画播放完毕的时间】
-		CurData.M_FirstSpawnDelay == 0.f ?
-		UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim1)->GetTotalDuration() : CurData.M_FirstSpawnDelay,
+		CurData.M_FirstSpawnDelay,
 		//生产多个时，每一个的延迟
 		0.f
 	);
 
 	this->M_SpawnFlameValue = CurData.M_FlameNum;
+
+	//播放默认动画
+	this->CurSpawnCardActor->SetAnimation(
+		0,
+		this->CurSpawnCardActor->Idle.GetDefaultObject()->GetCategoryName().ToString(),
+		true);
+	this->SetTrackEntry(nullptr);
 }
 
 
@@ -117,24 +110,26 @@ void UCardSpawnComponent::PlayAttackAnimation()
 {
 	Super::PlayAttackAnimation();
 
-	//this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Spawn);
-
-	this->CurSpawnCardActor->SetAnimation(
+	this->SetTrackEntry(nullptr);
+	//播放默认动画
+	UTrackEntry* Track = this->CurSpawnCardActor->SetAnimation(
 		0,
-		SpineAnimationState_SpawnCard_Spawn,
+		this->CurSpawnCardActor->Attack.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
+	BINDANIMATION(Track,this,&UCardSpawnComponent::AnimationPlayEnd);
+	this->SetTrackEntry(Track);
 }
 
 void UCardSpawnComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
 
-	//this->CurSpawnCardActor->SetPlayAnimation(this->M_Resource.M_UPaperFlipbook_Idle);
-
+	//播放默认动画
 	this->CurSpawnCardActor->SetAnimation(
 		0,
-		SpineAnimationState_SpawnCard_Idle,
+		this->CurSpawnCardActor->Idle.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
+	this->SetTrackEntry(nullptr);
 }
 
 
@@ -143,6 +138,8 @@ void UCardSpawnComponent::PlayIdleAnimation()
 void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	
 
 	//游戏暂停则不在生产
 	if (this->CurSpawnCardActor->GamePause())
@@ -155,6 +152,7 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	//卡片生命值不为0
 	if (this->CurSpawnCardActor->GetCurrentHP() > 0.f)
 	{
+		/*
 		//自动生长时间计时
 		if (this->M_SpawnCondition.M_CurrentCardIsWeekUp)
 		{
@@ -176,7 +174,7 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 					true);
 
 
-				/*---动画重新赋值---*/
+				//---动画重新赋值---
 				//默认动画
 				this->M_Resource.M_UPaperFlipbook_Idle = UGameSystemFunction::LoadRes(this->CurSpawnCardActor->CardActor_DefAnim2);
 				//生产动画
@@ -191,15 +189,23 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		//生长模式关闭状态
 		if (!this->InWeekUp)
 		{
-			this->SetAttackModEnabled(true);
+
 		}
+
+		*/	
+
+		this->SetAttackModEnabled(true);
 	}
+
+	
 }
 
 void UCardSpawnComponent::OnAnimationPlayEnd()
 {
 	Super::OnAnimationPlayEnd();
 
+
+	/*
 
 	//游戏暂停则不在生产
 	if (this->CurSpawnCardActor->GamePause())
@@ -224,4 +230,12 @@ void UCardSpawnComponent::OnAnimationPlayEnd()
 				true);
 		}
 	}
+
+	*/
+}
+
+void UCardSpawnComponent::AnimationPlayEnd(UTrackEntry* Track)
+{
+	this->OnAnimationPlayEnd();
+	this->SetTrackEntry(nullptr);
 }

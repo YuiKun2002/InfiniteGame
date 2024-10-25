@@ -7,6 +7,7 @@
 #include "GameStart/VS/UI/UI_MouseRound.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameSystem/FVMGameInstance.h"
+#include <Components/Capsulecomponent.h>
 #include <Components/SphereComponent.h>
 #include <Components/BoxComponent.h>
 
@@ -261,6 +262,11 @@ void ABossBase::AttackedBegin()
 	}
 
 	Super::AttackedBegin();
+
+	if (IsValid(this->Get()))
+	{
+		this->Get()->AttackedBegin();
+	}
 }
 
 void ABossBase::AttackedEnd()
@@ -272,6 +278,10 @@ void ABossBase::AttackedEnd()
 
 	Super::AttackedEnd();
 
+	if (IsValid(this->Get()))
+	{
+		this->Get()->AttackedEnd();
+	}
 }
 
 
@@ -410,6 +420,14 @@ void ABossBase::BossAnimPlayEnd()
 	}
 }
 
+void ABossBase::OnBossAnimPlayEnd(class UTrackEntry* Track)
+{
+	if (IsValid(this->Get()))
+	{
+		this->Get()->AnimPlayEnd();
+	}
+}
+
 UMesheControllComponent* ABossBase::GetMesheComp()
 {
 	return AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent;
@@ -441,9 +459,9 @@ int32 ABossBase::GetMouseLevel()
 
 void ABossBase::UpdateBossOpacity(const float& value)
 {
-	float Time = UKismetMathLibrary::Lerp(0.f, 1.f, value);
+	//float Time = UKismetMathLibrary::Lerp(0.f, 1.f, value);
 	//this->GetRenderComponent()->SetScalarParameterValueOnMaterials(FName(TEXT("A")), Time);
-	this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Time));
+	//this->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Time));
 }
 
 void ABossBase::SpawnMouseByName(const FString& MouseName, int32 Row, int32 Col /*= -1*/)
@@ -571,10 +589,11 @@ UBossStateBase* ABossStateManager::ABossStateManager::Get()
 void UBossStateBase::Init() {}
 void UBossStateBase::MouseTick(const float& DeltaTime) {}
 void UBossStateBase::MoveingUpdate(const float& DeltaTime) {}
+void UBossStateBase::AttackedBegin(){}
+void UBossStateBase::AttackedEnd(){}
 void UBossStateBase::BeHit(UObject* CurHitMouseObj, float& _HurtValue, EFlyItemAttackType AttackType) {}
 void UBossStateBase::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime) {}
 void UBossStateBase::InMapMeshe(ELineType CurLineType) {}
-
 void UBossStateBase::AnimPlayEnd() {}
 
 void UBossStateBase::InitState(ABossStateManager* NewMan)
@@ -629,4 +648,25 @@ ABossSphereBase::ABossSphereBase()
 
 	this->MMeshe->SetupAttachment(this->GetRootComponent());
 	this->MBody->SetupAttachment(this->MMeshe);
+}
+
+ABossCapsuleBase::ABossCapsuleBase()
+{
+	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
+
+	//设置依附
+	this->MesheComp->SetupAttachment(this->GetPointComponent());
+	this->BodyComp->SetupAttachment(this->GetPointComponent());
+}
+
+void ABossCapsuleBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		this->MesheComp->SetHiddenInGame(false);
+		this->BodyComp->SetHiddenInGame(false);
+	}
 }

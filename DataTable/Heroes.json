@@ -1,0 +1,9 @@
+[
+	{
+		"Name": "NewRow",
+		"Heroes":
+		{
+			"Xiao": "/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C"
+		}
+	}
+]

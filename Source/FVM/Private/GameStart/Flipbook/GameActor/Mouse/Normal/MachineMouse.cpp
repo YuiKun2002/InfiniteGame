@@ -3,190 +3,144 @@
 
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/MachineMouse.h"
 #include "GameStart/Flipbook/GameActor/CardActor.h"
-#include <Components/SphereComponent.h>
+#include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include <Components/BoxComponent.h>
+#include <Components/Capsulecomponent.h>
 
-AMachineMouse::AMachineMouse()
-{
-	this->MMesheComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MMouseMeshComp"));
-	this->MBodyComponent = CreateDefaultSubobject<USphereComponent>(TEXT("MMouseBodyComp"));
-
-	//设置依附
-	this->MMesheComponent->SetupAttachment(this->GetRootComponent());
-	this->MBodyComponent->SetupAttachment(this->MMesheComponent);
-}
-
-void AMachineMouse::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 void AMachineMouse::MouseTick(const float& DeltaTime)
 {
 	Super::MouseTick(DeltaTime);
+
+	if (this->bAttackLine)
+	{
+		this->AddAttackLineFunc(UGameSystemFunction::GetCardCollisionBoxType(this->CheckCardType), DeltaTime, true);
+	}
 }
 
 void AMachineMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
-	this->bBomb = false;
-	this->bTime = 0.2f;
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 }
 
 void AMachineMouse::MouseInit()
 {
 	Super::MouseInit();
 
-	UGameSystemFunction::InitMouseMeshe(this->MMesheComponent, this->MBodyComponent);
-	//初始化碰撞
-	this->GetMouseManager()->ChangeMouseLineType(
-		this, this->GetMouseLine().Row, ELineType::OnGround, this->MMesheComponent, this->MBodyComponent
-	);
+	this->bAttackLine = true;
 
-	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &AMachineMouse::OnAnimationPlayEnd);
+	this->PlayWalk();
+}
+
+void AMachineMouse::AttackedBegin()
+{
+	Super::AttackedBegin();
+
+	this->PlayAttack();
+}
+
+void AMachineMouse::AttackedEnd()
+{
+	Super::AttackedEnd();
+
+	this->PlayWalk();
+}
+
+void AMachineMouse::MoveingBegin()
+{
+	Super::MoveingBegin();
+
+	this->PlayWalk();
 }
 
 void AMachineMouse::MoveingUpdate(float DeltaTime)
 {
-
-	if (this->bBomb)
-	{
-		return;
-	}
-
 	Super::MoveingUpdate(DeltaTime);
 
 	this->UpdateMove(DeltaTime);
-
-	//检查周围是否有障碍物
-	if (this->bTime > 0.f)
-	{
-		this->bTime -= DeltaTime;
-	}
-	else {
-		this->bTime = 0.2f;
-
-		FHitResult CurHit;
-		if (UGameSystemFunction::AddSphereTrace(
-			this, CurHit, Offset, Offset, 5.f,
-			UGameSystemFunction::GetCardCollisionTraceType(ECardCollisionType::E_CardActor2)
-		))
-		{
-			ACardActor* Cur = Cast<ACardActor>(CurHit.GetActor());
-			if (IsValid(Cur))
-			{
-				this->ClosedBoxComponent(this->MBodyComponent);
-				this->ClosedBoxComponent(this->MMesheComponent);
-				this->bBomb = true;
-				if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
-				{
-					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Idle), true);
-
-					this->SetAnimation(0, TEXT("SpineTag"), true);
-
-				}
-				else {
-					//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.IdleLow), true);
-
-					this->SetAnimation(0, TEXT("SpineTag"), true);
-				}
-			}
-		}
-	}
-}
-
-bool AMachineMouse::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAttackType AttackType)
-{
-	Super::BeHit(CurHitMouseObj, _HurtValue, AttackType);
-
-	this->UpdateState();
-
-	return true;
 }
 
 void AMachineMouse::MouseDeathed()
 {
+	this->bAttackLine = false;
+
+	//创建爆炸
+	TArray<FHitResult> Hits;
+	if (UGameSystemFunction::AddSphereTraceMulti(
+		this, Hits, FVector::ZeroVector, FVector::ZeroVector, this->BombRadius,
+		UGameSystemFunction::GetCardCollisionTraceType(CheckCardType)
+	))
+	{
+		for (const FHitResult& Hit : Hits)
+		{
+			ACardActor* Card = Cast<ACardActor>(Hit.GetActor());
+			if (IsValid(Card))
+			{
+				Card->UpdateCardState(9999999.f);
+				Card->KillCard();
+				UResourceManagerComponent::ResourceAddBadCard();
+			}
+		}
+	}
+
+	this->OnSpawnBomb();
+
 	Super::MouseDeathed();
 
-	this->ClosedBoxComponent(this->MBodyComponent);
-	this->ClosedBoxComponent(this->MMesheComponent);
+	this->ClosedBoxComponent(this->MesheComp);
+	this->ClosedBoxComponent(this->BodyComp);
 
-	//如果没有触发爆炸
-	if (!this->bBomb)
+	if (!this->GetPlayPlayBombEffAnim())
 	{
-		if (!this->GetPlayPlayBombEffAnim())
-		{
-			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Death), true);
-
-			this->SetAnimation(0, TEXT("SpineTag"), true);
-		}
-	}
-
-}
-
-void AMachineMouse::InMapMeshe(ELineType CurLineType)
-{
-	Super::InMapMeshe(CurLineType);
-
-	if (CurLineType == ELineType::OnWater)
-	{
-		Offset = FVector(0.f, 0.f, 20.f);
-	}
-	else {
-		Offset = FVector::ZeroVector;
+		UTrackEntry* Track = this->SetAnimation(0,
+			this->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+		BINDANIMATION(Track, this, &AMouseActor::AlienDeadAnimationCompelet);
 	}
 }
 
-void AMachineMouse::OnAnimationPlayEnd()
+void AMachineMouse::AnimationPlayEnd(class UTrackEntry* Track)
 {
 	if (this->GetCurrentHP() <= 0.f)
 	{
 		return;
 	}
 
-	if (this->bBomb)
-	{
-		//this->SetPlayAnimation(nullptr);
+	this->AddAttackCardUpdate();
 
-		this->SetEmptyAnimation(0, 0.2f);
-
-		//生成爆炸对象
-		UClass* CurBomb = UGameSystemFunction::LoadRes(this->BombClass);
-		if (IsValid(CurBomb))
-		{
-			AMachineBombAnim* NewBombActor = this->GetWorld()->SpawnActor<AMachineBombAnim>(CurBomb);
-			NewBombActor->SetActorLocation(this->GetActorLocation());
-			NewBombActor->OnInit();
-		}
-
-		this->SetMouseDeath(true);
-
-		return;
-	}
-
-	this->UpdateState();
+	this->PlayWalk();
 }
 
-void AMachineMouse::UpdateState()
+void AMachineMouse::PlayWalk()
 {
-	if (this->GetCurrentHP() <= 0.f)
+	if (!this->GetbIsAttack())
 	{
-		return;
-	}
-
-	if (!bBomb)
-	{
-		if (this->GetCurrentHP() > this->GetTotalHP() * 0.5)
+		if (this->State != 0)
 		{
-			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.Def));
+			this->State = 0;
 
-			this->SetAnimation(0, TEXT("SpineTag"), true);
+			UTrackEntry* Track = this->SetAnimation(0,
+				this->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+			this->SetTrackEntry(Track);
 		}
-		else {
-			//this->SetPlayAnimation(UGameSystemFunction::LoadRes(this->AnimRes.DefLow));
+	}
+}
 
-			this->SetAnimation(0, TEXT("SpineTag"), true);
+void AMachineMouse::PlayAttack()
+{
+	if (this->GetbIsAttack())
+	{
+		if (this->State != 1)
+		{
+			this->State = 1;
+
+			UTrackEntry* Track = this->SetAnimation(0,
+				this->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true);
+			BINDANIMATION(Track, this, &AMachineMouse::AnimationPlayEnd);
+			this->SetTrackEntry(Track);
 		}
 	}
 }

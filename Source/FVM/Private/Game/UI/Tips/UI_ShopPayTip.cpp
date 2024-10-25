@@ -14,6 +14,15 @@
 #include "GameSystem/PlayerStructManager.h"
 #include "GameSystem/PlayerDataSubsystem.h"
 
+void UUI_ShopPayTip::UpdateCoinText()
+{
+	//更新价格
+	if (this->Shop_UClass)
+	{
+		this->Shop_UClass->UpdateCoinText();
+	}
+}
+
 void UUI_ShopPayTip::SetShopUI(UUI_Shop* _UClass)
 {
 	this->Shop_UClass = _UClass;
@@ -21,204 +30,210 @@ void UUI_ShopPayTip::SetShopUI(UUI_Shop* _UClass)
 
 void UUI_ShopPayTip::PayButton()
 {
-	//背包类型不进行确认
-	if (this->M_FItemPrice.M_ItemType != EItemType::E_BagGrid)
-	{
-		this->Sure();
-	}
 
-	//读取原存档
-	UPlayerStructManager* NewLoadLocalPlayer = UGameSystemFunction::LoadCurrentPlayerData(__FUNCTION__ + FString(TEXT("准备进行支付操作")));
-	if (IsValid(NewLoadLocalPlayer))
-	{
-		UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetPlayerDataInstance(NewLoadLocalPlayer);
+	this->OnPay(this->ItemPriceData);
 
-		UPlayerStructManager* PlayerData = NewLoadLocalPlayer;
+	////更新价格
+	//if (this->Shop_UClass)
+	//{
+	//	this->Shop_UClass->UpdateCoinText();
+	//}
 
-		//获取个数
-		FString BuyCount = this->M_PlayerPayCountTextBox->GetText().ToString();
-		int32 ItemCount = FCString::Atoi(*BuyCount);
+	//return;
+	////背包类型不进行确认
+	//if (this->M_FItemPrice.M_ItemType != EItemType::E_BagGrid)
+	//{
+	//	this->Sure();
+	//}
 
-		//道具名称
-		FString ItemName;
-		//道具价格
-		int32 ItemPrice = 0;
-		//货币名称
-		FString ItemCoinName;
-		//选择购买道具的类型
-		EItemType ItemEItemType = EItemType::E_Card;
-		//道具数据转换
-		FItemPrice FItemPriceData;
-		//购买结果
-		bool BuyResult = false;
+	////读取原存档
+	//UPlayerStructManager* NewLoadLocalPlayer = UGameSystemFunction::LoadCurrentPlayerData(__FUNCTION__ + FString(TEXT("准备进行支付操作")));
+	//if (IsValid(NewLoadLocalPlayer))
+	//{
+	//	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetPlayerDataInstance(NewLoadLocalPlayer);
 
-		//选择数据解析
-		switch (this->M_EShopPayTipBuyType)
-		{
-		case EShopPayTipBuyType::E_DefShopBuy: {
-			ItemName = this->M_FItemPrice.M_ItemName.ToString();
-			ItemPrice = this->M_FItemPrice.M_ItemPrice;
-			ItemCoinName = this->M_FItemPrice.M_ItemMoneyTypeName.ToString();
-			ItemEItemType = this->M_FItemPrice.M_ItemType;
-			FItemPriceData = this->M_FItemPrice;
-		} break;
-		case EShopPayTipBuyType::E_TicketShopBuy: {
-			ItemName = this->M_FItemTicketPrice.M_ItemName.ToString();
-			ItemPrice = this->M_FItemTicketPrice.M_TicketCount;
-			ItemCoinName = this->M_FItemTicketPrice.M_TicketName.ToString();
-			ItemEItemType = this->M_FItemTicketPrice.M_ItemType;
-			//道具数据转换
-			{
-				FItemPriceData.M_ItemName = FText::FromString(ItemName);
-				FItemPriceData.M_ItemType = ItemEItemType;
-			}
-		} break;
-		}
+	//	UPlayerStructManager* PlayerData = NewLoadLocalPlayer;
 
-		//如果不是【背包道具】
-		if (ItemEItemType != EItemType::E_BagGrid)
-		{
-			if (ItemCount == 0)
-			{
-				UWidgetBase::CreateTipWidget(TEXT("购买失败，空间不足"));
-				return;
-			}
-		}
-		else {
-			//如果是背包道具
-			if (ItemEItemType == EItemType::E_BagGrid)
-			{
-				if (PlayerData->M_FPlayerCoin.M_Coin_1 < ItemPrice)
-				{
-					UWidgetBase::CreateTipWidget(TEXT("购买失败，礼券不足:") + FString::FromInt(ItemPrice));
-					return;
-				}
-			}
-		}
+	//	//获取个数
+	//	FString BuyCount = this->M_PlayerPayCountTextBox->GetText().ToString();
+	//	int32 ItemCount = FCString::Atoi(*BuyCount);
 
-		//默认商城购买
-		if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_DefShopBuy)
-		{
-			if (ItemEItemType == EItemType::E_BagGrid)
-			{
-				if (FPlayerCoinAdd::Buy(PlayerData, ItemPrice, this->M_FItemPrice.M_ItemMoneyType))
-				{
-					BuyResult = true;
-				}
-			}
-			else {
-				if (FPlayerCoinAdd::Buy(PlayerData, ItemPrice * ItemCount, this->M_FItemPrice.M_ItemMoneyType))
-				{
-					BuyResult = true;
-				}
-			}
+	//	//道具名称
+	//	FString ItemName;
+	//	//道具价格
+	//	int32 ItemPrice = 0;
+	//	//货币名称
+	//	FString ItemCoinName;
+	//	//选择购买道具的类型
+	//	EItemType ItemEItemType = EItemType::E_Card;
+	//	//道具数据转换
+	//	FItemPrice FItemPriceData;
+	//	//购买结果
+	//	bool BuyResult = false;
 
-		}
+	//	//选择数据解析
+	//	switch (this->M_EShopPayTipBuyType)
+	//	{
+	//	case EShopPayTipBuyType::E_DefShopBuy: {
+	//		ItemName = this->M_FItemPrice.M_ItemName.ToString();
+	//		ItemPrice = this->M_FItemPrice.M_ItemPrice;
+	//		ItemCoinName = this->M_FItemPrice.M_ItemMoneyTypeName.ToString();
+	//		ItemEItemType = this->M_FItemPrice.M_ItemType;
+	//		FItemPriceData = this->M_FItemPrice;
+	//	} break;
+	//	case EShopPayTipBuyType::E_TicketShopBuy: {
+	//		ItemName = this->M_FItemTicketPrice.M_ItemName.ToString();
+	//		ItemPrice = this->M_FItemTicketPrice.M_TicketCount;
+	//		ItemCoinName = this->M_FItemTicketPrice.M_TicketName.ToString();
+	//		ItemEItemType = this->M_FItemTicketPrice.M_ItemType;
+	//		//道具数据转换
+	//		{
+	//			FItemPriceData.M_ItemName = FText::FromString(ItemName);
+	//			FItemPriceData.M_ItemType = ItemEItemType;
+	//		}
+	//	} break;
+	//	}
 
-		//券商城购买【扣除券】
-		if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_TicketShopBuy)
-		{
-			//货币数据
-			FMaterialBase* RefData = nullptr;
-			//货币名称
-			for (auto& Data : PlayerData->M_PlayerItems_Material)
-			{
-				if (Data.ItemName.ToString().Equals(ItemCoinName))
-				{
-					RefData = &Data;
-					break;
-				}
-			}
+	//	//如果不是【背包道具】
+	//	if (ItemEItemType != EItemType::E_BagGrid)
+	//	{
+	//		if (ItemCount == 0)
+	//		{
+	//			UWidgetBase::CreateTipWidget(TEXT("购买失败，空间不足"));
+	//			return;
+	//		}
+	//	}
+	//	else {
+	//		//如果是背包道具
+	//		if (ItemEItemType == EItemType::E_BagGrid)
+	//		{
+	//			if (PlayerData->M_FPlayerCoin.M_Coin_1 < ItemPrice)
+	//			{
+	//				UWidgetBase::CreateTipWidget(TEXT("购买失败，礼券不足:") + FString::FromInt(ItemPrice));
+	//				return;
+	//			}
+	//		}
+	//	}
 
-			if (RefData)
-			{
-				//判断是否足够
-				if (RefData->M_Count >= this->M_FItemTicketPrice.M_TicketCount * ItemCount)
-				{
-					//减去资源货币
-					RefData->M_Count -= this->M_FItemTicketPrice.M_TicketCount * ItemCount;
-					if (RefData->M_Count <= 0)
-					{
-						RefData->bWaitRemove = true;
-						UGameSystemFunction::ClearWaitingItems(PlayerData->M_PlayerItems_Material);
+	//	//默认商城购买
+	//	if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_DefShopBuy)
+	//	{
+	//		if (ItemEItemType == EItemType::E_BagGrid)
+	//		{
+	//			if (FPlayerCoinAdd::Buy(PlayerData, ItemPrice, this->M_FItemPrice.M_ItemMoneyType))
+	//			{
+	//				BuyResult = true;
+	//			}
+	//		}
+	//		else {
+	//			if (FPlayerCoinAdd::Buy(PlayerData, ItemPrice * ItemCount, this->M_FItemPrice.M_ItemMoneyType))
+	//			{
+	//				BuyResult = true;
+	//			}
+	//		}
 
-						//调用券支付成功并且券归零
-						if (this->OnTicketPayFinishOver.IsBound())
-						{
-							OnTicketPayFinishOver.Execute();
-						}
-					}
+	//	}
 
-					BuyResult = true;
-				}
-			}
-		}
+	//	//券商城购买【扣除券】
+	//	if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_TicketShopBuy)
+	//	{
+	//		//货币数据
+	//		FMaterialBase* RefData = nullptr;
+	//		//货币名称
+	//		for (auto& Data : PlayerData->M_PlayerItems_Material)
+	//		{
+	//			if (Data.ItemName.ToString().Equals(ItemCoinName))
+	//			{
+	//				RefData = &Data;
+	//				break;
+	//			}
+	//		}
 
-		if (!BuyResult)
-		{
-			//货币不足
-			FString Tip = ItemCoinName + TEXT("不够:") + FString::FromInt(ItemPrice);
-			UWidgetBase::CreateTipWidget(Tip, FVector(1.f, 0.f, 1.f));
-		}
-		else {
-			//根据类型支付
-			switch (ItemEItemType)
-			{
-				//将玩家背包的第ItemCount界面的背包开启
-			case EItemType::E_BagGrid:
-			{
-				if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_DefShopBuy)
-				{
-					UShopItemPriceStruct::AddPlayerBagGrid(PlayerData, FItemPriceData, ItemCount);
-				}
-			}break;
-			//将物品添加到背包
-			default: {
-				//检查是否是货币资源
-				if (PlayerData->CheckCoin(FItemPriceData.M_ItemName.ToString()))
-				{
-					PlayerData->SendCoin(
-						FItemPriceData.M_ItemName.ToString(),
-						this->M_FItemTicketPrice.M_ItemCount * ItemCount
-					);
+	//		if (RefData)
+	//		{
+	//			//判断是否足够
+	//			if (RefData->M_Count >= this->M_FItemTicketPrice.M_TicketCount * ItemCount)
+	//			{
+	//				//减去资源货币
+	//				RefData->M_Count -= this->M_FItemTicketPrice.M_TicketCount * ItemCount;
+	//				if (RefData->M_Count <= 0)
+	//				{
+	//					RefData->bWaitRemove = true;
+	//					UGameSystemFunction::ClearWaitingItems(PlayerData->M_PlayerItems_Material);
 
-					if (UFVMGameInstance::GetDebug())
-					{
-						UE_LOG(LogTemp, Error,
-							TEXT("支付成功，发生货币资源：【%s】，数量【%d】，购买量【%d】"),
-							*FItemPriceData.M_ItemName.ToString(),
-							this->M_FItemTicketPrice.M_ItemCount, ItemCount
-						);
-					}
-				}
-				else {
+	//					//调用券支付成功并且券归零
+	//					if (this->OnTicketPayFinishOver.IsBound())
+	//					{
+	//						OnTicketPayFinishOver.Execute();
+	//					}
+	//				}
 
-					UShopItemPriceStruct::AddToPlayerBag(PlayerData, FItemPriceData, ItemCount * this->M_BuyCountSendNums);
-				}
-			}break;
-			}
-			//保存数据
-			UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("支付完成")));
-			//购买成功
-			FString Tip = TEXT("获得道具:") + ItemName + TEXT("*") + FString::FromInt(ItemCount * this->M_BuyCountSendNums);
-			UWidgetBase::CreateTipWidget(Tip, FVector(1.f, 0.5f, 0.f));
+	//				BuyResult = true;
+	//			}
+	//		}
+	//	}
 
-			//调用支付成功
-			if (this->OnPayFinish.IsBound())
-			{
-				OnPayFinish.Execute();
-			}
+	//	if (!BuyResult)
+	//	{
+	//		//货币不足
+	//		FString Tip = ItemCoinName + TEXT("不够:") + FString::FromInt(ItemPrice);
+	//		UWidgetBase::CreateTipWidget(Tip, FVector(1.f, 0.f, 1.f));
+	//	}
+	//	else {
+	//		//根据类型支付
+	//		switch (ItemEItemType)
+	//		{
+	//			//将玩家背包的第ItemCount界面的背包开启
+	//		case EItemType::E_BagGrid:
+	//		{
+	//			if (this->M_EShopPayTipBuyType == EShopPayTipBuyType::E_DefShopBuy)
+	//			{
+	//				UShopItemPriceStruct::AddPlayerBagGrid(PlayerData, FItemPriceData, ItemCount);
+	//			}
+	//		}break;
+	//		//将物品添加到背包
+	//		default: {
+	//			//检查是否是货币资源
+	//			if (PlayerData->CheckCoin(FItemPriceData.M_ItemName.ToString()))
+	//			{
+	//				PlayerData->SendCoin(
+	//					FItemPriceData.M_ItemName.ToString(),
+	//					this->M_FItemTicketPrice.M_ItemCount * ItemCount
+	//				);
 
-			//移除界面
-			this->RemoveFromParent();
-		}
-	}
+	//				if (UFVMGameInstance::GetDebug())
+	//				{
+	//					UE_LOG(LogTemp, Error,
+	//						TEXT("支付成功，发生货币资源：【%s】，数量【%d】，购买量【%d】"),
+	//						*FItemPriceData.M_ItemName.ToString(),
+	//						this->M_FItemTicketPrice.M_ItemCount, ItemCount
+	//					);
+	//				}
+	//			}
+	//			else {
 
-	//更新价格
-	if (this->Shop_UClass)
-	{
-		this->Shop_UClass->UpdateCoinText();
-	}
+	//				UShopItemPriceStruct::AddToPlayerBag(PlayerData, FItemPriceData, ItemCount * this->M_BuyCountSendNums);
+	//			}
+	//		}break;
+	//		}
+	//		//保存数据
+	//		UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("支付完成")));
+	//		//购买成功
+	//		FString Tip = TEXT("获得道具:") + ItemName + TEXT("*") + FString::FromInt(ItemCount * this->M_BuyCountSendNums);
+	//		UWidgetBase::CreateTipWidget(Tip, FVector(1.f, 0.5f, 0.f));
+
+	//		//调用支付成功
+	//		if (this->OnPayFinish.IsBound())
+	//		{
+	//			OnPayFinish.Execute();
+	//		}
+
+	//		//移除界面
+	//		this->RemoveFromParent();
+	//	}
+	//}
+
+
 }
 
 UEditableTextBox* UUI_ShopPayTip::GetEditableTextBox()

@@ -49,6 +49,8 @@ enum class ELineTraceType : uint8 {
 	E_MouseGroundAndSky  UMETA(DisplayName = "MouseGroundAndSky"),
 	//在地下的老鼠
 	E_MouseUnder  UMETA(DisplayName = "MouseUnder"),
+	//在水上的老鼠
+	E_MouseWater  UMETA(DisplayName = "MouseWater"),
 	//任何类型
 	E_MouseVisibility  UMETA(DisplayName = "MouseVisibility"),
 };

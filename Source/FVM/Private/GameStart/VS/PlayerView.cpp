@@ -31,9 +31,6 @@ APlayerView::APlayerView()
 void APlayerView::BeginPlay()
 {
 	Super::BeginPlay();
-
-
-	this->SetActorLocation(FVector(0.f, 0.f, 118.f));
 }
 
 void APlayerView::MoveUp(float _Value)

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStart/Flipbook/GameActorFlipbookBase.h"
+#include "SpineActor.h"
 #include "DaLiShenMissile.generated.h"
 
 /**
  * 大力神 发射的导弹
  */
 UCLASS()
-class FVM_API ADaLiShenMissile : public AGameActorFlipbookBase
+class FVM_API ADaLiShenMissile : public ASpineActor
 {
 	GENERATED_BODY()
 private:

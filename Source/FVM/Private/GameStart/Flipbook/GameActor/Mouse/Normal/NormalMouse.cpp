@@ -10,29 +10,14 @@
 #include <Components/BoxComponent.h>
 #include <Components/Capsulecomponent.h>
 
-ANormalMouse::ANormalMouse()
-{
-	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
-	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
-
-	//设置依附
-	this->MesheComp->SetupAttachment(this->GetPointComponent());
-	this->BodyComp->SetupAttachment(this->GetPointComponent());
-}
-
 void ANormalMouse::BeginPlay()
 {
 	Super::BeginPlay();
 
 	//初始化碰撞网格位置
-	this->MesheComp->SetBoxExtent(FVector(20.f, 20.f, 20.f), true);
-	this->MesheComp->AddLocalOffset(FVector(0.f, 0.f, 17.f));
-
-	if (UFVMGameInstance::GetDebug())
-	{
-		this->MesheComp->SetHiddenInGame(false);
-		this->BodyComp->SetHiddenInGame(false);
-	}
+	this->MesheComp->SetBoxExtent(this->BoxCompSize, true);
+	this->MesheComp->AddLocalOffset(this->CollisionOffset);
+	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 
 	//绑定动画播放结束的委托
 	//this->GetRenderComponent()->OnAnimationPlayEnd.BindUObject(this, &ANormalMouse::OnAnimationPlayEnd);
@@ -126,8 +111,6 @@ void ANormalMouse::MouseDeathed()
 {
 	//关闭碰撞
 	this->ClosedBoxComponent(this->MesheComp);
-	//this->ClosedBoxComponent(this->BodyComp);
-
 	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Super::MouseDeathed();
@@ -195,13 +178,13 @@ void ANormalMouse::MouseTick(const float& DeltaTime)
 	}
 }
 
-void ANormalMouse::OnAnimationPlayEnd()
+void ANormalMouse::OnAnimationPlayEnd(UTrackEntry* Track)
 {
 	if (IsValid(this->Manager))
 	{
 		if (IsValid(this->Manager->GetState()))
 		{
-			this->Manager->GetState()->OnAnimationPlayEnd();
+			this->Manager->GetState()->OnAnimationPlayEnd(Track);
 		}
 	}
 }
@@ -423,7 +406,7 @@ void UNormalMouseStateBase::AttackedEnd() {}
 void UNormalMouseStateBase::MoveingBegin() {}
 void UNormalMouseStateBase::MouseDeathed() {}
 void UNormalMouseStateBase::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime) {}
-void UNormalMouseStateBase::OnAnimationPlayEnd() {}
+void UNormalMouseStateBase::OnAnimationPlayEnd(UTrackEntry* Track) {}
 
 ANormalMouse* UNormalMouseStateBase::Get()
 {
@@ -437,11 +420,11 @@ void UMouseStateBase::Init()
 	if (this->Get()->M_DefAnim_Anim.WalkAnimRes.Get())
 	{
 		//播放Walk动画
-		this->TrackEntry = this->Get()->SetAnimation(
-			this->TrackEntry,
-			0,
-			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName()
+		UTrackEntry* Trac = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
 		);
+		//BindAnimation(Trac, this->Get(), &ANormalMouse::OnAnimationPlayEnd);
+		//this->Get()->SetTrackEntry(Trac);
 
 		this->State = 0;
 	}
@@ -483,7 +466,7 @@ bool UMouseStateBase::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemA
 	return !this->Get()->UpdateHP(_HurtValue);
 }
 
-void UMouseStateBase::OnAnimationPlayEnd()
+void UMouseStateBase::OnAnimationPlayEnd(UTrackEntry* Track)
 {
 	//如果老鼠处于攻击状态
 	if (this->Get()->GetbIsAttack())
@@ -536,19 +519,19 @@ void UMouseStateDef::MouseDeathed()
 {
 	if (this->State != 4)
 	{
-		this->TrackEntry = this->Get()->SetAnimation(
-			this->TrackEntry,
-			0,
-			this->Get()->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName()
+		UTrackEntry* Trac = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.DeadAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
 		);
-		this->TrackEntry->AnimationComplete.AddDynamic(this->Get(), &AMouseActor::AlienDeadAnimationCompelet);
+		BINDANIMATION(Trac, this->Get(), &AMouseActor::AlienDeadAnimationCompelet);
+		this->Get()->SetTrackEntry(Trac);
+
 		this->State = 4;
 	}
 }
 
-void UMouseStateDef::OnAnimationPlayEnd()
+void UMouseStateDef::OnAnimationPlayEnd(UTrackEntry* Track)
 {
-	Super::OnAnimationPlayEnd();
+	Super::OnAnimationPlayEnd(Track);
 
 	//更新动画
 	this->ModeDefState();
@@ -556,7 +539,7 @@ void UMouseStateDef::OnAnimationPlayEnd()
 
 void UMouseStateDef::OnAnimationComplet(class UTrackEntry* Track)
 {
-	this->OnAnimationPlayEnd();
+	this->OnAnimationPlayEnd(Track);
 }
 
 void UMouseStateDef::ModeDefState()
@@ -566,63 +549,50 @@ void UMouseStateDef::ModeDefState()
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			if (this->State != 1)
-			{
-				//播放攻击动画
-				this->TrackEntry = this->Get()->SetAnimation(
-					this->TrackEntry,
-					0,
-					this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName()
-				);
-
-				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
-
-				this->State = 1;
-			}
+			this->PlayAttack();
 		}
 		else {
-			if (this->State != 0)
-			{
-				this->TrackEntry = this->Get()->SetAnimation(
-					this->TrackEntry,
-					0,
-					this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName()
-				);
-
-				this->State = 0;
-			}
+			this->PlayWalk();
 		}
 	}//[当生命值小于等于总生命值的40% && 老鼠生命值大于0]
 	else if (this->Get()->GetCurrentHP() <= this->Get()->GetTotalHP() * 0.4f && this->Get()->GetCurrentHP() > 0.f)
 	{
 		if (this->Get()->GetbIsAttack())
 		{
-			if (this->State != 3)
-			{
-				//播放攻击动画
-				this->TrackEntry = this->Get()->SetAnimation(
-					this->TrackEntry,
-					0,
-					this->Get()->M_DefAnim_Anim.AttackAnimDamageRes.GetDefaultObject()->GetCategoryName()
-				);
-
-				this->TrackEntry->AnimationComplete.AddDynamic(this, &UMouseStateDef::OnAnimationComplet);
-
-				this->State = 3;
-			}
+			this->PlayAttack();
 		}
 		else {
-			if (this->State != 2)
-			{
-				this->TrackEntry = this->Get()->SetAnimation(
-					this->TrackEntry,
-					0,
-					this->Get()->M_DefAnim_Anim.WalkAnimDamageRes.GetDefaultObject()->GetCategoryName()
-				);
-
-				this->State = 2;
-			}
+			this->PlayWalk();
 		}
+	}
+}
+
+void UMouseStateDef::PlayWalk()
+{
+	if (this->State != 0)
+	{
+		//播放行走动画
+		UTrackEntry* Track = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.WalkAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		this->Get()->SetTrackEntry(Track);
+
+		this->State = 0;
+	}
+}
+
+void UMouseStateDef::PlayAttack()
+{
+	if (this->State != 1)
+	{
+		//播放攻击动画
+		UTrackEntry* Track = this->Get()->SetAnimation(0,
+			this->Get()->M_DefAnim_Anim.AttackAnimRes.GetDefaultObject()->GetCategoryName().ToString(), true
+		);
+		BINDANIMATION(Track, this, &UMouseStateDef::OnAnimationComplet);
+		this->Get()->SetTrackEntry(Track);
+
+		this->State = 1;
 	}
 }
 
@@ -664,9 +634,9 @@ void UMouseStateModAdd::MouseDeathed()
 	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
-void UMouseStateModAdd::OnAnimationPlayEnd()
+void UMouseStateModAdd::OnAnimationPlayEnd(UTrackEntry* Track)
 {
-	Super::OnAnimationPlayEnd();
+	Super::OnAnimationPlayEnd(Track);
 
 	this->ModeAddState();
 }
@@ -867,9 +837,9 @@ void UMouseStateAddDefence::MouseDeathed()
 	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
-void UMouseStateAddDefence::OnAnimationPlayEnd()
+void UMouseStateAddDefence::OnAnimationPlayEnd(UTrackEntry* Track)
 {
-	Super::OnAnimationPlayEnd();
+	Super::OnAnimationPlayEnd(Track);
 
 	//如果没有攻击，但是停止了移动，表示掉落的防具【如果是冻结、凝固buff，动画根本不会播放也不会出现播放完成的情况】
 	if (!this->Get()->GetbIsAttack() && !this->Get()->GetbIsMove())
@@ -914,12 +884,12 @@ void UMouseStateBug::MouseDeathed()
 	this->Get()->SetAnimation(0, TEXT("SpineTag"), true);
 }
 
-void UMouseStateBug::OnAnimationPlayEnd()
+void UMouseStateBug::OnAnimationPlayEnd(UTrackEntry* Track)
 {
 	//获取是否在攻击
 	bool bATK = this->Get()->GetbIsAttack();
 
-	Super::OnAnimationPlayEnd();
+	Super::OnAnimationPlayEnd(Track);
 
 	//如果在攻击则减少攻击次数
 	if (bATK)

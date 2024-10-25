@@ -4,6 +4,7 @@
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
 #include "GameStart/VS/UI/UI_MapMeshe.h"
 #include "GameStart/VS/MapMeshe.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
@@ -30,15 +31,7 @@ void AGamePlayer::InitMeshe(UUI_MapMeshe* _UUI_MapMeshe, AMapMeshe* _AMapMeshe)
 
 void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 {
-	//加载套装
-	this->LoadAnimation(
-		SuitData,
-		true,
-		this->M_SuitAnim,
-		this->M_Anim_Suit_Def,
-		this->M_Anim_Suit_Attack,
-		EPlayerEquipmentSlotPosition::E_Player_Suit
-	);
+
 }
 
 void AGamePlayer::InitPlayerWeapon()
@@ -46,38 +39,58 @@ void AGamePlayer::InitPlayerWeapon()
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 
 	//加载武器(主武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_bUse)
+	if (PlayerData->PlayerEquipWeaponData.bMainEquip)
 	{
-		this->LoadPlayerFirstWeapon(PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_WeaponName,
-			PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerFirstWeapon.M_WeaponResource_C_Path
+		this->LoadPlayerWeapon(
+			*PlayerData->PlayerEquipWeaponData.MainWeapon.ItemName.ToString(),
+			PlayerData->PlayerEquipWeaponData.MainWeapon
 		);
 	}
-	else {
+	else if (PlayerData->PlayerEquipWeaponData.bSecondaryEquip)
+	{
+		this->LoadPlayerWeapon(
+			*PlayerData->PlayerEquipWeaponData.SecondaryWeapon.ItemName.ToString(),
+			PlayerData->PlayerEquipWeaponData.SecondaryWeapon
+		);
+	}
+	else
+	{
+		FMainWeaponData DefWeaponData;
 		//如果没有装备则使用默认武器
-		this->LoadPlayerFirstWeapon(
-			TEXT("小笼机枪"),
-			TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/Weapon/First/BP_小笼机枪.BP_小笼机枪_C'")
-		);
-	}
-
-	//加载武器(副武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerSecondWeapon.M_bUse)
-	{
-
-	}
-	//加载武器(超级武器)
-	if (PlayerData->M_FPlayerSuit.M_PlayerWeapons.M_PlayerSuperWeapon.M_bUse)
-	{
-
+		this->LoadPlayerWeapon(TEXT("CatGun"), DefWeaponData);
 	}
 }
 
-void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FString& _ClassPath)
+void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponData& WeaponData)
 {
+	if (IsValid(this->M_PlayerFirstWeapon))
+	{
+		this->M_PlayerFirstWeapon->Destroy();
+		this->M_PlayerFirstWeapon = nullptr;
+	}
 
+	//通过名称加载角色
+	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
+	//武器实例对象
+	TSoftClassPtr<APlayerFirstWeapon>* PlayerSoftIns = nullptr;
+	for (FEquipment_Weapon_Data& CurDatas : Cache->GetWeapons())
+	{
+		PlayerSoftIns = CurDatas.Weapons.Find(WeapinName);
+		if (PlayerSoftIns)
+		{
+			break;
+		}
+	}
+
+	if (!PlayerSoftIns)
+	{
+		return;
+	}
+
+	//加载武器
 	this->M_PlayerFirstWeapon = this->GetWorld()->SpawnActor<APlayerFirstWeapon>(
-		LoadClass<APlayerFirstWeapon>(0, *_ClassPath)
-		);
+		PlayerSoftIns->LoadSynchronous()
+	);
 
 	if (UFVMGameInstance::GetDebug())
 	{
@@ -88,7 +101,7 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 	{
 		if (UFVMGameInstance::GetDebug())
 		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("设置角色数据"));
+			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("设置武器的角色数据"));
 		}
 
 		//设置角色
@@ -100,9 +113,9 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 		}
 
 		//初始化武器数据
-		this->M_PlayerFirstWeapon->InitWeaponData(
-			UFVMGameInstance::GetPlayerStructManager_Static(),
-			_WeapinName,
+		this->M_PlayerFirstWeapon->InitWeapon(
+			this,
+			WeaponData,
 			this->M_UUI_MapMeshe,
 			this->M_AMapMeshe
 		);
@@ -112,18 +125,10 @@ void AGamePlayer::LoadPlayerFirstWeapon(const FString& _WeapinName, const FStrin
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("主武器创建完成"));
 		}
 
-		this->M_PlayerFirstWeapon->InitRotation();
-		this->M_PlayerFirstWeapon->SetActorLocation(this->GetActorLocation());
-		this->M_PlayerFirstWeapon->SetActorScale3D(FVector(0.7f, 0.7f, 0.7f));
-
+		//this->M_PlayerFirstWeapon->InitRotation();
+		//this->M_PlayerFirstWeapon->SetActorLocation(this->GetActorLocation());
 		//更新角色武器位置
-		this->M_PlayerFirstWeapon->MeshMoveUpdate(0.f, this->M_UUI_MapMeshe, this->M_AMapMeshe);
-	}
-	else {
-		if (UFVMGameInstance::GetDebug())
-		{
-			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("资源路径有错，确保路径末尾含有_C"));
-		}
+		//this->M_PlayerFirstWeapon->MeshMoveUpdate(0.f, this->M_UUI_MapMeshe, this->M_AMapMeshe);
 	}
 }
 
@@ -136,57 +141,7 @@ void AGamePlayer::SetPlayerTranslucency(UUI_MapMeshe* _CurMeshe)
 {
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 
-	//设置超级武器  默认 0
-	//设置翅膀的渲染层
-	if (this->M_FlyItemAnim)
-		this->M_FlyItemAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 1);
-
-	if (PlayerData->M_FPlayerSuit.M_bPlayerSuit && PlayerData->M_FPlayerSuit.M_ShowPlayerSuit)
-	{
-		//设置套装的渲染层
-		if (this->M_SuitAnim)
-			this->M_SuitAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 2);
-		//设置副武器 + 3
-
-		//设置主武器
-		if (this->M_PlayerFirstWeapon)
-			this->M_PlayerFirstWeapon->GetRenderComponent()->SetTranslucency(_CurMeshe->GetTranslucency() + 4);
-	}
-	else
-	{
-		//头发后
-		if (this->M_HairBackAnim)
-			this->M_HairBackAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 2);
-		//身体
-		if (this->M_BodyAnim)
-			this->M_BodyAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 3);
-		//裸头
-		if (this->M_HeadAnim)
-			this->M_HeadAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 4);
-		//眼睛
-		if (this->M_EyeAnim)
-			this->M_EyeAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 5);
-		//脸
-		if (this->M_FaceAnim)
-			this->M_FaceAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 6);
-		//眼镜
-		if (this->M_GlassesAnim)
-			this->M_GlassesAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 7);
-		//头发前
-		if (this->M_HairAnim)
-			this->M_HairAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 8);
-		//帽子
-		if (this->M_CapAnim)
-			this->M_CapAnim->SetTranslucency(_CurMeshe->GetTranslucency() + 9);
-
-		//设置副武器 + 10
-
-		//设置主武器
-		if (this->M_PlayerFirstWeapon)
-		{
-			this->M_PlayerFirstWeapon->GetRenderComponent()->SetTranslucency(_CurMeshe->GetTranslucency() + 11);
-		}
-	}
+	this->SetRenderLayer(_CurMeshe->GetTranslucency() + 1);
 }
 
 void AGamePlayer::SetCurrentMouse(AMouseActor* _MouseActor)
@@ -219,48 +174,20 @@ UUI_MapMeshe* const AGamePlayer::GetUIMapMeshe()
 	return this->M_UUI_MapMeshe;
 }
 
-int32 AGamePlayer::GetTranslucency()
+int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 {
-	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
-
-	if (PlayerData->M_FPlayerSuit.M_bPlayerSuit && PlayerData->M_FPlayerSuit.M_ShowPlayerSuit)
-	{
-		return this->M_UUI_MapMeshe->GetTranslucency() + 4;
-	}
-
-	return this->M_UUI_MapMeshe->GetTranslucency() + 11;
+	return this->GetRenderLayer() + 11;
 }
 
 void AGamePlayer::PlayerDef_Anim()
 {
-	this->M_FlyItemAnim->SetPlayAnimation(this->M_Anim_Suit_FlyItemDef);
-	this->M_SuitAnim->SetPlayAnimation(this->M_Anim_Suit_Def);
-	this->M_HairBackAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairBackDef);
-	this->M_BodyAnim->SetPlayAnimation(this->M_Anim_BaseSuit_BodyDef);
-	this->M_HeadAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HeadDef);
-	this->M_EyeAnim->SetPlayAnimation(this->M_Anim_BaseSuit_EyeDef);
-	this->M_FaceAnim->SetPlayAnimation(this->M_Anim_BaseSuit_FaceDef);
-	this->M_GlassesAnim->SetPlayAnimation(this->M_Anim_BaseSuit_GlassesDef);
-	this->M_HairAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairDef);
-	this->M_CapAnim->SetPlayAnimation(this->M_Anim_BaseSuit_CapDef);
-
-	this->M_PlayerFirstWeapon->PlayerDef_Anim();
+	this->SetAnimation(0, TEXT("idle"), true);
 }
 
-void AGamePlayer::PlayerAttack_Anim()
+void AGamePlayer::PlayerAttack_Anim(float TimeScale)
 {
-	this->M_FlyItemAnim->SetPlayAnimation(this->M_Anim_Suit_FlyItemAttack);
-	this->M_SuitAnim->SetPlayAnimation(this->M_Anim_Suit_Attack);
-	this->M_HairBackAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairBackAttack);
-	this->M_BodyAnim->SetPlayAnimation(this->M_Anim_BaseSuit_BodyAttack);
-	this->M_HeadAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HeadAttack);
-	this->M_EyeAnim->SetPlayAnimation(this->M_Anim_BaseSuit_EyeAttack);
-	this->M_FaceAnim->SetPlayAnimation(this->M_Anim_BaseSuit_FaceAttack);
-	this->M_GlassesAnim->SetPlayAnimation(this->M_Anim_BaseSuit_GlassesAttack);
-	this->M_HairAnim->SetPlayAnimation(this->M_Anim_BaseSuit_HairAttack);
-	this->M_CapAnim->SetPlayAnimation(this->M_Anim_BaseSuit_CapAttack);
-
-	this->M_PlayerFirstWeapon->PlayerAttack_Anim();
+	UTrackEntry* Track = this->SetAnimation(0, TEXT("attack"), true);
+	Track->SetTimeScale(TimeScale);
 }
 
 void AGamePlayer::Tick(float DeltaTime)

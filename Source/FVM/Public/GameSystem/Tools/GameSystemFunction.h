@@ -147,6 +147,11 @@ public:
 	static int32 GetRandomRange(int32 Random_Min = 0, int32 RandomNums = 100);
 	//返回一个概率结果[Min,Max]
 	static float GetRandomRangeFloat(float Random_Min = 0.f, float RandomNums = 100.f);
+
+	UFUNCTION(BlueprintPure)
+	static float GetGCD_f(int32 X, int32 Y);
+	UFUNCTION(BlueprintPure)
+	static void GetScale(const int32& X, const int32& Y, FString& OutScaleX, FString& OutScaleY);
 public:
 	//选项卡选择功能
 	UFUNCTION(BlueprintCallable)
@@ -241,6 +246,14 @@ public:
 		const FVector& CurLoca,
 		const FVector& BeginOffset,
 		const FVector& EndOffset,
+		ECollisionChannel CC,
+		UObject* InputObj,
+		TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
+	);
+	static bool AddLineTrance(
+		const UWorld* World,
+		const FVector& Begin,
+		const FVector& End,
 		ECollisionChannel CC,
 		UObject* InputObj,
 		TFunctionRef<void(UObject* Obj, AActor* CurHit)> Func
@@ -571,7 +584,7 @@ public:
 	static void SaveGameToBinary(class USaveGame* SaveGameObject, TArray<uint8>& OutSaveData);
 	//将成字节流转换SaveGame对象【UE格式字节流】
 	UFUNCTION(BlueprintPure)
-	static void LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData,class USaveGame*& SaveGameObject);
+	static void LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData, class USaveGame*& SaveGameObject);
 };
 
 //分时加载器

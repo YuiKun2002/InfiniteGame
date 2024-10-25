@@ -1,10 +1,10 @@
-// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
+﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStart/VS/Components/Card/CardLauncherComponent.h"
-#include "GameSystem/Tools/ObjectPoolManager.h"
+#include "Data/EquipmentDataSturct.h"
+#include "GameStart/VS/Components/Card/AttackLauncherComponent.h"
 #include "FirstWeaponProjectionComponent.generated.h"
 
 /**
@@ -12,29 +12,19 @@
  */
 
  //动态多播代理->当进行物体投射时->触发代理
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FItemSpawnDelegate);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FItemSpawnDelegate);
 
 class APlayerFirstWeapon;
 class AFlyItemActor;
 
 UCLASS(ShowCategories = (Mobility, ComponentReplication), ClassGroup = Paper2D, meta = (BlueprintSpawnableComponent))
-class FVM_API UFirstWeaponProjectionComponent : public UCardLauncherComponent
+class FVM_API UFirstWeaponProjectionComponent : public UAttackLauncherComponent
 {
 	GENERATED_BODY()
-private:
-	//主武器
-	UPROPERTY()
-		APlayerFirstWeapon* M_Owner = nullptr;
-	UPROPERTY()
-		UObjectPoolManager* Pool = nullptr;
-public:
-	//可蓝图调用
-	UPROPERTY(BlueprintAssignable)
-		FItemSpawnDelegate OnSpawn;
 public:
 	virtual void BeginPlay() override;
 	//生成投射物并且设置属性
-	virtual void Spawn() override;
+	virtual void SpawnBullet(AFlyItemActor* NewBullet);
 	//播放攻击动画
 	virtual void PlayAttackAnimation() override;
 	//播放默认动画
@@ -47,12 +37,18 @@ public:
 	//资源加载
 	virtual void LoadResource() override;
 public:
-	//生成子弹
-	UFUNCTION(BlueprintCallable)
-		AFlyItemActor* SpawnFlyItem(TSoftClassPtr<AFlyItemActor> _Path_C, FVector _Offset);
 	//更新攻击->有老鼠就自动攻击
 	UFUNCTION(BlueprintCallable)
-		void UpdateAutoAttack(float _DeltaTime);
+	void UpdateAutoAttack(float _DeltaTime);
+	//当动画播放完毕
+	UFUNCTION()
+	void OnAnimationComplete(class UTrackEntry* Track);
+	//检测外星人
+	UFUNCTION()
+	void CheckAlien();
+private:
+	void PlayIdleAnim();
+	void PlayAttackAnim();
 private:
 	/*碰撞结果*/
 	FHitResult M_Trance_Result;
@@ -61,4 +57,12 @@ private:
 	ECollisionChannel M_Trance_Target;
 	/*时间*/
 	float M_time = 0;
+	/*子弹生成位置*/
+	FVector SpawnBulletLocation = FVector::ZeroVector;
+private:
+	//主武器
+	UPROPERTY()
+	APlayerFirstWeapon* M_Owner = nullptr;
+	UPROPERTY()
+	FMainWeaponData TargetData;
 };
