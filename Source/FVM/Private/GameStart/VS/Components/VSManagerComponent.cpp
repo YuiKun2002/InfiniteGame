@@ -360,7 +360,8 @@ void UVSManagerComponent::GameOver()
 	}
 
 	//结算界面
-	this->M_UI_GameOver = CreateWidget<UUI_GameOver>(this->GetWorld(), LoadClass<UUI_GameOver>(0, TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/UI_GameOver.UI_GameOver_C'")));
+	this->M_UI_GameOver = CreateWidget<UUI_GameOver>(this->GetWorld(), LoadClass<UUI_GameOver>(0,
+		TEXT("WidgetBlueprint'/Game/Resource/BP/GameStart/VS/UI_Player/BPUI_GameOver.BPUI_GameOver_C'")));
 	this->M_UI_GameOver->AddToViewport();
 	if (M_Win)
 	{

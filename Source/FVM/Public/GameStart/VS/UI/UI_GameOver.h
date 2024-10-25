@@ -58,7 +58,7 @@ public:
 public:
 
 	//显示界面1的数据
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ShowOver1(bool bWin);
 
 	//显示界面2的数据

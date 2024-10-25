@@ -149,9 +149,9 @@ public:
 	static float GetRandomRangeFloat(float Random_Min = 0.f, float RandomNums = 100.f);
 
 	UFUNCTION(BlueprintPure)
-	static float GetGCD_f(int32 X,int32 Y);
+	static float GetGCD_f(int32 X, int32 Y);
 	UFUNCTION(BlueprintPure)
-	static FVector2D GetScale(int32 X,int32 Y);
+	static void GetScale(const int32& X, const int32& Y, FString& OutScaleX, FString& OutScaleY);
 public:
 	//选项卡选择功能
 	UFUNCTION(BlueprintCallable)
@@ -584,7 +584,7 @@ public:
 	static void SaveGameToBinary(class USaveGame* SaveGameObject, TArray<uint8>& OutSaveData);
 	//将成字节流转换SaveGame对象【UE格式字节流】
 	UFUNCTION(BlueprintPure)
-	static void LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData,class USaveGame*& SaveGameObject);
+	static void LoadBinaryToSaveGame(const TArray<uint8>& OutSaveData, class USaveGame*& SaveGameObject);
 };
 
 //分时加载器

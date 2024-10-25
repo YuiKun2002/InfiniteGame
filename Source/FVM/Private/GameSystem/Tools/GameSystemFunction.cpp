@@ -192,7 +192,12 @@ float UGameSystemFunction::GetGCD_f(int32 X, int32 Y)
 	return GetGCD_f(Y, X % Y);
 }
 
-FVector2D UGameSystemFunction::GetScale(int32 X, int32 Y)
+void UGameSystemFunction::GetScale(
+	const int32& X,
+	const int32& Y,
+	FString& OutScaleX,
+	FString& OutScaleY
+)
 {
 	int32 Max = X;
 	int32 Min = Y;
@@ -211,11 +216,8 @@ FVector2D UGameSystemFunction::GetScale(int32 X, int32 Y)
 		BigRoundResult > 0 ? BigRoundResult % Accuracy : (-1) * BigRoundResult % Accuracy
 	);
 
-	float TargetValue = UKismetStringLibrary::Conv_StringToFloat(IntPart + TEXT(".") + DigPart);
-
-	UE_LOG(LogTemp, Error, TEXT("%s"), *FString::SanitizeFloat(TargetValue));
-
-	return FVector2D(TargetValue, 9.f);
+	OutScaleX = IntPart + TEXT(".") + DigPart;
+	OutScaleY = TEXT("9");
 }
 
 void UGameSystemFunction::TabSelect(const TArray<UButton*>& _ButtonArrays, const  FString& _UniformPath, const  TArray<FString>& _DefButtonStyle, const TArray<FString>& _ClickButtonStyle, int32 _Index)
