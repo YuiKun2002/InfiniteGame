@@ -1053,7 +1053,7 @@ void AMouseActor::BeginPlay()
 				)
 			);
 		}, [](UTimeLineClass* TimeLine, UObject* CurMouse) {});
-	this->InWaterTimeLine->PlayFromStart();
+	this->AlienInTimeLine->PlayFromStart();
 
 
 	//加载动画名称
