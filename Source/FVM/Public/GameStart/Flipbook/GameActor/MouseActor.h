@@ -24,6 +24,8 @@ class UBoxComponent;
 
 #define SpineMouseDeath TEXT("Death")
 #define AttackLineOnWaterOffset 15.f
+#define AlienInTimeLineRes TEXT("CurveFloat'/Game/Resource/SpineData/外星人动画/出场/BP_AlienCurve.BP_AlienCurve'")
+#define InWaterTimeLineRes TEXT("CurveFloat'/Game/Resource/BP/GameStart/Item/Mouse/Curve/MouseInWater.MouseInWater'")
 
 #define  BINDANIMATION(Anim,Object,Func)\
 	Anim->AnimationComplete.AddDynamic(\
@@ -183,6 +185,7 @@ public:
 };
 
 class AMouseActor;
+class UCurveFloat;
 
 //老鼠基本类型
 UENUM()
@@ -236,6 +239,9 @@ public:
 	//老鼠的位置
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* M_MousePosition = nullptr;
+	//出场曲线
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCurveFloat* CurveIn = nullptr;
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)
@@ -574,6 +580,9 @@ private:
 	//入水的时间轴
 	UPROPERTY()
 	class UTimeLineClass* InWaterTimeLine = nullptr;
+	//时间线管理
+	UPROPERTY()
+	class UTimeLineClass* AlienInTimeLine = nullptr;
 	//动画轨道
 	UPROPERTY()
 	UTrackEntry* CurAnimTrackEntry = nullptr;

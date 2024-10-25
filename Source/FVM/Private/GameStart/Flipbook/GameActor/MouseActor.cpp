@@ -1012,6 +1012,16 @@ void AMouseActor::Tick(float DeltaTime)
 
 		this->InWaterTimeLine->Tick(DeltaTime);
 	}
+
+	if (IsValid(this->AlienInTimeLine))
+	{
+		if (this->GetCurrentHP() <= 0.f)
+		{
+			return;
+		}
+
+		this->AlienInTimeLine->Tick(DeltaTime);
+	}
 }
 
 void AMouseActor::BeginPlay()
@@ -1023,7 +1033,28 @@ void AMouseActor::BeginPlay()
 	if (!this->M_MouseManager)
 	{
 		this->SetActorTickEnabled(false);
+		return;
 	}
+
+
+	this->SetSpineRenderColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+	this->AlienInTimeLine = UTimeLineClass::MakeTimeLineClass();
+	this->AlienInTimeLine->AddCurve(TSoftObjectPtr<UCurveFloat>(FSoftObjectPath(AlienInTimeLineRes)),
+		this,
+		[](UTimeLineClass* TimeLine, UObject* CurMouse, float time) {
+
+			const FLinearColor& CurColor = Cast<AMouseActor>(CurMouse)->GetSpineRenderColor();
+			Cast<AMouseActor>(CurMouse)->SetSpineRenderColor(
+				FLinearColor(
+					CurColor.R,
+					CurColor.G,
+					CurColor.B
+					, time
+				)
+			);
+		}, [](UTimeLineClass* TimeLine, UObject* CurMouse) {});
+	this->InWaterTimeLine->PlayFromStart();
+
 
 	//加载动画名称
 	//UGameSystemFunction::GetAssetCategoryName(this->M_DefAnim_Anim.WalkAnimRes);
@@ -1160,26 +1191,26 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 			this->fCurInWaterZ = this->GetActorLocation().Z;
 			//陆地老鼠下水
 			this->InWaterTimeLine = UTimeLineClass::MakeTimeLineClass();
-			this->InWaterTimeLine->AddCurve(
-				TSoftObjectPtr<UCurveFloat>(FSoftObjectPath(
-					TEXT("CurveFloat'/Game/Resource/BP/GameStart/Item/Mouse/Curve/MouseInWater.MouseInWater'"))),
+			this->InWaterTimeLine->AddCurve(TSoftObjectPtr<UCurveFloat>(FSoftObjectPath(InWaterTimeLineRes)),
 				this,
 				[](UTimeLineClass* TimeLine, UObject* CurMouse, float time) {
 					//位移坐标
 					float TargetZ = UKismetMathLibrary::Lerp(
-						Cast<AMouseActor>(CurMouse)->fCurInWaterZ, Cast<AMouseActor>(CurMouse)->fCurInWaterZ - Cast<AMouseActor>(CurMouse)->fMouseInWaterZ, time);
+						Cast<AMouseActor>(CurMouse)->fCurInWaterZ,
+						Cast<AMouseActor>(CurMouse)->fCurInWaterZ - Cast<AMouseActor>(CurMouse)->fMouseInWaterZ,
+						time);
 					FVector Location = Cast<AMouseActor>(CurMouse)->GetActorLocation();
 					Location.Z = TargetZ;
 					Cast<AMouseActor>(CurMouse)->SetActorLocation(Location);
 
 					//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, time));
 
-					Cast<AMouseActor>(CurMouse)->GetRenderComponent()->
+					/*Cast<AMouseActor>(CurMouse)->GetRenderComponent()->
 						SetScalarParameterValueOnMaterials(FName(TEXT("Opacity")), 0.2f);
 
 					float Value = UKismetMathLibrary::Lerp(0.f, Cast<AMouseActor>(CurMouse)->MouseInWaterRate, time);
 					Cast<AMouseActor>(CurMouse)->GetRenderComponent()->
-						SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Value);
+						SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Value);*/
 
 				}, [](UTimeLineClass* TimeLine, UObject* CurMouse) {
 
@@ -1189,8 +1220,8 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						FVector Location = Cast<AMouseActor>(CurMouse)->GetActorLocation();
 						Location.Z = Cur->fCurInWaterZ - Cur->fMouseInWaterZ;
 						Cur->SetActorLocation(Location);
-						Cur->GetRenderComponent()->
-							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Cur->MouseInWaterRate);
+						/*Cur->GetRenderComponent()->
+							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Cur->MouseInWaterRate);*/
 						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1));
 						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(false);
 
@@ -1203,8 +1234,8 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						FVector Location = Cast<AMouseActor>(CurMouse)->GetActorLocation();
 						Location.Z = Cur->fCurInWaterZ + Cur->fMouseInWaterZ;
 						Cur->SetActorLocation(Location);
-						Cur->GetRenderComponent()->
-							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0.f);
+						/*Cur->GetRenderComponent()->
+							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0.f);*/
 						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
 						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
 
