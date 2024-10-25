@@ -182,7 +182,7 @@ public:
 	);
 	//销毁卡片
 	UFUNCTION(BlueprintCallable)
-	bool EradicateCard();
+	bool EradicateCard(bool Recovery);
 	//通过ID销毁卡片
 	UFUNCTION(BlueprintCallable)
 	bool EradicateCardByID(int32 Id);

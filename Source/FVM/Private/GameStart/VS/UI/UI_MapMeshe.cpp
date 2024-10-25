@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/GameActor/CardActor.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
+#include "GameStart/VS/Components/ResourceManagerComponent.h"
 
 #include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/Components/VSManagerComponent.h"
@@ -523,7 +524,7 @@ FLine UUI_MapMeshe::GetLine()
 	return this->M_Line;
 }
 
-bool UUI_MapMeshe::EradicateCard()
+bool UUI_MapMeshe::EradicateCard(bool Recovery)
 {
 	//销毁顺序
 	TArray<int8> M_Card_Layer = { 5,4,2,0,1,-1,3 };
@@ -546,7 +547,11 @@ bool UUI_MapMeshe::EradicateCard()
 		if (_Reult && IsValid(*_Reult))
 		{
 			(*_Reult)->KillCard();
-
+			if (Recovery)
+			{
+				int32 Value = (*_Reult)->GetCardData().M_CardPrice * 0.1f;
+				UResourceManagerComponent::GetResourceManagerComponent()->AddFlameNum(Value);
+			}
 			return true;
 		}
 	}
@@ -782,17 +787,19 @@ bool UUI_MapMeshe::CreateCard(
 		//如果选择了铲卡
 		if (_CardMComp->M_CurrentSelectEradicate)
 		{
-			this->EradicateCard();
+			this->EradicateCard(true);
 			_CardMComp->CancelEradicate();
 
-			AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
+			/*铲卡*/
+
+			/*AGameActorFlipbookBase* Eradicate_ = this->GetWorld()->SpawnActor<AGameActorFlipbookBase>(
 				LoadClass<AGameActorFlipbookBase>(0,
 					TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/BPEradicate.BPEradicate_C'")
 				),
 				this->M_MapMesheTransform);
 
 			Eradicate_->SetAnimationPlayEndDestroy();
-			Eradicate_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));
+			Eradicate_->SetFlipbookRotation(FRotator(0.f, 90.f, 0.f));*/
 
 			switch (this->M_ELineType)
 			{
