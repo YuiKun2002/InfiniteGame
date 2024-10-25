@@ -112,20 +112,24 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		//重新检测外星人【动态变动】
 		if (CheckLineAlien(this->CurrentAlien->GetMouseLine().Row))
 		{
-			FTransform Trans;
-			Trans.SetLocation(CurrentAlien->GetActorLocation());
+			//因为重新检测了一次，那么需要重新判断一次
+			if (IsValid(this->CurrentAlien))
+			{
+				FTransform Trans;
+				Trans.SetLocation(CurrentAlien->GetActorLocation());
 
-			NewBullet->SetLine(this->CardActor->GetLine().Row);
-			NewBullet->SetActorTransform(Trans);
-			NewBullet->SetObjectActorLocation(this->CardActor->GetCurrentMouse());
-			NewBullet->SetATK(this->CardActor->GetCurrentATK());
-			NewBullet->SetSecondATK(
-				this->CardActor->GetCurrentSecondATK(
-					this->CardActor->GetATKCardData().M_SputteringATKRate)
-			);
-			NewBullet->SetFloatModeEnable(true);
-			NewBullet->Init();
-			NewBullet->HitMouse_OverlapBegin(CurrentAlien);
+				NewBullet->SetLine(this->CardActor->GetLine().Row);
+				NewBullet->SetActorTransform(Trans);
+				NewBullet->SetObjectActorLocation(this->CardActor->GetCurrentMouse());
+				NewBullet->SetATK(this->CardActor->GetCurrentATK());
+				NewBullet->SetSecondATK(
+					this->CardActor->GetCurrentSecondATK(
+						this->CardActor->GetATKCardData().M_SputteringATKRate)
+				);
+				NewBullet->SetFloatModeEnable(true);
+				NewBullet->Init();
+				NewBullet->HitMouse_OverlapBegin(CurrentAlien);
+			}
 		}
 		else {
 			this->CurrentAlien = nullptr;
