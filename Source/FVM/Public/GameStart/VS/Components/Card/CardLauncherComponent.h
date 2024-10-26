@@ -118,6 +118,9 @@ public:
 		float _FirstProjectionAttackDelay,
 		float _ProjectionAttackDelay
 	);
+	//设置首次发射延迟时间
+	UFUNCTION(BlueprintCallable)
+	void SetFirstAttackDelay(float Delay);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

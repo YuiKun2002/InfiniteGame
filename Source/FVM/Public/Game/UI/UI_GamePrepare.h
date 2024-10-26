@@ -60,6 +60,14 @@ public:
 	//卡片数据
 	UPROPERTY()
 	TArray<FItemCard> M_CardDatas_Copy;
+	//当前存在列表的卡片
+	UPROPERTY()
+	TMap<int32, FString> CardNames;
+	UPROPERTY()
+	TArray<int32> CardID;
+	UPROPERTY()
+	TArray<FString> CardNames_Array;
+
 public:
 	//玩家名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

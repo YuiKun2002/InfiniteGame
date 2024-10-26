@@ -199,6 +199,9 @@ void UGameSystemFunction::GetScale(
 	FString& OutScaleY
 )
 {
+	//X 看成 宽
+	//Y 看成 高
+	//分别匹配大小到Max和Min
 	int32 Max = X;
 	int32 Min = Y;
 	if (Max < Y)
@@ -207,8 +210,11 @@ void UGameSystemFunction::GetScale(
 		Min = X;
 	}
 
+	// Max宽高最大
+	// Min宽高最小
 	// 10 9 3 1  以9为基数
 	float Target9 = Max * 9.f / Min;
+
 	constexpr int Accuracy = 10;
 	const int BigRoundResult = FMath::RoundToInt(Target9 * Accuracy);
 	const FString IntPart = FString::FromInt(BigRoundResult / Accuracy);
@@ -217,6 +223,7 @@ void UGameSystemFunction::GetScale(
 	);
 
 	OutScaleX = IntPart + TEXT(".") + DigPart;
+
 	OutScaleY = TEXT("9");
 }
 

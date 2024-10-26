@@ -725,7 +725,7 @@ AMouseActor* UMouseSpawnManager::SpawnMouse(
 		//设置坐标
 		CurNewMouse->SetActorLocation(
 			AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->M_LineLastLocation[Line.Row]
-			+ FVector(0.f, 90.f, -15.f)
+			+ FVector(0.f, 80.f, -15.f)
 		);
 		//设置旋转
 		CurNewMouse->InitSpineShow();

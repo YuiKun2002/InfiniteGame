@@ -143,6 +143,11 @@ void UUI_PlayerBagCardGrid::RemoveCurrentSelectCard()
 		TArray<int32> Names = { this->CopyData.M_ItemID };
 		GamePrepare->SetCardEnable(Names, true);
 		GamePrepare->CancelCardNum();
+		GamePrepare->CardNames.Remove(this->GetCardIndex());
+		GamePrepare->CardNames_Array.Remove(this->CopyData.ItemName.ToString());
+		GamePrepare->CardID.Emplace(this->GetCardIndex());
+		GamePrepare->CardID.Sort();
+		GamePrepare->LoadCards();
 	}
 }
 

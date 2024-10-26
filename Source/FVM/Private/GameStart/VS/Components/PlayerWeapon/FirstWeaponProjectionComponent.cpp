@@ -133,7 +133,7 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	this->InitLaunchProperty(
 		this->TargetData.AttackCount,
 		this->TargetData.AttackCoolingTime,
-		this->TargetData.AttackFristTime,
+		0,
 		this->TargetData.AttackBackTime
 	);
 
@@ -153,9 +153,18 @@ void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 
 void UFirstWeaponProjectionComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
+	this->SetFirstAttackDelay(900.f);
 	this->OnAnimationPlayEnd();
 	this->CheckAlien();
 	this->SetTrackEntry(nullptr);
+}
+
+void UFirstWeaponProjectionComponent::OnAnimationEvent(UTrackEntry* entry, FSpineEvent evt)
+{
+	if (evt.Name.Equals(TEXT("Attack")))
+	{
+		this->SetFirstAttackDelay(0.f);
+	}
 }
 
 void UFirstWeaponProjectionComponent::CheckAlien()
@@ -189,7 +198,7 @@ void UFirstWeaponProjectionComponent::PlayIdleAnim()
 	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetIdleAnimName(), true);
 	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
 	//绑定动画事件
-	BINDANIMATION(Track,this,&UFirstWeaponProjectionComponent::OnAnimationComplete);
+	BINDANIMATION(Track, this, &UFirstWeaponProjectionComponent::OnAnimationComplete);
 	this->SetTrackEntry(Track);
 }
 
@@ -200,6 +209,7 @@ void UFirstWeaponProjectionComponent::PlayAttackAnim()
 	//播放武器的攻击动画
 	UTrackEntry* Track = this->M_Owner->SetAnimation(0, this->GetAttackAnimName(), true);
 	Track->SetTimeScale(1 + TargetData.AttackSpeedUpRate);
-	BINDANIMATION(Track,this,&UFirstWeaponProjectionComponent::OnAnimationComplete);
+	BINDANIMATION(Track, this, &UFirstWeaponProjectionComponent::OnAnimationComplete);
+	Track->AnimationEvent.AddDynamic(this, &UFirstWeaponProjectionComponent::OnAnimationEvent);
 	this->SetTrackEntry(Track);
 }

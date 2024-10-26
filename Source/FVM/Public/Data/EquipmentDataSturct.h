@@ -160,9 +160,6 @@ public:
 	UPROPERTY()
 	float AttackSpeedUpRate = 0.f;
 
-	//攻击前摇时间
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackFristTime = 0.43;
 	//攻击后摇时间【攻击次数之间的间隔】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackBackTime = 0.1f;

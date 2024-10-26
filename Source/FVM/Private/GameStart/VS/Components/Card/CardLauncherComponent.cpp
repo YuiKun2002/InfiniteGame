@@ -134,6 +134,11 @@ void UCardLauncherComponent::InitLaunchProperty(int32 _LaunchCount, float _Attac
 }
 
 
+void UCardLauncherComponent::SetFirstAttackDelay(float Delay)
+{
+	this->M_LauncherCondition.M_FirstProjectionDelay = Delay;
+}
+
 void UCardLauncherComponent::LoadResource() {}
 
 void UCardLauncherComponent::Attack(const float& DeltaTime, const FVector& _Location)

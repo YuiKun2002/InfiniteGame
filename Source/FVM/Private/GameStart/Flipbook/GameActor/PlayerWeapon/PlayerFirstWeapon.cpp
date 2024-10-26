@@ -55,7 +55,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	);
 
 	this->BoneFollowerComp->Target = Player;
-	this->BoneFollowerComp->BoneName = TEXT("hand1");
+	this->BoneFollowerComp->BoneName = TEXT("WeaponSlot");
 
 	this->BoneFollowerComp->UseComponentTransform = false;
 	this->BoneFollowerComp->UsePosition = true;

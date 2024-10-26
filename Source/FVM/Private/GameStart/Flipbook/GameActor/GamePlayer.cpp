@@ -181,12 +181,12 @@ int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 
 void AGamePlayer::PlayerDef_Anim()
 {
-	this->SetAnimation(0, TEXT("idle"), true);
+	this->SetAnimation(0, TEXT("Idle"), true);
 }
 
 void AGamePlayer::PlayerAttack_Anim(float TimeScale)
 {
-	UTrackEntry* Track = this->SetAnimation(0, TEXT("attack"), true);
+	UTrackEntry* Track = this->SetAnimation(0, TEXT("Attack"), true);
 	Track->SetTimeScale(TimeScale);
 }
 

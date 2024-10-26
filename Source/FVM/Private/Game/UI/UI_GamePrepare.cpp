@@ -58,6 +58,7 @@ void UUI_GamePrepare::SelectCard(const FItemCard& _CardData)
 	UUI_PlayerBagCardGrid* M_TempCardGrid = CreateWidget<UUI_PlayerBagCardGrid>(this,
 		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Card")));
 
+	M_TempCardGrid->M_UI_Other = this;
 	M_TempCardGrid->SetFItemCardData(_CardData);
 	M_TempCardGrid->M_CardTexturePath = _CardData.ItemTexturePath.ToString();
 	M_TempCardGrid->UpdateButtonTexture(FString::FormatAsNumber(_CardData.M_CardPrice));
@@ -65,12 +66,29 @@ void UUI_GamePrepare::SelectCard(const FItemCard& _CardData)
 
 	//绑定函数 点击之后显示细节面板
 	FScriptDelegate CallFunc;
-	CallFunc.BindUFunction(M_TempCardGrid, "RemoveCurrentSelectCard");
+	CallFunc.BindUFunction(M_TempCardGrid, TEXT("RemoveCurrentSelectCard"));
 	M_TempCardGrid->GetButtonClickEvent().Add(CallFunc);
-	//添加到列表
-	this->M_SelectCardList->AddChildToUniformGrid(
-		M_TempCardGrid, this->M_SelectCardList->GetChildrenCount() / 2,
-		this->M_SelectCardList->GetChildrenCount() % 2);
+	if (this->CardID.Num())
+	{
+		int32 CurID = this->CardID[0];
+		this->CardNames.Emplace(CurID, _CardData.ItemName.ToString());
+		this->CardID.RemoveAt(0);
+		M_TempCardGrid->SetCardIndex(CurID);
+		//添加到列表
+		this->M_SelectCardList->AddChildToUniformGrid(
+			M_TempCardGrid, CurID / 2,
+			CurID % 2);
+	}
+	else {
+		int32 Index = this->M_SelectCardList->GetChildrenCount();
+		M_TempCardGrid->SetCardIndex(Index);
+		this->CardNames.Emplace(Index, _CardData.ItemName.ToString());
+		//添加到列表
+		this->M_SelectCardList->AddChildToUniformGrid(
+			M_TempCardGrid, Index / 2,
+			Index % 2);
+	}
+	this->CardNames_Array.Emplace(_CardData.ItemName.ToString());
 	//选择数量+1
 	this->M_SelectCardNum++;
 	//重新加载卡片
@@ -232,7 +250,7 @@ UWidget* UUI_GamePrepare::WidgetCreate_InitCards(UItemDataTable* _Data, int32 _I
 {
 	UUI_PlayerBagCardGrid* Grid = CreateWidget<UUI_PlayerBagCardGrid>(this,
 		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Card")));
-
+	Grid->M_UI_Other = this;
 	this->SetCardData(Grid, _Data, _Index);
 
 	return Grid;
@@ -245,12 +263,22 @@ void UUI_GamePrepare::WidgetRefresh_UpdateCards(UItemDataTable* _Data, int32 _In
 
 void UUI_GamePrepare::SetCardData(UUI_PlayerBagCardGrid* _Grid, UItemDataTable* _Data, int32 _Index)
 {
+	FItemCard CardData = _Data->GetTransValue<FItemCard>();
+	_Grid->M_UI_Other = this;
+	if (this->CardNames_Array.Find(CardData.ItemName.ToString()) != INDEX_NONE)
+	{
+		//启动按钮
+		_Grid->GetButton()->SetIsEnabled(false);
+	}
+	else
+	{
+		//启动按钮
+		_Grid->GetButton()->SetIsEnabled(true);
+	}
 	//设置数据
-	_Grid->SetFItemCardData(_Data->GetTransValue<FItemCard>());
+	_Grid->SetFItemCardData(CardData);
 	//设置纹理
 	_Grid->M_CardTexturePath = _Grid->GetFItemCardData()->ItemTexturePath.ToString();
-	//启动按钮
-	_Grid->GetButton()->SetIsEnabled(true);
 	//设置[准备UI]
 	_Grid->SetUI_Other(this);
 
@@ -290,7 +318,9 @@ void UUI_GamePrepare::LoadCards()
 
 	//获取卡片数据
 	this->ItemLoadManager_Card->UpdateDatatable(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card);
-	this->ItemLoadManager_Card->SetLoadItemMaxCount(UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card.Num());
+	this->ItemLoadManager_Card->SetLoadItemMaxCount(
+		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Card.Num()
+	);
 	this->ItemLoadManager_Card->ContinueRun();
 }
 

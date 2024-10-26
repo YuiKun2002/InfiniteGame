@@ -43,6 +43,8 @@ public:
 	//当动画播放完毕
 	UFUNCTION()
 	void OnAnimationComplete(class UTrackEntry* Track);
+	UFUNCTION()
+	void OnAnimationEvent(UTrackEntry* entry, FSpineEvent evt);
 	//检测外星人
 	UFUNCTION()
 	void CheckAlien();
