@@ -66,7 +66,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	this->InitSpineShow();
 
 	//初始化渲染层级
-	this->SetRenderLayer(Player->GetSpineRenderLayer());
+	this->SetRenderLayer(Player->GetSpineRenderLayer() + 1);
 
 	//计算射线目标位置
 	for (const auto& LineTrace : this->WeaponLineTraceSettings)
