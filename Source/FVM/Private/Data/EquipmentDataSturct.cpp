@@ -144,13 +144,6 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 			);
 	Data.AttackCoolingTime = Speed;
 
-	//攻击前摇
-	float FirstSpeed = Data.WeaponLevel == 1 ? Data.AttackFristTime :
-		Data.AttackFristTime - (
-			Data.AttackFristTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackFristTime
-			);
-	Data.AttackFristTime = FirstSpeed;
-
 	//子弹间隔
 	float BackSpeed = Data.WeaponLevel == 1 ? Data.AttackBackTime :
 		Data.AttackBackTime - (
@@ -158,21 +151,10 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 			);
 	Data.AttackBackTime = BackSpeed;
 
-	if (Data.AttackFristTime < 0.f)
-	{
-		Data.AttackFristTime = 0.f;
-	}
-
 	if (Data.AttackBackTime < 0.f)
 	{
 		Data.AttackBackTime = 0.f;
 	}
-
-	if (Data.AttackCoolingTime < Data.AttackFristTime)
-	{
-		Data.AttackCoolingTime = Data.AttackFristTime;
-	}
-
 
 	//速度提升比例
 	Data.AttackSpeedUpRate = 1.f - (Data.AttackCoolingTime / CurSpeed);

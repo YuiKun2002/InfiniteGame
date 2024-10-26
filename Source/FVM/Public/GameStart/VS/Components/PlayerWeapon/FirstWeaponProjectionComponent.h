@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Data/EquipmentDataSturct.h"
+#include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/Components/Card/AttackLauncherComponent.h"
 #include "FirstWeaponProjectionComponent.generated.h"
 
