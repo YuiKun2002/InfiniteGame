@@ -153,9 +153,9 @@ public:
 	//攻击冷却时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackCoolingTime = 1.f;
-	//攻击冷却成长
+	//攻击冷却成长(0.003)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackCoolingTimeCoefficient = 1.1f;
+	float AttackCoolingTimeCoefficient = 1.f;
 	//提升比例
 	UPROPERTY()
 	float AttackSpeedUpRate = 0.f;

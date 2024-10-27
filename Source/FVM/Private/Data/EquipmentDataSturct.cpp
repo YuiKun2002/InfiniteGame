@@ -147,9 +147,9 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 		Data.AttackCoolingTime - (
 			Data.AttackCoolingTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackCoolingTime
 			);
-	if (Speed < 0.2f)
+	if (Speed < 0.1f)
 	{
-		Speed = 0.2f;
+		Speed = 0.1f;
 	}
 
 	Data.AttackCoolingTime = Speed;
