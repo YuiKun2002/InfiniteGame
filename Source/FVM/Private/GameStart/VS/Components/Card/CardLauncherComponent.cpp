@@ -56,7 +56,6 @@ void UCardLauncherComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		//攻击
 		this->Attack(DeltaTime);
 	}
-
 	//生成投射物
 	this->SpawnCardItem(DeltaTime);
 }
@@ -68,7 +67,6 @@ void UCardLauncherComponent::TickCondition(float DeltaTime)
 		//攻击
 		this->Attack(DeltaTime);
 	}
-
 	//生成投射物
 	this->SpawnCardItem(DeltaTime);
 }
@@ -226,7 +224,7 @@ void UCardLauncherComponent::SpawnProjection()
 
 void UCardLauncherComponent::PlayAttackAnimation() {}
 void UCardLauncherComponent::PlayIdleAnimation() {}
-void UCardLauncherComponent::InitCondition() { this->M_Condition.Init(); }
+void UCardLauncherComponent::InitCondition() { this->M_Condition.Init(); this->M_bProj = false; }
 void UCardLauncherComponent::Spawn() {}
 void UCardLauncherComponent::SpawnOnce(const int32& SpawnCount) {}
 

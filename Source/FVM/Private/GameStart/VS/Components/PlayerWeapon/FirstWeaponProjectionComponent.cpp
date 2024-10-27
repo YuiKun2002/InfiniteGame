@@ -69,6 +69,7 @@ void UFirstWeaponProjectionComponent::PlayAttackAnimation()
 	this->PlayAttackAnim();
 }
 
+
 void UFirstWeaponProjectionComponent::PlayIdleAnimation()
 {
 	Super::PlayIdleAnimation();
@@ -138,6 +139,8 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	);
 
 	this->SetFirstAttackDelay(900.f);
+
+	this->bPlayComp = true;
 
 	//初始化子弹资源
 	this->InitLaunchBulletByDef(this->M_Owner->WeaponBulletClassObj);

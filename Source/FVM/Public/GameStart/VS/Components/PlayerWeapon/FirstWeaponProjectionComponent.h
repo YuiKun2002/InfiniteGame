@@ -68,4 +68,6 @@ private:
 	APlayerFirstWeapon* M_Owner = nullptr;
 	UPROPERTY()
 	FMainWeaponData TargetData;
+	UPROPERTY()
+	bool bPlayComp = true;
 };

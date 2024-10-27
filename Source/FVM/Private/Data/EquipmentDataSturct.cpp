@@ -147,6 +147,11 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 		Data.AttackCoolingTime - (
 			Data.AttackCoolingTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackCoolingTime
 			);
+	if (Speed < 0.2f)
+	{
+		Speed = 0.2f;
+	}
+
 	Data.AttackCoolingTime = Speed;
 
 	//子弹间隔
@@ -159,11 +164,6 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 	if (Data.AttackBackTime < 0.f)
 	{
 		Data.AttackBackTime = 0.f;
-	}
-
-	if (Speed < 0.2f)
-	{
-		Speed = 0.2f;
 	}
 
 	//速度提升比例
