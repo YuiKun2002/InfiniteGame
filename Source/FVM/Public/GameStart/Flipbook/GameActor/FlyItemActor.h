@@ -207,7 +207,7 @@ public:
 	void SetLastObjectActor(AActor* ObjectActor);
 	//设置父项
 	UFUNCTION(BlueprintCallable)
-	void SetParentActor(AActor* NewParent);
+	void SetFlyParentActor(AActor* NewParent);
 public:
 	//添加Buff
 	void AddBuff(TMap<Buff_Infor, float>& _buffers);
@@ -222,8 +222,8 @@ public:
 	void AddAttackType(ELineType _type);
 public:
 	//获取父项
-	UPROPERTY(BlueprintPure)
-	AActor* GetParentActor();
+	UFUNCTION(BlueprintPure)
+	class AActor* GetFlyParentActor();
 	//获取动画轨道
 	UFUNCTION(BlueprintPure)
 	class UTrackEntry* GetTrackEntry();

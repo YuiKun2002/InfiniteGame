@@ -326,7 +326,7 @@ void AFlyItemActor::SetLastObjectActor(AActor* ObjectActor)
 	this->M_LastHitObjectActor = ObjectActor;
 }
 
-void AFlyItemActor::SetParentActor(AActor* NewParent)
+void AFlyItemActor::SetFlyParentActor(AActor* NewParent)
 {
 	this->ParentActor = NewParent;
 }
@@ -961,7 +961,7 @@ void AFlyItemActor::AddAttackType(ELineType _type)
 	this->M_AttackType.Emplace(_type);
 }
 
-AActor* AFlyItemActor::GetParentActor()
+AActor* AFlyItemActor::GetFlyParentActor()
 {
 	return this->ParentActor;
 }
