@@ -57,7 +57,7 @@ void AGamePlayer::InitPlayerWeapon()
 	{
 		FMainWeaponData DefWeaponData;
 		//如果没有装备则使用默认武器
-		this->LoadPlayerWeapon(TEXT("CatGun"), DefWeaponData);
+		this->LoadPlayerWeapon(TEXT("CokeGun"), DefWeaponData);
 	}
 }
 
