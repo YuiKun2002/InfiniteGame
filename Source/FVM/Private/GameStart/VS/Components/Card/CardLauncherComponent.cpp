@@ -224,7 +224,7 @@ void UCardLauncherComponent::SpawnProjection()
 
 void UCardLauncherComponent::PlayAttackAnimation() {}
 void UCardLauncherComponent::PlayIdleAnimation() {}
-void UCardLauncherComponent::InitCondition() { this->M_Condition.Init(); this->M_bProj = false; }
+void UCardLauncherComponent::InitCondition() { this->M_Condition.Init();}
 void UCardLauncherComponent::Spawn() {}
 void UCardLauncherComponent::SpawnOnce(const int32& SpawnCount) {}
 

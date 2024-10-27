@@ -62,6 +62,7 @@ void UUI_Weapons::InitWeapons()
 		}
 		C.M_ItemID = 18;
 		C.WeaponLevel = 2;
+		C.StarsLevel = 3;
 		C.BagID = TEXT("2");
 
 		FMainWeaponData D;
@@ -75,6 +76,7 @@ void UUI_Weapons::InitWeapons()
 		}
 		D.M_ItemID = 19;
 		D.WeaponLevel = 4;
+		D.StarsLevel = 2;
 		D.BagID = TEXT("3");
 
 		FMainWeaponData E;
