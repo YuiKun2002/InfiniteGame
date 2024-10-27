@@ -48,7 +48,8 @@ public:
 		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetBag(), EEquipment::E_Bag);
 		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetPlayerEquipment(), EEquipment::E_PlayerEquipment);
 		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetGiftBox(), EEquipment::E_Gift);
-		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponFirst(), EEquipment::E_PlayerWeaponFirst);
+		//主武器详细数据
+		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponDetailDatas(), EEquipment::E_PlayerWeaponFirst);
 		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponSecond(), EEquipment::E_PlayerWeaponSecond);
 		LocalEquipmentTypeFactory.GetEquipmentType(ECache->GetWeaponSuper(), EEquipment::E_PlayerWeaponSuper);
 		//宝石

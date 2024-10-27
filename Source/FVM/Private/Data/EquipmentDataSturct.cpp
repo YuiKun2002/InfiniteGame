@@ -125,6 +125,11 @@ TArray<FEquipment_Weapon_Data>& UEquipmentDataAssetCache::GetWeapons()
 	return GetDataTableSourceData(this->WeaponsData, this->Weapons, GLOBALASSET_EQUIP, TEXT("Weapons"));
 }
 
+TArray<FMainWeaponData_Data>& UEquipmentDataAssetCache::GetWeaponDetailDatas()
+{
+	return GetDataTableSourceData(this->WeaponDetailDatas, this->WeaponDetails, GLOBALASSET_EQUIP, TEXT("WeaponDetails"));
+}
+
 FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 {
 	FMainWeaponData Data = InputData;
@@ -154,6 +159,11 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 	if (Data.AttackBackTime < 0.f)
 	{
 		Data.AttackBackTime = 0.f;
+	}
+
+	if (Speed < 0.2f)
+	{
+		Speed = 0.2f;
 	}
 
 	//速度提升比例

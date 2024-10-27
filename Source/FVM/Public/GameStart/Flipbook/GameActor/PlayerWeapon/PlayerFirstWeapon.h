@@ -30,9 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USpineBoneFollowerComponent* BoneFollowerComp = nullptr;
 public:
-	//武器基础射线
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
-	TArray<FLineTraceSetting> WeaponLineTraceSettings;
 	//武器基础子弹
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
 	TSoftClassPtr<class AFlyItemActor> WeaponBulletClassObj;

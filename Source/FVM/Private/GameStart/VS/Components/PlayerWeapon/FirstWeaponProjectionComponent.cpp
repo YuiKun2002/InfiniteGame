@@ -137,6 +137,8 @@ void UFirstWeaponProjectionComponent::LoadResource()
 		this->TargetData.AttackBackTime
 	);
 
+	this->SetFirstAttackDelay(900.f);
+
 	//初始化子弹资源
 	this->InitLaunchBulletByDef(this->M_Owner->WeaponBulletClassObj);
 

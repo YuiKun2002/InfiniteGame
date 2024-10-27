@@ -186,6 +186,16 @@ public:
 	bool bEvolve = false;
 };
 
+//武器详细数据
+USTRUCT(BlueprintType)
+struct FMainWeaponData_Data : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FMainWeaponData M_FEquipment;
+};
+
 //数据计算
 UCLASS()
 class FVM_API UMainWeaponDataFunc : public UObject
@@ -265,6 +275,8 @@ public:
 	TArray<FEquipment_Hero_Data>& GetHeroes();
 	//获取武器
 	TArray<FEquipment_Weapon_Data>& GetWeapons();
+	//获取武器详细数据
+	TArray<FMainWeaponData_Data>& GetWeaponDetailDatas();
 public:
 	DataTableAssetData<FEquipment_Bag_Data> Bag;
 	TArray<FEquipment_Bag_Data> BagData;
@@ -292,11 +304,17 @@ public:
 	DataTableAssetData<FEquipment_FMail_Data> Mail;
 	TArray<FEquipment_FMail_Data> MailData;
 
+	//角色实例对象
 	DataTableAssetData<FEquipment_Hero_Data> Heroes;
 	TArray<FEquipment_Hero_Data> HeroesData;
 
+	//武器实例对象
 	DataTableAssetData<FEquipment_Weapon_Data> Weapons;
 	TArray<FEquipment_Weapon_Data> WeaponsData;
+
+	//武器详细数据
+	DataTableAssetData<FMainWeaponData_Data> WeaponDetails;
+	TArray<FMainWeaponData_Data> WeaponDetailDatas;
 };
 
 

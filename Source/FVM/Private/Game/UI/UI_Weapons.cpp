@@ -19,63 +19,102 @@ void UUI_Weapons::InitWeapons()
 		this->ItemLoadManagerItem->OnRefreshItem.BindUFunction(this, TEXT("WidgetRefreshUpdateWeapons"));
 	}
 
+
+
 	if (!this->Weapons.Num())
 	{
 		FMainWeaponData A;
-		A.ItemName = FText(FText::FromName(TEXT("FreezeGun")));
+		FEquipmentBase* ASourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("FreezeGun"),
+			ASourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			A = *(FMainWeaponData*)(ASourceData);
+		}
 		A.M_ItemID = 16;
-		UItemBaseStruct::GetTextureResource(A.M_ItemID, A.ItemTexturePath);
-		A.WeaponType = EWeaponType::MainWeapon;
 		A.WeaponLevel = 1;
 		A.BagID = TEXT("0");
 
+
 		FMainWeaponData B;
-		B.ItemName = FText(FText::FromName(TEXT("CokeMachineGun")));
+		FEquipmentBase* BSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("CokeMachineGun"),
+			BSourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			B = *(FMainWeaponData*)(BSourceData);
+		}
 		B.M_ItemID = 17;
 		B.WeaponLevel = 4;
-		UItemBaseStruct::GetTextureResource(B.M_ItemID, B.ItemTexturePath);
-		B.WeaponType = EWeaponType::MainWeapon;
 		B.BagID = TEXT("1");
 
+
 		FMainWeaponData C;
-		C.ItemName = FText(FText::FromName(TEXT("ThreeWireGun")));
+		FEquipmentBase* CSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("ThreeWireGun"),
+			CSourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			C = *(FMainWeaponData*)(CSourceData);
+		}
 		C.M_ItemID = 18;
-		UItemBaseStruct::GetTextureResource(C.M_ItemID, C.ItemTexturePath);
-		C.WeaponType = EWeaponType::MainWeapon;
 		C.WeaponLevel = 2;
 		C.BagID = TEXT("2");
 
 		FMainWeaponData D;
-		D.ItemName = FText(FText::FromName(TEXT("FireGun")));
+		FEquipmentBase* DSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("FireGun"),
+			DSourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			D = *(FMainWeaponData*)(DSourceData);
+		}
 		D.M_ItemID = 19;
 		D.WeaponLevel = 4;
-		UItemBaseStruct::GetTextureResource(D.M_ItemID, D.ItemTexturePath);
-		D.WeaponType = EWeaponType::MainWeapon;
 		D.BagID = TEXT("3");
 
 		FMainWeaponData E;
-		E.ItemName = FText(FText::FromName(TEXT("FreezeLaserGun")));
+		FEquipmentBase* ESourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("FreezeLaserGun"),
+			ESourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			E = *(FMainWeaponData*)(ESourceData);
+		}
 		E.M_ItemID = 20;
-		UItemBaseStruct::GetTextureResource(E.M_ItemID, E.ItemTexturePath);
-		E.WeaponType = EWeaponType::MainWeapon;
 		E.WeaponLevel = 1;
 		E.StarsLevel = 2;
 		E.BagID = TEXT("4");
 
 		FMainWeaponData F1;
-		F1.ItemName = FText(FText::FromName(TEXT("BubbleGun")));
+		FEquipmentBase* F1SourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("BubbleGun"),
+			F1SourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			F1 = *(FMainWeaponData*)(F1SourceData);
+		}
 		F1.M_ItemID = 21;
-		UItemBaseStruct::GetTextureResource(F1.M_ItemID, F1.ItemTexturePath);
-		F1.WeaponType = EWeaponType::MainWeapon;
 		F1.WeaponLevel = 1;
 		F1.StarsLevel = 2;
 		F1.BagID = TEXT("5");
 
 		FMainWeaponData G;
-		G.ItemName = FText(FText::FromName(TEXT("LaserTrackerGun")));
+		FEquipmentBase* GSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("LaserTrackerGun"),
+			GSourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			G = *(FMainWeaponData*)(GSourceData);
+		}
 		G.M_ItemID = 22;
-		UItemBaseStruct::GetTextureResource(G.M_ItemID, G.ItemTexturePath);
-		G.WeaponType = EWeaponType::MainWeapon;
 		G.WeaponLevel = 1;
 		G.StarsLevel = 2;
 		G.BagID = TEXT("6");

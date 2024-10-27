@@ -56,6 +56,17 @@ void AGamePlayer::InitPlayerWeapon()
 	else
 	{
 		FMainWeaponData DefWeaponData;
+		FEquipmentBase* ASourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("CokeGun"),
+			ASourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			DefWeaponData = *(FMainWeaponData*)(ASourceData);
+		}
+		DefWeaponData.M_ItemID = 15;
+		DefWeaponData.WeaponLevel = 1;
+		DefWeaponData.BagID = TEXT("0");
 		//如果没有装备则使用默认武器
 		this->LoadPlayerWeapon(TEXT("CokeGun"), DefWeaponData);
 	}

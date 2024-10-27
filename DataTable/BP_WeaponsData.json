@@ -1,0 +1,450 @@
+[
+	{
+		"Name": "CokeGun",
+		"M_FEquipment":
+		{
+			"ATK": 5,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 4,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 2,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"3C0393E24822A5E3FBBEC9815F7B7662\", \"CokeGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/7.7",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "FreezeGun",
+		"M_FEquipment":
+		{
+			"ATK": 5,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 4,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"F5EF1CB84942CD589BCD1C85ACAB3F65\", \"FreezeGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/6.6",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "CokeMachineGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"83F6F77F48D236B4E7EDDBB47AA298FB\", \"CokeMachineGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/5.5",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "ThreeWireGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"4799F11F4A351C4D0F93828808807CBF\", \"ThreeWireGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/4.4",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "FireGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"0F527E7A4240D8416A8F9AA99EB7719E\", \"FireGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/3.3",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "FreezeLaserGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"6CE51C8148C99144584856B11539AE83\", \"FreezeLaserGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/2.2",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "BubbleGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"4B0DD6DF4C56B7413A3C8BBE67560778\", \"BubbleGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/1.1",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	},
+	{
+		"Name": "LaserTrackerGun",
+		"M_FEquipment":
+		{
+			"ATK": 2,
+			"ATKRCoefficient": 1.1,
+			"AttackCoolingTime": 1,
+			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackSpeedUpRate": 0,
+			"AttackBackTime": 0.1,
+			"AttackCount": 1,
+			"CriticalMultiple": 2,
+			"CriticalStrikeRate": 0.02,
+			"CriticalStrikeRateCoefficient": 1.2,
+			"LineTraceSettings": [
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				}
+			],
+			"bEvolve": false,
+			"WeaponLevel": 1,
+			"StarsLevel": 0,
+			"WeaponType": "MainWeapon",
+			"ItemName": "NSLOCTEXT(\"[9DFEBF52491CF985414D319FEA298A41]\", \"D6C4840B4E56C1EE77598984EE7A9508\", \"LaserTrackerGun\")",
+			"ItemDescrible": "",
+			"ItemTexturePath":
+			{
+				"AssetPathName": "/Game/Resource/Texture/PlayerItems/Weapons/8.8",
+				"SubPathString": ""
+			},
+			"bWaitRemove": false,
+			"M_ItemID": -1,
+			"BagID": ""
+		}
+	}
+]

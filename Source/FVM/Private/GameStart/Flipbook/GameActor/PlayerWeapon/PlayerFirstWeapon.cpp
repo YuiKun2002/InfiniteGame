@@ -69,7 +69,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	this->SetRenderLayer(Player->GetSpineRenderLayer() + 1);
 
 	//计算射线目标位置
-	for (const auto& LineTrace : this->WeaponLineTraceSettings)
+	for (const auto& LineTrace : this->GetPlayerFirstWeaponData().LineTraceSettings)
 	{
 		UGameSystemFunction::CalculateLineTracePosition(
 			_MapMeshe->GetActorLocation(),
