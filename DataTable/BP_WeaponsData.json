@@ -115,13 +115,13 @@
 		"Name": "CokeMachineGun",
 		"M_FEquipment":
 		{
-			"ATK": 2,
+			"ATK": 3,
 			"ATKRCoefficient": 1.1,
-			"AttackCoolingTime": 1,
+			"AttackCoolingTime": 8,
 			"AttackCoolingTimeCoefficient": 1.1,
 			"AttackSpeedUpRate": 0,
-			"AttackBackTime": 0.1,
-			"AttackCount": 1,
+			"AttackBackTime": 0.3,
+			"AttackCount": 4,
 			"CriticalMultiple": 2,
 			"CriticalStrikeRate": 0.02,
 			"CriticalStrikeRateCoefficient": 1.2,
