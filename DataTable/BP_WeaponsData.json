@@ -118,7 +118,7 @@
 			"ATK": 3,
 			"ATKRCoefficient": 1.1,
 			"AttackCoolingTime": 8,
-			"AttackCoolingTimeCoefficient": 1.1,
+			"AttackCoolingTimeCoefficient": 1.005,
 			"AttackSpeedUpRate": 0,
 			"AttackBackTime": 0.3,
 			"AttackCount": 4,
@@ -203,6 +203,54 @@
 						"X": 0,
 						"Y": 0,
 						"Z": 0
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				},
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": -60
+					},
+					"M_ELineTraceType": "E_MouseGround"
+				},
+				{
+					"M_BeginLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_EndLocation":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 0
+					},
+					"M_ELineTracePosition": "E_Right",
+					"M_bEnableSettingGridCount": false,
+					"M_GridCount": 1,
+					"M_LineTraceOffset":
+					{
+						"X": 0,
+						"Y": 0,
+						"Z": 60
 					},
 					"M_ELineTraceType": "E_MouseGround"
 				}

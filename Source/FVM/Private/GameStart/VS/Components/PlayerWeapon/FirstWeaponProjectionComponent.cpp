@@ -53,6 +53,7 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 
 	FTransform Trans;
 	Trans.SetLocation(this->SpawnBulletLocation);
+	NewBullet->SetParentActor(this->M_Owner->GetPlayerActor());
 	NewBullet->SetActorTransform(Trans);
 	NewBullet->SetObjectActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
 	NewBullet->SetATK(this->TargetData.ATK);

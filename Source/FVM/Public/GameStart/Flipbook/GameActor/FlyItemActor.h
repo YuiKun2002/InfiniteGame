@@ -205,6 +205,9 @@ public:
 	//设置上次的对象
 	UFUNCTION(BlueprintCallable)
 	void SetLastObjectActor(AActor* ObjectActor);
+	//设置父项
+	UFUNCTION(BlueprintCallable)
+	void SetParentActor(AActor* NewParent);
 public:
 	//添加Buff
 	void AddBuff(TMap<Buff_Infor, float>& _buffers);
@@ -218,6 +221,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddAttackType(ELineType _type);
 public:
+	//获取父项
+	UPROPERTY(BlueprintPure)
+	AActor* GetParentActor();
 	//获取动画轨道
 	UFUNCTION(BlueprintPure)
 	class UTrackEntry* GetTrackEntry();
@@ -359,6 +365,9 @@ private:
 	//FristHit首次击中结果，投掷物判断【防止二次击中】
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	bool bFirstHitResult = false;
+	//发射者
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	AActor* ParentActor = nullptr;
 private:
 	//防止卡片的功能组件（某些功能）重复使用飞行物
 	UPROPERTY()

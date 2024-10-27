@@ -326,6 +326,11 @@ void AFlyItemActor::SetLastObjectActor(AActor* ObjectActor)
 	this->M_LastHitObjectActor = ObjectActor;
 }
 
+void AFlyItemActor::SetParentActor(AActor* NewParent)
+{
+	this->ParentActor = NewParent;
+}
+
 void AFlyItemActor::PlayAnim_Fly()
 {
 	//播放飞行动画
@@ -954,6 +959,11 @@ void AFlyItemActor::SetObjectActorLocation(AActor* _MouseActor)
 void AFlyItemActor::AddAttackType(ELineType _type)
 {
 	this->M_AttackType.Emplace(_type);
+}
+
+AActor* AFlyItemActor::GetParentActor()
+{
+	return this->ParentActor;
 }
 
 class UTrackEntry* AFlyItemActor::GetTrackEntry()
