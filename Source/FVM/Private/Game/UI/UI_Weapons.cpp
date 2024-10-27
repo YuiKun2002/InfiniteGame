@@ -35,7 +35,7 @@ void UUI_Weapons::InitWeapons()
 		B.WeaponLevel = 4;
 		UItemBaseStruct::GetTextureResource(B.M_ItemID, B.ItemTexturePath);
 		B.WeaponType = EWeaponType::MainWeapon;
-		B.BagID = TEXT("2");
+		B.BagID = TEXT("1");
 
 		FMainWeaponData C;
 		C.ItemName = FText(FText::FromName(TEXT("ThreeWireGun")));
@@ -43,7 +43,7 @@ void UUI_Weapons::InitWeapons()
 		UItemBaseStruct::GetTextureResource(C.M_ItemID, C.ItemTexturePath);
 		C.WeaponType = EWeaponType::MainWeapon;
 		C.WeaponLevel = 2;
-		C.BagID = TEXT("1");
+		C.BagID = TEXT("2");
 
 		FMainWeaponData D;
 		D.ItemName = FText(FText::FromName(TEXT("FireGun")));
@@ -69,7 +69,7 @@ void UUI_Weapons::InitWeapons()
 		F1.WeaponType = EWeaponType::MainWeapon;
 		F1.WeaponLevel = 1;
 		F1.StarsLevel = 2;
-		F1.BagID = TEXT("4");
+		F1.BagID = TEXT("5");
 
 		FMainWeaponData G;
 		G.ItemName = FText(FText::FromName(TEXT("LaserTrackerGun")));
@@ -78,7 +78,7 @@ void UUI_Weapons::InitWeapons()
 		G.WeaponType = EWeaponType::MainWeapon;
 		G.WeaponLevel = 1;
 		G.StarsLevel = 2;
-		G.BagID = TEXT("4");
+		G.BagID = TEXT("6");
 
 		//UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Weapon.Empty();
 		this->Weapons.Append(
