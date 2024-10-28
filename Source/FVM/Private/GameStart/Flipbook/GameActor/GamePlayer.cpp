@@ -220,9 +220,9 @@ void AGamePlayer::PlayerLocationUpdate(const float& DeltaTime)
 		this->M_AMapMeshe->GetActorLocation() + this->M_AMapMeshe->M_PlayerMesheOffset
 	);
 
-	this->M_PlayerFirstWeapon->SetActorLocation(
-		this->M_AMapMeshe->GetActorLocation() + this->M_AMapMeshe->M_PlayerMesheOffset
-	);
+	//this->M_PlayerFirstWeapon->SetActorLocation(
+	//	this->M_AMapMeshe->GetActorLocation() + this->M_AMapMeshe->M_PlayerMesheOffset
+	//);
 
 	this->M_PlayerLine = this->M_AMapMeshe->GetLine();
 }
@@ -245,6 +245,6 @@ void AGamePlayer::UpdateWeaponLocation(const float& DeltaTime)
 	//更新主武器的计算
 	if (IsValid(this->M_PlayerFirstWeapon))
 	{
-		this->M_PlayerFirstWeapon->MeshMoveUpdate(DeltaTime, this->M_UUI_MapMeshe, this->M_AMapMeshe);
+		//this->M_PlayerFirstWeapon->MeshMoveUpdate(DeltaTime, this->M_UUI_MapMeshe, this->M_AMapMeshe);
 	}
 }

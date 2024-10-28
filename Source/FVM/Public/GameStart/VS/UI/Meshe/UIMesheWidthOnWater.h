@@ -7,7 +7,7 @@
 #include "UIMesheWidthOnWater.generated.h"
 
 #define MesheWidthOnWaterCardOffset 0.f
-#define MesheWidthOnWaterOtherCardOffset -5.f
+#define MesheWidthOnWaterOtherCardOffset 8.f
 
 /**
  *水上网格

@@ -166,64 +166,9 @@ bool UVSManagerComponent::CreatePlayer(
 			}break;
 			}
 
-
 			AGameMapInstance::GetGameMapInstance()->SpawnPlayerToMeshe(MesheActor, UIMeshe);
 			//添加ID
 			UIMeshe->IdAdd(0, nullptr);
-
-			//AGamePlayer* PlayerIns = MesheActor->GetWorld()->SpawnActor<AGamePlayer>(LoadClass<AGamePlayer>(0,
-			//	TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Player/MyGamePlayer.MyGamePlayer_C'")));
-
-			//UIMeshe->SetPlayer(PlayerIns);
-			//AGameMapInstance::GetGameMapInstance()->SetPlayer(PlayerName, PlayerIns);
-
-			////设置旋转
-			//PlayerIns->SetActorRotation(FRotator(0.f, 90.f, 0.f));
-			////初始化网格
-			//PlayerIns->InitMeshe(UIMeshe, MesheActor);
-
-			//if (bMainPlayer)
-			//{
-			//	//初始化角色形象
-			//	PlayerIns->InitPlayerData();
-			//	//初始化武器
-			//	PlayerIns->InitPlayerWeapon();
-			//}
-			//else {
-
-			//	//设置新套装
-			//	PlayerIns->SetPlayerSuit(NewSuit);
-
-			//	UEquipmentDataAssetCache* Cache = GetGameDataAssetCache<UEquipmentDataAssetCache>(GLOBALASSET_EQUIP);
-			//	//设置武器
-			//	for (const auto& Data : Cache->GetWeaponFirst())
-			//	{
-			//		if (Data.M_FEquipment.ItemName.ToString().Equals(FirstWeaponName))
-			//		{
-			//			PlayerIns->LoadPlayerFirstWeapon(
-			//				FirstWeaponName,
-			//				Data.M_FEquipment.M_WeaponClassPath.ToString()
-			//			);
-			//			break;
-			//		}
-			//	}
-
-			//	//武器无效
-			//	if (!PlayerIns->PlayerFirstWeaponIsValid())
-			//	{
-			//		return false;
-			//	}
-			//}
-
-			////初始化排序
-			//PlayerIns->SetPlayerTranslucency(UIMeshe);
-			////更新角色位置
-			//MesheActor->UpdatePlayerLocation();
-
-			////更新网格碰撞
-			//UIMeshe->UpdateAllCardsCollision();
-			////更新角色位置
-			//UIMeshe->GetMapMeshe()->UpdatePlayerLocation();
 
 			//添加角色头像UI
 			UUI_GamePlayerHead* UIPlayerHead = CreateWidget<UUI_GamePlayerHead>(
