@@ -70,4 +70,6 @@ private:
 	FMainWeaponData TargetData;
 	UPROPERTY()
 	bool bPlayComp = true;
+	UPROPERTY()
+	bool bAuto = false;
 };

@@ -92,6 +92,11 @@ void UFirstWeaponProjectionComponent::TickComponent(float DeltaTime, ELevelTick 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (this->bAuto)
+	{
+		return;
+	}
+
 	if (this->M_time < 0.3f)
 	{
 		this->M_time += DeltaTime;
@@ -151,9 +156,19 @@ void UFirstWeaponProjectionComponent::LoadResource()
 
 void UFirstWeaponProjectionComponent::UpdateAutoAttack(float _DeltaTime)
 {
+	this->bAuto = true;
+
+	if (this->GetAttackModEnabled())
+	{
+		return;
+	}
+
 	if (AGameMapInstance::GetGameMapInstance()->M_MouseManagerComponent->IsMouseExist())
 	{
 		this->SetAttackModEnabled(true);
+	}
+	else {
+		this->SetAttackModEnabled(false);
 	}
 }
 
@@ -161,8 +176,14 @@ void UFirstWeaponProjectionComponent::OnAnimationComplete(class UTrackEntry* Tra
 {
 	this->SetFirstAttackDelay(900.f);
 	this->OnAnimationPlayEnd();
-	this->CheckAlien();
 	this->SetTrackEntry(nullptr);
+	if (this->bAuto)
+	{
+		this->SetAttackModEnabled(false);
+	}
+	else {
+		this->CheckAlien();
+	}
 }
 
 void UFirstWeaponProjectionComponent::OnAnimationEvent(UTrackEntry* entry, FSpineEvent evt)
@@ -175,6 +196,11 @@ void UFirstWeaponProjectionComponent::OnAnimationEvent(UTrackEntry* entry, FSpin
 
 void UFirstWeaponProjectionComponent::CheckAlien()
 {
+	if (this->bAuto)
+	{
+		return;
+	}
+
 	//当前检测到的老鼠线路
 	ELineTraceType CurCheckLineType;
 	//当前老鼠
