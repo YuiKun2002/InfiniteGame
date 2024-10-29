@@ -1460,6 +1460,8 @@ void UMouseManagerComponent::GameOver()
 	if (UFVMGameInstance::GetDebug())
 		UE_LOG(LogTemp, Warning, TEXT("[UMouseManagerComponent::GameOver]:游戏结束"));
 
+	this->KillAllMouse();
+
 	this->AllMouseData.Empty();
 	this->MouseLineManager.Empty();
 	this->MouseTimeManager = nullptr;
@@ -1811,6 +1813,18 @@ void UMouseManagerComponent::GetAllMouse(TArray<AMouseActor*>& OutAllMouse)
 			{
 				OutAllMouse.Emplace(Cur.Value);
 			}
+		}
+	}
+}
+
+void UMouseManagerComponent::KillAllMouse()
+{
+	//秒杀所有老鼠
+	for (UMouseLineManager* Line : this->MouseLineManager)
+	{
+		if (IsValid(Line))
+		{
+			Line->KillAllMouse();
 		}
 	}
 }

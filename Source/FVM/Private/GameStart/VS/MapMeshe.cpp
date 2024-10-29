@@ -146,7 +146,7 @@ void AMapMeshe::InitUUI_MapMesh(const ELineType& _LineType, const int32& _Transl
 		case ELineType::DisEnable:this->M_MapMesheWidgetComponent->DestroyComponent(true); break;
 		case ELineType::OnWater:this->M_PlayerMesheOffset = FVector(0.f, 0.f, 8.f); break;
 		default:
-			this->M_PlayerMesheOffset = FVector(0.f, 0.f, -5.f);
+			this->M_PlayerMesheOffset = FVector(0.f, 0.f, -4.5f);
 			break;
 		}
 

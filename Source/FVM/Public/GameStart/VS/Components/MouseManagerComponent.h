@@ -383,6 +383,9 @@ public:
 	//获取所有存在的老鼠
 	UFUNCTION(BlueprintCallable)
 	static void GetAllMouse(TArray<AMouseActor*>& OutAllMouse);
+	//消灭当前所有老鼠
+	UFUNCTION(BlueprintCallable)
+	void KillAllMouse();
 	//设置老鼠死亡
 	UFUNCTION(BlueprintCallable)
 	void SetMouseSpawnKill();
