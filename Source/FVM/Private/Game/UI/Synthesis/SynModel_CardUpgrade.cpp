@@ -115,11 +115,29 @@ void USynModel_CardUpgrade::WidgetResetLoadData()
 	//加载卡片
 	this->LoadCards();
 
+	TArray<EMaterialType> _Type = { EMaterialType::E_Clover };
+	TArray<FMaterialBase*> OutArrays;
+	//添加材料
+	UGameSystemFunction::GetMaterialsArrayByType(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material,
+		_Type,
+		OutArrays
+	);
+
+	this->CurClovers.Empty();
+	this->CurClovers.Reset(OutArrays.Num());
+	for (const auto& Cur : OutArrays)
+	{
+		this->CurClovers.Emplace(*Cur);
+	}
+
+	this->InitCloversSelect();
+
 	//加载四叶草
-	this->LoadCloversToMakeCard(
+	/*this->LoadCloversToMakeCard(
 		{
 		{ FMaterialsSerachTypeBind(EMaterialType::E_Clover,{"AddUpGradeCardCloverSlot"}) }
-		}, FMaterialsSerachKeyWordsIgnore());
+		}, FMaterialsSerachKeyWordsIgnore());*/
 }
 
 void USynModel_CardUpgrade::SetSelectClover(FMaterialBase CopyData, float CloverRate)
@@ -141,7 +159,7 @@ void USynModel_CardUpgrade::SetSelectClover(FMaterialBase CopyData, float Clover
 	//如果四叶草无效，取消选择
 	if (this->SelectCloverIndex == -1)
 	{
-		this->CancelSelectClover();
+		this->NextCloversSelect();
 	}
 }
 
@@ -152,7 +170,7 @@ void USynModel_CardUpgrade::SetSelectCloverUI(class UUI_PlayerBagMaterialGrid* U
 	//取消四叶草按钮的所有绑定
 	this->M_Clover_Butt->OnClicked.Clear();
 	this->M_Clover_Butt->OnClicked.AddDynamic(
-		this, &USynModel_CardUpgrade::CancelSelectClover);
+		this, &USynModel_CardUpgrade::NextCloversSelect);
 	this->M_Clover_Butt->OnClicked.AddDynamic(
 		this->PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 }
@@ -165,19 +183,15 @@ void USynModel_CardUpgrade::CancelSelectClover()
 		this->PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 	//取消四叶草的选择
 	this->SelectCloverIndex = -1;
-	//还原四叶草的显示UI
-	UWidgetBase::SetButtonStyle(
-		this->M_Clover_Butt,
-		"Texture2D'/Game/Resource/Texture/UI/Game/PlayerSynthesis/T_PS_25.T_PS_25'"
-	);
 	this->M_Clover_Butt->SetVisibility(ESlateVisibility::Collapsed);
 	//更新概率
 	this->GetUpGradeRate();
-	//加载四叶草
-	this->LoadCloversToMakeCard(
-		{
-		{ FMaterialsSerachTypeBind(EMaterialType::E_Clover,{"AddUpGradeCardCloverSlot"}) }
-		}, FMaterialsSerachKeyWordsIgnore());
+	this->InitCloversSelect();
+	////加载四叶草
+	//this->LoadCloversToMakeCard(
+	//	{
+	//	{ FMaterialsSerachTypeBind(EMaterialType::E_Clover,{"AddUpGradeCardCloverSlot"}) }
+	//	}, FMaterialsSerachKeyWordsIgnore());
 }
 
 int32 USynModel_CardUpgrade::GetSelectClover(FString& OutCloverName)
@@ -809,30 +823,30 @@ void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, U
 		_Grid->GetButton()->OnClicked.Clear();
 	}
 
-	//绑定函数
-	for (auto& LBind : _BindFuncName)
-	{
-		if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
-		{
-			//设置指向合成屋的UI
-			_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
-			for (const auto& FnName : LBind.M_BindFnName)
-			{
-				//如果是空的则不绑定
-				if (FnName.IsEqual(""))
-				{
-					continue;
-				}
+	////绑定函数
+	//for (auto& LBind : _BindFuncName)
+	//{
+	//	if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
+	//	{
+	//		//设置指向合成屋的UI
+	//		_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
+	//		for (const auto& FnName : LBind.M_BindFnName)
+	//		{
+	//			//如果是空的则不绑定
+	//			if (FnName.IsEqual(""))
+	//			{
+	//				continue;
+	//			}
 
-				//绑定
-				FScriptDelegate AddFunc;
-				AddFunc.BindUFunction(_Grid, FnName);
-				_Grid->GetButton()->OnClicked.Add(AddFunc);
-			}
+	//			//绑定
+	//			FScriptDelegate AddFunc;
+	//			AddFunc.BindUFunction(_Grid, FnName);
+	//			_Grid->GetButton()->OnClicked.Add(AddFunc);
+	//		}
 
-			break;
-		}
-	}
+	//		break;
+	//	}
+	//}
 
 	//绑定音效
 	FScriptDelegate AddFunc;
@@ -905,6 +919,116 @@ void USynModel_CardUpgrade::LoadCloversToMakeCard(const TArray<FMaterialsSerachT
 	this->ItemLoadManager_Clover->SetCurrentPage(0);
 	this->ItemLoadManager_Clover->SetResetScrollBoxOffset();
 	this->ItemLoadManager_Clover->ContinueRun();
+}
+
+void USynModel_CardUpgrade::InitCloversSelect()
+{
+	//检测索引
+	bool b = false;
+	this->M_BindFunctionName_Materials.Empty();
+
+	if (this->CurClovers.Num())
+	{
+		for (int32 i = 0; i < this->CurClovers.Num(); i++)
+		{
+			//判断索引
+			if (this->SelectCloverIndexA >= this->CurClovers.Num())
+			{
+				this->SelectCloverIndexA = 0;
+			}
+
+			if (this->CurClovers[this->SelectCloverIndexA].M_Count >= 5)
+			{
+				b = true;
+				break;
+			}
+			else {
+				this->SelectCloverIndexA++;
+			}
+		}
+	}
+	else {
+		if (IsValid(this->CloversUI))
+		{
+			this->CancelSelectClover();
+		}
+		return;
+	}
+
+	if (IsValid(this->CloversUI))
+	{
+		this->SetMaterialsData(this->CloversUI,
+			(UItemDataTable*)&this->CurClovers[this->SelectCloverIndexA],
+			this->SelectCloverIndexA,
+			this->M_BindFunctionName_Materials);
+	}
+	else {
+		this->CloversUI = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
+			UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
+		);
+		this->SetMaterialsData(this->CloversUI,
+			(UItemDataTable*)&this->CloversUI[this->SelectCloverIndexA],
+			this->SelectCloverIndexA,
+			this->M_BindFunctionName_Materials);
+	}
+
+	if (b)
+	{
+		this->CloversUI->AddSynthesisSpicesSlot();
+	}
+	else {
+		if (IsValid(this->CloversUI))
+		{
+			this->CancelSelectClover();
+		}
+	}
+}
+
+void USynModel_CardUpgrade::NextCloversSelect()
+{
+	if (this->CurClovers.Num())
+	{
+		//下一个索引
+		bool b = false;
+		this->SelectCloverIndexA++;
+		for (int32 i = 0; i < this->CurClovers.Num(); i++)
+		{
+			//判断索引
+			if (this->SelectCloverIndexA >= this->CurClovers.Num())
+			{
+				this->SelectCloverIndexA = 0;
+			}
+
+			if (this->CurClovers[this->SelectCloverIndexA].M_Count >= 5)
+			{
+				b = true;
+				break;
+			}
+			else {
+				this->SelectCloverIndexA++;
+			}
+		}
+
+		if (b)
+		{
+			if (IsValid(this->CloversUI))
+			{
+				this->CloversUI->AddSynthesisSpicesSlot();
+			}
+		}
+		else {
+			if (IsValid(this->CloversUI))
+			{
+				this->CancelSelectClover();
+			}
+		}
+	}
+	else {
+		if (IsValid(this->CloversUI))
+		{
+			this->CancelSelectClover();
+		}
+	}
 }
 
 void USynModel_CardUpgrade::LoadCards()

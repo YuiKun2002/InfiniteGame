@@ -217,7 +217,8 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 	{
 		if (IsValid(this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesData().Grid))
 		{
-			this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesData().Grid->GetButton()->SetIsEnabled(true);
+			this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->
+				GetSpicesData().Grid->GetButton()->SetIsEnabled(true);
 		}
 	}
 
@@ -228,12 +229,15 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 		EMaterialType::E_Spices
 	))
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]查询失败!")));
+		UWidgetBase::CreateTipWidget(FString(TEXT("[") +
+			this->MaterialBaseCopyData.ItemName.ToString() +
+			TEXT("]查询失败!")));
 		return;
 	}
 
 	//获取香料配置
-	FMakeCardSpicesData& CurSpicesData = this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesData();
+	FMakeCardSpicesData& CurSpicesData =
+		this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesData();
 
 	//选择香料
 	FMakeCardSpicesData NewData;
@@ -246,7 +250,9 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 
 	if (NewData.PlayerBagIndex == -1)
 	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]选择失败!")));
+		UWidgetBase::CreateTipWidget(FString(TEXT("[") +
+			this->MaterialBaseCopyData.ItemName.ToString() +
+			TEXT("]选择失败!")));
 		return;
 	}
 
@@ -263,11 +269,11 @@ void UUI_PlayerBagMaterialGrid::AddSynthesisSpicesSlot()
 		this->MaterialBaseCopyData.ItemTexturePath.ToString()
 	);
 	//this->GetButton()->SetVisibility(ESlateVisibility::Visible);
-	//绑定取消香料的委托
+	//绑定选择香料的委托
 	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesButt()->OnClicked.Clear();
 	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesButt()->OnClicked.AddDynamic(
 		this->M_UUI_PlayerSynthesis->GetMakeCardFunction(),
-		&USynModel_MakeCard::CancelSelectSpices
+		&USynModel_MakeCard::NextSpiceSelect
 	);
 	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesButt()->SetVisibility(ESlateVisibility::Visible);
 	this->M_UUI_PlayerSynthesis->GetMakeCardFunction()->GetSpicesButt()->OnClicked.AddDynamic(
@@ -280,22 +286,6 @@ void UUI_PlayerBagMaterialGrid::AddUpGradeCardCloverSlot()
 	{
 		return;
 	}
-
-
-
-	/*FCloverMaterial _Clover;
-	if (!UMaterialBaseStruct::GetMaterialSourceData<FCloverMaterial>(
-		this->MaterialBaseCopyData.ItemName.ToString(),
-		_Clover,
-		EMaterialType::E_Clover
-	))
-	{
-		UWidgetBase::CreateTipWidget(FString(TEXT("[") + this->MaterialBaseCopyData.ItemName.ToString() + TEXT("]查询失败!")));
-		return;
-	}*/
-
-	//请求数据【】-》拿到结果后，才能继续选择
-	//this->MaterialBaseCopyData;
 
 	this->M_UUI_PlayerSynthesis->OnSelectStoneRequest(
 		this,

@@ -272,7 +272,21 @@ public:
 		const TArray<FMaterialsSerachTypeBind>& _BindFuncName,
 		const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords
 	);
-
+	//四叶草格子
+	UPROPERTY()
+	class UUI_PlayerBagMaterialGrid* CloversUI = nullptr;
+	//香料数据
+	UPROPERTY()
+	TArray<FMaterialBase> CurClovers;
+	//选择索引
+	UPROPERTY()
+	int32 SelectCloverIndexA = 0;
+	//初始化四叶草的选择
+	UFUNCTION()
+	void InitCloversSelect();
+	//选择下一个四叶草
+	UFUNCTION()
+	void NextCloversSelect();
 
 	/************************************************************************/
 	/*                          卡片显示界面                                 */

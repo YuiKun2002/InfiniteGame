@@ -250,6 +250,12 @@ public:
 	/************************************************************************/
 	/*                          香料显示界面                                 */
 	/************************************************************************/
+	//香料格子
+	UPROPERTY()
+	class UUI_PlayerBagMaterialGrid* SpiceUI = nullptr;
+	//选择索引
+	UPROPERTY()
+	int32 SelectSpiceIndex = 0;
 	//材料显示界面
 	UPROPERTY()
 	UScrollBox* ScrollBox_Spice = nullptr;
@@ -262,6 +268,9 @@ public:
 	//绑定函数的名称
 	UPROPERTY()
 	TArray<FMaterialsSerachTypeBind> M_BindFunctionName_Materials;
+	//当前香料
+	UPROPERTY()
+	TArray<FMaterialBase> CurSpices;
 	//创建材界面
 	UFUNCTION()
 	UWidget* WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index);
@@ -282,7 +291,12 @@ public:
 		const TArray<FMaterialsSerachTypeBind>& _BindFuncName,
 		const FMaterialsSerachKeyWordsIgnore& IgnoreKeyWords
 	);
-
+	//初始化香料的选择
+	UFUNCTION()
+	void InitSpicesSelect();
+	//下一个香料的选择
+	UFUNCTION()
+	void NextSpiceSelect();
 
 	/************************************************************************/
 	/*                           配方、配方原材料显示                         */

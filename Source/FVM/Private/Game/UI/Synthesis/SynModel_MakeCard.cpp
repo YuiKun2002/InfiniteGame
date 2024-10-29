@@ -326,9 +326,23 @@ void USynModel_MakeCard::WidgetResetLoadData()
 	this->LoadMaterialsToMakeCard();
 	//this->LoadCardsToMakeCard();
 
-	this->LoadSpicesToMakeCard(
-		{ FMaterialsSerachTypeBind(EMaterialType::E_Spices,{"AddSynthesisSpicesSlot"}) }, FMaterialsSerachKeyWordsIgnore()
+	TArray<EMaterialType> _Type = { EMaterialType::E_Spices };
+	TArray<FMaterialBase*> OutArrays;
+	//添加材料
+	UGameSystemFunction::GetMaterialsArrayByType(
+		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Material,
+		_Type,
+		OutArrays
 	);
+
+	this->CurSpices.Empty();
+	this->CurSpices.Reset(OutArrays.Num());
+	for (const auto& Cur : OutArrays)
+	{
+		this->CurSpices.Emplace(*Cur);
+	}
+
+	this->InitSpicesSelect();
 }
 
 /*
@@ -550,6 +564,114 @@ void USynModel_MakeCard::LoadSpicesToMakeCard(const TArray<FMaterialsSerachTypeB
 	this->ItemLoadManager_Spice->ContinueRun();
 }
 
+void USynModel_MakeCard::InitSpicesSelect()
+{
+	//检测索引
+	bool b = false;
+	if (this->CurSpices.Num())
+	{
+		for (int32 i = 0; i < this->CurSpices.Num(); i++)
+		{
+			//判断索引
+			if (this->SelectSpiceIndex >= this->CurSpices.Num())
+			{
+				this->SelectSpiceIndex = 0;
+			}
+
+			if (this->CurSpices[this->SelectSpiceIndex].M_Count >= 5)
+			{
+				b = true;
+				break;
+			}
+			else {
+				this->SelectSpiceIndex++;
+			}
+		}
+	}
+	else {
+		if (IsValid(this->SpiceUI))
+		{
+			this->CancelSelectSpices();
+		}
+		return;
+	}
+
+	if (IsValid(this->SpiceUI))
+	{
+		this->SetMaterialsData(this->SpiceUI,
+			(UItemDataTable*)&this->SpiceUI[this->SelectSpiceIndex],
+			this->SelectSpiceIndex,
+			this->M_BindFunctionName_Materials);
+	}
+	else {
+		this->SpiceUI = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
+			UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
+		);
+		this->SetMaterialsData(this->SpiceUI,
+			(UItemDataTable*)&this->SpiceUI[this->SelectSpiceIndex],
+			this->SelectSpiceIndex,
+			this->M_BindFunctionName_Materials);
+	}
+
+	if (b)
+	{
+		this->SpiceUI->AddSynthesisSpicesSlot();
+	}
+	else {
+		if (IsValid(this->SpiceUI))
+		{
+			this->CancelSelectSpices();
+		}
+	}
+}
+
+void USynModel_MakeCard::NextSpiceSelect()
+{
+	if (this->CurSpices.Num())
+	{
+		//下一个索引
+		bool b = false;
+		this->SelectSpiceIndex++;
+		for (int32 i = 0; i < this->CurSpices.Num(); i++)
+		{
+			//判断索引
+			if (this->SelectSpiceIndex >= this->CurSpices.Num())
+			{
+				this->SelectSpiceIndex = 0;
+			}
+
+			if (this->CurSpices[this->SelectSpiceIndex].M_Count >= 5)
+			{
+				b = true;
+				break;
+			}
+			else {
+				this->SelectSpiceIndex++;
+			}
+		}
+
+		if (b)
+		{
+			if (IsValid(this->SpiceUI))
+			{
+				this->SpiceUI->AddSynthesisSpicesSlot();
+			}
+		}
+		else {
+			if (IsValid(this->SpiceUI))
+			{
+				this->CancelSelectSpices();
+			}
+		}
+	}
+	else {
+		if (IsValid(this->SpiceUI))
+		{
+			this->CancelSelectSpices();
+		}
+	}
+}
+
 //创建-材料区域-材料UI界面
 UWidget* USynModel_MakeCard::WidgetCreate_InitMaterial(UItemDataTable* _Data, int32 _Index)
 {
@@ -652,13 +774,6 @@ void USynModel_MakeCard::MakeCard()
 		return;
 	}
 
-	////香料
-	//int32 TargetCardGrade = 0;
-	//if (this->SpicesData.PlayerBagIndex != -1)
-	//{
-	//	TargetCardGrade = this->SpicesData.MakeCardGrade;
-	//}
-
 	if (this->SpicesData.PlayerBagIndex == -1)
 	{
 		this->PlayerSynthesis->OnSelectMakeCardRequest(
@@ -674,145 +789,6 @@ void USynModel_MakeCard::MakeCard()
 			this->GetBlueprintData().Bp.BagID
 		);
 	}
-
-
-
-	//查询背包空间
-	/*if (
-		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->GetBagNum(1)
-		==
-		UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->GetBagMaxCount(1))
-	{
-		UWidgetBase::CreateTipWidget(TEXT("背包空间不足"));
-		return;
-	}*/
-
-	////支付金币200
-	//if (!UFVMGameInstance::GetPlayerStructManager_Static()->ReduceCoin(200, 0))
-	//{
-	//	UWidgetBase::CreateTipWidget(TEXT("金币不足"));
-	//	return;
-	//}
-
-	////香料
-	//int32 TargetCardGrade = 0;
-	//if (this->SpicesData.PlayerBagIndex != -1)
-	//{
-	//	TargetCardGrade = this->SpicesData.MakeCardGrade;
-	//}
-
-	////制作卡片
-	////获取制作成功的卡片数据
-	//FItemCard _Card;
-	//if (!UCardBaseStruct::SearchCardFromDataTable(
-	//	this->BlueprintData.TargetCardName, _Card, true, this->BlueprintData.TargetCardType, TargetCardGrade
-	//))
-	//{
-	//	UWidgetBase::CreateTipWidget(
-	//		TEXT("制作失败!") + FString(TEXT("目标卡片：") + this->BlueprintData.TargetCardName) +
-	//		FString(TEXT("目标等级：") + FString::FromInt(TargetCardGrade))
-	//	);
-
-	//	return;
-	//}
-	////赋予等级
-	//_Card.M_CardGrade = TargetCardGrade;
-
-	////添加到背包【末尾或者已经存在的卡片后面】
-	//int32 PlayIndex = -1;
-	//for (
-	//	auto CardPP = UFVMGameInstance::GetFVMGameInstance()->
-	//	GetPlayerStructManager()->M_PlayerItems_Card.CreateConstIterator();
-	//	CardPP;
-	//	++CardPP
-	//	)
-	//{
-	//	if ((*CardPP).ItemName.EqualTo(_Card.ItemName))
-	//	{
-	//		PlayIndex = CardPP.GetIndex();
-	//		break;
-	//	}
-	//}
-
-	//if (PlayIndex == -1)
-	//{
-	//	UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->M_PlayerItems_Card.Emplace(_Card);
-	//}
-	//else
-	//{
-	//	UFVMGameInstance::GetFVMGameInstance()->GetPlayerStructManager()->
-	//		M_PlayerItems_Card.EmplaceAt(PlayIndex, _Card);
-	//}
-
-
-
-	////消耗香料
-	//if (this->SpicesData.PlayerBagIndex != -1)
-	//{
-	//	UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-	//		this->SpicesData.PlayerBagIndex,
-	//		this->SpicesData.SpicesName,
-	//		5, false
-	//	);
-	//}
-
-	////消耗材料
-	//for (const auto& CurMaterial : this->BlueprintData.GetBlueprintMaterials())
-	//{
-	//	if (CurMaterial.PlayerBagIndex != -1)
-	//	{
-	//		UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-	//			CurMaterial.PlayerBagIndex,
-	//			CurMaterial.BluepName,
-	//			1, false
-	//		);
-	//	}
-	//}
-
-	////消耗配方【并且保持数据】
-	//UFVMGameInstance::GetPlayerStructManager_Static()->UseMaterial(
-	//	this->BlueprintData.PlayerBagIndex,
-	//	this->BlueprintData.BluepName,
-	//	1, true
-	//);
-
-
-	////查询香料是否存在【重新选择或者取消】
-	//this->SpicesData.PlayerBagIndex =
-	//	UFVMGameInstance::GetPlayerStructManager_Static()->FindMaterialByName(this->SpicesData.SpicesName);
-	//if (
-	//	//香料无效
-	//	this->SpicesData.PlayerBagIndex == -1
-	//	||
-	//	//香料数量不足
-	//	(this->SpicesData.PlayerBagIndex != -1
-	//		&&
-	//		UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Material[this->SpicesData.PlayerBagIndex].M_Count < 5
-	//		))
-	//{
-	//	//取消对香料的选择
-	//	this->CancelSelectSpices();
-	//}
-
-
-
-
-	//this->CardName = _Card.ItemName.ToString();
-
-	////添加历史记录
-	//UPlayerRecord::AddDayCardMakeCount(this->CardName);
-
-	////执行任务
-	//UTaskSubsystem::GetTaskSubsystemStatic()->ExecuteTasks(this);
-
-
-	//UWidgetBase::CreateTipWidget(TEXT("制作成功!"));
-
-
-	//检测制作
-	//this->CheckMakeCard();
-	//重新加载列表
-	//this->WidgetResetLoadData();
 }
 
 bool USynModel_MakeCard::CheckBlueprint()
@@ -866,8 +842,8 @@ void USynModel_MakeCard::CheckSpices()
 			].M_Count < 5
 			))
 	{
-		//取消对香料的选择
-		this->CancelSelectSpices();
+		//切换香料的选择
+		this->NextSpiceSelect();
 	}
 }
 
