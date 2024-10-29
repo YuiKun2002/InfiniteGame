@@ -598,6 +598,7 @@ void USynModel_MakeCard::InitSpicesSelect()
 
 	if (IsValid(this->SpiceUI))
 	{
+		this->SpiceUI->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 		this->SetMaterialsData(this->SpiceUI,
 			this->CurSpices[this->SelectSpiceIndex],
 			this->SelectSpiceIndex,
@@ -611,6 +612,7 @@ void USynModel_MakeCard::InitSpicesSelect()
 			this->CurSpices[this->SelectSpiceIndex],
 			this->SelectSpiceIndex,
 			this->M_BindFunctionName_Materials);
+		this->SpiceUI->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 	}
 
 	if (b)

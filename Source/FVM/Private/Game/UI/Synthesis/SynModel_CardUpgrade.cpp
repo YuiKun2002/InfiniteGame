@@ -932,6 +932,7 @@ void USynModel_CardUpgrade::InitCloversSelect()
 
 	if (IsValid(this->CloversUI))
 	{
+		this->CloversUI->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 		this->SetMaterialsData(this->CloversUI,
 			this->CurClovers[this->SelectCloverIndexA],
 			this->SelectCloverIndexA,
@@ -941,6 +942,7 @@ void USynModel_CardUpgrade::InitCloversSelect()
 		this->CloversUI = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
 			UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
 		);
+		this->CloversUI->SetUI_PlayerSynthesis(this->PlayerSynthesis);
 		this->SetMaterialsData(this->CloversUI,
 			this->CurClovers[this->SelectCloverIndexA],
 			this->SelectCloverIndexA,
