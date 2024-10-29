@@ -951,7 +951,7 @@ void USynModel_CardUpgrade::InitCloversSelect()
 
 	if (b)
 	{
-		this->CloversUI->AddSynthesisSpicesSlot();
+		this->CloversUI->AddUpGradeCardCloverSlot();
 	}
 	else {
 		if (IsValid(this->CloversUI))
@@ -990,7 +990,7 @@ void USynModel_CardUpgrade::NextCloversSelect()
 		{
 			if (IsValid(this->CloversUI))
 			{
-				this->CloversUI->AddSynthesisSpicesSlot();
+				this->CloversUI->AddUpGradeCardCloverSlot();
 			}
 		}
 		else {
