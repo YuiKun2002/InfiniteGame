@@ -262,7 +262,7 @@ public:
 	UFUNCTION()
 	void SetMaterialsData(
 		UUI_PlayerBagMaterialGrid* _Grid,
-		UItemDataTable* _CardData,
+		FMaterialBase _CardData,
 		int32 _Index,
 		const TArray<FMaterialsSerachTypeBind>& _BindFuncName
 	);

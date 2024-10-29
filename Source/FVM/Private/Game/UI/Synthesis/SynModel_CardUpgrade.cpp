@@ -793,24 +793,24 @@ UWidget* USynModel_CardUpgrade::WidgetCreate_InitMaterial(UItemDataTable* _Data,
 		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
 	);
 
-	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
+	//	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
 
 	return Grid;
 }
 
 void USynModel_CardUpgrade::WidgetRefresh_UpdateMaterial(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
-	this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
+	//this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
 }
 
-void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
+void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, FMaterialBase _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
 {
 	//设置材料索引
 	_Grid->SetIndex(_Index);
 	//设置材料按钮表示可以选择
 	_Grid->GetButton()->SetIsEnabled(true);
 	//设置材料数据
-	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
+	_Grid->SetMaterialData(_CardData);
 	//设置材料的数量
 	int32 CurCount = _Grid->GetMaterialData()->M_Count;
 	//设置显示上限
@@ -822,31 +822,6 @@ void USynModel_CardUpgrade::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, U
 	{
 		_Grid->GetButton()->OnClicked.Clear();
 	}
-
-	////绑定函数
-	//for (auto& LBind : _BindFuncName)
-	//{
-	//	if (((FMaterialBase*)(_CardData->GetValue()))->M_MaterialType == LBind.M_Type)
-	//	{
-	//		//设置指向合成屋的UI
-	//		_Grid->SetUI_PlayerSynthesis(this->PlayerSynthesis);
-	//		for (const auto& FnName : LBind.M_BindFnName)
-	//		{
-	//			//如果是空的则不绑定
-	//			if (FnName.IsEqual(""))
-	//			{
-	//				continue;
-	//			}
-
-	//			//绑定
-	//			FScriptDelegate AddFunc;
-	//			AddFunc.BindUFunction(_Grid, FnName);
-	//			_Grid->GetButton()->OnClicked.Add(AddFunc);
-	//		}
-
-	//		break;
-	//	}
-	//}
 
 	//绑定音效
 	FScriptDelegate AddFunc;
@@ -958,7 +933,7 @@ void USynModel_CardUpgrade::InitCloversSelect()
 	if (IsValid(this->CloversUI))
 	{
 		this->SetMaterialsData(this->CloversUI,
-			(UItemDataTable*)&this->CurClovers[this->SelectCloverIndexA],
+			this->CurClovers[this->SelectCloverIndexA],
 			this->SelectCloverIndexA,
 			this->M_BindFunctionName_Materials);
 	}
@@ -967,7 +942,7 @@ void USynModel_CardUpgrade::InitCloversSelect()
 			UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
 		);
 		this->SetMaterialsData(this->CloversUI,
-			(UItemDataTable*)&this->CloversUI[this->SelectCloverIndexA],
+			this->CurClovers[this->SelectCloverIndexA],
 			this->SelectCloverIndexA,
 			this->M_BindFunctionName_Materials);
 	}

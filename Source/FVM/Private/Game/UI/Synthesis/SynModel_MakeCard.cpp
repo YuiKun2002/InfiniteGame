@@ -599,7 +599,7 @@ void USynModel_MakeCard::InitSpicesSelect()
 	if (IsValid(this->SpiceUI))
 	{
 		this->SetMaterialsData(this->SpiceUI,
-			(UItemDataTable*)&this->SpiceUI[this->SelectSpiceIndex],
+			this->CurSpices[this->SelectSpiceIndex],
 			this->SelectSpiceIndex,
 			this->M_BindFunctionName_Materials);
 	}
@@ -608,7 +608,7 @@ void USynModel_MakeCard::InitSpicesSelect()
 			UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
 		);
 		this->SetMaterialsData(this->SpiceUI,
-			(UItemDataTable*)&this->SpiceUI[this->SelectSpiceIndex],
+			this->CurSpices[this->SelectSpiceIndex],
 			this->SelectSpiceIndex,
 			this->M_BindFunctionName_Materials);
 	}
@@ -678,17 +678,17 @@ UWidget* USynModel_MakeCard::WidgetCreate_InitMaterial(UItemDataTable* _Data, in
 	UUI_PlayerBagMaterialGrid* Grid = CreateWidget<UUI_PlayerBagMaterialGrid>(this->PlayerSynthesis,
 		UGameSystemFunction::GetUserInterClassByName(UI_LABSUINAME, TEXT("Material"))
 	);
-	this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
+	//this->SetMaterialsData(Grid, _Data, _Index, this->M_BindFunctionName_Materials);
 
 	return Grid;
 }
 //刷新-材料区域-材料UI界面
 void USynModel_MakeCard::WidgetRefresh_UpdateMaterial(UItemDataTable* _Data, int32 _Index, UWidget* _UWidget)
 {
-	this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
+	//this->SetMaterialsData(Cast<UUI_PlayerBagMaterialGrid>(_UWidget), _Data, _Index, this->M_BindFunctionName_Materials);
 }
 //卡片制作界面-设置（香料，四叶草，等等）UI界面
-void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UItemDataTable* _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
+void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, FMaterialBase _CardData, int32 _Index, const TArray<FMaterialsSerachTypeBind>& _BindFuncName)
 {
 	//设置材料索引
 	_Grid->SetIndex(_Index);
@@ -699,7 +699,7 @@ void USynModel_MakeCard::SetMaterialsData(UUI_PlayerBagMaterialGrid* _Grid, UIte
 	//设置显示上限
 	_Grid->UpdateMaterialsShowCount("x" + FString::FromInt(CurCount > 9999 ? 9999 : CurCount));
 	//设置材料数据
-	_Grid->SetMaterialData(_CardData->GetTransValue<FMaterialBase>());
+	_Grid->SetMaterialData(_CardData);
 	//设置材料的外观
 	UWidgetBase::SetButtonStyle(_Grid->GetButton(), _Grid->GetMaterialData()->ItemTexturePath.ToString());
 
