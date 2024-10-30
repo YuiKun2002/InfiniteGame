@@ -18,17 +18,59 @@
 
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
+void UWeaponSkillObject::Run(FMainWeaponData& Data, FFlyItemProOverride& ProOverride)
+{
+	FWeaponSkillObjectReturn RetunrData = this->SkillRun(Data, ProOverride);
+
+	Data = RetunrData.Data;
+	ProOverride = RetunrData.ProOverride;
+}
+
 APlayerFirstWeapon::APlayerFirstWeapon()
 {
-	this->M_UFirstWeaponProjectionComponent = CreateDefaultSubobject<UFirstWeaponProjectionComponent>(TEXT("FristWeapon_Projection"));
-	this->BulletLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("FristWeapon_BulletLocationComp"));
-	this->BoneFollowerComp = CreateDefaultSubobject<USpineBoneFollowerComponent>(TEXT("FristWeapon_SpineBoneFollowerComponent"));
+	this->M_UFirstWeaponProjectionComponent = CreateDefaultSubobject<UFirstWeaponProjectionComponent>(
+		TEXT("FristWeapon_Projection")
+	);
+	this->BulletLocationComp = CreateDefaultSubobject<USceneComponent>(
+		TEXT("FristWeapon_BulletLocationComp")
+	);
+	this->BoneFollowerComp = CreateDefaultSubobject<USpineBoneFollowerComponent>(
+		TEXT("FristWeapon_SpineBoneFollowerComponent")
+	);
 	this->BulletLocationComp->SetupAttachment(this->GetPointComponent());
+}
+
+void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
+{
+	FMainWeaponData OldData = WeaponData;
+	//初始化技能
+	this->WeaponSkils = OldData.Skils;
+	//当前武器等级
+	int32 CurWeaponLevel = OldData.StarsLevel;
+
+	//技能初始化
+	for (const auto& WeaponSkill : this->WeaponSkils)
+	{
+		if (WeaponSkill.Key <= CurWeaponLevel)
+		{
+			UWeaponSkillObject* Obj = WeaponSkill.Value.GetDefaultObject();
+			if (IsValid(Obj))
+			{
+				Obj->Run(WeaponData, this->FlyItemProOverride);
+			}
+		}
+	}
 }
 
 void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& WeaponData, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
 {
 	this->M_FFPlayerWeaponFirstData = WeaponData;
+
+	//覆盖子弹
+	if (this->FlyItemProOverride.WeaponBulletClassObjOverride.IsValid())
+	{
+		this->WeaponBulletClassObj = this->FlyItemProOverride.WeaponBulletClassObjOverride;
+	}
 
 	if (UFVMGameInstance::GetDebug())
 	{

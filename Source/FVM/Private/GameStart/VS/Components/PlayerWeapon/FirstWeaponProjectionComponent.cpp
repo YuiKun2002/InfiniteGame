@@ -56,10 +56,33 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetFlyParentActor(this->M_Owner->GetPlayerActor());
 	NewBullet->SetActorTransform(Trans);
 	NewBullet->SetObjectActorLocation(this->M_Owner->GetPlayerActor()->GetCurrentMouse());
-	NewBullet->SetATK(this->TargetData.ATK);
-	NewBullet->SetSecondATK(0.f);
+	//设置线路
 	NewBullet->SetLine(this->M_Owner->GetPlayerActor()->GetLine().Row);
+	//设置模式
 	NewBullet->SetFloatModeEnable(this->M_Owner->GetPlayerActor()->GetMapMeshe()->GetMove());
+
+	if (this->M_Owner->FlyItemProOverride.bOverride)
+	{
+		//设置攻击力
+		NewBullet->SetATK(this->TargetData.ATK * this->M_Owner->FlyItemProOverride.BaseAttackUpRate);
+		//设置二次攻击力
+		NewBullet->SetSecondATK(this->M_Owner->FlyItemProOverride.SecondAttackOverwrite);
+		//重写buff
+		NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
+		//重写攻击类型
+		NewBullet->M_AttackType = this->M_Owner->FlyItemProOverride.AttackTypeOverride;
+		//条件
+		NewBullet->M_FlyCondition.M_FlyItemAttackType = this->M_Owner->FlyItemProOverride.FlyItemAttackType;
+		NewBullet->M_FlyCondition.PanetrateLayers = this->M_Owner->FlyItemProOverride.PanetrateLayers;
+	}
+	else {
+		//设置攻击力
+		NewBullet->SetATK(this->TargetData.ATK);
+		//设置二次攻击力
+		NewBullet->SetSecondATK(this->TargetData.SecondATKRate);
+	}
+
+
 	NewBullet->Init();
 }
 

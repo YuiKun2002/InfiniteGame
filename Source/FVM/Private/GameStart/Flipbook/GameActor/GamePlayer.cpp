@@ -123,10 +123,13 @@ void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponDat
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("初始化武器数据"));
 		}
 
+		//初始化技能
+		FMainWeaponData TempWeaponData = WeaponData;
+		this->M_PlayerFirstWeapon->InitSkill(TempWeaponData);
 		//初始化武器数据
 		this->M_PlayerFirstWeapon->InitWeapon(
 			this,
-			WeaponData,
+			TempWeaponData,
 			this->M_UUI_MapMeshe,
 			this->M_AMapMeshe
 		);

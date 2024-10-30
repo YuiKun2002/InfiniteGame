@@ -776,6 +776,16 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 					//设置当前击中的老鼠
 					this->M_CurrentHitObjectActor = Mouse;
 				}
+				else {
+					if (this->M_FlyCondition.PanetrateLayers > 0)
+					{
+						this->M_FlyCondition.PanetrateLayers -= 1;
+						if (this->M_FlyCondition.PanetrateLayers == 0)
+						{
+							this->M_FlyCondition.M_FlyItemAttackType = EFlyItemAttackType::Def;
+						}
+					}
+				}
 				//上一次击中的老鼠
 				this->M_LastHitObjectActor = Mouse;
 				//飞行物击中
@@ -793,6 +803,16 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 					{
 						//设置当前击中的老鼠
 						this->M_CurrentHitObjectActor = Mouse;
+					}
+					else {
+						if (this->M_FlyCondition.PanetrateLayers > 0)
+						{
+							this->M_FlyCondition.PanetrateLayers -= 1;
+							if (this->M_FlyCondition.PanetrateLayers == 0)
+							{
+								this->M_FlyCondition.M_FlyItemAttackType = EFlyItemAttackType::Def;
+							}
+						}
 					}
 					//上一次击中的老鼠
 					this->M_LastHitObjectActor = Mouse;

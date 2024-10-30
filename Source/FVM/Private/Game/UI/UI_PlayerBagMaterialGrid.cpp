@@ -323,7 +323,7 @@ void UUI_PlayerBagMaterialGrid::AddCardUpgradeCloverSlot(float Rate)
 	//重新绑定四叶草的点击功能
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.Clear();
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.AddDynamic(
-		this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction(), &USynModel_CardUpgrade::CancelSelectClover);
+		this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction(), &USynModel_CardUpgrade::NextCloversSelect);
 	this->M_UUI_PlayerSynthesis->GetCardUpgradeFunction()->GetCloverButton()->OnClicked.AddDynamic(
 		this->M_UUI_PlayerSynthesis, &UWidgetBase::PlayOperateAudioDef);
 }

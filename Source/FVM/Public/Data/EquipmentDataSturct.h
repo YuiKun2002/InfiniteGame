@@ -150,6 +150,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ATKRCoefficient = 1.1f;
 
+	//二次攻击力
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SecondATKRate = 0.f;
+
 	//攻击冷却时间
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackCoolingTime = 1.f;
@@ -184,6 +188,10 @@ public:
 	//是否可以进化
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bEvolve = false;
+
+	//技能开启
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, TSubclassOf<class UWeaponSkillObject>> Skils;
 };
 
 //武器详细数据

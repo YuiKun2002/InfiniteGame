@@ -75,6 +75,9 @@ public:
 	//子弹攻击的类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFlyItemAttackType M_FlyItemAttackType = EFlyItemAttackType::Def;
+	//穿透层数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 PanetrateLayers = 999;
 	//是否约束飞行物到本线路
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool M_bConstraintLine = false;
