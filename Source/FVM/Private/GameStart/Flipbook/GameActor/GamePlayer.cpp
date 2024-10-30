@@ -126,6 +126,7 @@ void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponDat
 		//初始化技能
 		FMainWeaponData TempWeaponData = WeaponData;
 		this->M_PlayerFirstWeapon->InitSkill(TempWeaponData);
+
 		//初始化武器数据
 		this->M_PlayerFirstWeapon->InitWeapon(
 			this,

@@ -210,10 +210,19 @@ class FVM_API UMainWeaponDataFunc : public UObject
 {
 	GENERATED_BODY()
 public:
+	//计算数据
 	UFUNCTION(BlueprintPure)
 	static FMainWeaponData Calculate(const FMainWeaponData& InputData);
+	//计算下一集
 	UFUNCTION(BlueprintPure)
 	static FMainWeaponData CalculateNext(const FMainWeaponData& InputData);
+public:
+	//提升攻击速度【0.f(0%) - 1.f(100%)】
+	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
+	static FMainWeaponData Calculate_AttackSpeed(const FMainWeaponData& InputData, float Rate);
+	//提升攻击力【0.f(0%),0.2f(20%Rate)】
+	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
+	static FMainWeaponData Calculate_Attack(const FMainWeaponData& InputData, float Rate);
 };
 
 //副武器数据结构

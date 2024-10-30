@@ -42,6 +42,9 @@ APlayerFirstWeapon::APlayerFirstWeapon()
 
 void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 {
+	//计算最初数据
+	WeaponData = UMainWeaponDataFunc::Calculate(WeaponData);
+	//先计算
 	FMainWeaponData OldData = WeaponData;
 	//初始化技能
 	this->WeaponSkils = OldData.Skils;
@@ -58,7 +61,7 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 			{
 				Obj->Run(WeaponData, this->FlyItemProOverride);
 
-				UGameSystemFunction::FVMLog(__FUNCTION__,TEXT("执行武器技能：") + WeaponSkill.Key);
+				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("执行武器技能：") + WeaponSkill.Key);
 			}
 		}
 	}
@@ -66,6 +69,7 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 
 void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& WeaponData, UUI_MapMeshe* _UI_MapMeshe, AMapMeshe* _MapMeshe)
 {
+	//初始化数据
 	this->M_FFPlayerWeaponFirstData = WeaponData;
 
 	//覆盖子弹

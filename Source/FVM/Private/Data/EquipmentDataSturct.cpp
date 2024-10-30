@@ -191,6 +191,37 @@ FMainWeaponData UMainWeaponDataFunc::CalculateNext(const FMainWeaponData& InputD
 	return UMainWeaponDataFunc::Calculate(Data);
 }
 
+FMainWeaponData UMainWeaponDataFunc::Calculate_AttackSpeed(const FMainWeaponData& InputData, float Rate)
+{
+	if (Rate < 0.f)
+	{
+		Rate = 0.f;
+	}
+	else if (Rate > 1.f)
+	{
+		Rate = 1.f;
+	}
+
+	float CurRate = 1.f - Rate;
+	FMainWeaponData Data = InputData;
+
+	Data.AttackCoolingTime = Data.AttackCoolingTime * CurRate;
+	Data.AttackSpeedUpRate = Data.AttackSpeedUpRate * CurRate;
+
+	return Data;
+}
+
+FMainWeaponData UMainWeaponDataFunc::Calculate_Attack(const FMainWeaponData& InputData, float Rate)
+{
+
+	FMainWeaponData Data = InputData;
+
+	Data.ATK = Data.ATK * (1.f + Rate);
+
+	return Data;
+
+}
+
 FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 {
 	FItemHeroBase Data = InputData;
