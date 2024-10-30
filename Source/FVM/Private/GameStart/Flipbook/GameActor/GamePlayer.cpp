@@ -66,6 +66,7 @@ void AGamePlayer::InitPlayerWeapon()
 		}
 		DefWeaponData.M_ItemID = 15;
 		DefWeaponData.WeaponLevel = 1;
+		DefWeaponData.StarsLevel = 1;
 		DefWeaponData.BagID = TEXT("100000000");
 		//如果没有装备则使用默认武器
 		this->LoadPlayerWeapon(TEXT("CokeGun"), DefWeaponData);
