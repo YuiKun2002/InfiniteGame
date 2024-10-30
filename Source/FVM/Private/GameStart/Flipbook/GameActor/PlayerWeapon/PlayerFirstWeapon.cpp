@@ -57,6 +57,8 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 			if (IsValid(Obj))
 			{
 				Obj->Run(WeaponData, this->FlyItemProOverride);
+
+				UGameSystemFunction::FVMLog(__FUNCTION__,TEXT("执行武器技能：") + WeaponSkill.Key);
 			}
 		}
 	}
