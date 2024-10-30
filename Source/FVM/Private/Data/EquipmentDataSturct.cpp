@@ -157,8 +157,10 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 	//×Óµ¯¼ä¸ô
 	float BackSpeed = Data.WeaponLevel == 1 ? Data.AttackBackTime :
 		Data.AttackBackTime - (
-			Data.AttackBackTime * FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackBackTime
+			Data.AttackBackTime *
+			FMath::Pow(Data.AttackCoolingTimeCoefficient, (Data.WeaponLevel - 1)) - Data.AttackBackTime
 			);
+
 	Data.AttackBackTime = BackSpeed;
 
 	if (Data.AttackBackTime < 0.f)
