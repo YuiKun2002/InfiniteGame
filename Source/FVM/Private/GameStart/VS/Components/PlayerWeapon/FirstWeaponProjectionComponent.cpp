@@ -159,6 +159,11 @@ void UFirstWeaponProjectionComponent::LoadResource()
 
 	this->TargetData = UMainWeaponDataFunc::Calculate(LData);
 
+	if (this->TargetData.AttackCoolingTime < 0.5f)
+	{
+		this->TargetData.AttackCoolingTime = 0.5f;
+	}
+
 	//初始化发射条件
 	this->InitLaunchProperty(
 		this->TargetData.AttackCount,
