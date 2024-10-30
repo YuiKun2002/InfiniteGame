@@ -42,9 +42,6 @@ APlayerFirstWeapon::APlayerFirstWeapon()
 
 void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 {
-	//计算最初数据
-	WeaponData = UMainWeaponDataFunc::Calculate(WeaponData);
-	//先计算
 	FMainWeaponData OldData = WeaponData;
 	//初始化技能
 	this->WeaponSkils = OldData.Skils;

@@ -156,6 +156,7 @@ void UFirstWeaponProjectionComponent::LoadResource()
 	}
 
 	const FMainWeaponData& LData = this->M_Owner->GetPlayerFirstWeaponData();
+	this->TargetData = LData;
 	//初始化发射条件
 	this->InitLaunchProperty(
 		this->TargetData.AttackCount,

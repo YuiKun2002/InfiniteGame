@@ -204,9 +204,13 @@ FMainWeaponData UMainWeaponDataFunc::Calculate_AttackSpeed(const FMainWeaponData
 
 	float CurRate = 1.f - Rate;
 	FMainWeaponData Data = InputData;
-
-	Data.AttackCoolingTime = Data.AttackCoolingTime * CurRate;
-	Data.AttackSpeedUpRate = Data.AttackSpeedUpRate * CurRate;
+	float CurSpeed = Data.AttackCoolingTime;
+	Data.AttackCoolingTime = Data.AttackCoolingTime - Data.AttackCoolingTime * CurRate;
+	if (Data.AttackCoolingTime < 0.1f)
+	{
+		Data.AttackCoolingTime = 0.1f;
+	}
+	Data.AttackSpeedUpRate = 1.f - (Data.AttackCoolingTime / CurSpeed);
 
 	return Data;
 }
