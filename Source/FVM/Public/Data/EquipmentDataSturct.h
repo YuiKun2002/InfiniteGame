@@ -220,7 +220,7 @@ public:
 	//提升攻击速度【0.f(0%) - 1.f(100%)】
 	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
 	static FMainWeaponData Calculate_AttackSpeed(const FMainWeaponData& InputData, float Rate);
-	//提升攻击力【0.f(0%),0.2f(20%Rate)】
+	//提升【基础】攻击力【0.f(0%),0.2f(20%Rate)】
 	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
 	static FMainWeaponData Calculate_Attack(const FMainWeaponData& InputData, float Rate);
 	//设置攻击次数

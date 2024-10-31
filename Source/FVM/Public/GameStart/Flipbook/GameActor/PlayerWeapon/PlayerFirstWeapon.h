@@ -103,7 +103,7 @@ public:
 		float BaseAttackUpRate = 1.f
 	);
 
-	//重写二次攻击力加成
+	//重写二次攻击力加成【* 基础攻击力】（攻击力加成倍率）
 	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
 	static FFlyItemProOverride SetSecondAttackOverwrite(
 		const FFlyItemProOverride& FlyItemProOverride,
