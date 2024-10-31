@@ -243,6 +243,15 @@ FMainWeaponData UMainWeaponDataFunc::Calculate_AttackCount(const FMainWeaponData
 	return Data;
 }
 
+FMainWeaponData UMainWeaponDataFunc::Calculate_LineTraceSettings(const FMainWeaponData& InputData, const TArray<FLineTraceSetting>& LineTraceSettings)
+{
+	FMainWeaponData Data = InputData;
+
+	Data.LineTraceSettings = LineTraceSettings;
+
+	return Data;
+}
+
 FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 {
 	FItemHeroBase Data = InputData;

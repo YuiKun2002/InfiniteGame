@@ -226,6 +226,9 @@ public:
 	//设置攻击次数
 	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
 	static FMainWeaponData Calculate_AttackCount(const FMainWeaponData& InputData, int32 AttackCount);
+	//设置攻击线路
+	UFUNCTION(BlueprintPure, Category = "主武器数据计算")
+	static FMainWeaponData Calculate_LineTraceSettings(const FMainWeaponData& InputData, const TArray<FLineTraceSetting>& LineTraceSettings);
 
 };
 
