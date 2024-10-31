@@ -23,6 +23,19 @@ void UUI_Weapons::InitWeapons()
 
 	if (!this->Weapons.Num())
 	{
+		FMainWeaponData Aa;
+		FEquipmentBase* AaSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("CokeGun"),
+			AaSourceData, true, EEquipment::E_PlayerWeaponFirst
+		))
+		{
+			Aa = *(FMainWeaponData*)(AaSourceData);
+		}
+		Aa.M_ItemID = 15;
+		Aa.WeaponLevel = 1;
+		Aa.BagID = TEXT("7");
+
 		FMainWeaponData A;
 		FEquipmentBase* ASourceData;
 		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
@@ -123,7 +136,7 @@ void UUI_Weapons::InitWeapons()
 
 		//UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Weapon.Empty();
 		this->Weapons.Append(
-			{ A,B,C,D,E,F1,G }
+			{ Aa,A,B,C,D,E,F1,G }
 		);
 	}
 
