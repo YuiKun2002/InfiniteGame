@@ -155,6 +155,9 @@ public:
 	//静态对象池(线路约束，限制到本行)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | StaticItems")
 	bool M_StaticFlyItemLocationConstLine = true;
+	//静态对象池(是否只创建一次，如果遇到穿透类型，可能多次创建)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | StaticItems")
+	bool bCreateStaticItemOnceOverride = false;
 	//静态对象池(有几个就会创建几个)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | StaticItems")
 	TArray<TSoftClassPtr<AFlyItemActor>> M_StaticFlyItemClass;

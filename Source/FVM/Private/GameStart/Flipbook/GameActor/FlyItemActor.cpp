@@ -383,10 +383,25 @@ void AFlyItemActor::Hit()
 		this->M_FlyItem_Property_AudioEnd.M_AudioRootPathName
 	);
 
-	//创建静态飞行物对象
-	for (auto ResPath_C : this->M_StaticFlyItemClass)
+	//如果不是穿透类型
+	if (this->M_FlyCondition.M_FlyItemAttackType != EFlyItemAttackType::Panetrate)
 	{
-		this->CreateStaticItem(ResPath_C);
+		//创建静态飞行物对象
+		for (auto ResPath_C : this->M_StaticFlyItemClass)
+		{
+			this->CreateStaticItem(ResPath_C);
+		}
+	}
+	else {
+		//如果是穿透类型
+		if (!this->bCreateStaticItemOnceOverride)
+		{
+			//创建静态飞行物对象
+			for (auto ResPath_C : this->M_StaticFlyItemClass)
+			{
+				this->CreateStaticItem(ResPath_C);
+			}
+		}
 	}
 
 	//如果子弹类型不是穿透类型

@@ -35,6 +35,9 @@ public:
 	//穿透层数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 PanetrateLayers = 999;
+	//静态物品创建一次【遇到穿透可能会多次创建】
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCreateStaticItemOnceOverride = false;
 	//攻击类型重写
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<ELineType> AttackTypeOverride;
@@ -73,7 +76,12 @@ public:
 		const FFlyItemProOverride& FlyItemProOverride,
 		int32 PanetrateLayers
 	);
-
+	//重写是否静态物品创建一次
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetbCreateStaticItemOnceOverride(
+		const FFlyItemProOverride& FlyItemProOverride,
+		bool bCreateStaticItemOnceOverride
+	);
 	//重写攻击目标
 	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
 	static FFlyItemProOverride SetAttackTypeOverride(

@@ -53,6 +53,14 @@ FFlyItemProOverride UFlyItemProOverrideFunc::SetPanetrateLayers(const FFlyItemPr
 	return Temp;
 }
 
+FFlyItemProOverride UFlyItemProOverrideFunc::SetbCreateStaticItemOnceOverride(const FFlyItemProOverride& FlyItemProOverride, bool bCreateStaticItemOnceOverride)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.bCreateStaticItemOnceOverride = bCreateStaticItemOnceOverride;
+	return Temp;
+}
+
 FFlyItemProOverride UFlyItemProOverrideFunc::SetAttackTypeOverride(const FFlyItemProOverride& FlyItemProOverride, const TArray<ELineType>& AttackTypeOverride)
 {
 	FFlyItemProOverride Temp = FlyItemProOverride;

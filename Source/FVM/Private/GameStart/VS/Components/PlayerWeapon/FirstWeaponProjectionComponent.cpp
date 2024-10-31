@@ -65,22 +65,29 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	{
 		//设置攻击力
 		NewBullet->SetATK(this->TargetData.ATK * this->M_Owner->FlyItemProOverride.BaseAttackUpRate);
+		
 		//设置二次攻击力
 		NewBullet->SetSecondATK(
 			NewBullet->GetCurATK() *
 			this->M_Owner->FlyItemProOverride.SecondAttackOverwrite
 		);
+
 		//重写buff
 		if (this->M_Owner->FlyItemProOverride.ItemBuffOverride.M_Buffers.Num())
 		{
 			NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
 			NewBullet->M_FItem_Buff.M_bCondition = true;
 		}
+
 		//重写攻击类型
 		if (this->M_Owner->FlyItemProOverride.AttackTypeOverride.Num())
 		{
 			NewBullet->M_AttackType = this->M_Owner->FlyItemProOverride.AttackTypeOverride;
 		}
+
+		//静态武器创建一次
+		NewBullet->bCreateStaticItemOnceOverride =
+			this->M_Owner->FlyItemProOverride.bCreateStaticItemOnceOverride;
 		//条件
 		NewBullet->M_FlyCondition.M_FlyItemAttackType =
 			this->M_Owner->FlyItemProOverride.FlyItemAttackType;
