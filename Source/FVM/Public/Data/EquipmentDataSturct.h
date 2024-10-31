@@ -132,7 +132,7 @@ public:
 	int32 WeaponLevel = 1;
 	//星星等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 StarsLevel = 1;
+	int32 StarsLevel = 0;
 	//武器类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EWeaponType WeaponType = EWeaponType::MainWeapon;
