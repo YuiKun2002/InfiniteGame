@@ -105,7 +105,7 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 	//初始化技能
 	this->WeaponSkils = OldData.Skils;
 	//当前武器等级
-	int32 CurWeaponLevel = OldData.StarsLevel;
+	int32 CurWeaponLevel = OldData.StarsLevel + 1;
 
 	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器星级：【") +
 		FString::FromInt(CurWeaponLevel) +
@@ -134,7 +134,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	this->M_FFPlayerWeaponFirstData = WeaponData;
 
 	//覆盖子弹
-	if (this->FlyItemProOverride.WeaponBulletClassObjOverride.IsValid())
+	if (!this->FlyItemProOverride.WeaponBulletClassObjOverride.IsNull())
 	{
 		this->WeaponBulletClassObj = this->FlyItemProOverride.WeaponBulletClassObjOverride;
 	}

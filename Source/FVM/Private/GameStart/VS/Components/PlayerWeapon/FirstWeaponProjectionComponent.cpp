@@ -74,6 +74,7 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		if (this->M_Owner->FlyItemProOverride.ItemBuffOverride.M_Buffers.Num())
 		{
 			NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
+			NewBullet->M_FItem_Buff.M_bCondition = true;
 		}
 		//重写攻击类型
 		if (this->M_Owner->FlyItemProOverride.AttackTypeOverride.Num())
