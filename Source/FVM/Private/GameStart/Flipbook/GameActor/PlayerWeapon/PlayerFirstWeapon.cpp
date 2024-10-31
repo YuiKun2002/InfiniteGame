@@ -26,6 +26,65 @@ void UWeaponSkillObject::Run(FMainWeaponData& Data, FFlyItemProOverride& ProOver
 	ProOverride = RetunrData.ProOverride;
 }
 
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetWeaponBulletClassObjOverride(
+	const FFlyItemProOverride& FlyItemProOverride,
+	const TSoftClassPtr<class AFlyItemActor>& Fly)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.WeaponBulletClassObjOverride = Fly;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetFlyItemAttackType(const FFlyItemProOverride& FlyItemProOverride, EFlyItemAttackType Type)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.FlyItemAttackType = Type;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetPanetrateLayers(const FFlyItemProOverride& FlyItemProOverride, int32 PanetrateLayers)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.PanetrateLayers = PanetrateLayers;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetAttackTypeOverride(const FFlyItemProOverride& FlyItemProOverride, const TArray<ELineType>& AttackTypeOverride)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.AttackTypeOverride = AttackTypeOverride;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetItemBuffOverride(const FFlyItemProOverride& FlyItemProOverride, const FItem_Buff& ItemBuffOverride)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.ItemBuffOverride = ItemBuffOverride;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetBaseAttackUpRate(const FFlyItemProOverride& FlyItemProOverride, float BaseAttackUpRate /*= 1.f */)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.BaseAttackUpRate = BaseAttackUpRate;
+	return Temp;
+}
+
+FFlyItemProOverride UFlyItemProOverrideFunc::SetSecondAttackOverwrite(const FFlyItemProOverride& FlyItemProOverride, float SecondAttackOverwrite /*= 0.f */)
+{
+	FFlyItemProOverride Temp = FlyItemProOverride;
+	Temp.bOverride = true;
+	Temp.SecondAttackOverwrite = SecondAttackOverwrite;
+	return Temp;
+}
+
 APlayerFirstWeapon::APlayerFirstWeapon()
 {
 	this->M_UFirstWeaponProjectionComponent = CreateDefaultSubobject<UFirstWeaponProjectionComponent>(
@@ -52,18 +111,17 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 		FString::FromInt(CurWeaponLevel) +
 		TEXT("】"));
 
-	//技能初始化
-	for (const auto& WeaponSkill : this->WeaponSkils)
+	for (auto WeaponPP = this->WeaponSkils.CreateConstIterator(); WeaponPP; ++WeaponPP)
 	{
-		if (WeaponSkill.Key <= CurWeaponLevel)
+		if (WeaponPP->Key <= CurWeaponLevel)
 		{
-			UWeaponSkillObject* Obj = WeaponSkill.Value.GetDefaultObject();
+			UWeaponSkillObject* Obj = WeaponPP->Value.GetDefaultObject();
 			if (IsValid(Obj))
 			{
 				Obj->Run(WeaponData, this->FlyItemProOverride);
 
 				UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("执行武器技能：【") +
-					FString::FromInt(WeaponSkill.Key) +
+					FString::FromInt(WeaponPP->Key) +
 					TEXT("】"));
 			}
 		}

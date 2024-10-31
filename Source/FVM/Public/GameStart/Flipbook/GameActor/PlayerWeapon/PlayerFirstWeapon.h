@@ -16,6 +16,7 @@ class AMapMeshe;
 class AMouseActor;
 class AGamePlayer;
 
+//---------------------------------------------------------------------------------
 //子弹的属性数值重写
 USTRUCT(BlueprintType)
 struct FFlyItemProOverride
@@ -47,6 +48,62 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SecondAttackOverwrite = 0.f;
 };
+
+//数据计算
+UCLASS()
+class FVM_API UFlyItemProOverrideFunc : public UObject
+{
+	GENERATED_BODY()
+public:
+	//重写子弹
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetWeaponBulletClassObjOverride(
+		const FFlyItemProOverride& FlyItemProOverride,
+		const TSoftClassPtr<class AFlyItemActor>& Fly
+	);
+	//重写攻击类型
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetFlyItemAttackType(
+		const FFlyItemProOverride& FlyItemProOverride,
+		EFlyItemAttackType Type
+	);
+	//重写穿透层数
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetPanetrateLayers(
+		const FFlyItemProOverride& FlyItemProOverride,
+		int32 PanetrateLayers
+	);
+
+	//重写攻击目标
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetAttackTypeOverride(
+		const FFlyItemProOverride& FlyItemProOverride,
+		const TArray<ELineType>& AttackTypeOverride
+	);
+
+	//重写Buff
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetItemBuffOverride(
+		const FFlyItemProOverride& FlyItemProOverride,
+		const FItem_Buff& ItemBuffOverride
+	);
+
+	//重写攻击力加成
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetBaseAttackUpRate(
+		const FFlyItemProOverride& FlyItemProOverride,
+		float BaseAttackUpRate = 1.f
+	);
+
+	//重写二次攻击力加成
+	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
+	static FFlyItemProOverride SetSecondAttackOverwrite(
+		const FFlyItemProOverride& FlyItemProOverride,
+		float SecondAttackOverwrite = 0.f
+	);
+};
+
+//---------------------------------------------------------------------------------
 
 //技能修改的返回结果
 USTRUCT(BlueprintType)
@@ -96,7 +153,7 @@ public:
 	TSoftClassPtr<class AFlyItemActor> WeaponBulletClassObj;
 	//技能
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
-	TMap<int32,TSubclassOf<UWeaponSkillObject>> WeaponSkils;
+	TMap<int32, TSubclassOf<UWeaponSkillObject>> WeaponSkils;
 	//飞行物属性重写
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "武器属性")
 	FFlyItemProOverride FlyItemProOverride;

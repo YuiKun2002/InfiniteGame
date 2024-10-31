@@ -71,9 +71,15 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 			this->M_Owner->FlyItemProOverride.SecondAttackOverwrite
 		);
 		//重写buff
-		NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
+		if (this->M_Owner->FlyItemProOverride.ItemBuffOverride.M_Buffers.Num())
+		{
+			NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
+		}
 		//重写攻击类型
-		NewBullet->M_AttackType = this->M_Owner->FlyItemProOverride.AttackTypeOverride;
+		if (this->M_Owner->FlyItemProOverride.AttackTypeOverride.Num())
+		{
+			NewBullet->M_AttackType = this->M_Owner->FlyItemProOverride.AttackTypeOverride;
+		}
 		//条件
 		NewBullet->M_FlyCondition.M_FlyItemAttackType = this->M_Owner->FlyItemProOverride.FlyItemAttackType;
 		NewBullet->M_FlyCondition.PanetrateLayers = this->M_Owner->FlyItemProOverride.PanetrateLayers;
