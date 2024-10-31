@@ -75,7 +75,6 @@ void UUI_Weapons::InitWeapons()
 		}
 		C.M_ItemID = 18;
 		C.WeaponLevel = 2;
-		C.StarsLevel = 3;
 		C.BagID = TEXT("2");
 
 		FMainWeaponData D;
@@ -89,7 +88,6 @@ void UUI_Weapons::InitWeapons()
 		}
 		D.M_ItemID = 19;
 		D.WeaponLevel = 4;
-		D.StarsLevel = 2;
 		D.BagID = TEXT("3");
 
 		FMainWeaponData E;
@@ -103,7 +101,6 @@ void UUI_Weapons::InitWeapons()
 		}
 		E.M_ItemID = 20;
 		E.WeaponLevel = 1;
-		E.StarsLevel = 2;
 		E.BagID = TEXT("4");
 
 		FMainWeaponData F1;
@@ -117,7 +114,6 @@ void UUI_Weapons::InitWeapons()
 		}
 		F1.M_ItemID = 21;
 		F1.WeaponLevel = 1;
-		F1.StarsLevel = 2;
 		F1.BagID = TEXT("5");
 
 		FMainWeaponData G;
@@ -131,7 +127,6 @@ void UUI_Weapons::InitWeapons()
 		}
 		G.M_ItemID = 22;
 		G.WeaponLevel = 1;
-		G.StarsLevel = 2;
 		G.BagID = TEXT("6");
 
 		//UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Weapon.Empty();
