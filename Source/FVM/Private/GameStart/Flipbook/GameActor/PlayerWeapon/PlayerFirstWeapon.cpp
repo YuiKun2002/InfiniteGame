@@ -48,6 +48,10 @@ void APlayerFirstWeapon::InitSkill(FMainWeaponData& WeaponData)
 	//当前武器等级
 	int32 CurWeaponLevel = OldData.StarsLevel;
 
+	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("武器星级：【") +
+		FString::FromInt(CurWeaponLevel) +
+		TEXT("】"));
+
 	//技能初始化
 	for (const auto& WeaponSkill : this->WeaponSkils)
 	{

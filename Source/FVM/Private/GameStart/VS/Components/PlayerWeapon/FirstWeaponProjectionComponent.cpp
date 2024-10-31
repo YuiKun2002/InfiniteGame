@@ -66,7 +66,10 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		//设置攻击力
 		NewBullet->SetATK(this->TargetData.ATK * this->M_Owner->FlyItemProOverride.BaseAttackUpRate);
 		//设置二次攻击力
-		NewBullet->SetSecondATK(this->M_Owner->FlyItemProOverride.SecondAttackOverwrite);
+		NewBullet->SetSecondATK(
+			NewBullet->GetCurATK() *
+			this->M_Owner->FlyItemProOverride.SecondAttackOverwrite
+		);
 		//重写buff
 		NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
 		//重写攻击类型
