@@ -234,6 +234,15 @@ FMainWeaponData UMainWeaponDataFunc::Calculate_Attack(const FMainWeaponData& Inp
 
 }
 
+FMainWeaponData UMainWeaponDataFunc::Calculate_AttackCount(const FMainWeaponData& InputData, int32 AttackCount)
+{
+	FMainWeaponData Data = InputData;
+
+	Data.AttackCount = AttackCount;
+
+	return Data;
+}
+
 FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 {
 	FItemHeroBase Data = InputData;
