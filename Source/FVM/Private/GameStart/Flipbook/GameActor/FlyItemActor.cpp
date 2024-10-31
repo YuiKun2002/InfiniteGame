@@ -510,7 +510,8 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	float _Time,
 	FVector Offset,
 	bool _IsbConstaintLine,
-	FString ObjPoolID
+	FString ObjPoolID,
+	bool InheritProperty
 )
 {
 	//线路判断 不能小于0 不能大于最大值
@@ -553,14 +554,21 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	_TargetActor->SetSecondATK(this->M_FlyData._SecondATK);
 	_TargetActor->SetLine(this->M_FlyData.M_Line + _LineOffset);
 	_TargetActor->SetFlyConstraintLine(_IsbConstaintLine);
+	if (InheritProperty)
+	{
+		//重写buff		
+		_TargetActor->M_FItem_Buff = this->M_FItem_Buff;
+		_TargetActor->M_FItem_Buff.M_bCondition = true;
+		//重写攻击类型
+		_TargetActor->M_AttackType = this->M_AttackType;
+		//静态武器创建一次
+		_TargetActor->bCreateStaticItemOnceOverride = this->bCreateStaticItemOnceOverride;
+		//条件
+		_TargetActor->M_FlyCondition.M_FlyItemAttackType = this->M_FlyCondition.M_FlyItemAttackType;
+		//穿透层数
+		_TargetActor->M_FlyCondition.PanetrateLayers = this->M_FlyCondition.PanetrateLayers;
+	}
 	_TargetActor->Init();
-
-	/*AFlyItemActor* _TargetActor = Cast<AFlyItemActor>(UGameplayStatics::BeginDeferredActorSpawnFromClass(
-		this->GetWorld(), UGameSystemFunction::LoadRes(_FlyActorPath_C), Trans)
-		);*/
-
-		//新生成的对象设置自定义拥有者(CardActor)
-	//AFlyItemActor* _Actor = Cast<AFlyItemActor>(UGameplayStatics::FinishSpawningActor(_TargetActor, Trans));
 
 	//通过node节点更具Direction设置Pitch旋转
 	switch (_Node.M_EShootDirection)
@@ -588,23 +596,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 			_TargetActor->SetFlyConstraintLine(false);
 		}
 	}
-
-	////获取指定的组件
-	//for (UActorComponent* Comp : _TargetActor->GetComponents())
-	//{
-	//	if (Cast<UShootLineComponent>(Comp))
-	//	{
-	//		Cast<UShootLineComponent>(Comp)->SetTargetNode(_Node);
-
-	//		//如果是浮动模式则不受行限制
-	//		if (this->M_bFloatMode)
-	//		{
-	//			_TargetActor->SetFlyConstraintLine(false);
-	//		}
-
-	//		break;
-	//	}
-	//}
 }
 
 void AFlyItemActor::CreateFlyActor_ShootLine_Slash(

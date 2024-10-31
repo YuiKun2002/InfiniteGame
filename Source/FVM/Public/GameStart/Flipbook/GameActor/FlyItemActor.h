@@ -311,7 +311,8 @@ public:
 		float _Time = 10.f,
 		FVector Offset = FVector(0.f),
 		bool _IsbConstaintLine = true,
-		FString ObjPoolID = TEXT("")
+		FString ObjPoolID = TEXT(""),
+		bool InheritProperty = false
 	);
 	//创建一个flyActor斜线
 	UFUNCTION(BlueprintCallable)
