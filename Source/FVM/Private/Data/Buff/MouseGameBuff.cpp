@@ -37,10 +37,15 @@ void UBuffMouseObject::UpdateMaterial()
 	//如果遇到凝固
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Solidification))
 	{
-		this->GetBuffChar()->SetMaterial(
+		/*this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Solidification/MI_SolidificationMaterial_Inst.MI_SolidificationMaterial_Inst'")
-			));
+			));*/
+
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
+			1.f, 0.6f, 0.f, this->GetBuffChar()->GetColorOpacity())
+		);
+
 		if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
 		{
 			if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
@@ -58,28 +63,36 @@ void UBuffMouseObject::UpdateMaterial()
 	//如果遇到冻结
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Freeze))
 	{
-		this->GetBuffChar()->SetMaterial(
+		/*this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Ice/MI_IceMaterial_Inst.MI_IceMaterial_Inst'")
-			));
+			));*/
+
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
+			0.f, 0.5f, 1.f, this->GetBuffChar()->GetColorOpacity())
+		);
+
 		return;
 	}
 
 	//遇到减速
 	if (Cur->GetBuffExistByTag(EGameBuffTag::SlowDown))
 	{
-		this->GetBuffChar()->SetMaterial(
+		/*this->GetBuffChar()->SetMaterial(
 			LoadObject<UMaterialInstance>(this,
 				TEXT("MaterialInstanceConstant'/Game/Resource/BP/Data/Fx/Ice/MI_SlowDownMaterial_Inst.MI_SlowDownMaterial_Inst'")
-			));
+			));*/
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
+			0.f, 1.f, 1.f, this->GetBuffChar()->GetColorOpacity())
+		);
 		return;
 	}
 
 	//其他buff
-	this->GetBuffChar()->SetMaterial(
+	/*this->GetBuffChar()->SetMaterial(
 		LoadObject<UMaterialInstance>(this,
 			TEXT("MaterialInstanceConstant'/Game/Resource/BP/Martials/Mouse/MI_MouseRender.MI_MouseRender'")
-		));
+		));*/
 
 	//灼烧
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Burn))

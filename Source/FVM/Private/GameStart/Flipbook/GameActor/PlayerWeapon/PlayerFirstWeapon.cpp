@@ -134,7 +134,7 @@ void APlayerFirstWeapon::InitWeapon(AGamePlayer* Player, const FMainWeaponData& 
 	this->M_FFPlayerWeaponFirstData = WeaponData;
 
 	//覆盖子弹
-	if (!this->FlyItemProOverride.WeaponBulletClassObjOverride.IsNull())
+	if (!this->FlyItemProOverride.WeaponBulletClassObjOverride.GetAssetName().IsEmpty())
 	{
 		this->WeaponBulletClassObj = this->FlyItemProOverride.WeaponBulletClassObjOverride;
 	}
