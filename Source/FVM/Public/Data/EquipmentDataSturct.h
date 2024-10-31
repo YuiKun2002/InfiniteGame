@@ -148,7 +148,7 @@ public:
 	float ATK = 2.f;
 	//攻击力加成
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ATKRCoefficient = 1.1f;
+	float ATKRCoefficient = 1.002f;
 
 	//二次攻击力
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -159,7 +159,7 @@ public:
 	float AttackCoolingTime = 1.f;
 	//攻击冷却成长(0.003)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AttackCoolingTimeCoefficient = 1.f;
+	float AttackCoolingTimeCoefficient = 1.002f;
 	//提升比例
 	UPROPERTY()
 	float AttackSpeedUpRate = 0.f;

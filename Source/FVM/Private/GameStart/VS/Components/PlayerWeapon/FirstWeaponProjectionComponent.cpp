@@ -81,8 +81,11 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 			NewBullet->M_AttackType = this->M_Owner->FlyItemProOverride.AttackTypeOverride;
 		}
 		//条件
-		NewBullet->M_FlyCondition.M_FlyItemAttackType = this->M_Owner->FlyItemProOverride.FlyItemAttackType;
-		NewBullet->M_FlyCondition.PanetrateLayers = this->M_Owner->FlyItemProOverride.PanetrateLayers;
+		NewBullet->M_FlyCondition.M_FlyItemAttackType =
+			this->M_Owner->FlyItemProOverride.FlyItemAttackType;
+		//穿透层数
+		NewBullet->M_FlyCondition.PanetrateLayers =
+			this->M_Owner->FlyItemProOverride.PanetrateLayers;
 	}
 	else {
 		//设置攻击力
