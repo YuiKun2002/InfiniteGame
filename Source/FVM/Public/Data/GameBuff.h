@@ -42,6 +42,9 @@ USTRUCT(BlueprintType)
 struct FGameBuffInfor {
 	GENERATED_USTRUCT_BODY()
 public:
+	//当前所有的buff
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EGameBuffTag, float> CurBuffs;
 	//当前所有的buff动态属性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys;
@@ -158,6 +161,9 @@ private:
 	//当前buff对象
 	UPROPERTY()
 	class UGameBuff* CurBuffObject = nullptr;
+	//当前动态属性
+	UPROPERTY()
+	class UBuffDynamicProperty* DynamicProperty = nullptr;
 };
 
 //执行buff
@@ -190,7 +196,11 @@ public:
 	static UGameBuff* MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuffTag);
 	//添加buff
 	UFUNCTION(BlueprintCallable)
-	void AddBuff(EGameBuffTag NewTag, float NewBuffTime);
+	void AddBuff(
+		EGameBuffTag NewTag,
+		float NewBuffTime,
+		const TSubclassOf<UBuffDynamicProperty>& Property
+	);
 	//添加buff集合
 	UFUNCTION(BlueprintCallable)
 	void AddBuffInfor(FGameBuffInfor NewBuff);
@@ -229,7 +239,7 @@ public:
 	UObject* GetBuffChar();
 protected:
 	//生成一个新的buff对象
-	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime);
+	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property);
 	//设置buff的时间
 	void SetBuffCurTime(const EGameBuffTag& CurTag, const float& NewTime);
 private:

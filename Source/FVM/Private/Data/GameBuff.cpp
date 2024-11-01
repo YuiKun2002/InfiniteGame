@@ -24,7 +24,11 @@ UGameBuff* UGameBuff::MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuf
 	return NewBuff;
 }
 
-void UGameBuff::AddBuff(EGameBuffTag NewTag, float NewBuffTime)
+void UGameBuff::AddBuff(
+	EGameBuffTag NewTag,
+	float NewBuffTime,
+	const TSubclassOf<UBuffDynamicProperty>& Property
+)
 {
 	UBuffObject** CurBuff = this->CurBuffs.Find(NewTag);
 	if (CurBuff)
@@ -49,7 +53,7 @@ void UGameBuff::AddBuff(EGameBuffTag NewTag, float NewBuffTime)
 		if (NewBuffTime > 0.f)
 		{
 			//添加buff
-			UBuffObject* NewBuff = this->GetNewBuffObject(NewTag, NewBuffTime);
+			UBuffObject* NewBuff = this->GetNewBuffObject(NewTag, NewBuffTime, Property);
 			this->CurBuffs.Emplace(NewTag, NewBuff);
 			//设置限制buff的存在
 			if (NewBuff->GetConstbuff())
@@ -67,7 +71,7 @@ void UGameBuff::AddBuffInfor(FGameBuffInfor NewBuff)
 {
 	for (const auto& Cur : NewBuff.CurBuffs)
 	{
-		this->AddBuff(Cur.Key, Cur.Value);
+		this->AddBuff(Cur.Key, Cur.Value, *NewBuff.CurBuffPropertys.Find(Cur.Key));
 	}
 }
 
@@ -196,7 +200,7 @@ UObject* UGameBuff::GetBuffChar()
 	return this->BuffChar;
 }
 
-UBuffObject* UGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime)
+UBuffObject* UGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property)
 {
 	return NewObject<UBuffObject>();
 }

@@ -1,0 +1,14 @@
+diff a/Plugins/SpinePlugin/Source/SpinePlugin/Private/SpineSkeletonRendererComponent.cpp b/Plugins/SpinePlugin/Source/SpinePlugin/Private/SpineSkeletonRendererComponent.cpp	(rejected hunks)
+@@ -345,9 +345,9 @@
+ 		for (int j = 0; j < numTriangles; j++) {
+ 			const int triangleIndex = j * 3;
+ 			if (FVector::CrossProduct(
+-						vertices[indices[triangleIndex + 2]] - vertices[indices[triangleIndex]],
+-						vertices[indices[triangleIndex + 1]] - vertices[indices[triangleIndex]])
+-						.Y < 0.f) {
++				vertices[indices[triangleIndex + 2]] - vertices[indices[triangleIndex]],
++				vertices[indices[triangleIndex + 1]] - vertices[indices[triangleIndex]])
++				.Y < 0.f) {
+ 				const int32 targetVertex = indices[triangleIndex];
+ 				indices[triangleIndex] = indices[triangleIndex + 2];
+ 				indices[triangleIndex + 2] = targetVertex;

@@ -6,7 +6,11 @@
 #include "GameSystem/GameConfigManager.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
-UBuffObject* UMouseGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime)
+UBuffObject* UMouseGameBuff::GetNewBuffObject(
+	EGameBuffTag NewTag,
+	float NewBuffTime,
+	const TSubclassOf<UBuffDynamicProperty>& Property
+)
 {
 	UBuffObject* CurNewBuff = nullptr;
 	switch (NewTag)
@@ -21,7 +25,13 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuff
 
 	//初始化数据
 	CurNewBuff->CurTag = NewTag;
+	CurNewBuff->CurTime = NewBuffTime;
 	CurNewBuff->CurBuffObject = this;
+	//如果有属性
+	if (IsValid(Property))
+	{
+		CurNewBuff->DynamicProperty = Property.GetDefaultObject();
+	}
 	return CurNewBuff;
 }
 
@@ -94,7 +104,7 @@ void UBuffMouseObject::UpdateMaterial()
 			TEXT("MaterialInstanceConstant'/Game/Resource/BP/Martials/Mouse/MI_MouseRender.MI_MouseRender'")
 		));*/
 
-	//灼烧
+		//灼烧
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Burn))
 	{
 		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
@@ -207,7 +217,7 @@ void UFreezeBuffMouse::BuffInit(float BuffTime)
 void UFreezeBuffMouse::BuffEnd()
 {
 	//触发减速buff
-	this->GetGameBuff()->AddBuff(EGameBuffTag::SlowDown, 10.f);
+	this->GetGameBuff()->AddBuff(EGameBuffTag::SlowDown, 10.f, nullptr);
 
 	Super::BuffEnd();
 }
