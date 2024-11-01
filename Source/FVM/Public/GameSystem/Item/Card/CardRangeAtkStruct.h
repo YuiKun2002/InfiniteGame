@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Data/GameBuff.h"
 #include "GameSystem/Item/Card/CardBaseStruct.h"
 #include "CardRangeAtkStruct.generated.h"
 
@@ -82,7 +83,7 @@ public:
 		EFlyItemAttackType AttackType = EFlyItemAttackType::Def;
 	//携带buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FItem_Buff M_FItem_Buff;
+		FGameBuffInfor M_FItem_Buff;
 	//检测类型(决定当前卡片可以攻击的老鼠类型)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		ELineTraceType M_ELineTraceType;

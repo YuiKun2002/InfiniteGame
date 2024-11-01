@@ -108,7 +108,7 @@ void UCardDefenceComponent::BeHurt(AMouseActor* CurMouseActor)
 		//获取当前攻击该卡片的老鼠
 		if (IsValid(CurMouseActor) && CurMouseActor->GetCurrentHP() > 0.f)
 		{
-			FItem_Buff buff;
+			FGameBuffInfor buff;
 			if (UGameSystemFunction::HitMouse(this->DefenceCardActor,
 				CardData.M_ATK * CardData.M_ATK_UpRate * this->DefenceCardActor->GetTotalHP() * 0.1f / 2.f,
 				CurMouseActor, buff, EFlyItemAttackType::Def)

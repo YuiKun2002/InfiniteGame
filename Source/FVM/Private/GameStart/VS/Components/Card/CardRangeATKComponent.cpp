@@ -68,7 +68,7 @@ void UCardRangeATKComponent::Spawn()
 			Type)
 			)
 		{
-			FItem_Buff Buff = this->RangeATKCardActor->GetRangeATKCardData().M_FItem_Buff;
+			FGameBuffInfor Buff = this->RangeATKCardActor->GetRangeATKCardData().M_FItem_Buff;
 
 			for (auto& Mouse : Hits)
 			{

@@ -42,20 +42,19 @@ bool AElementSphere::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAt
 	AFlyItemActor* CurActor = Cast<AFlyItemActor>(CurHitMouseObj);
 	if (IsValid(CurActor))
 	{
-		if (CurActor->GetBuff().M_bCondition)
-		{
-			for (const auto& CurBuff : CurActor->GetBuff().M_Buffers)
+		
+			for (const auto& CurBuff : CurActor->GetBuff().CurBuffs)
 			{
 				switch (CurBuff.Key)
 				{
-				case Buff_Infor::Burn: {
-					if (this->ElementType == Buff_Infor::E_Freeze)
+				case EGameBuffTag::Burn: {
+					if (this->ElementType == EGameBuffTag::Freeze)
 					{
 						CurValue = CurValue * 2.5;
 					}
 				}; break;
-				case Buff_Infor::E_SlowDown: {
-					if (this->ElementType == Buff_Infor::Burn)
+				case EGameBuffTag::SlowDown: {
+					if (this->ElementType == EGameBuffTag::Burn)
 					{
 						CurValue = CurValue * 4;
 					}
@@ -63,7 +62,7 @@ bool AElementSphere::BeHit(UObject* CurHitMouseObj, float _HurtValue, EFlyItemAt
 				default:break;
 				}
 			}
-		}
+		
 	}
 
 	bool Re = Super::BeHit(CurHitMouseObj, CurValue, AttackType);

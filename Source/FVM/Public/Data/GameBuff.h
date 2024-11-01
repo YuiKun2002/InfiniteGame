@@ -42,9 +42,9 @@ USTRUCT(BlueprintType)
 struct FGameBuffInfor {
 	GENERATED_USTRUCT_BODY()
 public:
-	//当前所有的buff
+	//当前所有的buff动态属性
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<EGameBuffTag, float> CurBuffs;
+	TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys;
 };
 
 UINTERFACE(MinimalAPI)
@@ -70,6 +70,7 @@ protected:
 };
 
 //Buff的动态属性
+UCLASS(Blueprintable)
 class FVM_API UBuffDynamicProperty : public UObject {
 	GENERATED_BODY()
 public:
@@ -108,10 +109,10 @@ private:
 		const TMap<FString, TypeValue>& Propertys,
 		const FString& VariableName
 	) {
-		TypeValue* TargetValue = Propertys.Find(VariableName);
+		const TypeValue* TargetValue = Propertys.Find(VariableName);
 		if (TargetValue)
 		{
-			return *TargetValue
+			return *TargetValue;
 		}
 
 		return TypeValue();

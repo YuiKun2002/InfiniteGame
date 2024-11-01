@@ -127,7 +127,7 @@ public:
 	float BombATKRate = 0.5f;
 	//额外的buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FItem_Buff Buffs;
+	FGameBuffInfor Buffs;
 	//生成对象[爆炸生成]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftClassPtr<AFunctionActor> OtherShow;
@@ -485,7 +485,7 @@ public:
 	float ATKRate = 1.f;
 	//携带buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<Buff_Infor, float> BuffSet;
+	TMap<EGameBuffTag, float> BuffSet;
 	//更正的动画资源(当子弹穿过时可以更正外观)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftClassPtr<AFlyItemActor> AcrossBulletClass;

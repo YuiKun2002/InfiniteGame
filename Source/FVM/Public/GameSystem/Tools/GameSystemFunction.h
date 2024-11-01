@@ -279,7 +279,7 @@ public:
 
 	//通道获取---------------------------------------开始
 	//将直接给指定老鼠造成伤害(必中)
-	static bool HitMouse(UObject* CurHitMouseObj, float _HitValue, AMouseActor* _Mouse, FItem_Buff& _Buff, EFlyItemAttackType AttackType);
+	static bool HitMouse(UObject* CurHitMouseObj, float _HitValue, AMouseActor* _Mouse, FGameBuffInfor& _Buff, EFlyItemAttackType AttackType);
 	//创建一个老鼠检测
 	static AActor* CreateCheckMouseLineTrace(class UWorld* World, const TArray<FLineTraceSetting>& InputLineTraceSetting, ELineTraceType& OutCheckLineType);
 	//线路检测

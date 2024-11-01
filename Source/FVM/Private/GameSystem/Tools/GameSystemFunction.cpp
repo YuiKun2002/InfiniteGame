@@ -769,7 +769,7 @@ void UGameSystemFunction::CreateMapMatrix(FLine _Line, int32 _RowCount, int32 _C
 
 
 
-bool UGameSystemFunction::HitMouse(UObject* CurHitMouseObj, float _HitValue, AMouseActor* _Mouse, FItem_Buff& _Buff, EFlyItemAttackType AttackType)
+bool UGameSystemFunction::HitMouse(UObject* CurHitMouseObj, float _HitValue, AMouseActor* _Mouse, FGameBuffInfor& _Buff, EFlyItemAttackType AttackType)
 {
 	if (IsValid(_Mouse))
 	{

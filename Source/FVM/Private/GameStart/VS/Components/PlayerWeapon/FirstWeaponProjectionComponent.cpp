@@ -65,7 +65,7 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	{
 		//设置攻击力
 		NewBullet->SetATK(this->TargetData.ATK * this->M_Owner->FlyItemProOverride.BaseAttackUpRate);
-		
+
 		//设置二次攻击力
 		NewBullet->SetSecondATK(
 			NewBullet->GetCurATK() *
@@ -73,10 +73,9 @@ void UFirstWeaponProjectionComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		);
 
 		//重写buff
-		if (this->M_Owner->FlyItemProOverride.ItemBuffOverride.M_Buffers.Num())
+		if (this->M_Owner->FlyItemProOverride.ItemBuffOverride.CurBuffs.Num())
 		{
 			NewBullet->M_FItem_Buff = this->M_Owner->FlyItemProOverride.ItemBuffOverride;
-			NewBullet->M_FItem_Buff.M_bCondition = true;
 		}
 
 		//重写攻击类型

@@ -216,13 +216,13 @@ public:
 	void SetFlyParentActor(AActor* NewParent);
 public:
 	//添加Buff
-	void AddBuff(TMap<Buff_Infor, float>& _buffers);
+	void AddBuff(TMap<EGameBuffTag, float>& _buffers);
 	//添加可以攻击类型
 	void AddAttackType(TArray<ELineType>& _types);
 
 	//添加Buff
 	UFUNCTION(BlueprintCallable)
-	void AddBuff(Buff_Infor& _buff, const float& _time);
+	void AddBuff(EGameBuffTag& _buff, const float& _time);
 	//添加可以攻击类型
 	UFUNCTION(BlueprintCallable)
 	void AddAttackType(ELineType _type);
@@ -262,7 +262,7 @@ public:
 	FVector GetObjectActorLocation();
 	//获取buff
 	UFUNCTION(BlueprintCallable)
-	FItem_Buff& GetBuff();
+	FGameBuffInfor& GetBuff();
 	//获取对象的ActorLocation
 	UFUNCTION(BlueprintCallable)
 	AActor* const GetObjectActor();

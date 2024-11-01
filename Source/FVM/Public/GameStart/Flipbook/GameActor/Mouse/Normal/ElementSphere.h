@@ -22,7 +22,7 @@ public:
 		ECardCollisionType M_ECardCollisionType = ECardCollisionType::E_CardActor2;
 	//元素类型[冰]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Buff_Infor ElementType = Buff_Infor::E_SlowDown;
+		EGameBuffTag ElementType = EGameBuffTag::SlowDown;
 	//遇到buff直接死亡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<EGameBuffTag> BuffKill;

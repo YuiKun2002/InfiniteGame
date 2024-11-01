@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SpineActor.h"
+#include "Data/GameBuff.h"
 #include "Data/EquipmentDataSturct.h"
 #include "GameSystem/Item/ItemStruct.h"
 #include "PlayerFirstWeapon.generated.h"
@@ -43,7 +44,7 @@ public:
 	TArray<ELineType> AttackTypeOverride;
 	//Buff重写
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FItem_Buff ItemBuffOverride;
+	FGameBuffInfor ItemBuffOverride;
 	//基础攻击力附加重写【基于原来的攻击力增长】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BaseAttackUpRate = 1.f;
@@ -93,7 +94,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "武器飞行物属性重写")
 	static FFlyItemProOverride SetItemBuffOverride(
 		const FFlyItemProOverride& FlyItemProOverride,
-		const FItem_Buff& ItemBuffOverride
+		const FGameBuffInfor& ItemBuffOverride
 	);
 
 	//重写攻击力加成

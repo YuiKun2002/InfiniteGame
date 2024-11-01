@@ -3,7 +3,7 @@
 
 #include "Data/Buff/MouseGameBuff.h"
 #include "GameSystem/FVMGameInstance.h"
-#include "GameSystem/GameConfigManager.h"==
+#include "GameSystem/GameConfigManager.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
 UBuffObject* UMouseGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime)

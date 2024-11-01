@@ -270,7 +270,7 @@ FVector AFlyItemActor::GetObjectActorLocation()
 	}
 }
 
-FItem_Buff& AFlyItemActor::GetBuff()
+FGameBuffInfor& AFlyItemActor::GetBuff()
 {
 	return this->M_FItem_Buff;
 }
@@ -558,7 +558,6 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	{
 		//重写buff		
 		_TargetActor->M_FItem_Buff = this->M_FItem_Buff;
-		_TargetActor->M_FItem_Buff.M_bCondition = true;
 		//重写攻击类型
 		_TargetActor->M_AttackType = this->M_AttackType;
 		//静态武器创建一次
@@ -965,16 +964,14 @@ void AFlyItemActor::OnBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 		//开启范围伤害并且开启了静态对象
 }
 
-void AFlyItemActor::AddBuff(TMap<Buff_Infor, float>& _buffers)
+void AFlyItemActor::AddBuff(TMap<EGameBuffTag, float>& _buffers)
 {
-	this->M_FItem_Buff.M_bCondition = true;
-	this->M_FItem_Buff.M_Buffers.Append(_buffers);
+	this->M_FItem_Buff.CurBuffs.Append(_buffers);
 }
 
-void AFlyItemActor::AddBuff(Buff_Infor& _buff, const float& _time)
+void AFlyItemActor::AddBuff(EGameBuffTag& _buff, const float& _time)
 {
-	this->M_FItem_Buff.M_bCondition = true;
-	this->M_FItem_Buff.M_Buffers.Emplace(_buff, _time);
+	this->M_FItem_Buff.CurBuffs.Emplace(_buff, _time);
 }
 
 void AFlyItemActor::SetObjectActorLocation(AActor* _MouseActor)

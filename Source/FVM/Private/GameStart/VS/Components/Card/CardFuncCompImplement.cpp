@@ -240,7 +240,7 @@ void UCardFunctionBombBase::CreateBomb(UCardFunctionComponent* CardFuncComp, boo
 			)))
 		{
 			AMouseActor* MouseAc = nullptr;
-			FItem_Buff CurBuff = this->CardDataTRB.Buffs;
+			FGameBuffInfor CurBuff = this->CardDataTRB.Buffs;
 			for (auto& Mouse : Hits)
 			{
 				MouseAc = Cast<AMouseActor>(Mouse.GetActor());
@@ -369,7 +369,7 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 					}
 				}
 
-				FItem_Buff CurBuff = this->CardDataTRB.Buffs;
+				FGameBuffInfor CurBuff = this->CardDataTRB.Buffs;
 				float BombATK = this->CardDataTRB.BombATK;
 				float BombATKRate = this->CardDataTRB.BombATKRate;
 				float TargetATK =
@@ -635,7 +635,7 @@ void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncCo
 			TargetATK = this->CurCheckMouse->GetTotalHP();
 		}
 
-		FItem_Buff CurBuff = this->CardDataTRB.Buffs;
+		FGameBuffInfor CurBuff = this->CardDataTRB.Buffs;
 		if (UGameSystemFunction::HitMouse(
 			CardFuncComp->GetCardActor(),
 			TargetATK,

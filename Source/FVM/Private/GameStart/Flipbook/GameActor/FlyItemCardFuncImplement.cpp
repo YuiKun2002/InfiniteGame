@@ -119,7 +119,7 @@ void UFlyItemBuffCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFu
 				);
 			}
 
-			TMap<Buff_Infor, float> Buffs = CardData.BuffSet;
+			TMap<EGameBuffTag, float> Buffs = CardData.BuffSet;
 			CurFlyItem->AddBuff(Buffs);
 		}
 	}
@@ -181,9 +181,9 @@ void UFlyItemAcrossCardFunc::Execute(
 
 	bool bRe = false;
 	//如果遇到当前飞行物携带减速buff
-	for (auto Buff : CurFlyItem->GetBuff().M_Buffers)
+	for (auto Buff : CurFlyItem->GetBuff().CurBuffs)
 	{
-		if (Buff.Key == Buff_Infor::E_SlowDown)
+		if (Buff.Key == EGameBuffTag::SlowDown)
 		{
 			//回溯攻击力【万一出现加伤害的情况】
 			CurFlyItem->SetCurATK(CurFlyItem->GetATK());

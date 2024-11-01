@@ -69,7 +69,7 @@ FFlyItemProOverride UFlyItemProOverrideFunc::SetAttackTypeOverride(const FFlyIte
 	return Temp;
 }
 
-FFlyItemProOverride UFlyItemProOverrideFunc::SetItemBuffOverride(const FFlyItemProOverride& FlyItemProOverride, const FItem_Buff& ItemBuffOverride)
+FFlyItemProOverride UFlyItemProOverrideFunc::SetItemBuffOverride(const FFlyItemProOverride& FlyItemProOverride, const FGameBuffInfor& ItemBuffOverride)
 {
 	FFlyItemProOverride Temp = FlyItemProOverride;
 	Temp.bOverride = true;

@@ -85,30 +85,24 @@ void UBZ_BaseState::BeHit(UObject* CurHitMouseObj, float& _HurtValue, EFlyItemAt
 		{
 			if (!this->GetBZ()->bDoubleState)
 			{
-				if (CurFly->GetBuff().M_bCondition)
+				for (const auto& CurBuff : CurFly->GetBuff().CurBuffs)
 				{
-					for (const auto& CurBuff : CurFly->GetBuff().M_Buffers)
+					if (CurBuff.Key == EGameBuffTag::Burn)
 					{
-						if (CurBuff.Key == Buff_Infor::Burn)
-						{
-							_HurtValue = _HurtValue * 0.90f;
-							break;
-						}
+						_HurtValue = _HurtValue * 0.90f;
+						break;
 					}
 				}
 			}
 			else {
 				if (this->GetLevel() >= 3)
 				{
-					if (CurFly->GetBuff().M_bCondition)
+					for (const auto& CurBuff : CurFly->GetBuff().CurBuffs)
 					{
-						for (const auto& CurBuff : CurFly->GetBuff().M_Buffers)
+						if (CurBuff.Key == EGameBuffTag::SlowDown)
 						{
-							if (CurBuff.Key == Buff_Infor::E_SlowDown)
-							{
-								_HurtValue = _HurtValue * 0.95f;
-								break;
-							}
+							_HurtValue = _HurtValue * 0.95f;
+							break;
 						}
 					}
 				}
