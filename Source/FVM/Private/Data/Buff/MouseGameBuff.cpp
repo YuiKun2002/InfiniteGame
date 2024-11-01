@@ -28,7 +28,7 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	CurNewBuff->CurTime = NewBuffTime;
 	CurNewBuff->CurBuffObject = this;
 	//如果有属性
-	if (IsValid(Property))
+	if (Property != nullptr)
 	{
 		CurNewBuff->DynamicProperty = Property.GetDefaultObject();
 	}
