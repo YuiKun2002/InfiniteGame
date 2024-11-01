@@ -245,7 +245,7 @@ public:
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)
-	void ParseBuff_Information(const FItem_Buff& _Buff);
+	void ParseBuff_Information(const FGameBuffInfor& _Buff);
 	//获取当前生命值
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHP();

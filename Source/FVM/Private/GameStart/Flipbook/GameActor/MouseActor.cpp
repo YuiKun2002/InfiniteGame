@@ -81,38 +81,10 @@ void AMouseActor::UpdateColor()
 	}
 }
 
-void AMouseActor::ParseBuff_Information(const FItem_Buff& _Buff)
+void AMouseActor::ParseBuff_Information(const FGameBuffInfor& _Buff)
 {
-	if (_Buff.M_Buffers.Num())
-	{
-		FGameBuffInfor Infor;
-		//转换buff
-		for (const auto& CurInfor : _Buff.M_Buffers)
-		{
-			switch (CurInfor.Key)
-			{
-			case Buff_Infor::E_SlowDown:
-				Infor.CurBuffs.Emplace(EGameBuffTag::SlowDown, CurInfor.Value);
-				break;
-			case Buff_Infor::E_Freeze:
-				Infor.CurBuffs.Emplace(EGameBuffTag::Freeze, CurInfor.Value);
-				break;
-			case Buff_Infor::E_Solidification:
-				Infor.CurBuffs.Emplace(EGameBuffTag::Solidification, CurInfor.Value);
-				break;
-			case Buff_Infor::E_Accelerate:
-				Infor.CurBuffs.Emplace(EGameBuffTag::Accelerate, CurInfor.Value);
-				break;
-			case Buff_Infor::Burn:
-				Infor.CurBuffs.Emplace(EGameBuffTag::Burn, CurInfor.Value);
-				break;
-			default:
-				break;
-			}
-		}
-		//添加buff
-		this->M_Buff->AddBuffInfor(Infor);
-	}
+	//添加buff
+	this->M_Buff->AddBuffInfor(_Buff);
 }
 
 void AMouseActor::MouseKill()

@@ -139,7 +139,7 @@ public:
 	ECardCollisionType M_AttackCardType = ECardCollisionType::E_None;
 	//携带的buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | AddBuffer")
-	FItem_Buff M_FItem_Buff;
+	FGameBuffInfor M_FItem_Buff;
 	//飞行物条件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | Condition")
 	FlyItem_PropertyCondition M_FlyCondition;

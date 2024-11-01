@@ -96,17 +96,17 @@ void UGameBuff::DebugLog(const FString& ActorName, EGameBuffTag NewTag, bool Tir
 		{
 			UE_LOG(LogTemp, Warning, TEXT("~~~%s：%s"), *ActorName, *B);
 		}
-	};
+		};
 
 	switch (NewTag)
 	{
-	case EGameBuffTag::Accelerate: LLog(ActorName,TEXT("触发加速"), TEXT("加速结束~~~~")); break;
-	case EGameBuffTag::Burn: LLog(ActorName,TEXT("触发灼烧"), TEXT("灼烧结束~~~~")); break;
-	case EGameBuffTag::Solidification: LLog(ActorName,TEXT("触发凝固"), TEXT("凝固结束~~~~")); break;
-	case EGameBuffTag::Freeze: LLog(ActorName,TEXT("触发冻结"), TEXT("冻结结束~~~~")); break;
-	case EGameBuffTag::SlowDown: LLog(ActorName,TEXT("触发减速"), TEXT("减速结束~~~~")); break;
+	case EGameBuffTag::Accelerate: LLog(ActorName, TEXT("触发加速"), TEXT("加速结束~~~~")); break;
+	case EGameBuffTag::Burn: LLog(ActorName, TEXT("触发灼烧"), TEXT("灼烧结束~~~~")); break;
+	case EGameBuffTag::Solidification: LLog(ActorName, TEXT("触发凝固"), TEXT("凝固结束~~~~")); break;
+	case EGameBuffTag::Freeze: LLog(ActorName, TEXT("触发冻结"), TEXT("冻结结束~~~~")); break;
+	case EGameBuffTag::SlowDown: LLog(ActorName, TEXT("触发减速"), TEXT("减速结束~~~~")); break;
 	default:
-		LLog(ActorName,TEXT("触发【其他buff】"), TEXT("【其他buff】结束~~~~"));
+		LLog(ActorName, TEXT("触发【其他buff】"), TEXT("【其他buff】结束~~~~"));
 		break;
 	}
 }
@@ -119,6 +119,7 @@ void UGameBuff::UpdateBuff(const float& DeltaTime)
 	//更新buff时间
 	for (auto& CurBuffObj : this->CurBuffs)
 	{
+		CurBuffObj.Value->Tick(DeltaTime);
 		CurBuffObj.Value->CurTime -= DeltaTime;
 		if (CurBuffObj.Value->CurTime <= 0.f)
 		{
@@ -231,6 +232,15 @@ void UGameBuff::ExecuteBuffs()
 	this->OnBuffExecuteFinishedDelegate.ExecuteIfBound(this);
 }
 
+void UBuffDynamicProperty::SetIntProperty(const FString& VariableName, int32 Value)
+{
+	this->EditProperty(this->IntPropertys, VariableName, Value);
+}
+int32 UBuffDynamicProperty::GetIntProperty(const FString& VariableName)
+{
+	return this->GetProperty(this->IntPropertys, VariableName);
+}
+
 void UBuffObject::BuffInit(float BuffTime)
 {
 	//如果当前buff时间小于新的时间，刷新buff的时间
@@ -238,6 +248,11 @@ void UBuffObject::BuffInit(float BuffTime)
 	{
 		this->CurTime = BuffTime;
 	}
+}
+
+void UBuffObject::Tick(float BuffTime)
+{
+
 }
 
 void UBuffObject::BuffEnd()

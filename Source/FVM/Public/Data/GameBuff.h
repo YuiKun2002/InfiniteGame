@@ -44,7 +44,7 @@ struct FGameBuffInfor {
 public:
 	//当前所有的buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<EGameBuffTag, float> CurBuffs;
+	TMap<EGameBuffTag, float> CurBuffs;
 };
 
 UINTERFACE(MinimalAPI)
@@ -59,6 +59,8 @@ class FVM_API IGameBuffInterface
 protected:
 	//初始化
 	virtual void BuffInit(float BuffTime) = 0;
+	//更新
+	virtual void Tick(float BuffTime) = 0;
 	//buff结束
 	virtual void BuffEnd() = 0;
 	//是否是负面状态的buff
@@ -67,17 +69,67 @@ protected:
 	virtual bool GetConstbuff() = 0;
 };
 
+//Buff的动态属性
+class FVM_API UBuffDynamicProperty : public UObject {
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetIntProperty(const FString& VariableName, int32 Value);
+	UFUNCTION(BlueprintPure)
+	int32 GetIntProperty(const FString& VariableName);
+private:
+	UPROPERTY()
+	TMap<FString, int32> IntPropertys;
+	UPROPERTY()
+	TMap<FString, float> FloatPropertys;
+	UPROPERTY()
+	TMap<FString, FString> FStringPropertys;
+	UPROPERTY()
+	TMap<FString, UObject*> UObjectPropertys;
+private:
+	template<class TypeValue>
+	void EditProperty(
+		TMap<FString, TypeValue>& Propertys,
+		const FString& VariableName,
+		const TypeValue& Value
+	) {
+		TypeValue* TargetValue = Propertys.Find(VariableName);
+		if (TargetValue)
+		{
+			*TargetValue = Value;
+		}
+		else {
+			Propertys.Emplace(VariableName, Value);
+		}
+	}
+
+	template<class TypeValue>
+	TypeValue GetProperty(
+		const TMap<FString, TypeValue>& Propertys,
+		const FString& VariableName
+	) {
+		TypeValue* TargetValue = Propertys.Find(VariableName);
+		if (TargetValue)
+		{
+			return *TargetValue
+		}
+
+		return TypeValue();
+	}
+};
+
 //buff基本类型
 UCLASS()
 class FVM_API UBuffObject : public UObject, public IGameBuffInterface
 {
 	GENERATED_BODY()
 
-		friend class UGameBuff;
+	friend class UGameBuff;
 	friend class UMouseGameBuff;
 
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void Tick(float BuffTime) override;
 	virtual void BuffEnd() override;
 	virtual bool GetDebuff() override;
 	virtual bool GetConstbuff() override;
@@ -98,13 +150,13 @@ public:
 private:
 	//当前持续的时间
 	UPROPERTY()
-		float CurTime = 0.f;
+	float CurTime = 0.f;
 	//当前buff的标签
 	UPROPERTY()
-		EGameBuffTag CurTag = EGameBuffTag::Burn;
+	EGameBuffTag CurTag = EGameBuffTag::Burn;
 	//当前buff对象
 	UPROPERTY()
-		class UGameBuff* CurBuffObject = nullptr;
+	class UGameBuff* CurBuffObject = nullptr;
 };
 
 //执行buff
@@ -122,7 +174,7 @@ class FVM_API UGameBuff : public UObject
 {
 	GENERATED_BODY()
 
-		friend class UBuffObject;
+	friend class UBuffObject;
 
 public:
 	//当执行buff时
@@ -134,46 +186,46 @@ public:
 public:
 	//生成buff对象
 	UFUNCTION(BlueprintCallable)
-		static UGameBuff* MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuffTag);
+	static UGameBuff* MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuffTag);
 	//添加buff
 	UFUNCTION(BlueprintCallable)
-		void AddBuff(EGameBuffTag NewTag, float NewBuffTime);
+	void AddBuff(EGameBuffTag NewTag, float NewBuffTime);
 	//添加buff集合
 	UFUNCTION(BlueprintCallable)
-		void AddBuffInfor(FGameBuffInfor NewBuff);
+	void AddBuffInfor(FGameBuffInfor NewBuff);
 	//直接清除所有buff
 	UFUNCTION(BlueprintCallable)
-		void ClearBuffs();
+	void ClearBuffs();
 	//直接结束所有Buff
 	UFUNCTION(BlueprintCallable)
-		void EndBuffs();
+	void EndBuffs();
 	//打印
 	UFUNCTION(BlueprintCallable)
-		void DebugLog(const FString& ActorName,EGameBuffTag NewTag, bool Tirgger);
+	void DebugLog(const FString& ActorName, EGameBuffTag NewTag, bool Tirgger);
 	//立刻执行所有buff
 	UFUNCTION(BlueprintCallable)
-		void ExecuteBuffs();
+	void ExecuteBuffs();
 	//更新buff
 	UFUNCTION(BlueprintCallable)
-		void UpdateBuff(const float& DeltaTime);
+	void UpdateBuff(const float& DeltaTime);
 	//移除buff
 	UFUNCTION(BlueprintCallable)
-		void RemoveBuff(EGameBuffTag NewTag);
+	void RemoveBuff(EGameBuffTag NewTag);
 	//获取是否存在buff
 	UFUNCTION(BlueprintCallable)
-		bool GetBuffExist() const;
+	bool GetBuffExist() const;
 	//获取某个buff是否存在
 	UFUNCTION(BlueprintCallable)
-		bool GetBuffExistByTag(EGameBuffTag NewTag);
+	bool GetBuffExistByTag(EGameBuffTag NewTag);
 	//获取是否存在限制buff
 	UFUNCTION(BlueprintCallable)
-		bool GetConstBuff() const;
+	bool GetConstBuff() const;
 	//获取tick的更新率
 	UFUNCTION(BlueprintCallable)
-		float GetTickRate() const;
+	float GetTickRate() const;
 	//获取buff的对象
 	UFUNCTION(BlueprintCallable)
-		UObject* GetBuffChar();
+	UObject* GetBuffChar();
 protected:
 	//生成一个新的buff对象
 	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime);
@@ -182,17 +234,17 @@ protected:
 private:
 	//buff集合
 	UPROPERTY()
-		TMap<EGameBuffTag, UBuffObject*> CurBuffs;
+	TMap<EGameBuffTag, UBuffObject*> CurBuffs;
 	//角色buff类型
 	UPROPERTY()
-		EGameBuffCharTag BuffTag = EGameBuffCharTag::Mouse;
+	EGameBuffCharTag BuffTag = EGameBuffCharTag::Mouse;
 	//buff对象
 	UPROPERTY()
-		UObject* BuffChar = nullptr;
+	UObject* BuffChar = nullptr;
 	//是否存在限制类型的buff
 	UPROPERTY()
-		bool bConstBuff = false;
+	bool bConstBuff = false;
 	//时间更新率
 	UPROPERTY()
-		float UpdateTickRate = 1.f;
+	float UpdateTickRate = 1.f;
 };

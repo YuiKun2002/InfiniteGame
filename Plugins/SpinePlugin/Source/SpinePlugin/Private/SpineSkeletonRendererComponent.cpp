@@ -89,8 +89,7 @@ void USpineSkeletonRendererComponent::TickComponent(float DeltaTime, ELevelTick 
 void USpineSkeletonRendererComponent::UpdateRenderer(USpineSkeletonComponent* component) {
 	if (component && !component->IsBeingDestroyed() && component->GetSkeleton() && component->Atlas) {
 		component->GetSkeleton()->getColor().set(Color.R, Color.G, Color.B, Color.A);
-
-		/*if (atlasNormalBlendMaterials.Num() != component->Atlas->atlasPages.Num()) {
+		if (atlasNormalBlendMaterials.Num() != component->Atlas->atlasPages.Num()) {
 			atlasNormalBlendMaterials.SetNum(0);
 			atlasAdditiveBlendMaterials.SetNum(0);
 			atlasMultiplyBlendMaterials.SetNum(0);
@@ -103,7 +102,7 @@ void USpineSkeletonRendererComponent::UpdateRenderer(USpineSkeletonComponent* co
 				material->SetTextureParameterValue(TextureParameterName, component->Atlas->atlasPages[i]);
 				atlasNormalBlendMaterials.Add(material);
 
-				material = UMaterialInstanceDynamic::Create(AdditiveBlendMaterial, this);
+				/*material = UMaterialInstanceDynamic::Create(AdditiveBlendMaterial, this);
 				material->SetTextureParameterValue(TextureParameterName, component->Atlas->atlasPages[i]);
 				atlasAdditiveBlendMaterials.Add(material);
 
@@ -113,25 +112,18 @@ void USpineSkeletonRendererComponent::UpdateRenderer(USpineSkeletonComponent* co
 
 				material = UMaterialInstanceDynamic::Create(ScreenBlendMaterial, this);
 				material->SetTextureParameterValue(TextureParameterName, component->Atlas->atlasPages[i]);
-				atlasScreenBlendMaterials.Add(material);
+				atlasScreenBlendMaterials.Add(material);*/
 			}
 		} else {
 			for (int i = 0; i < component->Atlas->atlasPages.Num(); i++) {
 				UTexture2D *texture = component->Atlas->atlasPages[i];
 				UpdateMaterial(texture, atlasNormalBlendMaterials[i], NormalBlendMaterial);
-				UpdateMaterial(texture, atlasAdditiveBlendMaterials[i], AdditiveBlendMaterial);
+				/*UpdateMaterial(texture, atlasAdditiveBlendMaterials[i], AdditiveBlendMaterial);
 				UpdateMaterial(texture, atlasMultiplyBlendMaterials[i], MultiplyBlendMaterial);
-				UpdateMaterial(texture, atlasScreenBlendMaterials[i], ScreenBlendMaterial);
+				UpdateMaterial(texture, atlasScreenBlendMaterials[i], ScreenBlendMaterial);*/
 			}
-		}*/
-
-		for (int i = 0; i < component->Atlas->atlasPages.Num(); i++) {
-			UTexture2D* texture = component->Atlas->atlasPages[i];
-			UpdateMaterial(texture, atlasNormalBlendMaterials[i], NormalBlendMaterial);
-			//\UpdateMaterial(texture, atlasAdditiveBlendMaterials[i], AdditiveBlendMaterial);
-			//UpdateMaterial(texture, atlasMultiplyBlendMaterials[i], MultiplyBlendMaterial);
-			//UpdateMaterial(texture, atlasScreenBlendMaterials[i], ScreenBlendMaterial);
 		}
+
 
 		UpdateMesh(component, component->GetSkeleton());
 	}
