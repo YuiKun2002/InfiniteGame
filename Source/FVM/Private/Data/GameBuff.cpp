@@ -53,6 +53,7 @@ void UGameBuff::AddBuff(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProp
 			if ((*CurBuff)->CurTime < NewBuffTime)
 			{
 				(*CurBuff)->CurTime = NewBuffTime;
+				(*CurBuff)->BuffUpdate();
 			}
 		}
 	}
@@ -314,12 +315,19 @@ void UBuffObject::BuffInit(float BuffTime)
 	if (this->CurTime < BuffTime)
 	{
 		this->CurTime = BuffTime;
-
-		if (IsValid(this->DynamicProperty))
-		{
-			this->DynamicProperty->Init();
-		}
 	}
+
+	if (IsValid(this->DynamicProperty))
+	{
+		this->DynamicProperty->Init();
+	}
+
+	this->BuffUpdate();
+}
+
+void UBuffObject::BuffUpdate()
+{
+
 }
 
 void UBuffObject::Tick(float BuffTime)

@@ -4,6 +4,7 @@
 #include "Data/Buff/MouseGameBuff.h"
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/GameConfigManager.h"
+#include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
@@ -237,8 +238,7 @@ void UBurnBuffMouse::BuffInit(float BuffTime)
 {
 	Super::BuffInit(BuffTime);
 
-	//是否触发
-	bool bTrigger = true;
+	this->bTrigger = true;
 
 	//检测是否存在buff
 	if (this->GetGameBuff()->GetBuffExist())
@@ -277,17 +277,21 @@ void UBurnBuffMouse::BuffInit(float BuffTime)
 	//触发效果
 	if (bTrigger)
 	{
+		//更新
+		this->UpdateTickRate();
+		this->UpdateMaterial();
+	}
+}
 
+void UBurnBuffMouse::BuffUpdate()
+{
+	if (bTrigger)
+	{
 		//初始化持续灼烧时间
 		this->GetDynamicProperty()->GetFloatProperty(TEXT("CurBuffTime"), this->CurBuffTime);
 
-		//防止刷新时，刷新间隔导致无法触发
-		if (!this->bEnable)
-		{
-			//初始化触发灼烧时间
-			this->GetDynamicProperty()->GetFloatProperty(TEXT("BuffDelay"), this->BuffDelay);
-			this->BuffDelayTime = this->BuffDelay;
-		}
+		//初始化触发灼烧时间
+		this->GetDynamicProperty()->GetFloatProperty(TEXT("BuffDelay"), this->BuffDelay);
 
 		//初始化持续伤害
 		UObject* DefObj = nullptr;
@@ -298,16 +302,18 @@ void UBurnBuffMouse::BuffInit(float BuffTime)
 			float TempRate = 0.1f;
 			this->GetDynamicProperty()->GetFloatProperty(TEXT("ATKRate"), TempRate);
 			this->ATK = FlyItem->GetATK() * TempRate;
+		}
+
+		//防止刷新时，刷新间隔导致无法触发
+		if (!this->bEnable)
+		{
+			this->BuffDelayTime = this->BuffDelay;
 
 			if (this->ATK > 0.f)
 			{
 				this->bEnable = true;
 			}
 		}
-
-		//更新
-		this->UpdateTickRate();
-		this->UpdateMaterial();
 	}
 }
 
@@ -318,19 +324,27 @@ void UBurnBuffMouse::Tick(float BuffTime)
 		if (this->CurBuffTime > 0.f)
 		{
 			this->CurBuffTime -= BuffTime;
+			this->BuffDelayTime -= BuffTime;
 
-			if (this->BuffDelayTime > 0.f)
-			{
-				this->BuffDelayTime -= BuffTime;
-			}
-			else {
+			if (this->BuffDelayTime <= 0.f) {
+
 				this->BuffDelayTime = this->BuffDelay;
+
 				//触发伤害
 				if (IsValid(this->GetBuffChar()) && !this->GetBuffChar()->GetMouseIsDeath())
 				{
 					if (this->GetBuffChar()->BeHit(this, this->ATK, EFlyItemAttackType::Def))
 					{
 						this->GetBuffChar()->SetbIsHurt(true);
+
+						UE_LOG(LogTemp, Error, TEXT(""));
+
+						UGameSystemFunction::FVMLog(__FUNCTION__,
+							TEXT("灼烧buff：【") +
+							UGameSystemFunction::GetObjectName(this->GetBuffChar()) +
+							TEXT("】灼烧伤害：") +
+							FString::SanitizeFloat(this->ATK)
+						);
 					}
 				}
 			}

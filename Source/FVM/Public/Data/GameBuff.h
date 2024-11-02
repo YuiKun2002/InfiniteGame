@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "UObject/Interface.h"
+#include "UObject/NoExportTypes.h"
 #include "Engine/Classes/Engine/DataTable.h"
 #include "GameBuff.generated.h"
 
@@ -67,6 +67,8 @@ class FVM_API IGameBuffInterface
 protected:
 	//初始化
 	virtual void BuffInit(float BuffTime) = 0;
+	//初始化更新
+	virtual void BuffUpdate() = 0;
 	//更新
 	virtual void Tick(float BuffTime) = 0;
 	//buff结束
@@ -167,6 +169,7 @@ class FVM_API UBuffObject : public UObject, public IGameBuffInterface
 
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void BuffUpdate() override;
 	virtual void Tick(float BuffTime) override;
 	virtual void BuffEnd() override;
 	virtual bool GetDebuff() override;

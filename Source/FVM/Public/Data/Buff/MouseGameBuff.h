@@ -56,8 +56,11 @@ class FVM_API UBurnBuffMouse : public UBuffMouseObject
 	GENERATED_BODY()
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void BuffUpdate() override;
 	virtual void Tick(float BuffTime) override;
 private:
+	UPROPERTY()
+	bool bTrigger = true;
 	//延迟多少触发
 	UPROPERTY()
 	float BuffDelay = 0.2f;

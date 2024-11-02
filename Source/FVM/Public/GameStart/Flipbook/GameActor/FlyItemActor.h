@@ -161,6 +161,9 @@ public:
 	//静态对象池(有几个就会创建几个)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | StaticItems")
 	TArray<TSoftClassPtr<AFlyItemActor>> M_StaticFlyItemClass;
+	//对象死亡静态对象池(有几个就会创建几个)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | StaticItems")
+	TArray<TSoftClassPtr<AFlyItemActor>> M_TargetDeathStaticFlyItemClass;
 	//飞行物动画资源
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FlyItemActorProperty | FlyItemAnimationRes")
 	FlyItem_Property_AnimRes M_FlyItem_Property_AnimRes;

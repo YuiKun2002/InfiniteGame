@@ -830,6 +830,15 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 				}
 			}
 
+			if (Mouse->GetMouseIsDeath())
+			{
+				//创建静态飞行物对象
+				for (auto ResPath_C : this->M_TargetDeathStaticFlyItemClass)
+				{
+					this->CreateStaticItem(ResPath_C);
+				}
+			}
+
 			if (UFVMGameInstance::GetDebug())
 			{
 				UE_LOG(
