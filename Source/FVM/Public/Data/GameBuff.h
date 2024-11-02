@@ -29,7 +29,9 @@ enum class EGameBuffTag : uint8
 	//灼烧
 	Burn UMETA(DisplayName = "Burn"),
 	//凝固
-	Solidification UMETA(DisplayName = "Solidification")
+	Solidification UMETA(DisplayName = "Solidification"),
+	//中毒
+	Poisoning UMETA(DisplayName = "Poisoning")
 };
 
 //对象buff，针对谁的buff

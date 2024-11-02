@@ -28,6 +28,33 @@ protected:
 	virtual void BuffEnd() override;
 };
 
+//中毒buff
+UCLASS()
+class FVM_API UPoisoningBuffMouse : public UBuffMouseObject
+{
+	GENERATED_BODY()
+protected:
+	virtual void BuffInit(float BuffTime) override;
+	virtual void BuffUpdate() override;
+	virtual void Tick(float BuffTime) override;
+private:
+	//延迟多少触发
+	UPROPERTY()
+	float BuffDelay = 0.2f;
+	//延迟计时器
+	UPROPERTY()
+	float BuffDelayTime = 0.f;
+	//持续时间
+	UPROPERTY()
+	float CurBuffTime = 0.f;
+	//伤害
+	UPROPERTY()
+	float ATK = 0.f;
+	//触发
+	UPROPERTY()
+	bool bEnable = false;
+};
+
 //冻结buff
 UCLASS()
 class FVM_API UFreezeBuffMouse : public UBuffMouseObject

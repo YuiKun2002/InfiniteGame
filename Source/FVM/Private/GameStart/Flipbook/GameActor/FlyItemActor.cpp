@@ -827,15 +827,12 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 					Mouse->SetbIsHurt(true);
 					//解析Buff信息
 					Mouse->ParseBuff_Information(this->M_FItem_Buff, this);
-				}
-			}
 
-			if (Mouse->GetMouseIsDeath())
-			{
-				//创建静态飞行物对象
-				for (auto ResPath_C : this->M_TargetDeathStaticFlyItemClass)
-				{
-					this->CreateStaticItem(ResPath_C);
+					//创建静态飞行物对象
+					for (auto ResPath_C : this->M_TargetDeathStaticFlyItemClass)
+					{
+						this->CreateStaticItem(ResPath_C);
+					}
 				}
 			}
 

@@ -22,6 +22,7 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	case EGameBuffTag::SlowDown:CurNewBuff = NewObject<USlowDownBuffMouse>(); break;
 	case EGameBuffTag::Solidification:CurNewBuff = NewObject<USolidificationBuffMouse>(); break;
 	case EGameBuffTag::Accelerate:CurNewBuff = NewObject<UAccelerateBuffMouse>(); break;
+	case EGameBuffTag::Poisoning:CurNewBuff = NewObject<UPoisoningBuffMouse>(); break;
 	default: CurNewBuff = NewObject<UBuffObject>(); break;
 	}
 
@@ -129,6 +130,16 @@ void UBuffMouseObject::UpdateMaterial()
 				CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
 			}
 		}
+
+		return;
+	}
+
+	//中毒
+	if (Cur->GetBuffExistByTag(EGameBuffTag::Poisoning))
+	{
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
+			0.f, 1.f, 0.f, this->GetBuffChar()->GetColorOpacity())
+		);
 
 		return;
 	}
@@ -414,4 +425,93 @@ void UAccelerateBuffMouse::BuffInit(float BuffTime)
 bool UAccelerateBuffMouse::GetDebuff()
 {
 	return false;
+}
+
+void UPoisoningBuffMouse::BuffInit(float BuffTime)
+{
+	Super::BuffInit(BuffTime);
+
+	//更新
+	this->UpdateTickRate();
+	this->UpdateMaterial();
+}
+
+void UPoisoningBuffMouse::BuffUpdate()
+{
+	//初始化持续中毒时间
+	this->GetDynamicProperty()->GetFloatProperty(TEXT("CurBuffTime"), this->CurBuffTime);
+
+	//初始化触发中毒时间
+	this->GetDynamicProperty()->GetFloatProperty(TEXT("BuffDelay"), this->BuffDelay);
+
+	//初始化伤害
+	int32 TempATK = 0;
+	if (this->GetDynamicProperty()->GetIntProperty(TEXT("ATK"), TempATK))
+	{
+		this->ATK = TempATK;
+	}
+
+	//如果固定伤害=0
+	if (TempATK == 0)
+	{
+		//初始化比例伤害
+		UObject* DefObj = nullptr;
+		this->GetDynamicProperty()->GetDefObject(DefObj);
+		if (AFlyItemActor* FlyItem = Cast<AFlyItemActor>(DefObj))
+		{
+			//初始化伤害倍率
+			float TempRate = 0.1f;
+			this->GetDynamicProperty()->GetFloatProperty(TEXT("ATKRate"), TempRate);
+			this->ATK = FlyItem->GetATK() * TempRate;
+		}
+	}
+
+	//防止刷新时，刷新间隔导致无法触发
+	if (!this->bEnable)
+	{
+		this->BuffDelayTime = this->BuffDelay;
+
+		if (this->ATK > 0.f)
+		{
+			this->bEnable = true;
+		}
+	}
+}
+
+void UPoisoningBuffMouse::Tick(float BuffTime)
+{
+	if (this->bEnable)
+	{
+		if (this->CurBuffTime > 0.f)
+		{
+			this->CurBuffTime -= BuffTime;
+			this->BuffDelayTime -= BuffTime;
+
+			if (this->BuffDelayTime <= 0.f) {
+
+				this->BuffDelayTime = this->BuffDelay;
+
+				//触发伤害
+				if (IsValid(this->GetBuffChar()) && !this->GetBuffChar()->GetMouseIsDeath())
+				{
+					if (this->GetBuffChar()->BeHit(this, this->ATK, EFlyItemAttackType::Def))
+					{
+						this->GetBuffChar()->SetbIsHurt(true);
+
+						UE_LOG(LogTemp, Error, TEXT(""));
+
+						UGameSystemFunction::FVMLog(__FUNCTION__,
+							TEXT("中毒buff：【") +
+							UGameSystemFunction::GetObjectName(this->GetBuffChar()) +
+							TEXT("】中毒伤害：") +
+							FString::SanitizeFloat(this->ATK)
+						);
+					}
+				}
+			}
+		}
+		else {
+			this->bEnable = false;
+		}
+	}
 }
