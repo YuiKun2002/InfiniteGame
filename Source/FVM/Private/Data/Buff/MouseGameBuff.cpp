@@ -31,11 +31,9 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	if (Property)
 	{
 		CurNewBuff->DynamicProperty = Property.GetDefaultObject();
-		CurNewBuff->DynamicProperty->Init();
 	}
 	else {
 		CurNewBuff->DynamicProperty = NewObject<UBuffDynamicProperty>();
-		CurNewBuff->DynamicProperty->Init();
 	}
 
 	return CurNewBuff;

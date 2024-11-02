@@ -294,6 +294,11 @@ void UBuffObject::BuffInit(float BuffTime)
 	{
 		this->CurTime = BuffTime;
 	}
+
+	if (IsValid(this->DynamicProperty))
+	{
+		this->DynamicProperty->Init();
+	}
 }
 
 void UBuffObject::Tick(float BuffTime)
