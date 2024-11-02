@@ -80,7 +80,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIntProperty(const FString& VariableName, int32 Value);
 	UFUNCTION(BlueprintPure)
-	int32 GetIntProperty(const FString& VariableName);
+	bool GetIntProperty(const FString& VariableName,int32& Value);
 private:
 	UPROPERTY()
 	TMap<FString, int32> IntPropertys;
@@ -108,17 +108,18 @@ private:
 	}
 
 	template<class TypeValue>
-	TypeValue GetProperty(
+	bool GetProperty(
 		const TMap<FString, TypeValue>& Propertys,
-		const FString& VariableName
+		const FString& VariableName,
+		TypeValue& Value
 	) {
 		const TypeValue* TargetValue = Propertys.Find(VariableName);
 		if (TargetValue)
 		{
-			return *TargetValue;
+			Value = *TargetValue;
+			return true;
 		}
-
-		return TypeValue();
+		return false;
 	}
 };
 

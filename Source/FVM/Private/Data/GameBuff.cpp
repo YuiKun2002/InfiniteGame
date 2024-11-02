@@ -71,7 +71,14 @@ void UGameBuff::AddBuffInfor(FGameBuffInfor NewBuff)
 {
 	for (const auto& Cur : NewBuff.CurBuffs)
 	{
-		this->AddBuff(Cur.Key, Cur.Value, *NewBuff.CurBuffPropertys.Find(Cur.Key));
+		TSubclassOf<UBuffDynamicProperty>* Sub = NewBuff.CurBuffPropertys.Find(Cur.Key);
+		if (Sub)
+		{
+			this->AddBuff(Cur.Key, Cur.Value, *Sub);
+		}
+		else {
+			this->AddBuff(Cur.Key, Cur.Value, UBuffDynamicProperty::StaticClass());
+		}
 	}
 }
 
@@ -240,9 +247,9 @@ void UBuffDynamicProperty::SetIntProperty(const FString& VariableName, int32 Val
 {
 	this->EditProperty(this->IntPropertys, VariableName, Value);
 }
-int32 UBuffDynamicProperty::GetIntProperty(const FString& VariableName)
+bool UBuffDynamicProperty::GetIntProperty(const FString& VariableName, int32& Value)
 {
-	return this->GetProperty(this->IntPropertys, VariableName);
+	return this->GetProperty(this->IntPropertys, VariableName, Value);
 }
 
 void UBuffObject::BuffInit(float BuffTime)

@@ -19,11 +19,11 @@ class FVM_API UBuffMouseObject : public UBuffObject
 	GENERATED_BODY()
 public:
 	UFUNCTION()
-		AMouseActor* GetBuffChar();
+	AMouseActor* GetBuffChar();
 	UFUNCTION()
-		void UpdateMaterial();
+	void UpdateMaterial();
 	UFUNCTION()
-		void UpdateTickRate();
+	void UpdateTickRate();
 protected:
 	virtual void BuffEnd() override;
 };
@@ -56,6 +56,23 @@ class FVM_API UBurnBuffMouse : public UBuffMouseObject
 	GENERATED_BODY()
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void Tick(float BuffTime) override;
+private:
+	//延迟多少触发
+	UPROPERTY()
+	float BuffDelay = 0.2f;
+	//延迟计时器
+	UPROPERTY()
+	float BuffDelayTime = 0.f;
+	//持续时间
+	UPROPERTY()
+	float CurBuffTime = 0.f;
+	//伤害
+	UPROPERTY()
+	float ATK = 0.f;
+	//触发
+	UPROPERTY()
+	bool bEnable = false;
 };
 
 //减速buff
@@ -81,9 +98,9 @@ UCLASS()
 class FVM_API UMouseGameBuff : public UGameBuff
 {
 	GENERATED_BODY()
-		friend class UBuffObject;
+	friend class UBuffObject;
 
 protected:
 	//生成一个新的buff对象
-	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime,const TSubclassOf<UBuffDynamicProperty>& Property) override;
+	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property) override;
 };

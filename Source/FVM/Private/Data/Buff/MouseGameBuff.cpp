@@ -28,7 +28,7 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	CurNewBuff->CurTime = NewBuffTime;
 	CurNewBuff->CurBuffObject = this;
 	//如果有属性
-	if (Property != nullptr)
+	if (Property)
 	{
 		CurNewBuff->DynamicProperty = Property.GetDefaultObject();
 	}
@@ -271,8 +271,42 @@ void UBurnBuffMouse::BuffInit(float BuffTime)
 	//触发效果
 	if (bTrigger)
 	{
+		//初始化时间
+		this->BuffDelayTime = this->BuffDelay;
+
+
 		this->UpdateTickRate();
 		this->UpdateMaterial();
+	}
+}
+
+void UBurnBuffMouse::Tick(float BuffTime)
+{
+	if (this->bEnable)
+	{
+		if (this->CurBuffTime > 0.f)
+		{
+			this->CurBuffTime -= BuffTime;
+
+			if (this->BuffDelayTime > 0.f)
+			{
+				this->BuffDelayTime -= BuffTime;
+			}
+			else {
+				this->BuffDelayTime = this->BuffDelay;
+				//触发伤害
+				if (IsValid(this->GetBuffChar()) && !this->GetBuffChar()->GetMouseIsDeath())
+				{
+					if (this->GetBuffChar()->BeHit(this, this->ATK, EFlyItemAttackType::Def))
+					{
+						this->GetBuffChar()->SetbIsHurt(true);
+					}
+				}
+			}
+		}
+		else {
+			this->bEnable = false;
+		}
 	}
 }
 
