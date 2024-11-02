@@ -243,6 +243,11 @@ void UGameBuff::ExecuteBuffs()
 	this->OnBuffExecuteFinishedDelegate.ExecuteIfBound(this);
 }
 
+void UBuffDynamicProperty::Init()
+{
+	this->OnInit();
+}
+
 void UBuffDynamicProperty::SetIntProperty(const FString& VariableName, int32 Value)
 {
 	this->EditProperty(this->IntPropertys, VariableName, Value);
@@ -250,6 +255,36 @@ void UBuffDynamicProperty::SetIntProperty(const FString& VariableName, int32 Val
 bool UBuffDynamicProperty::GetIntProperty(const FString& VariableName, int32& Value)
 {
 	return this->GetProperty(this->IntPropertys, VariableName, Value);
+}
+
+void UBuffDynamicProperty::SetFloatProperty(const FString& VariableName, float Value)
+{
+	this->EditProperty(this->FloatPropertys, VariableName, Value);
+}
+
+bool UBuffDynamicProperty::GetFloatProperty(const FString& VariableName, float& Value)
+{
+	return this->GetProperty(this->FloatPropertys, VariableName, Value);
+}
+
+void UBuffDynamicProperty::SetStringProperty(const FString& VariableName, const FString& Value)
+{
+	this->EditProperty(this->FStringPropertys, VariableName, Value);
+}
+
+bool UBuffDynamicProperty::GetStringProperty(const FString& VariableName, FString& Value)
+{
+	return this->GetProperty(this->FStringPropertys, VariableName, Value);
+}
+
+void UBuffDynamicProperty::SetObjectProperty(const FString& VariableName, UObject* Value)
+{
+	this->EditProperty(this->UObjectPropertys, VariableName, Value);
+}
+
+bool UBuffDynamicProperty::GetObjectProperty(const FString& VariableName, UObject*& Value)
+{
+	return this->GetProperty(this->UObjectPropertys, VariableName, Value);
 }
 
 void UBuffObject::BuffInit(float BuffTime)
@@ -324,4 +359,9 @@ float UBuffObject::GetCurTime() const
 const EGameBuffTag& UBuffObject::GetCurTag() const
 {
 	return this->CurTag;
+}
+
+UBuffDynamicProperty* UBuffObject::GetDynamicProperty()
+{
+	return this->DynamicProperty;
 }

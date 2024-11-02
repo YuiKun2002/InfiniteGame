@@ -77,10 +77,31 @@ UCLASS(Blueprintable)
 class FVM_API UBuffDynamicProperty : public UObject {
 	GENERATED_BODY()
 public:
+	//初始化
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInit();
+	virtual void Init();
+
+	//整形
 	UFUNCTION(BlueprintCallable)
 	void SetIntProperty(const FString& VariableName, int32 Value);
 	UFUNCTION(BlueprintPure)
-	bool GetIntProperty(const FString& VariableName,int32& Value);
+	bool GetIntProperty(const FString& VariableName, int32& Value);
+	//浮点
+	UFUNCTION(BlueprintCallable)
+	void SetFloatProperty(const FString& VariableName, float Value);
+	UFUNCTION(BlueprintPure)
+	bool GetFloatProperty(const FString& VariableName, float& Value);
+	//字符串
+	UFUNCTION(BlueprintCallable)
+	void SetStringProperty(const FString& VariableName, const FString& Value);
+	UFUNCTION(BlueprintPure)
+	bool GetStringProperty(const FString& VariableName, FString& Value);
+	//对象
+	UFUNCTION(BlueprintCallable)
+	void SetObjectProperty(const FString& VariableName, UObject* Value);
+	UFUNCTION(BlueprintPure)
+	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
 private:
 	UPROPERTY()
 	TMap<FString, int32> IntPropertys;
@@ -152,6 +173,9 @@ public:
 	float GetCurTime() const;
 	//获取buff标记
 	const EGameBuffTag& GetCurTag() const;
+	//获取Buff属性对象
+	UFUNCTION(BlueprintCallable)
+	UBuffDynamicProperty* GetDynamicProperty();
 private:
 	//当前持续的时间
 	UPROPERTY()
