@@ -4,12 +4,13 @@
 #include "Data/Buff/MouseGameBuff.h"
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/GameConfigManager.h"
+#include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
 UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	EGameBuffTag NewTag,
 	float NewBuffTime,
-	const TSubclassOf<UBuffDynamicProperty>& Property
+	UBuffDynamicProperty* Property
 )
 {
 	UBuffObject* CurNewBuff = nullptr;
@@ -27,10 +28,11 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	CurNewBuff->CurTag = NewTag;
 	CurNewBuff->CurTime = NewBuffTime;
 	CurNewBuff->CurBuffObject = this;
+
 	//如果有属性
-	if (Property)
+	if (IsValid(Property))
 	{
-		CurNewBuff->DynamicProperty = Property.GetDefaultObject();
+		CurNewBuff->DynamicProperty = Property;
 	}
 	else {
 		CurNewBuff->DynamicProperty = NewObject<UBuffDynamicProperty>();
@@ -164,13 +166,13 @@ void UBuffMouseObject::UpdateTickRate()
 	//如果存在减速Buff，减去速度
 	if (Cur->GetBuffExistByTag(EGameBuffTag::SlowDown))
 	{
-		this->SetTickRate(Cur->GetTickRate() - 0.35f);
+		this->SetTickRate(Cur->GetTickRate() - 0.5f);
 	}
 
 	//如果存在加速Buff，加上速度
 	if (Cur->GetBuffExistByTag(EGameBuffTag::Accelerate))
 	{
-		this->SetTickRate(Cur->GetTickRate() + 0.35f);
+		this->SetTickRate(Cur->GetTickRate() + 0.5f);
 	}
 
 	//设置最终移动速度
@@ -276,15 +278,32 @@ void UBurnBuffMouse::BuffInit(float BuffTime)
 	if (bTrigger)
 	{
 
-		//初始化触发时间
-		this->GetDynamicProperty()->GetFloatProperty(TEXT("BuffDelay"), this->BuffDelay);
-		this->BuffDelayTime = this->BuffDelay;
-
-		//初始化持续时间
+		//初始化持续灼烧时间
 		this->GetDynamicProperty()->GetFloatProperty(TEXT("CurBuffTime"), this->CurBuffTime);
 
-		//初始化伤害
-		this->GetDynamicProperty()->GetFloatProperty(TEXT("ATK"), this->ATK);
+		//防止刷新时，刷新间隔导致无法触发
+		if (!this->bEnable)
+		{
+			//初始化触发灼烧时间
+			this->GetDynamicProperty()->GetFloatProperty(TEXT("BuffDelay"), this->BuffDelay);
+			this->BuffDelayTime = this->BuffDelay;
+		}
+
+		//初始化持续伤害
+		UObject* DefObj = nullptr;
+		this->GetDynamicProperty()->GetDefObject(DefObj);
+		if (AFlyItemActor* FlyItem = Cast<AFlyItemActor>(DefObj))
+		{
+			//初始化伤害倍率
+			float TempRate = 0.1f;
+			this->GetDynamicProperty()->GetFloatProperty(TEXT("ATKRate"), TempRate);
+			this->ATK = FlyItem->GetATK() * TempRate;
+
+			if (this->ATK > 0.f)
+			{
+				this->bEnable = true;
+			}
+		}
 
 		//更新
 		this->UpdateTickRate();

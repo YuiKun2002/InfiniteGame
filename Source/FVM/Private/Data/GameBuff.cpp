@@ -24,11 +24,22 @@ UGameBuff* UGameBuff::MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuf
 	return NewBuff;
 }
 
-void UGameBuff::AddBuff(
+void UGameBuff::AddBuffBySubclass(
 	EGameBuffTag NewTag,
 	float NewBuffTime,
 	const TSubclassOf<UBuffDynamicProperty>& Property
 )
+{
+	if (Property)
+	{
+		this->AddBuff(NewTag, NewBuffTime, Property.GetDefaultObject());
+	}
+	else {
+		this->AddBuff(NewTag, NewBuffTime, nullptr);
+	}
+}
+
+void UGameBuff::AddBuff(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProperty* Property)
 {
 	UBuffObject** CurBuff = this->CurBuffs.Find(NewTag);
 	if (CurBuff)
@@ -74,10 +85,10 @@ void UGameBuff::AddBuffInfor(FGameBuffInfor NewBuff)
 		TSubclassOf<UBuffDynamicProperty>* Sub = NewBuff.CurBuffPropertys.Find(Cur.Key);
 		if (Sub)
 		{
-			this->AddBuff(Cur.Key, Cur.Value, *Sub);
+			this->AddBuffBySubclass(Cur.Key, Cur.Value, *Sub);
 		}
 		else {
-			this->AddBuff(Cur.Key, Cur.Value, UBuffDynamicProperty::StaticClass());
+			this->AddBuffBySubclass(Cur.Key, Cur.Value, UBuffDynamicProperty::StaticClass());
 		}
 	}
 }
@@ -207,7 +218,7 @@ UObject* UGameBuff::GetBuffChar()
 	return this->BuffChar;
 }
 
-UBuffObject* UGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property)
+UBuffObject* UGameBuff::GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProperty* Property)
 {
 	return NewObject<UBuffObject>();
 }
@@ -287,17 +298,27 @@ bool UBuffDynamicProperty::GetObjectProperty(const FString& VariableName, UObjec
 	return this->GetProperty(this->UObjectPropertys, VariableName, Value);
 }
 
+void UBuffDynamicProperty::SetDefObject(UObject* Value)
+{
+	this->SetObjectProperty(GAMEBUFF_VAR_DEFOBJECT, Value);
+}
+
+void UBuffDynamicProperty::GetDefObject(UObject*& Value)
+{
+	this->GetObjectProperty(GAMEBUFF_VAR_DEFOBJECT, Value);
+}
+
 void UBuffObject::BuffInit(float BuffTime)
 {
 	//如果当前buff时间小于新的时间，刷新buff的时间
 	if (this->CurTime < BuffTime)
 	{
 		this->CurTime = BuffTime;
-	}
 
-	if (IsValid(this->DynamicProperty))
-	{
-		this->DynamicProperty->Init();
+		if (IsValid(this->DynamicProperty))
+		{
+			this->DynamicProperty->Init();
+		}
 	}
 }
 

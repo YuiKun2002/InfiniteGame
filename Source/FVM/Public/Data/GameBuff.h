@@ -8,6 +8,11 @@
 #include "Engine/Classes/Engine/DataTable.h"
 #include "GameBuff.generated.h"
 
+//全局默认变量
+#define GAMEBUFF_VAR_DEFOBJECT TEXT(".")
+
+
+
 /**
  * 游戏buff
  */
@@ -102,6 +107,13 @@ public:
 	void SetObjectProperty(const FString& VariableName, UObject* Value);
 	UFUNCTION(BlueprintPure)
 	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
+
+	//设置默认对象
+	UFUNCTION(BlueprintCallable)
+	void SetDefObject(UObject* Value);
+	//获取默认对象
+	UFUNCTION(BlueprintPure)
+	void GetDefObject(UObject*& Value);
 private:
 	UPROPERTY()
 	TMap<FString, int32> IntPropertys;
@@ -221,10 +233,16 @@ public:
 	static UGameBuff* MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuffTag);
 	//添加buff
 	UFUNCTION(BlueprintCallable)
-	void AddBuff(
+	void AddBuffBySubclass(
 		EGameBuffTag NewTag,
 		float NewBuffTime,
 		const TSubclassOf<UBuffDynamicProperty>& Property
+	);
+	UFUNCTION(BlueprintCallable)
+	void AddBuff(
+		EGameBuffTag NewTag,
+		float NewBuffTime,
+		UBuffDynamicProperty* Property
 	);
 	//添加buff集合
 	UFUNCTION(BlueprintCallable)
@@ -264,7 +282,7 @@ public:
 	UObject* GetBuffChar();
 protected:
 	//生成一个新的buff对象
-	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property);
+	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProperty* Property);
 	//设置buff的时间
 	void SetBuffCurTime(const EGameBuffTag& CurTag, const float& NewTime);
 private:

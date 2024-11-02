@@ -798,7 +798,7 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 				//设置老鼠状态->被击中
 				Mouse->SetbIsHurt(true);
 				//解析Buff信息
-				Mouse->ParseBuff_Information(this->M_FItem_Buff);
+				Mouse->ParseBuff_Information(this->M_FItem_Buff, this);
 			}
 			else {
 				//执行了BeHit修改了血量后，返回false，此时判断是否是最后一击
@@ -826,7 +826,7 @@ void AFlyItemActor::HitMouse_OverlapBegin(AActor* _Mouse)
 					//设置老鼠状态->被击中
 					Mouse->SetbIsHurt(true);
 					//解析Buff信息
-					Mouse->ParseBuff_Information(this->M_FItem_Buff);
+					Mouse->ParseBuff_Information(this->M_FItem_Buff, this);
 				}
 			}
 

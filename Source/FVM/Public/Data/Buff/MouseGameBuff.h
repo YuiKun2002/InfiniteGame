@@ -102,5 +102,5 @@ class FVM_API UMouseGameBuff : public UGameBuff
 
 protected:
 	//生成一个新的buff对象
-	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, const TSubclassOf<UBuffDynamicProperty>& Property) override;
+	virtual	UBuffObject* GetNewBuffObject(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProperty* Property) override;
 };

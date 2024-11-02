@@ -81,10 +81,22 @@ void AMouseActor::UpdateColor()
 	}
 }
 
-void AMouseActor::ParseBuff_Information(const FGameBuffInfor& _Buff)
+void AMouseActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* CurObject)
 {
 	//添加buff
-	this->M_Buff->AddBuffInfor(_Buff);
+	for (const auto& Cur : _Buff.CurBuffs)
+	{
+		const TSubclassOf<UBuffDynamicProperty>* Sub = _Buff.CurBuffPropertys.Find(Cur.Key);
+		if (Sub)
+		{
+			UBuffDynamicProperty* Pro = (*Sub).GetDefaultObject();
+			Pro->SetDefObject(CurObject);
+			this->M_Buff->AddBuff(Cur.Key, Cur.Value, Pro);
+		}
+		else {
+			this->M_Buff->AddBuff(Cur.Key, Cur.Value, nullptr);
+		}
+	}
 }
 
 void AMouseActor::MouseKill()
@@ -1194,8 +1206,8 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						Cur->SetActorLocation(Location);
 						/*Cur->GetRenderComponent()->
 							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), Cur->MouseInWaterRate);*/
-						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1));
-						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(false);
+							//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 1));
+							//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(false);
 
 						for (UWaterSceneComponent*& Water : Cast<AMouseActor>(CurMouse)->WaterComps)
 						{
@@ -1208,8 +1220,8 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 						Cur->SetActorLocation(Location);
 						/*Cur->GetRenderComponent()->
 							SetScalarParameterValueOnMaterials(FName(TEXT("Range")), 0.f);*/
-						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
-						//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
+							//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, 0));
+							//Cast<AMouseActor>(CurMouse)->InWaterAnim->SetHiddenInGame(true);
 
 						for (UWaterSceneComponent*& Water : Cast<AMouseActor>(CurMouse)->WaterComps)
 						{
