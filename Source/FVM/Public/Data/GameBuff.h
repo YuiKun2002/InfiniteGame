@@ -31,7 +31,9 @@ enum class EGameBuffTag : uint8
 	//凝固
 	Solidification UMETA(DisplayName = "Solidification"),
 	//中毒
-	Poisoning UMETA(DisplayName = "Poisoning")
+	Poisoning UMETA(DisplayName = "Poisoning"),
+	//击杀
+	Seckill UMETA(DisplayName = "Seckill")
 };
 
 //对象buff，针对谁的buff
@@ -185,6 +187,8 @@ protected:
 	void SetTickRate(float NewRate);
 	//设置buff的时间
 	void SetBuffCurTime(const EGameBuffTag& NewTag, const float& NewTime);
+	//强制设置buff持续时间
+	void SetForceCurTime(const float& NewTime);
 public:
 	//获取buff时间
 	float GetCurTime() const;

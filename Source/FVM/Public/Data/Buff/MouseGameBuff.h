@@ -28,6 +28,15 @@ protected:
 	virtual void BuffEnd() override;
 };
 
+//秒杀buff
+UCLASS()
+class FVM_API USeckillBuffMouse : public UBuffMouseObject
+{
+	GENERATED_BODY()
+protected:
+	virtual void BuffInit(float BuffTime) override;
+};
+
 //中毒buff
 UCLASS()
 class FVM_API UPoisoningBuffMouse : public UBuffMouseObject

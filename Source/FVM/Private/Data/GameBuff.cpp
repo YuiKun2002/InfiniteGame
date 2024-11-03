@@ -385,6 +385,11 @@ void UBuffObject::SetBuffCurTime(const EGameBuffTag& NewTag, const float& NewTim
 	this->CurBuffObject->SetBuffCurTime(NewTag, NewTime);
 }
 
+void UBuffObject::SetForceCurTime(const float& NewTime)
+{
+	this->CurTime = NewTime;
+}
+
 float UBuffObject::GetCurTime() const
 {
 	return this->CurTime;

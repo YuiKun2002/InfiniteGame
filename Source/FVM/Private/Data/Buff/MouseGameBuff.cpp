@@ -197,6 +197,30 @@ void UBuffMouseObject::BuffEnd()
 	this->UpdateMaterial();
 }
 
+void USeckillBuffMouse::BuffInit(float BuffTime)
+{
+	if (!IsValid(this->GetBuffChar()))
+	{
+		return;
+	}
+
+	if (this->GetBuffChar()->GetMouseIsDeath())
+	{
+		return;
+	}
+
+	if (this->GetBuffChar()->GetMouseBaseType() == EMouseBaseType::Boss)
+	{
+		this->SetForceCurTime(0.f);
+		return;
+	}
+
+	if (this->GetBuffChar()->BeHit(this, this->GetBuffChar()->GetTotalHP(), EFlyItemAttackType::Def))
+	{
+		this->GetBuffChar()->SetbIsHurt(true);
+	}
+}
+
 void UFreezeBuffMouse::BuffInit(float BuffTime)
 {
 	Super::BuffInit(BuffTime);
