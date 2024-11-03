@@ -60,6 +60,13 @@ public:
 	bool GetMouseExist();
 	//消灭所有老鼠
 	void KillAllMouse();
+	//获取小于当前坐标点老鼠
+	UFUNCTION(BlueprintPure)
+	void GetMouseByLocation(
+		const FVector& Location,
+		const TSet<ELineType>& MouseLineType,
+		TArray<AMouseActor*>& AllMouses
+	);
 private:
 	//排序老鼠最前位置
 	AMouseActor* SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses);

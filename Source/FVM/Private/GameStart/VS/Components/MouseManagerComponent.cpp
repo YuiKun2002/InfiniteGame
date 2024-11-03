@@ -273,6 +273,40 @@ void UMouseLineManager::KillAllMouse()
 	this->CurMouseOnWater.Empty();
 }
 
+void UMouseLineManager::GetMouseByLocation(
+	const FVector& Location,
+	const TSet<ELineType>& MouseLineType,
+	TArray<AMouseActor*>& AllMouses)
+{
+	for (const ELineType& LineType : MouseLineType)
+	{
+		switch (LineType)
+		{
+		case ELineType::Underground:
+			break;
+			this->GetMouseUnderGround().GenerateValueArray(AllMouses);
+		case ELineType::Sky:
+			break;
+			this->GetMouseSky().GenerateValueArray(AllMouses);
+		case ELineType::OnWater:
+			this->CurMouseOnWater.GenerateValueArray(AllMouses);
+			break;
+		default:
+			this->GetMouseGround().GenerateValueArray(AllMouses);
+			break;
+		}
+	}
+
+	//移除不符合条件的老鼠
+	for (AMouseActor*& MouseActor : AllMouses)
+	{
+		if (IsValid(MouseActor) && MouseActor->GetActorLocation().Y < Location.Y)
+		{
+			MouseActor = nullptr;
+		}
+	}
+}
+
 AMouseActor* UMouseLineManager::SortMouseTopLocation(TMap<FString, AMouseActor*>& _Mouses)
 {
 	//当前最前面的老鼠
@@ -1591,7 +1625,12 @@ AMouseActor* const UMouseManagerComponent::GetTopMouseByType(const ELineType& Li
 
 UMouseLineManager* UMouseManagerComponent::GetMouseLineManager(int32 Row)
 {
-	return this->MouseLineManager[Row];
+	if (Row < this->MouseLineManager.Num())
+	{
+		return this->MouseLineManager[Row];
+	}
+
+	return nullptr;
 }
 
 int32 UMouseManagerComponent::GetCurrentRoundTotal() const
