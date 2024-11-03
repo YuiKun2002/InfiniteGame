@@ -23,6 +23,7 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	case EGameBuffTag::Solidification:CurNewBuff = NewObject<USolidificationBuffMouse>(); break;
 	case EGameBuffTag::Accelerate:CurNewBuff = NewObject<UAccelerateBuffMouse>(); break;
 	case EGameBuffTag::Poisoning:CurNewBuff = NewObject<UPoisoningBuffMouse>(); break;
+	case EGameBuffTag::Seckill:CurNewBuff = NewObject<USeckillBuffMouse>(); break;
 	default: CurNewBuff = NewObject<UBuffObject>(); break;
 	}
 

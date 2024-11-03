@@ -87,7 +87,7 @@ void AMouseActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* Cu
 	for (const auto& Cur : _Buff.CurBuffs)
 	{
 		const TSubclassOf<UBuffDynamicProperty>* Sub = _Buff.CurBuffPropertys.Find(Cur.Key);
-		if (Sub)
+		if (Sub && *Sub)
 		{
 			UBuffDynamicProperty* Pro = (*Sub).GetDefaultObject();
 			Pro->SetDefObject(CurObject);

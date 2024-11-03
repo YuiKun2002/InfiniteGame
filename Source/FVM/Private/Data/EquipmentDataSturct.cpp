@@ -135,8 +135,7 @@ FMainWeaponData UMainWeaponDataFunc::Calculate(const FMainWeaponData& InputData)
 	FMainWeaponData Data = InputData;
 
 	//计算攻击力
-	int32 ATK = Data.WeaponLevel == 1 ? Data.ATK :
-		Data.ATK * FMath::Pow(Data.ATKRCoefficient, (Data.WeaponLevel - 1));
+	int32 ATK = Data.ATK + (Data.ATK / 2.f) + Data.ATKRCoefficient * Data.WeaponLevel;
 	Data.ATK = ATK;
 
 	//初始速度
