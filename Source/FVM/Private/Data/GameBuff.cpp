@@ -209,9 +209,9 @@ bool UGameBuff::GetConstBuff() const
 	return this->bConstBuff;
 }
 
-UBuffObject* UGameBuff::GetBuff(EGameBuffTag BuffTag)
+UBuffObject* UGameBuff::GetBuff(EGameBuffTag NewBuffTag)
 {
-	UBuffObject** CurBuff = this->CurBuffs.Find(BuffTag);
+	UBuffObject** CurBuff = this->CurBuffs.Find(NewBuffTag);
 	if (CurBuff && IsValid(*CurBuff))
 	{
 		return ((*CurBuff)->GetCurTime() > 0.f) ? *CurBuff : nullptr;

@@ -285,7 +285,7 @@ public:
 	bool GetConstBuff() const;
 	//获取buff对象
 	UFUNCTION(BlueprintCallable)
-	UBuffObject* GetBuff(EGameBuffTag BuffTag);
+	UBuffObject* GetBuff(EGameBuffTag NewBuffTag);
 	//获取tick的更新率
 	UFUNCTION(BlueprintCallable)
 	float GetTickRate() const;

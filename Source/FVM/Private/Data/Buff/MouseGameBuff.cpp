@@ -184,10 +184,10 @@ void UBuffMouseObject::UpdateTickRate()
 		{
 			float Rate = 0.5f;
 			Buff->GetDynamicProperty()->GetFloatProperty(TEXT("Rate"), Rate);
-			this->SetTickRate(Cur->GetTickRate() * Rate);
+			this->SetTickRate(Cur->GetTickRate() - Rate * Cur->GetTickRate());
 		}
 		else {
-			this->SetTickRate(Cur->GetTickRate() * 0.5f);
+			this->SetTickRate(Cur->GetTickRate() - 0.5f * Cur->GetTickRate());
 		}
 	}
 
