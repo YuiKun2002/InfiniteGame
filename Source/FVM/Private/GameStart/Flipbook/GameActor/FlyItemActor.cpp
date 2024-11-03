@@ -332,8 +332,8 @@ void AFlyItemActor::SetFlyParentActor(AActor* NewParent)
 }
 
 void AFlyItemActor::ResetBuff(
-	TMap<EGameBuffTag, float>& Buffs,
-	TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys
+	const TMap<EGameBuffTag, float>& Buffs,
+	const TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>>& CurBuffPropertys
 )
 {
 	this->M_FItem_Buff.CurBuffs.Empty();

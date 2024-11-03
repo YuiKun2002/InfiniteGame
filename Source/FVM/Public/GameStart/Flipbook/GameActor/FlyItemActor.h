@@ -221,8 +221,8 @@ public:
 	//重置Buff
 	UFUNCTION(BlueprintCallable)
 	void ResetBuff(
-		TMap<EGameBuffTag, float>& Buffs,
-		TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys
+		const TMap<EGameBuffTag, float>& Buffs,
+		const TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>>& CurBuffPropertys
 	);
 	//添加可以攻击类型
 	void AddAttackType(TArray<ELineType>& _types);

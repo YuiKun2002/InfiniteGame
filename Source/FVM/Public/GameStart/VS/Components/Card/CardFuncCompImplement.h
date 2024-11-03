@@ -485,7 +485,7 @@ public:
 	float ATKRate = 1.f;
 	//携带buff
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<EGameBuffTag, float> BuffSet;
+	FGameBuffInfor BuffSet;
 	//更正的动画资源(当子弹穿过时可以更正外观)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftClassPtr<AFlyItemActor> AcrossBulletClass;

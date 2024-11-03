@@ -119,8 +119,10 @@ void UFlyItemBuffCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFu
 				);
 			}
 
-			TMap<EGameBuffTag, float> Buffs = CardData.BuffSet;
-			CurFlyItem->AddBuff(Buffs);
+			if (CardData.BuffSet.CurBuffs.Num())
+			{
+				CurFlyItem->M_FItem_Buff = CardData.BuffSet;
+			}
 		}
 	}
 }
@@ -136,8 +138,8 @@ void UFlyItemAcrossCardFunc::Execute(
 	FCardFunctionTriggerImplementTRB CardData,
 	AFlyItemActor* CurFlyItem
 )
-{	
-	
+{
+
 	if (CurFlyItem->GetFlyConstraintLine())
 	{
 		if (CurFlyItem->GetLine() != CardFuncComp->GetCardActor()->GetLine().Row)
