@@ -196,17 +196,27 @@ bool UGameBuff::GetBuffExist() const
 
 bool UGameBuff::GetBuffExistByTag(EGameBuffTag NewTag)
 {
-	UBuffObject** CurBuff = this->CurBuffs.Find(NewTag);
-	if (CurBuff && IsValid(*CurBuff))
+	if (IsValid(this->GetBuff(NewTag)))
 	{
-		return ((*CurBuff)->GetCurTime() > 0.f);
+		return true;
 	}
+
 	return false;
 }
 
 bool UGameBuff::GetConstBuff() const
 {
 	return this->bConstBuff;
+}
+
+UBuffObject* UGameBuff::GetBuff(EGameBuffTag BuffTag)
+{
+	UBuffObject** CurBuff = this->CurBuffs.Find(BuffTag);
+	if (CurBuff && IsValid(*CurBuff))
+	{
+		return ((*CurBuff)->GetCurTime() > 0.f) ? *CurBuff : nullptr;
+	}
+	return nullptr;
 }
 
 float UGameBuff::GetTickRate() const
