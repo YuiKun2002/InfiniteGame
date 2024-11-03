@@ -590,7 +590,7 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 			0
 		).Z;
 
-		_Node.M_Hight = Trans.GetLocation().Z - CurZ;
+		_Node.M_Hight = CurZ - Trans.GetLocation().Z;
 	}
 
 	//通过node节点更具Direction设置Pitch旋转
