@@ -14,7 +14,7 @@ class UButton;
 class UTextBlock;
 class UUI_Heroes_WeaponSlot;
 
-
+#define WEAPON_MAXLEVEL 30
 
 //武器槽
 UCLASS()

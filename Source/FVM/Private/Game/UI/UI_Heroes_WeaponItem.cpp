@@ -210,7 +210,7 @@ bool UUI_Heroes_WeaponSlot::GetUpgradeWeapon()
 		return false;
 	}
 
-	if (this->WeaponData.WeaponLevel < 50)
+	if (this->WeaponData.WeaponLevel < WEAPON_MAXLEVEL)
 	{
 		return true;
 	}
@@ -262,7 +262,7 @@ void UUI_Heroes_WeaponSlot::DecomposeWeapon()
 
 void UUI_Heroes_WeaponSlot::UpdageWeapon(FMainWeaponData& Data)
 {
-	if (Data.WeaponLevel < 50)
+	if (Data.WeaponLevel < WEAPON_MAXLEVEL)
 	{
 		Data.WeaponLevel++;
 	}
@@ -288,9 +288,9 @@ void UUI_Heroes_WeaponItem::InitWeaponData()
 	{
 		this->WeaponData.WeaponLevel = 1;
 	}
-	else if (this->WeaponData.WeaponLevel > 50)
+	else if (this->WeaponData.WeaponLevel > WEAPON_MAXLEVEL)
 	{
-		this->WeaponData.WeaponLevel = 50;
+		this->WeaponData.WeaponLevel = WEAPON_MAXLEVEL;
 	}
 
 	if (this->WeaponData.StarsLevel < 0)
