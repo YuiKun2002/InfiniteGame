@@ -315,7 +315,8 @@ public:
 		FVector Offset = FVector(0.f),
 		bool _IsbConstaintLine = true,
 		FString ObjPoolID = TEXT(""),
-		bool InheritProperty = false
+		bool InheritProperty = false,
+		bool bUseLineHight = false
 	);
 	//创建一个flyActor斜线
 	UFUNCTION(BlueprintCallable)

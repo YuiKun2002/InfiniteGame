@@ -192,6 +192,9 @@ public:
 	//技能开启
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int32, TSubclassOf<class UWeaponSkillObject>> Skils;
+	//技能描述
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32, FText> SkilDes;
 };
 
 //武器详细数据

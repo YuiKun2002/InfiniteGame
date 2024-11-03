@@ -523,7 +523,8 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 	FVector Offset,
 	bool _IsbConstaintLine,
 	FString ObjPoolID,
-	bool InheritProperty
+	bool InheritProperty,
+	bool bUseLineHight
 )
 {
 	//线路判断 不能小于0 不能大于最大值
@@ -580,6 +581,17 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 		_TargetActor->M_FlyCondition.PanetrateLayers = this->M_FlyCondition.PanetrateLayers;
 	}
 	_TargetActor->Init();
+
+	//使用行高
+	if (bUseLineHight && IsValid(AGameMapInstance::GetGameMapInstance()))
+	{
+		float CurZ = AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->GetMapMeshLocation(
+			this->M_FlyData.M_Line + _LineOffset,
+			0
+		).Z;
+
+		_Node.M_Hight = Trans.GetLocation().Z - CurZ;
+	}
 
 	//通过node节点更具Direction设置Pitch旋转
 	switch (_Node.M_EShootDirection)
