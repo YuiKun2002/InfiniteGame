@@ -218,14 +218,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetFlyParentActor(AActor* NewParent);
 public:
-	//添加Buff
-	void AddBuff(TMap<EGameBuffTag, float>& _buffers);
+	//重置Buff
+	UFUNCTION(BlueprintCallable)
+	void ResetBuff(
+		TMap<EGameBuffTag, float>& Buffs,
+		TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys
+	);
 	//添加可以攻击类型
 	void AddAttackType(TArray<ELineType>& _types);
-
-	//添加Buff
-	UFUNCTION(BlueprintCallable)
-	void AddBuff(EGameBuffTag& _buff, const float& _time);
 	//添加可以攻击类型
 	UFUNCTION(BlueprintCallable)
 	void AddAttackType(ELineType _type);

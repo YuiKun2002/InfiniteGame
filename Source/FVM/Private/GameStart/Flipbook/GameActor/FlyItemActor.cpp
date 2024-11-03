@@ -331,6 +331,18 @@ void AFlyItemActor::SetFlyParentActor(AActor* NewParent)
 	this->ParentActor = NewParent;
 }
 
+void AFlyItemActor::ResetBuff(
+	TMap<EGameBuffTag, float>& Buffs,
+	TMap<EGameBuffTag, TSubclassOf<UBuffDynamicProperty>> CurBuffPropertys
+)
+{
+	this->M_FItem_Buff.CurBuffs.Empty();
+	this->M_FItem_Buff.CurBuffs.Append(Buffs);
+
+	this->M_FItem_Buff.CurBuffPropertys.Empty();
+	this->M_FItem_Buff.CurBuffPropertys.Append(CurBuffPropertys);
+}
+
 void AFlyItemActor::PlayAnim_Fly()
 {
 	//播放飞行动画
@@ -968,16 +980,6 @@ void AFlyItemActor::OnBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 {
 	//UGameSystemFunction::Log(FString(__FUNCTION__), );
 		//开启范围伤害并且开启了静态对象
-}
-
-void AFlyItemActor::AddBuff(TMap<EGameBuffTag, float>& _buffers)
-{
-	this->M_FItem_Buff.CurBuffs.Append(_buffers);
-}
-
-void AFlyItemActor::AddBuff(EGameBuffTag& _buff, const float& _time)
-{
-	this->M_FItem_Buff.CurBuffs.Emplace(_buff, _time);
 }
 
 void AFlyItemActor::SetObjectActorLocation(AActor* _MouseActor)
