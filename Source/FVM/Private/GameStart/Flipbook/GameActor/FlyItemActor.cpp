@@ -589,8 +589,33 @@ void AFlyItemActor::CreateFlyActor_ShootLine(
 			this->M_FlyData.M_Line + _LineOffset,
 			0
 		).Z;
+		float CurFlyZ = this->GetActorLocation().Z;
 
-		_Node.M_Hight = CurZ - Trans.GetLocation().Z;
+		// -  往上
+		if (_LineOffset < 0)
+		{
+			if (CurZ > CurFlyZ)
+			{
+				_Node.M_Hight = (CurZ - CurFlyZ) * 1.f;
+			}
+			else {
+				_Node.M_Hight = (CurFlyZ - CurZ) * -1.f;
+			}
+		}
+		else if (_LineOffset > 0) {
+			// + 往下
+
+			if (CurFlyZ > CurZ)
+			{
+				_Node.M_Hight = (CurFlyZ - CurZ) * -1.f;
+			}
+			else {
+				_Node.M_Hight = (CurZ - CurFlyZ) * 1.f;
+			}
+		}
+		else {
+			_Node.M_Hight = CurZ - CurFlyZ;
+		}
 	}
 
 	//通过node节点更具Direction设置Pitch旋转
