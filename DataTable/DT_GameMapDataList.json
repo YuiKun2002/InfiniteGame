@@ -2,5 +2,81 @@
 	{
 		"Name": "BurgerShop",
 		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/BurgerShop.BurgerShop"
+	},
+	{
+		"Name": "DrinksShop",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/DrinksShop.DrinksShop"
+	},
+	{
+		"Name": "ColdDrinkShop",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/ColdDrinkShop.ColdDrinkShop"
+	},
+	{
+		"Name": "FurnaceHouse",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/FurnaceHouse.FurnaceHouse"
+	},
+	{
+		"Name": "Bar",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/Bar.Bar"
+	},
+	{
+		"Name": "FreshFoodStore",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/FreshFoodStore2.FreshFoodStore2"
+	},
+	{
+		"Name": "ChocolateWorkshop",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/ChocolateWorkshop.ChocolateWorkshop"
+	},
+	{
+		"Name": "ColaHouse",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/ColaHouse.ColaHouse"
+	},
+	{
+		"Name": "Bakery",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/Bakery.Bakery"
+	},
+	{
+		"Name": "PotatoCottage",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/PotatoCottage.PotatoCottage"
+	},
+	{
+		"Name": "Pizzeria",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/Pizzeria.Pizzeria"
+	},
+	{
+		"Name": "Drinks",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/Drinks.Drinks"
+	},
+	{
+		"Name": "Restaurant",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/Restaurant.Restaurant"
+	},
+	{
+		"Name": "CakeHouse1",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/CakeHouse1.CakeHouse1"
+	},
+	{
+		"Name": "CakeHouse2",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/CakeHouse2.CakeHouse2"
+	},
+	{
+		"Name": "WaterRoute",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/WaterRoute.WaterRoute"
+	},
+	{
+		"Name": "ShallowEnd",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/ShallowEnd.ShallowEnd"
+	},
+	{
+		"Name": "DeepEnd",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/DeepEnd.DeepEnd"
+	},
+	{
+		"Name": "WaterPark",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/WaterPark.WaterPark"
+	},
+	{
+		"Name": "ReservoirBoundary",
+		"MapDataTable": "/Game/Resource/BP/Data/MapData/Maps/ReservoirBoundary.ReservoirBoundary"
 	}
 ]
