@@ -218,6 +218,12 @@ void USeckillBuffMouse::BuffInit(float BuffTime)
 	if (this->GetBuffChar()->BeHit(this, this->GetBuffChar()->GetTotalHP(), EFlyItemAttackType::Def))
 	{
 		this->GetBuffChar()->SetbIsHurt(true);
+
+		UGameSystemFunction::FVMLog(__FUNCTION__,
+			TEXT("灼烧buff：【") +
+			UGameSystemFunction::GetObjectName(this->GetBuffChar()) +
+			TEXT("】秒杀")
+		);
 	}
 }
 
