@@ -32,10 +32,14 @@ void UGameBuff::AddBuffBySubclass(
 {
 	if (Property)
 	{
-		this->AddBuff(NewTag, NewBuffTime, Property.GetDefaultObject());
+		this->AddBuff(NewTag, NewBuffTime,
+			UDynamicProperty::MakeDynamicPropertyByClass(Property)
+		);
 	}
 	else {
-		this->AddBuff(NewTag, NewBuffTime, nullptr);
+		this->AddBuff(NewTag, NewBuffTime,
+			UDynamicProperty::MakeDynamicPropertyByClass<UBuffDynamicProperty>()
+		);
 	}
 }
 

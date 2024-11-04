@@ -89,7 +89,7 @@ void AMouseActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* Cu
 		const TSubclassOf<UBuffDynamicProperty>* Sub = _Buff.CurBuffPropertys.Find(Cur.Key);
 		if (Sub && *Sub)
 		{
-			UBuffDynamicProperty* Pro = (*Sub).GetDefaultObject();
+			UBuffDynamicProperty* Pro = UDynamicProperty::MakeDynamicPropertyByClass(*Sub);
 			Pro->SetDefObject(CurObject);
 			this->M_Buff->AddBuff(Cur.Key, Cur.Value, Pro);
 		}

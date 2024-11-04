@@ -8,11 +8,6 @@ void UDynamicProperty::Init()
 	this->OnInit();
 }
 
-UDynamicProperty::UDynamicProperty()
-{
-	this->Init();
-}
-
 void UDynamicProperty::SetIntProperty(const FString& VariableName, int32 Value)
 {
 	this->EditProperty(this->IntPropertys, VariableName, Value);
@@ -24,12 +19,12 @@ bool UDynamicProperty::GetIntProperty(const FString& VariableName, int32& Value)
 
 void UDynamicProperty::SetIntArrayProperty(const FString& VariableName, TArray<int32> Value)
 {
-	this->SetArrayProperty(VariableName,Value);
+	this->SetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName,Value);
 }
 
 bool UDynamicProperty::GetIntArrayProperty(const FString& VariableName, TArray<int32>& Value)
 {
-	return this->GetArrayProperty(VariableName,Value);
+	return this->GetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName,Value);
 }
 
 void UDynamicProperty::SetFloatProperty(const FString& VariableName, float Value)
@@ -40,6 +35,16 @@ void UDynamicProperty::SetFloatProperty(const FString& VariableName, float Value
 bool UDynamicProperty::GetFloatProperty(const FString& VariableName, float& Value)
 {
 	return this->GetProperty(this->FloatPropertys, VariableName, Value);
+}
+
+void UDynamicProperty::SetFloatArrayProperty(const FString& VariableName, TArray<float> Value)
+{
+	this->SetArrayProperty<UDynamicPropertyArrayFloatObject>(VariableName,Value);
+}
+
+bool UDynamicProperty::GetFloatArrayProperty(const FString& VariableName, TArray<float>& Value)
+{
+	return this->GetArrayProperty<UDynamicPropertyArrayFloatObject>(VariableName, Value);
 }
 
 void UDynamicProperty::SetStringProperty(const FString& VariableName, const FString& Value)

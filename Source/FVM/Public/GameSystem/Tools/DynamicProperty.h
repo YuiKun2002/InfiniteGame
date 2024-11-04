@@ -7,20 +7,44 @@
 #include "DynamicProperty.generated.h"
 
 //动态数组对象
-template<class Type>
+
+//对象数组类
+UCLASS()
 class FVM_API UDynamicPropertyArrayObject : public UObject
 {
+	GENERATED_BODY()
 public:
-	//数组属性
-	TArray<Type> TypeValue;
+	UPROPERTY()
+	TArray<UObject*> TypeValue;
 };
-
-template<>
-class FVM_API UDynamicPropertyArrayObject<int32> : public UObject{
+//整型数组类
+UCLASS()
+class FVM_API UDynamicPropertyArrayIntObject : public UObject
+{
+	GENERATED_BODY()
 public:
 	UPROPERTY()
 	TArray<int32> TypeValue;
-}
+};
+//浮点数组类
+UCLASS()
+class FVM_API UDynamicPropertyArrayFloatObject : public UObject
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY()
+	TArray<float> TypeValue;
+};
+//字符串组类
+UCLASS()
+class FVM_API UDynamicPropertyArrayFStringObject : public UObject
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY()
+	TArray<FString> TypeValue;
+};
+
 
 /**
  * 动态属性
@@ -30,8 +54,70 @@ class FVM_API UDynamicProperty : public UObject
 {
 	GENERATED_BODY()
 public:
-	//构造
-	UDynamicProperty();
+	//初始化类型
+	template<class Type>
+	static Type* MakeDynamicPropertyByClass(Type* Property = nullptr) {
+
+		if (IsValid(Property))
+		{
+			Property->Init();
+			return Property;
+		}
+
+		Type* Obj = NewObject<Type>();
+		Obj->Init();
+		return Obj;
+	}
+
+	//初始化
+	template<class Type>
+	static Type* MakeDynamicPropertyByClass(const TSubclassOf<Type>& Property) {
+
+		if (Property)
+		{
+			Type* Obj = Property.GetDefaultObject();
+			if (IsValid(Obj))
+			{
+				Obj->Init();
+				return Obj;
+			}
+		}
+
+		Type* Obj = NewObject<Type>();
+		Obj->Init();
+		return Obj;
+	}
+
+	//初始化
+	UFUNCTION(BlueprintPure)
+	static UDynamicProperty* MakeDynamicPropertyByClass(TSoftClassPtr<UDynamicProperty> Property) {
+
+		if (UClass* Class = Property.LoadSynchronous())
+		{
+			UDynamicProperty* Obj = NewObject<UDynamicProperty>(Class);
+			Obj->Init();
+			return Obj;
+		}
+
+		UDynamicProperty* Obj = NewObject<UDynamicProperty>();
+		Obj->Init();
+		return Obj;
+	}
+
+	//初始化
+	UFUNCTION(BlueprintPure)
+	static UDynamicProperty* MakeDynamicProperty(UDynamicProperty* Property = nullptr) {
+		if (IsValid(Property))
+		{
+			Property->Init();
+			return Property;
+		}
+
+		UDynamicProperty* Obj = MakeDynamicPropertyByClass<UDynamicProperty>();
+		Obj->Init();
+		return Obj;
+	}
+
 	//初始化
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInit();
@@ -51,6 +137,11 @@ public:
 	void SetFloatProperty(const FString& VariableName, float Value);
 	UFUNCTION(BlueprintPure)
 	bool GetFloatProperty(const FString& VariableName, float& Value);
+	//浮点数组
+	UFUNCTION(BlueprintCallable)
+	void SetFloatArrayProperty(const FString& VariableName, TArray<float> Value);
+	UFUNCTION(BlueprintPure)
+	bool GetFloatArrayProperty(const FString& VariableName, TArray<float>& Value);
 	//字符串
 	UFUNCTION(BlueprintCallable)
 	void SetStringProperty(const FString& VariableName, const FString& Value);
@@ -62,6 +153,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
 protected:
+	UFUNCTION()
 	virtual void Init();
 private:
 	UPROPERTY()
@@ -107,20 +199,20 @@ private:
 	}
 
 	//设置数组对象
-	template<class TypeValue>
+	template<class TypeClass, class TypeValue>
 	UObject* SetArrayObject(const TArray<TypeValue>& Value) {
-		UDynamicPropertyArrayObject<TypeValue>* Obj = NewObject<
-			UDynamicPropertyArrayObject<TypeValue>
+		TypeClass* Obj = NewObject<
+			TypeClass
 		>();
 		Obj->TypeValue = Value;
 		return Cast<UObject>(Obj);
 	};
 
 	//获取对象
-	template<class TypeValue>
+	template<class TypeClass, class TypeValue>
 	bool GetArrayObject(UObject*& ArrayObject, TArray<TypeValue>& Value) {
-		UDynamicPropertyArrayObject<TypeValue>* TargetObj = Cast<
-			UDynamicPropertyArrayObject<TypeValue>
+		TypeClass* TargetObj = Cast<
+			TypeClass
 		>(ArrayObject);
 		if (IsValid(TargetObj))
 		{
@@ -131,19 +223,19 @@ private:
 	}
 
 	//设置数组属性
-	template<class TypeValue>
+	template<class TypeClass, class TypeValue>
 	void SetArrayProperty(const FString& VariableName, TArray<TypeValue> Value) {
-		UObject* Obj = this->SetArrayObject(Value);
+		UObject* Obj = this->SetArrayObject<TypeClass>(Value);
 		this->EditProperty(this->UObjectPropertys, VariableName, Obj);
 	}
 
 	//获取数组属性
-	template<class TypeValue>
+	template<class TypeClass, class TypeValue>
 	bool GetArrayProperty(const FString& VariableName, TArray<TypeValue> Value) {
 		UObject* ArrayObject = nullptr;
 		if (this->GetProperty(this->UObjectPropertys, VariableName, ArrayObject))
 		{
-			return this->GetArrayObject(ArrayObject, Value);
+			return this->GetArrayObject<TypeClass>(ArrayObject, Value);
 		}
 		return false;
 	}
