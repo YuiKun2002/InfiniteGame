@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "UObject/NoExportTypes.h"
 #include "Engine/Classes/Engine/DataTable.h"
+#include "GameSystem/Tools/DynamicProperty.h"
 #include "GameBuff.generated.h"
 
 //全局默认变量
@@ -85,81 +86,15 @@ protected:
 
 //Buff的动态属性
 UCLASS(Blueprintable)
-class FVM_API UBuffDynamicProperty : public UObject {
+class FVM_API UBuffDynamicProperty : public UDynamicProperty {
 	GENERATED_BODY()
 public:
-	//初始化
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnInit();
-	virtual void Init();
-
-	//整形
-	UFUNCTION(BlueprintCallable)
-	void SetIntProperty(const FString& VariableName, int32 Value);
-	UFUNCTION(BlueprintPure)
-	bool GetIntProperty(const FString& VariableName, int32& Value);
-	//浮点
-	UFUNCTION(BlueprintCallable)
-	void SetFloatProperty(const FString& VariableName, float Value);
-	UFUNCTION(BlueprintPure)
-	bool GetFloatProperty(const FString& VariableName, float& Value);
-	//字符串
-	UFUNCTION(BlueprintCallable)
-	void SetStringProperty(const FString& VariableName, const FString& Value);
-	UFUNCTION(BlueprintPure)
-	bool GetStringProperty(const FString& VariableName, FString& Value);
-	//对象
-	UFUNCTION(BlueprintCallable)
-	void SetObjectProperty(const FString& VariableName, UObject* Value);
-	UFUNCTION(BlueprintPure)
-	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
-
 	//设置默认对象
 	UFUNCTION(BlueprintCallable)
 	void SetDefObject(UObject* Value);
 	//获取默认对象
 	UFUNCTION(BlueprintPure)
 	void GetDefObject(UObject*& Value);
-private:
-	UPROPERTY()
-	TMap<FString, int32> IntPropertys;
-	UPROPERTY()
-	TMap<FString, float> FloatPropertys;
-	UPROPERTY()
-	TMap<FString, FString> FStringPropertys;
-	UPROPERTY()
-	TMap<FString, UObject*> UObjectPropertys;
-private:
-	template<class TypeValue>
-	void EditProperty(
-		TMap<FString, TypeValue>& Propertys,
-		const FString& VariableName,
-		const TypeValue& Value
-	) {
-		TypeValue* TargetValue = Propertys.Find(VariableName);
-		if (TargetValue)
-		{
-			*TargetValue = Value;
-		}
-		else {
-			Propertys.Emplace(VariableName, Value);
-		}
-	}
-
-	template<class TypeValue>
-	bool GetProperty(
-		const TMap<FString, TypeValue>& Propertys,
-		const FString& VariableName,
-		TypeValue& Value
-	) {
-		const TypeValue* TargetValue = Propertys.Find(VariableName);
-		if (TargetValue)
-		{
-			Value = *TargetValue;
-			return true;
-		}
-		return false;
-	}
 };
 
 //buff基本类型

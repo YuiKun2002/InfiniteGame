@@ -393,9 +393,9 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 	for (FEquipment_Hero_Data& CurDatas : Cache->GetHeroes())
 	{
 		PlayerSoftIns = CurDatas.Heroes.Find(CurPlayerName);
-		if(PlayerSoftIns)
+		if (PlayerSoftIns)
 		{
-			break;	
+			break;
 		}
 	}
 
@@ -404,7 +404,10 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 		return;
 	}
 
-	AGamePlayer* PlayerIns = this->GetWorld()->SpawnActor<AGamePlayer>(PlayerSoftIns->LoadSynchronous());
+	//查询角色表格
+	AGamePlayer* PlayerIns = this->GetWorld()->SpawnActor<AGamePlayer>(
+		PlayerSoftIns->LoadSynchronous()
+	);
 
 	//设置旋转
 	PlayerIns->SetActorRotation(FRotator(0.f, 90.f, 0.f));
@@ -428,6 +431,8 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 	);
 	//更新角色位置
 	_MapMeshe->UpdatePlayerLocation();
+	//初始化角色
+	PlayerIns->InitPlayer(PlayerData->PlayerData);
 	//游戏开始
 	this->SetGameStartNow();
 	//调用放置角色的委托

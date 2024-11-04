@@ -34,6 +34,11 @@ void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 
 }
 
+void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
+{
+	
+}
+
 void AGamePlayer::InitPlayerWeapon()
 {
 	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();

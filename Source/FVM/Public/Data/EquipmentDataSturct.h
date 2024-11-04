@@ -84,6 +84,10 @@ public:
 	//角色CD系数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CDCoefficient = 1.1f;
+
+	//角色技能
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int32,TSubclassOf<class UGamePlayerSkillObject>> Skills;
 };
 
 //数据计算

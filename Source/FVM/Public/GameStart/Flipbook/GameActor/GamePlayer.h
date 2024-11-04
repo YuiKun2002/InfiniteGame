@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameSystem/Tools/DynamicProperty.h"
 #include "GameStart/Flipbook/GameActor/GamePlayerBase.h"
 #include "GamePlayer.generated.h"
 
@@ -10,6 +11,16 @@ class APlayerFirstWeapon;
 class UUI_MapMeshe;
 class AMapMeshe;
 class AMouseActor;
+
+//角色技能对象
+UCLASS(Blueprintable)
+class FVM_API UGamePlayerSkillObject : public UDynamicProperty
+{
+	GENERATED_BODY()
+
+public:
+
+};
 
 UCLASS()
 class FVM_API AGamePlayer : public AGamePlayerBase
@@ -44,6 +55,9 @@ public:
 	//初始化指定套装外观【仅套装外观】
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerSuit(FPlayerSuitItem SuitData);
+	//初始化角色
+	UFUNCTION(BlueprintCallable)
+	void InitPlayer(const FItemHeroBase& Data);
 	//初始化角色武器
 	UFUNCTION(BlueprintCallable)
 	void InitPlayerWeapon();
