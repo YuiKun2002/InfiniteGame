@@ -8,6 +8,7 @@
 #include <Paper2D/Classes/PaperSprite.h>
 #include <Paper2D/Classes/PaperFlipbook.h>
 #include <Paper2D/Classes/PaperFlipbookComponent.h>
+#include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameSystem/FVMGameInstance.h"
 #include <Kismet/GameplayStatics.h>
@@ -30,6 +31,11 @@ void UCardSpawnComponent::LoadResource()
 		this->SetTickableWhenPaused(false);
 		return;
 	}
+
+	//绑定卡片管理器属性变动事件
+	AGameMapInstance::GetCardManagerComponent_Static()->OnCardManagerDynamicPropertyChangeDelegate.BindUObject(
+		this, &UCardSpawnComponent::OnPropertyChange
+	);
 
 	//初始化基础数据以及生成器
 	const FItemCardSpawn& CurData = this->CurSpawnCardActor->GetSpawnCardData();
@@ -89,7 +95,7 @@ void UCardSpawnComponent::Spawn()
 	if (IsValid(CurFlame))
 	{
 
-		if (this->M_SpawnFlameValue < 25)
+		if (this->M_SpawnFlameValue * this->SpawnRate < 25)
 		{
 			CurFlame->SetActorScale3D(FVector(0.7f));
 		}
@@ -98,7 +104,7 @@ void UCardSpawnComponent::Spawn()
 		}
 
 		CurFlame->SetActorLocation(this->CurSpawnCardActor->GetActorLocation());
-		CurFlame->SetFlameValue(this->M_SpawnFlameValue);
+		CurFlame->SetFlameValue(this->M_SpawnFlameValue * this->SpawnRate);
 		CurFlame->Run();
 	}
 	else {
@@ -116,7 +122,7 @@ void UCardSpawnComponent::PlayAttackAnimation()
 		0,
 		this->CurSpawnCardActor->Attack.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
-	BINDANIMATION(Track,this,&UCardSpawnComponent::AnimationPlayEnd);
+	BINDANIMATION(Track, this, &UCardSpawnComponent::AnimationPlayEnd);
 	this->SetTrackEntry(Track);
 }
 
@@ -139,7 +145,7 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	
+
 
 	//游戏暂停则不在生产
 	if (this->CurSpawnCardActor->GamePause())
@@ -192,12 +198,12 @@ void UCardSpawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 		}
 
-		*/	
+		*/
 
 		this->SetAttackModEnabled(true);
 	}
 
-	
+
 }
 
 void UCardSpawnComponent::OnAnimationPlayEnd()
@@ -238,4 +244,9 @@ void UCardSpawnComponent::AnimationPlayEnd(UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
 	this->SetTrackEntry(nullptr);
+}
+
+void UCardSpawnComponent::OnPropertyChange(UDynamicProperty* Property)
+{
+	Property->GetFloatProperty(TEXT("SpawnCardSpawnRate"), this->SpawnRate);
 }

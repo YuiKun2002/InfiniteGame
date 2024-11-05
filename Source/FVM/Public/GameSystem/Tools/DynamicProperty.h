@@ -49,7 +49,7 @@ public:
 /**
  * 动态属性
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FVM_API UDynamicProperty : public UObject
 {
 	GENERATED_BODY()

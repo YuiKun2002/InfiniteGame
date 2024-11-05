@@ -68,6 +68,9 @@ public:
 
 	UFUNCTION()
 	void AnimationPlayEnd(UTrackEntry* Track);
+
+	UFUNCTION()
+	void OnPropertyChange(class UDynamicProperty* Property);
 private:
 	//当前生产卡片对象
 	UPROPERTY()
@@ -82,6 +85,9 @@ private:
 	//生产的火苗值
 	UPROPERTY()
 	int32 M_SpawnFlameValue = 25;
+	//产能率
+	UPROPERTY()
+	float SpawnRate = 1.f;
 	//生长模式
 	UPROPERTY()
 	bool InWeekUp = false;

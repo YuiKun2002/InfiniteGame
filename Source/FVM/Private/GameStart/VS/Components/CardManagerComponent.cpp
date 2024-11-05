@@ -39,6 +39,14 @@ UCardManagerComponent::UCardManagerComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+	this->DynamicProperty = UDynamicProperty::MakeDynamicPropertyByClass(
+		TSoftClassPtr<UDynamicProperty>(
+			FSoftClassPath(
+				TEXT("")
+			)
+		)
+	);
 }
 
 
@@ -454,6 +462,19 @@ void UCardManagerComponent::SetCardPriceByTag(EGamePropertyCategory Tag, float R
 			this->M_UICard[i]->M_NeedFlame = ItemData.M_CardPrice;
 		}
 	}
+}
+
+void UCardManagerComponent::ChangeProperty()
+{
+	if (this->OnCardManagerDynamicPropertyChangeDelegate.IsBound())
+	{
+		this->OnCardManagerDynamicPropertyChangeDelegate.Execute(this->DynamicProperty);
+	}
+}
+
+UDynamicProperty* UCardManagerComponent::GetDynamicProperty()
+{
+	return this->DynamicProperty;
 }
 
 // Called every frame
