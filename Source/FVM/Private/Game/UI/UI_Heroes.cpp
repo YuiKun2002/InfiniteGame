@@ -41,35 +41,44 @@ void UUI_Heroes::InitHeroes()
 
 	if (!this->Heroes.Num())
 	{
-		FItemHeroBase A;
-		A.ItemName = FText(FText::FromName(TEXT("Xiao")));
-		A.M_ItemID = 12;
-		UItemBaseStruct::GetTextureResource(2, A.ItemTexturePath);
-		A.HeroLevel = 1;
-		A.RarityLevel = 0;
-		A.StarsLevel = 1;
-		A.BagID = TEXT("0");
+		FItemHeroBase Aa;
+		FEquipmentBase* AaSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("Explorer"),
+			AaSourceData, true, EEquipment::E_PlayerEquipment
+		))
+		{
+			Aa = *(FItemHeroBase*)(AaSourceData);
+		}
+		Aa.M_ItemID = 12;
+		Aa.BagID = TEXT("12");
 
 		FItemHeroBase B;
-		B.ItemName = FText(FText::FromName(TEXT("Yu")));
-		B.M_ItemID = 14;
-		B.HeroLevel = 1;
-		B.RarityLevel = 1;
-		B.StarsLevel = 3;
-		UItemBaseStruct::GetTextureResource(3, B.ItemTexturePath);
-		B.BagID = TEXT("2");
+		FEquipmentBase* BSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("Jingke"),
+			BSourceData, true, EEquipment::E_PlayerEquipment
+		))
+		{
+			B = *(FItemHeroBase*)(BSourceData);
+		}
+		B.M_ItemID = 13;
+		B.BagID = TEXT("13");
 
 		FItemHeroBase C;
-		C.ItemName = FText(FText::FromName(TEXT("CCC")));
-		C.M_ItemID = 13;
-		UItemBaseStruct::GetTextureResource(4, C.ItemTexturePath);
-		C.HeroLevel = 1;
-		C.RarityLevel = 2;
-		C.StarsLevel = 4;
-		C.BagID = TEXT("1");
+		FEquipmentBase* CSourceData;
+		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+			TEXT("Bustre"),
+			CSourceData, true, EEquipment::E_PlayerEquipment
+		))
+		{
+			C = *(FItemHeroBase*)(CSourceData);
+		}
+		C.M_ItemID = 14;
+		C.BagID = TEXT("14");
 
 		this->Heroes.Append(
-			{ A,B,C }
+			{ Aa,B ,C }
 		);
 	}
 
@@ -95,7 +104,7 @@ void UUI_Heroes::InitData()
 	else {
 		PlayerHeroData = this->GetCurrentHeroData();
 	}
-	
+
 	//设置名称
 	this->HeroName->SetText(PlayerHeroData.ItemName);
 	//获取缓存对象

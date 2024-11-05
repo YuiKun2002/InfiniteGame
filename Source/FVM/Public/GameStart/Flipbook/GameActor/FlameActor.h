@@ -23,11 +23,12 @@ private:
 public:
 
 	//设置基本属性
+	UFUNCTION(BlueprintCallable)
 	void SetFlameValue(const int32& _value);
 
 	const int32& GetFlameValue() const;
 
 	//开始播放动画
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable,BlueprintImplementableEvent)
 		void Run();
 };
