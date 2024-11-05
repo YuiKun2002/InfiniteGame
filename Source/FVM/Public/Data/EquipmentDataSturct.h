@@ -51,6 +51,9 @@ USTRUCT(BlueprintType)
 struct FItemHeroBase : public FItemBase {
 	GENERATED_USTRUCT_BODY()
 public:
+	//角色系
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EGamePropertyCategory GamePropertyCategory = EGamePropertyCategory::Energy;
 	//角色等级
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 HeroLevel = 1;

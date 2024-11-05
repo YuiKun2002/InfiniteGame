@@ -191,6 +191,9 @@ public:
 	//卡片种类
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECardCategoryTag CardCategoryTag = ECardCategoryTag::Def;
+	//卡片系
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EGamePropertyCategory GamePropertyCategory = EGamePropertyCategory::Energy;
 	//卡片属于白天还是夜晚
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool M_CardDay = true;

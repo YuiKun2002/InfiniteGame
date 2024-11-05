@@ -55,6 +55,28 @@ enum class ELineTraceType : uint8 {
 	E_MouseVisibility  UMETA(DisplayName = "MouseVisibility"),
 };
 
+//游戏属性分类【能量，雷系，水系，火系......】
+UENUM(BlueprintType)
+enum class EGamePropertyCategory : uint8 {
+	//能量系
+	Energy  UMETA(DisplayName = "Energy"),
+	//近战
+	Melee  UMETA(DisplayName = "Melee"),
+	//防御
+	Defense  UMETA(DisplayName = "Defense"),
+	//雷系
+	Thunder  UMETA(DisplayName = "Thunder"),
+	//火系
+	Fire  UMETA(DisplayName = "Fire"),
+	//冰系
+	Ice  UMETA(DisplayName = "Ice"),
+	//超弦系
+	Chord  UMETA(DisplayName = "Chord"),
+	//魔法系
+	Mage UMETA(DisplayName = "Mage"),
+	//支持系
+	Support UMETA(DisplayName = "Support")
+};
 
 //检测范围结构设置
 USTRUCT(BlueprintType)
@@ -327,7 +349,7 @@ private:
 private:
 	//数据表加载器
 	DataTableAssetData<FItemResourceData> SourceDatas;
-	void GetResource(int32 ID,TSet<int32>& Ranges,TArray<FItemResourceData>& Datas, FItemResourceBase& Data);
+	void GetResource(int32 ID, TSet<int32>& Ranges, TArray<FItemResourceData>& Datas, FItemResourceBase& Data);
 public:
 	//纹理资源
 	UFUNCTION()
