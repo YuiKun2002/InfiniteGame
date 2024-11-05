@@ -90,6 +90,16 @@ public:
 	TMap<int32,TSubclassOf<class UGamePlayerSkillObject>> Skills;
 };
 
+//武器详细数据
+USTRUCT(BlueprintType)
+struct FItemHeroBase_Data : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemHeroBase M_FEquipment;
+};
+
 //数据计算
 UCLASS()
 class FVM_API UItemHeroDataFunc : public UObject
@@ -304,6 +314,8 @@ public:
 	TArray<FEquipment_FMail_Data>& GetMail();
 	//获取角色
 	TArray<FEquipment_Hero_Data>& GetHeroes();
+	//获取角色详细数据
+	TArray<FItemHeroBase_Data>& GetHeroeDetailDatas();
 	//获取武器
 	TArray<FEquipment_Weapon_Data>& GetWeapons();
 	//获取武器详细数据
@@ -338,6 +350,10 @@ public:
 	//角色实例对象
 	DataTableAssetData<FEquipment_Hero_Data> Heroes;
 	TArray<FEquipment_Hero_Data> HeroesData;
+
+	//角色详细数据
+	DataTableAssetData<FItemHeroBase_Data> HeroeDetails;
+	TArray<FItemHeroBase_Data> HeroeDetailDatas;
 
 	//武器实例对象
 	DataTableAssetData<FEquipment_Weapon_Data> Weapons;

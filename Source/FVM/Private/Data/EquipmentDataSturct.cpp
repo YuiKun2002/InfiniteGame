@@ -120,6 +120,11 @@ TArray<FEquipment_Hero_Data>& UEquipmentDataAssetCache::GetHeroes()
 	return GetDataTableSourceData(this->HeroesData, this->Heroes, GLOBALASSET_EQUIP, TEXT("Heroes"));
 }
 
+TArray<FItemHeroBase_Data>& UEquipmentDataAssetCache::GetHeroeDetailDatas()
+{
+	return GetDataTableSourceData(this->HeroeDetailDatas, this->HeroeDetails, GLOBALASSET_EQUIP, TEXT("HeroeDetails"));
+}
+
 TArray<FEquipment_Weapon_Data>& UEquipmentDataAssetCache::GetWeapons()
 {
 	return GetDataTableSourceData(this->WeaponsData, this->Weapons, GLOBALASSET_EQUIP, TEXT("Weapons"));
