@@ -18,13 +18,51 @@ class FVM_API UGamePlayerSkillObject : public UDynamicProperty
 {
 	GENERATED_BODY()
 
-public:
+	friend class AGamePlayer;
 
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void Run();
+	UFUNCTION(BlueprintImplementableEvent)
+	void Tick(const float& DeltaTime);
+public:
+	//获取角色
+	UFUNCTION(BlueprintPure)
+	class AGamePlayer* GetGamePlayer();
+	//获取地图
+	UFUNCTION(BlueprintPure)
+	class AGameMapInstance* GetGameMapIns();
+	//获取外星人管理器
+	UFUNCTION(BlueprintPure)
+	class UMouseManagerComponent* GetMouseManager();
+	//获取网格控制
+	UFUNCTION(BlueprintPure)
+	class UMesheControllComponent* GetMesheComponent();
+	//获取UI 卡片栏
+	UFUNCTION(BlueprintPure)
+	class UCardManagerComponent* GetCardComponent();
+	//获取资源管理器
+	UFUNCTION(BlueprintPure)
+	class UResourceManagerComponent* GetResourceComponent();
+	//获取角色数据
+	UFUNCTION(BlueprintPure)
+	void GetHeroData(FItemHeroBase& Data);
+public:
+	virtual void RunSkill();
+	virtual void TickSkill(const float& DeltaTime);
+private:
+	UPROPERTY()
+	class AGamePlayer* Player = nullptr;
+	UPROPERTY()
+	FItemHeroBase CurData;
 };
 
+//角色对象
 UCLASS()
 class FVM_API AGamePlayer : public AGamePlayerBase
 {
+	friend class UGamePlayerSkillObject;
+
 	GENERATED_BODY()
 private:
 	//角色线路
@@ -109,5 +147,7 @@ private:
 	float time = 0.1f;
 	UPROPERTY()
 	float Ptime = 0.01f;
-
+	//角色技能
+	UPROPERTY()
+	TArray<UGamePlayerSkillObject*> PlayerSkill;
 };

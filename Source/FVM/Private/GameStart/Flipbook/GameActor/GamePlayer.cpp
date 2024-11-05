@@ -7,6 +7,8 @@
 #include "SpineSkeletonAnimationComponent.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
+#include "GameStart/VS/Components/CardManagerComponent.h"
+#include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
 
 AGamePlayer::AGamePlayer()
@@ -36,7 +38,18 @@ void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 
 void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 {
-	
+	//循环
+	for (auto PP = Data.Skills.CreateConstIterator(); PP; ++PP)
+	{
+		if (PP->Key <= Data.StarsLevel)
+		{
+			UGamePlayerSkillObject* Skill = UDynamicProperty::MakeDynamicPropertyByClass(PP->Value);
+			Skill->Player = this;
+			Skill->CurData = Data;
+			Skill->RunSkill();
+			this->PlayerSkill.Emplace(Skill);
+		}
+	}
 }
 
 void AGamePlayer::InitPlayerWeapon()
@@ -223,6 +236,12 @@ void AGamePlayer::Tick(float DeltaTime)
 		this->PlayerLocationUpdate(DeltaTime);
 		this->SetPlayerTranslucency(this->M_UUI_MapMeshe);
 	}
+
+	//技能更新
+	for (auto& SKill : this->PlayerSkill)
+	{
+		SKill->TickSkill(DeltaTime);
+	}
 }
 
 void AGamePlayer::PlayerLocationUpdate(const float& DeltaTime)
@@ -258,4 +277,54 @@ void AGamePlayer::UpdateWeaponLocation(const float& DeltaTime)
 	{
 		//this->M_PlayerFirstWeapon->MeshMoveUpdate(DeltaTime, this->M_UUI_MapMeshe, this->M_AMapMeshe);
 	}
+}
+
+class AGamePlayer* UGamePlayerSkillObject::GetGamePlayer()
+{
+	return this->Player;
+}
+
+class AGameMapInstance* UGamePlayerSkillObject::GetGameMapIns()
+{
+	return AGameMapInstance::GetGameMapInstance();
+}
+
+class UMouseManagerComponent* UGamePlayerSkillObject::GetMouseManager()
+{
+	return AGameMapInstance::GetMouseManagerComponent_Static();
+}
+
+class UMesheControllComponent* UGamePlayerSkillObject::GetMesheComponent()
+{
+	if (IsValid(this->GetGameMapIns()))
+	{
+		return this->GetGameMapIns()->M_MesheControllComponent;
+	}
+
+	return nullptr;
+}
+
+UCardManagerComponent* UGamePlayerSkillObject::GetCardComponent()
+{
+	return AGameMapInstance::GetCardManagerComponent_Static();
+}
+
+class UResourceManagerComponent* UGamePlayerSkillObject::GetResourceComponent()
+{
+	return UResourceManagerComponent::GetResourceManagerComponent();
+}
+
+void UGamePlayerSkillObject::GetHeroData(FItemHeroBase& Data)
+{
+	Data = CurData;
+}
+
+void UGamePlayerSkillObject::RunSkill()
+{
+	this->Run();
+}
+
+void UGamePlayerSkillObject::TickSkill(const float& DeltaTime)
+{
+	this->Tick(DeltaTime);
 }
