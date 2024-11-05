@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "GameStart/VS/Components/CardManagerComponent.h"
@@ -43,7 +43,7 @@ UCardManagerComponent::UCardManagerComponent()
 	this->DynamicProperty = UDynamicProperty::MakeDynamicPropertyByClass(
 		TSoftClassPtr<UDynamicProperty>(
 			FSoftClassPath(
-				TEXT("")
+				TEXT("Blueprint'/Game/Resource/BP/Data/卡片管理器动态属性/BP_CardManager_Property.BP_CardManager_Property_C'")
 			)
 		)
 	);
