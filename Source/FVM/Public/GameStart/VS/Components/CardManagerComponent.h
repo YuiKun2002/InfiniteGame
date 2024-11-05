@@ -123,6 +123,12 @@ public:
 	//获取卡片栏
 	UFUNCTION(BlueprintCallable)
 		UUI_CardBar* GetUICardBar();
+	//设置卡片冷却时间
+	UFUNCTION(BlueprintCallable)
+		void SetCardCoolDownByTag(EGamePropertyCategory Tag,float Rate = 1.f);
+	//设置卡片费用
+	UFUNCTION(BlueprintCallable)
+		void SetCardPriceByTag(EGamePropertyCategory Tag,float Rate = 1.f);
 public:
 	//获取卡片原始数据
 	FItemCard* const GetCardDataByName(const FString& _CardName);

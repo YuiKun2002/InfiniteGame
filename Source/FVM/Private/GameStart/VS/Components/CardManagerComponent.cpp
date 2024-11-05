@@ -176,7 +176,7 @@ bool UCardManagerComponent::SelectCurrentActor(const FString& _CardName, bool Fo
 
 	//显示提示网格
 	AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent()->ShowTipMeshe(Data->M_ELineType);
-	
+
 	return true;
 }
 
@@ -426,6 +426,34 @@ UUI_Card* UCardManagerComponent::GetUICardArraysByIndex(int32 Index)
 UUI_CardBar* UCardManagerComponent::GetUICardBar()
 {
 	return this->M_UUI_CardBar;
+}
+
+void UCardManagerComponent::SetCardCoolDownByTag(EGamePropertyCategory Tag, float Rate)
+{
+	for (int32 i = 0; i < this->M_CardData.Num(); i++)
+	{
+		if (this->M_CardData[i].GamePropertyCategory == Tag)
+		{
+			FItemCard ItemData = this->M_CardData[i];
+			this->M_CardCoolDownManager[i]->SetCoolDownTime(ItemData.M_CardColdDown * Rate);
+			//this->M_UICard[i];
+		}
+	}
+}
+
+void UCardManagerComponent::SetCardPriceByTag(EGamePropertyCategory Tag, float Rate)
+{
+	for (int32 i = 0; i < this->M_CardData.Num(); i++)
+	{
+		if (this->M_CardData[i].GamePropertyCategory == Tag)
+		{
+			FItemCard& ItemData = this->M_CardData[i];
+			//修改费用
+			ItemData.M_CardPrice = ItemData.M_CardPrice * Rate;
+			//修改费用
+			this->M_UICard[i]->M_NeedFlame = ItemData.M_CardPrice;
+		}
+	}
 }
 
 // Called every frame
