@@ -41,7 +41,7 @@ void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 	//循环
 	for (auto PP = Data.Skills.CreateConstIterator(); PP; ++PP)
 	{
-		if (PP->Key <= Data.StarsLevel)
+		if (PP->Key <= Data.StarsLevel + 1)
 		{
 			UGamePlayerSkillObject* Skill = UDynamicProperty::MakeDynamicPropertyByClass(PP->Value);
 			Skill->Player = this;
