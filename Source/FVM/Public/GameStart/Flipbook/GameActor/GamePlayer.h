@@ -7,10 +7,11 @@
 #include "GameStart/Flipbook/GameActor/GamePlayerBase.h"
 #include "GamePlayer.generated.h"
 
-class APlayerFirstWeapon;
-class UUI_MapMeshe;
 class AMapMeshe;
 class AMouseActor;
+class UUI_MapMeshe;
+class APlayerFirstWeapon;
+class AGamePlayerSuperWeapon;
 
 //角色技能对象
 UCLASS(Blueprintable)
@@ -132,9 +133,13 @@ public:
 	UUI_MapMeshe* const GetUIMapMeshe();
 	//获取角色渲染层【卡片读取】
 	int32 GetPlayerRenderLayerToCardLayer();
+
 	//获取角色数据
 	UFUNCTION(BlueprintPure)
 	void GetPlayerData(FItemHeroBase& Data);
+	//获取角色超级武器
+	UFUNCTION(BlueprintPure)
+	AGamePlayerSuperWeapon* GetPlayerSuperWeapon();
 public:
 	//角色默认动画
 	void PlayerDef_Anim();
@@ -163,4 +168,7 @@ private:
 	//角色当前生命值
 	UPROPERTY()
 	float CurrentHP = 0.f;
+	//超级武器
+	UPROPERTY()
+	AGamePlayerSuperWeapon* GamePlayerSuperWeapon = nullptr;
 };

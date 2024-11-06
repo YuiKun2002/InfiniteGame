@@ -9,7 +9,9 @@
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
+#include "GameStart/Flipbook/GameActor/GamePlayerSuperWeapon.h"
 #include "GameStart/Flipbook/GameActor/PlayerWeapon/PlayerFirstWeapon.h"
+
 
 AGamePlayer::AGamePlayer()
 {
@@ -38,6 +40,14 @@ void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 
 void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 {
+	//初始化超级武器对象
+	if (!IsValid(this->GamePlayerSuperWeapon))
+	{
+		this->GamePlayerSuperWeapon = this->GetWorld()->SpawnActor<AGamePlayerSuperWeapon>(
+			AGamePlayerSuperWeapon::StaticClass()
+		);
+		this->GamePlayerSuperWeapon->SetActorLocation(this->GetActorLocation());
+	}
 	//初始化角色数据
 	this->ItemHeroBase = UItemHeroDataFunc::Calculate(Data);
 	//循环
@@ -228,6 +238,11 @@ int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 void AGamePlayer::GetPlayerData(FItemHeroBase& Data)
 {
 	Data = ItemHeroBase;
+}
+
+AGamePlayerSuperWeapon* AGamePlayer::GetPlayerSuperWeapon()
+{
+	return this->GamePlayerSuperWeapon;
 }
 
 void AGamePlayer::PlayerDef_Anim()
