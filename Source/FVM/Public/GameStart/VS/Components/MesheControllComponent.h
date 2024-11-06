@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameStart/VS/MapBaseType.h"
 #include "Components/ActorComponent.h"
+#include "GameSystem/GameMapStructManager.h"
 #include "MesheControllComponent.generated.h"
 
 class UGameMapStructManager;

@@ -233,7 +233,8 @@ AMapMeshe* UMesheControllComponent::CreateNewMapMeshe(
 {
 	//得到地图网格
 	AMapMeshe* M_TempMapMesh = Comp->GetWorld()->SpawnActor<AMapMeshe>(
-		LoadClass<AMapMeshe>(0, TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/AMapMeshe.AMapMeshe_C'")),
+		LoadClass<AMapMeshe>(0,
+			TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/AMapMeshe.AMapMeshe_C'")),
 		Trans);
 
 	if (bInitMeshe)
