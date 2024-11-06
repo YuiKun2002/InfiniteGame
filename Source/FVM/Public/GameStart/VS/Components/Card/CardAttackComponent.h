@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameStart/VS/Components/Card/AttackLauncherComponent.h"
 #include "GameStart/VS/MapBaseType.h"
+#include "GameSystem/Tools/DynamicProperty.h"
 #include "CardAttackComponent.generated.h"
 
 class AAttackCardActor;
@@ -33,6 +34,9 @@ public:
 	//当动画播放完毕时触发
 	UFUNCTION()
 	void OnAnimationComplete(class UTrackEntry* Track);
+	//当卡片管理器的动态属性发生变化时
+	UFUNCTION()
+	void OnCardManagerProChange(class UDynamicProperty* Property);
 	//重新初始化Idle动画
 	virtual void ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName) override;
 	//更新
@@ -44,4 +48,7 @@ protected:
 private:
 	//tick计时器
 	float time = 0.f;
+	//攻击倍率
+	UPROPERTY()
+	float AttackRate = 1.f;
 };

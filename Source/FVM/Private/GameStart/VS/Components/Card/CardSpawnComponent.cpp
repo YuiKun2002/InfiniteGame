@@ -248,5 +248,8 @@ void UCardSpawnComponent::AnimationPlayEnd(UTrackEntry* Track)
 
 void UCardSpawnComponent::OnPropertyChange(UDynamicProperty* Property)
 {
-	Property->GetFloatProperty(TEXT("SpawnCardSpawnRate"), this->SpawnRate);
+	if (this->CurSpawnCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Energy)
+	{
+		Property->GetFloatProperty(TEXT("SpawnCardSpawnRate"), this->SpawnRate);
+	}
 }

@@ -5,7 +5,7 @@
 
 #include "GameStart/Flipbook/GameActor/CardActor/AttackCardActor.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
-
+#include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/MapMeshe.h"
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/VS/Components/MesheControllComponent.h"
@@ -54,7 +54,7 @@ void UCardAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetLine(this->AttackCardActor->GetLine().Row);
 	NewBullet->SetActorTransform(NewTrans);
 	NewBullet->SetObjectActorLocation(this->AttackCardActor->GetCurrentMouse());
-	NewBullet->SetATK(this->AttackCardActor->GetCurrentATK());
+	NewBullet->SetATK(this->AttackCardActor->GetCurrentATK() *  this->AttackRate);
 	NewBullet->SetSecondATK(
 		this->AttackCardActor->GetCurrentSecondATK(
 			this->AttackCardActor->GetATKCardData().M_SputteringATKRate)
@@ -67,6 +67,11 @@ void UCardAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 void UCardAttackComponent::LoadResource()
 {
 	Super::LoadResource();
+
+	//绑定卡片管理器
+	AGameMapInstance::GetCardManagerComponent_Static()->OnCardManagerDynamicPropertyChangeDelegate.BindUObject(
+		this, &UCardAttackComponent::OnCardManagerProChange
+	);
 
 	//初始化条件
 	this->InitLaunchProperty(
@@ -93,6 +98,14 @@ void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
 	this->SetTrackEntry(nullptr);
+}
+
+void UCardAttackComponent::OnCardManagerProChange(UDynamicProperty* Property)
+{
+	if (this->AttackCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Melee)
+	{
+		Property->GetFloatProperty(TEXT("MeleeCardMeleeRate"), this->AttackRate);
+	}
 }
 
 void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName)
