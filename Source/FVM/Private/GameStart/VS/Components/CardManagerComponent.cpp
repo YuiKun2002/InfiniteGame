@@ -37,16 +37,6 @@ UCardManagerComponent::UCardManagerComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-
-	this->DynamicProperty = UDynamicProperty::MakeDynamicPropertyByClass(
-		TSoftClassPtr<UDynamicProperty>(
-			FSoftClassPath(
-				TEXT("Blueprint'/Game/Resource/BP/Data/卡片管理器动态属性/BP_CardManager_Property.BP_CardManager_Property_C'")
-			)
-		)
-	);
 }
 
 
@@ -55,6 +45,13 @@ void UCardManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	this->DynamicProperty = UDynamicProperty::MakeDynamicPropertyByClass(
+		TSoftClassPtr<UDynamicProperty>(
+			FSoftClassPath(
+				TEXT("Blueprint'/Game/Resource/BP/Data/卡片管理器动态属性/BP_CardManager_Property.BP_CardManager_Property_C'")
+			)
+		)
+	);
 
 	//初始化卡片默认动画
 	//加载数据表
