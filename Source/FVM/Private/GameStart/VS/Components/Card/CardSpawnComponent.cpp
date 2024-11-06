@@ -67,6 +67,11 @@ void UCardSpawnComponent::LoadResource()
 		this->CurSpawnCardActor->Idle.GetDefaultObject()->GetCategoryName().ToString(),
 		true);
 	this->SetTrackEntry(nullptr);
+
+	//主动调用卡片管理器	
+	this->OnPropertyChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
+	);
 }
 
 

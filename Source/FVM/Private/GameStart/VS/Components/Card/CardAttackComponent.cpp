@@ -54,7 +54,7 @@ void UCardAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetLine(this->AttackCardActor->GetLine().Row);
 	NewBullet->SetActorTransform(NewTrans);
 	NewBullet->SetObjectActorLocation(this->AttackCardActor->GetCurrentMouse());
-	NewBullet->SetATK(this->AttackCardActor->GetCurrentATK() *  this->AttackRate);
+	NewBullet->SetATK(this->AttackCardActor->GetCurrentATK() * this->AttackRate);
 	NewBullet->SetSecondATK(
 		this->AttackCardActor->GetCurrentSecondATK(
 			this->AttackCardActor->GetATKCardData().M_SputteringATKRate)
@@ -91,6 +91,11 @@ void UCardAttackComponent::LoadResource()
 	//播放发呆动画
 	this->SetTrackEntry(this->AttackCardActor->SetAnimation(0, this->GetIdleAnimName(), true));
 
+	//主动调用卡片管理器	
+	this->OnCardManagerProChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
+	);
+
 	//UWidgetBase::CreateSelectTipWidget(FString(TEXT("卡片动画名称：")) + this->GetIdleAnimName());
 }
 
@@ -102,6 +107,7 @@ void UCardAttackComponent::OnAnimationComplete(class UTrackEntry* Track)
 
 void UCardAttackComponent::OnCardManagerProChange(UDynamicProperty* Property)
 {
+	//近战卡片提升
 	if (this->AttackCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Melee)
 	{
 		Property->GetFloatProperty(TEXT("MeleeCardMeleeRate"), this->AttackRate);
