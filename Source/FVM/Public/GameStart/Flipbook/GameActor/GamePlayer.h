@@ -111,6 +111,10 @@ public:
 	void SetPlayerTranslucency(UUI_MapMeshe* _CurMeshe);
 	//设置老鼠对象
 	void SetCurrentMouse(AMouseActor* _AMapMeshe);
+
+	//设置角色数据
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerData(const FItemHeroBase& Data);
 public:
 	//获取角色线路
 	UFUNCTION(BlueprintCallable)
@@ -128,6 +132,9 @@ public:
 	UUI_MapMeshe* const GetUIMapMeshe();
 	//获取角色渲染层【卡片读取】
 	int32 GetPlayerRenderLayerToCardLayer();
+	//获取角色数据
+	UFUNCTION(BlueprintPure)
+	void GetPlayerData(FItemHeroBase& Data);
 public:
 	//角色默认动画
 	void PlayerDef_Anim();
@@ -150,4 +157,10 @@ private:
 	//角色技能
 	UPROPERTY()
 	TArray<UGamePlayerSkillObject*> PlayerSkill;
+	//角色基础数据
+	UPROPERTY()
+	FItemHeroBase ItemHeroBase;
+	//角色当前生命值
+	UPROPERTY()
+	float CurrentHP = 0.f;
 };

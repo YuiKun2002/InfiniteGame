@@ -38,6 +38,8 @@ void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 
 void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 {
+	//初始化角色数据
+	this->ItemHeroBase = UItemHeroDataFunc::Calculate(Data);
 	//循环
 	for (auto PP = Data.Skills.CreateConstIterator(); PP; ++PP)
 	{
@@ -50,6 +52,10 @@ void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 			this->PlayerSkill.Emplace(Skill);
 		}
 	}
+
+	this->CurrentHP = this->ItemHeroBase.HP;
+	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("角色当前生命值：") +
+		FString::FromInt(this->CurrentHP));
 }
 
 void AGamePlayer::InitPlayerWeapon()
@@ -184,6 +190,11 @@ void AGamePlayer::SetCurrentMouse(AMouseActor* _MouseActor)
 	this->M_MouseActor = _MouseActor;
 }
 
+void AGamePlayer::SetPlayerData(const FItemHeroBase& Data)
+{
+	this->ItemHeroBase = Data;
+}
+
 FLine AGamePlayer::GetLine() const
 {
 	return this->M_PlayerLine;
@@ -212,6 +223,11 @@ UUI_MapMeshe* const AGamePlayer::GetUIMapMeshe()
 int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 {
 	return this->GetRenderLayer() + 11;
+}
+
+void AGamePlayer::GetPlayerData(FItemHeroBase& Data)
+{
+	Data = ItemHeroBase;
 }
 
 void AGamePlayer::PlayerDef_Anim()

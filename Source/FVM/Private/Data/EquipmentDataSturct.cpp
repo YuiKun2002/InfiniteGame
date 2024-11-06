@@ -271,10 +271,10 @@ FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 		Data.HP * FMath::Pow(Data.HPCofficient, (Data.HeroLevel - 1));
 	Data.HP = HP;
 
-	//计算血量
-	int32 HPRate = Data.HeroLevel == 1 ? Data.HPRate :
-		Data.HPRate * FMath::Pow(Data.HPRateCofficient, (Data.HeroLevel - 1));
-	Data.HPRate = HPRate;
+	////计算血量
+	//int32 HPRate = Data.HeroLevel == 1 ? Data.HPRate :
+	//	Data.HPRate * FMath::Pow(Data.HPRateCofficient, (Data.HeroLevel - 1));
+	//Data.HPRate = HPRate;
 
 	//计算CD
 	int32 CD = Data.HeroLevel == 1 ? Data.CD :
