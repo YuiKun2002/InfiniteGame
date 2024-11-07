@@ -247,6 +247,9 @@ public:
 	//卡片碰撞
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* M_CardTypeBoxCollision = nullptr;
+	//卡片等级位置组件
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* CardLevelLocationComp = nullptr;
 private:
 	//生命类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -283,9 +286,6 @@ private:
 	//卡片数据组件
 	UPROPERTY()
 	UCardDataComponent* CurCardDataComponent = nullptr;
-	//卡片等级位置组件
-	UPROPERTY()
-	class USceneComponent* CardLevelLocationComp = nullptr;
 	//卡片等级对象
 	UPROPERTY()
 	class ACardLevelActor* CardLevelActor = nullptr;
