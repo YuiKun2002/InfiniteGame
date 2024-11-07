@@ -286,3 +286,8 @@ float UItemHeroDataFunc::CalculateRate(int32 Level, float Rate, float Base)
 	return (Level == 1) ? Base :
 		Base * FMath::Pow(Rate, (Level - 1));
 }
+
+int32 UItemHeroDataFunc::GetHeroLevel(const FItemHeroBase& Data)
+{
+	return Data.HeroLevel;
+}

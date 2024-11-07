@@ -106,14 +106,17 @@ class FVM_API UItemHeroDataFunc : public UObject
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static FItemHeroBase CalculateNext(const FItemHeroBase& InputData);
 
 	//数值计算【幂运算】
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static float CalculateRate(int32 Level, float Rate, float Base);
+	//获取英雄等级
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
+	static int32 GetHeroLevel(const FItemHeroBase& Data);
 
 };
 
