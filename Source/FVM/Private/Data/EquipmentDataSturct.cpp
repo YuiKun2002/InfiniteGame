@@ -271,16 +271,6 @@ FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 		Data.HP * FMath::Pow(Data.HPCofficient, (Data.HeroLevel - 1));
 	Data.HP = HP;
 
-	////º∆À„—™¡ø
-	//int32 HPRate = Data.HeroLevel == 1 ? Data.HPRate :
-	//	Data.HPRate * FMath::Pow(Data.HPRateCofficient, (Data.HeroLevel - 1));
-	//Data.HPRate = HPRate;
-
-	//º∆À„CD
-	int32 CD = Data.HeroLevel == 1 ? Data.CD :
-		Data.CD * FMath::Pow(Data.CDCoefficient, (Data.HeroLevel - 1));
-	Data.CD = CD;
-
 	return Data;
 }
 
@@ -289,4 +279,10 @@ FItemHeroBase UItemHeroDataFunc::CalculateNext(const FItemHeroBase& InputData)
 	FItemHeroBase Data = InputData;
 	Data.HeroLevel += 1;
 	return UItemHeroDataFunc::Calculate(Data);
+}
+
+float UItemHeroDataFunc::CalculateRate(int32 Level, float Rate, float Base)
+{
+	return (Level == 1) ? Base :
+		Base * FMath::Pow(Rate, (Level - 1));
 }

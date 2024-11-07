@@ -63,34 +63,31 @@ public:
 	//角色稀有度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 RarityLevel = 0;
+
 	//角色攻击
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ATK = 10;
+	float ATK = 2;
 	//角色加成比例
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ATKRate = 1.2f;
+	float ATKRate = 1.1f;
+
 	//角色生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float HP = 100;
-	//角色系数
+	//角色生命值成长系数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float HPCofficient = 1.1;
-	//角色生命值
+	float HPCofficient = 1.1f;
+
+	//角色生命值回复血量
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float HPRate = 10.f;
-	//角色生命值系数
+	float HPRecover = 2.f;
+	//角色生命值回复速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float HPRateCofficient = 1.1f;
-	//角色CD
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CD = 5.f;
-	//角色CD系数
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CDCoefficient = 1.1f;
+	float HPRecoverTime = 1.f;
 
 	//角色技能
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int32,TSubclassOf<class UGamePlayerSkillObject>> Skills;
+	TMap<int32, TSubclassOf<class UGamePlayerSkillObject>> Skills;
 };
 
 //武器详细数据
@@ -113,6 +110,11 @@ public:
 	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
 	UFUNCTION(BlueprintPure)
 	static FItemHeroBase CalculateNext(const FItemHeroBase& InputData);
+
+	//数值计算【幂运算】
+	UFUNCTION(BlueprintPure)
+	static float CalculateRate(int32 Level, float Rate, float Base);
+
 };
 
 /************************************************************************/
