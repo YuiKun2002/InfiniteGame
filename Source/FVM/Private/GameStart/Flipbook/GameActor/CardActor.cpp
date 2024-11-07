@@ -115,13 +115,14 @@ void ACardActor::SetCardGrade(const int32& _CardGrade)
 					);
 				}
 				else {
+					float Z = (_CardGrade > 9) ? 30.f : 35.f;
 					LevelPointLocation = PointLocation;
 					LevelPointLocation.Z =
 						AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->
 						GetMapMeshLocation(
 							this->GetLine().Row,
 							this->GetLine().Col
-						).Z + 20.f;
+						).Z - Z;
 				}
 
 				this->CardLevelActor->SetCardLevelLocation(
@@ -480,6 +481,12 @@ void ACardActor::KillCard()
 			{
 				this->M_UUI_MapMeshe->GetMapMeshe()->RemoveCard(this);
 				this->UpdateCardCollsion();
+
+				if (IsValid(this->CardLevelActor))
+				{
+					this->CardLevelActor->Destroy();
+				}
+
 				this->Destroy();
 				return;
 			}
@@ -488,6 +495,11 @@ void ACardActor::KillCard()
 
 	//this->GetRenderComponent()->OnDynamicAnimationEndDelegate.Clear();
 	//如果所有条件都不满足，直接移除
+
+	if (IsValid(this->CardLevelActor))
+	{
+		this->CardLevelActor->Destroy();
+	}
 	this->Destroy();
 }
 
@@ -552,6 +564,11 @@ void ACardActor::CardDeath()
 	if (this->OnCardDeathDelegate.IsBind())
 	{
 		this->OnCardDeathDelegate.Call();
+	}
+
+	if (IsValid(this->CardLevelActor))
+	{
+		this->CardLevelActor->Destroy();
 	}
 }
 
