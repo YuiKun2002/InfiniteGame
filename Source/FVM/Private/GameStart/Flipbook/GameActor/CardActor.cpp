@@ -16,7 +16,7 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include <Components/StaticMeshComponent.h>
-
+#include "GameStart/VS/CardLevelActor.h"
 #include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include "GameStart/VS/Components/VSManagerComponent.h"
@@ -88,29 +88,27 @@ void ACardActor::SetCardGrade(const int32& _CardGrade)
 
 	if (_CardGrade > 3 && _CardGrade < 17)
 	{
-		UDataTable* CurGradeDataTable = LoadObject<UDataTable>(this,
-			TEXT("DataTable'/Game/Resource/BP/Data/CardData/1_CardGradeAnim.1_CardGradeAnim'")
-		);
-
-		if (FCard_GradeAnim_Data* CurGradeData = CurGradeDataTable->FindRow<FCard_GradeAnim_Data>(
-			FName(FString::FromInt(_CardGrade)), TEXT("Grade")))
+		if (!IsValid(this->CardLevelActor))
 		{
-			UStaticMesh* CurStaticMesh = LoadObject<UStaticMesh>(this,
-				TEXT("StaticMesh'/Game/Resource/BP/GameStart/Item/Mesh/Plane.Plane'"));
-			this->M_CardGradeStaticMesh->SetStaticMesh(CurStaticMesh);
+			this->CardLevelActor = this->GetWorld()->SpawnActor<ACardLevelActor>(
+				LoadClass<ACardLevelActor>(nullptr,
+					TEXT("Blueprint'/Game/Resource/SpineData/卡片等级动画/BP_CardLevel.BP_CardLevel_C'"))
+			);
 
-			UMaterialInstance* CurMaterial = Cast<UMaterialInstance>(CurGradeData->CardGradeResource.TryLoad());
-			this->M_CardGradeStaticMesh->SetMaterial(0, CurMaterial);
-			this->M_CardGradeStaticMesh->SetRelativeLocation(
-				FVector(CurGradeData->RelativeLocation.X, 0.f, CurGradeData->RelativeLocation.Y));
-			this->M_CardGradeStaticMesh->SetWorldScale3D(FVector(CurGradeData->Scale.X, CurGradeData->Scale.Y, 1.f));
+			if (IsValid(this->CardLevelActor))
+			{
+				this->CardLevelActor->SetCardLevelLocation(
+					this->CardLevelLocationComp->GetComponentLocation(),
+					_CardGrade,
+					this->GetRenderLayer(),
+					FVector(1.f, 0.f, 0.f)
+				);
+			}
+			else {
+				UGameSystemFunction::FVMLog(__FUNCTION__,
+					TEXT("卡片等级资源加载失败，请检查资源位置！"));
+			}
 		}
-
-		this->M_CardGradeStaticMesh->SetHiddenInGame(false);
-
-	}
-	else {
-		this->M_CardGradeStaticMesh->SetHiddenInGame(true);
 	}
 }
 
@@ -279,7 +277,11 @@ void ACardActor::SetRenderLayer(int32 _Layer)
 	}*/
 
 	Super::SetRenderLayer(_Layer);
-	this->M_CardGradeStaticMesh->SetTranslucentSortPriority(_Layer + 1);
+	//this->M_CardGradeStaticMesh->SetTranslucentSortPriority(_Layer + 1);
+	if (IsValid(this->CardLevelActor))
+	{
+		this->CardLevelActor->SetRenderLayer(_Layer + 1);
+	}
 }
 
 int32 ACardActor::GetCardGrade(const FString& _Name)
@@ -532,17 +534,26 @@ ACardActor::ACardActor()
 
 	this->CurCheckMesheLine = FLine(-1);
 
-	this->M_CardGradeStaticMesh = this->CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CardGradeMeshComponent"));
+	/*this->M_CardGradeStaticMesh = this->CreateDefaultSubobject<UStaticMeshComponent>(
+		TEXT("CardGradeMeshComponent")
+	);
 	this->M_CardGradeStaticMesh->SetupAttachment(this->GetPointComponent());
-	this->M_CardGradeStaticMesh->SetWorldRotation(FRotator(0.f, 0.f, 90.f));
+	this->M_CardGradeStaticMesh->SetWorldRotation(FRotator(0.f, 0.f, 90.f));*/
 
 	this->M_CardTypeBoxCollision = this->CreateDefaultSubobject<UBoxComponent>(TEXT("CardTypeBox"));
 	this->M_CardTypeBoxCollision->SetupAttachment(this->GetPointComponent());
 
-	this->CurCardDataComponent = this->CreateDefaultSubobject<UCardDataComponent>(TEXT("CurCardDataComponent"));
+	this->CurCardDataComponent = this->CreateDefaultSubobject<UCardDataComponent>(
+		TEXT("CurCardDataComponent")
+	);
 
-	this->M_CardGradeStaticMesh->SetGenerateOverlapEvents(false);
-	this->M_CardGradeStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//新增卡片等级
+	this->CardLevelLocationComp = this->CreateDefaultSubobject<USceneComponent>(
+		TEXT("CardLevelLocationCompnent")
+	);
+	this->CardLevelLocationComp->SetupAttachment(
+		this->GetPointComponent()
+	);
 }
 
 void ACardActor::Tick(float DeltaSeconds)
@@ -586,7 +597,7 @@ void ACardActor::SetCardCollisonState(bool bActive)
 			this->bCollisionState = true;
 
 			this->M_CardTypeBoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
-			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,ECollisionResponse::ECR_Overlap);
+			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 			this->M_CardTypeBoxCollision->SetCollisionResponseToChannel(
 				UGameSystemFunction::GetCardCollisionBoxType(this->GetCardData().M_ECardCollisionType),

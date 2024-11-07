@@ -20,15 +20,13 @@ class UMouseManagerComponent;
 class UPaperFlipbook;
 class AGameMapInstance;
 
-class AMapMeshe;
-class AMapMouseMesheManager;
-class UUI_MapMeshe;
-
-class AMouseActor;
 class UUI_Card;
-
+class AMapMeshe;
+class AMouseActor;
+class UUI_MapMeshe;
 class UBoxComponent;
-
+class ACardLevelActor;
+class AMapMouseMesheManager;
 class UPaperFlipbookComponent;
 
 
@@ -39,10 +37,10 @@ struct FCard_HP {
 public:
 	//当前生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_Life = 10.f;
+	float M_Life = 10.f;
 	//总生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float M_TotalLife = 10.f;
+	float M_TotalLife = 10.f;
 };
 
 //卡片属性
@@ -52,28 +50,28 @@ struct FCard_Property {
 public:
 	//白天或者是夜晚(地图)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_Day = true;
+	bool M_Day = true;
 	//白天或者是夜晚(卡片)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_CardDay = true;
+	bool M_CardDay = true;
 	//卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString M_CardName;
+	FString M_CardName;
 	//卡片优先级(一个格子只能存在不同优先级的卡片(只能存在一次))
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int32 M_CardID = 0;
+	int32 M_CardID = 0;
 	//当前卡片所在的路线
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FLine M_Line;
+	FLine M_Line;
 	//适应类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ELineType M_ELineType;
+	ELineType M_ELineType;
 	//当前需要攻击的老鼠对象
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		AMouseActor* M_CurrentMouse = nullptr;
+	AMouseActor* M_CurrentMouse = nullptr;
 	//当前攻击该卡片的老鼠
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		AMouseActor* M_CurrentAttackSelfMouse = nullptr;
+	AMouseActor* M_CurrentAttackSelfMouse = nullptr;
 };
 
 //当卡片受到老鼠的攻击
@@ -105,124 +103,124 @@ public:
 public:
 	//获取浮动模式
 	UFUNCTION(BlueprintCallable)
-		bool GetFloatMode() const;
+	bool GetFloatMode() const;
 	//获取卡片原数据
 	UFUNCTION(BlueprintCallable)
-		const FItemCard& GetCardData();
+	const FItemCard& GetCardData();
 	//获取卡片名称
 	UFUNCTION(BlueprintCallable)
-		FString GetCardName();
+	FString GetCardName();
 	//获取当前生命值
 	UFUNCTION(BlueprintCallable)
-		float GetCurrentHP();
+	float GetCurrentHP();
 	//获取总生命值
 	UFUNCTION(BlueprintCallable)
-		float GetTotalHP();
+	float GetTotalHP();
 	//获取地图是白天还是夜晚
 	UFUNCTION(BlueprintCallable)
-		bool GetMapDay() const;
+	bool GetMapDay() const;
 	//获取卡片是白天还是夜晚
 	UFUNCTION(BlueprintCallable)
-		bool GetCardDay() const;
+	bool GetCardDay() const;
 	//获取地图状态是否游戏暂停
 	UFUNCTION(BlueprintCallable)
-		bool GamePause();
+	bool GamePause();
 	//获取卡片等级
 	UFUNCTION(BlueprintCallable)
-		int32 GetCardGrade(const FString& _Name);
+	int32 GetCardGrade(const FString& _Name);
 	//获取卡片ID
 	UFUNCTION(BlueprintCallable)
-		int32 GetCardID() const;
+	int32 GetCardID() const;
 	//获取线路
 	UFUNCTION(BlueprintCallable)
-		FLine GetLine();
+	FLine GetLine();
 	//获取线路类型
 	UFUNCTION(BlueprintCallable)
-		const ELineType& GetLineType() const;
+	const ELineType& GetLineType() const;
 	//获取地图网格UI
 	UFUNCTION(BlueprintCallable)
-		UUI_MapMeshe* GetUIMapMesh();
+	UUI_MapMeshe* GetUIMapMesh();
 	//获取当前指向的老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* GetCurrentMouse();
+	AMouseActor* GetCurrentMouse();
 	//获取当前攻击该卡片的老鼠
 	UFUNCTION(BlueprintCallable)
-		AMouseActor* GetCurrentAttackSelfMouse();
+	AMouseActor* GetCurrentAttackSelfMouse();
 public:
 	//设置卡片碰撞状态
 	UFUNCTION(BlueprintCallable)
-		void SetCardCollisonState(bool bActive);
+	void SetCardCollisonState(bool bActive);
 	//设置卡片等级
 	UFUNCTION(BlueprintCallable)
-		void SetCardGrade(const int32& _CardGrade);
+	void SetCardGrade(const int32& _CardGrade);
 	//设置线路
 	UFUNCTION(BlueprintCallable)
-		void SetLine(const FLine& _Line);
+	void SetLine(const FLine& _Line);
 	//设置类型和层
 	UFUNCTION(BlueprintCallable)
-		void SetCardType(const ELineType& _Type, const int32& _CardID);
+	void SetCardType(const ELineType& _Type, const int32& _CardID);
 	//设置卡片的生命值
 	UFUNCTION(BlueprintCallable)
-		void SetCardHP(const float& ATK_Value, float UpHP_Value);
+	void SetCardHP(const float& ATK_Value, float UpHP_Value);
 	//设置卡片当前生命值
 	UFUNCTION(BlueprintCallable)
-		void SetCardCurrentHP(const float& _HP);
+	void SetCardCurrentHP(const float& _HP);
 	//设置地图网格UI
 	UFUNCTION(BlueprintCallable)
-		void SetUIMapMesh(UUI_MapMeshe* _MapMesh);
+	void SetUIMapMesh(UUI_MapMeshe* _MapMesh);
 	//设置当前老鼠指向
 	UFUNCTION(BlueprintCallable)
-		void SetCurrentMouse(AMouseActor* _MouseActor);
+	void SetCurrentMouse(AMouseActor* _MouseActor);
 	//设置当前攻击该卡片的老鼠
 	UFUNCTION(BlueprintCallable)
-		void SetCurrentAttackSelfMouse(AMouseActor* _MouseActor);
+	void SetCurrentAttackSelfMouse(AMouseActor* _MouseActor);
 	//开关碰撞体
 	UFUNCTION(BlueprintCallable)
-		void SetCollisionEnable(bool bValue);
+	void SetCollisionEnable(bool bValue);
 	//设置层级
 	virtual	void SetRenderLayer(int32 _Layer) override;
 public:
 
 	//解析actor
 	UFUNCTION(BlueprintCallable)
-		void AnalysisActor(AActor* _Actor);
+	void AnalysisActor(AActor* _Actor);
 	//转换卡片适应的白天或者夜晚
 	UFUNCTION(BlueprintCallable)
-		void CardDayTransform(bool _Day);
+	void CardDayTransform(bool _Day);
 	//更新卡片碰撞
 	UFUNCTION(BlueprintCallable)
-		void UpdateCardCollsion();
+	void UpdateCardCollsion();
 	//移除当前卡片
 	UFUNCTION(BlueprintCallable)
-		void KillCard();
+	void KillCard();
 	//更新卡片状态（受到的攻击力和受到的回复）
 	UFUNCTION(BlueprintCallable)
-		bool UpdateCardState(const float& _ATK_Value, const float& _UpHP_Value = 0.f);
+	bool UpdateCardState(const float& _ATK_Value, const float& _UpHP_Value = 0.f);
 	//更新卡片激活状态
 	UFUNCTION(BlueprintCallable)
-		void UpdateCardEnableState();
+	void UpdateCardEnableState();
 public:
 	//函数调用发射器(当函数被调用时，会触发指针函数调用)
 
 	//卡片被激活时
 	UFUNCTION()
-		void CardActive();
+	void CardActive();
 	//卡片受到伤害时
 	UFUNCTION()
-		void CardBeHurt(class AMouseActor* CurMouseActor);
+	void CardBeHurt(class AMouseActor* CurMouseActor);
 	//卡片死亡伤害时
 	UFUNCTION()
-		void CardDeath();
+	void CardDeath();
 public:
 	//当卡片移动时
 	UFUNCTION()
-		void OnCardMovedUpdate(const float& DeltaTime, const int32& _Layer, const FVector& _Location, const FLine& _Line);
+	void OnCardMovedUpdate(const float& DeltaTime, const int32& _Layer, const FVector& _Location, const FLine& _Line);
 	//当卡片开始移动
 	UFUNCTION()
-		void OnCardMoveBegin(const int32& _Layer, const FLine& _Line);
+	void OnCardMoveBegin(const int32& _Layer, const FLine& _Line);
 	//当卡片移动结束时
 	UFUNCTION()
-		void OnCardMoveEnd(const int32& _Layer, const FLine& _Line);
+	void OnCardMoveEnd(const int32& _Layer, const FLine& _Line);
 public:
 	ACardActor();
 
@@ -232,36 +230,33 @@ public:
 private:
 	//颜色设置控制变量
 	UPROPERTY()
-		bool M_bColorSet = false;
+	bool M_bColorSet = false;
 	//当前卡片所对应的UI
 	UPROPERTY()
-		UUI_Card* M_UUI_Card = nullptr;
+	UUI_Card* M_UUI_Card = nullptr;
 	//卡片数据
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "基本数据")
-		FItemCard M_SourceCardDataBase;
+	FItemCard M_SourceCardDataBase;
 	//浮动模式(跟随地板浮动)
 	UPROPERTY()
-		bool M_bFloatMode = false;
+	bool M_bFloatMode = false;
 public:
-	//卡片等级动画
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh")
-		UStaticMeshComponent* M_CardGradeStaticMesh = nullptr;
 	//游戏地图实例
 	UPROPERTY(EditAnywhere)
-		AGameMapInstance* M_AGameMapInstance = nullptr;
+	AGameMapInstance* M_AGameMapInstance = nullptr;
 	//卡片碰撞
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-		UBoxComponent* M_CardTypeBoxCollision = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* M_CardTypeBoxCollision = nullptr;
 private:
 	//生命类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		FCard_HP M_FCardActor_HP;
+	FCard_HP M_FCardActor_HP;
 	//卡片属性
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		FCard_Property M_CardProperty;
+	FCard_Property M_CardProperty;
 	//当前卡片所在的UI网格
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UUI_MapMeshe* M_UUI_MapMeshe = nullptr;
+	UUI_MapMeshe* M_UUI_MapMeshe = nullptr;
 
 	/*
 
@@ -271,34 +266,40 @@ private:
 public:
 	//获取卡片数据组件
 	UFUNCTION()
-		UCardDataComponent* GetCardDataComponent();
+	UCardDataComponent* GetCardDataComponent();
 	//获取盒体碰撞组件
 	UFUNCTION()
-		UBoxComponent* GetBoxComponent();
+	UBoxComponent* GetBoxComponent();
 public:
 	//卡片的基础属性蓝图填写
 
 	//卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片名称")
-		FText CardActor_Name;
+	FText CardActor_Name;
 protected:
 	//设置卡片数据
 	void SetCardActor(const FItemCard& _CardData);
 private:
 	//卡片数据组件
 	UPROPERTY()
-		UCardDataComponent* CurCardDataComponent = nullptr;
+	UCardDataComponent* CurCardDataComponent = nullptr;
+	//卡片等级位置组件
+	UPROPERTY()
+	class USceneComponent* CardLevelLocationComp = nullptr;
+	//卡片等级对象
+	UPROPERTY()
+	class ACardLevelActor* CardLevelActor = nullptr;
 private:
 	//当前线路
 	UPROPERTY(EditAnywhere)
-		FLine CurCheckMesheLine;
+	FLine CurCheckMesheLine;
 	//碰撞是否激活
 	UPROPERTY(EditAnywhere)
-		bool bCollisionActive = true;
+	bool bCollisionActive = true;
 	//当前碰撞状态
 	UPROPERTY(EditAnywhere)
-		bool bCollisionState = false;
+	bool bCollisionState = false;
 	//更新延迟
 	UPROPERTY(EditAnywhere)
-		float DelayTime = 0.2f;
+	float DelayTime = 0.2f;
 };
