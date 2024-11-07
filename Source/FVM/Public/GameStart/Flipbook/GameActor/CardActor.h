@@ -279,6 +279,9 @@ public:
 	//卡片名称
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片名称")
 	FText CardActor_Name;
+	//自定义等级位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片等级位置")
+	bool bCustomCardLavelLocation = false;
 protected:
 	//设置卡片数据
 	void SetCardActor(const FItemCard& _CardData);

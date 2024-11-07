@@ -103,16 +103,32 @@ void ACardActor::SetCardGrade(const int32& _CardGrade)
 					this->GetPointComponent()->GetRelativeLocation().X + Location.Y,
 					this->GetPointComponent()->GetRelativeLocation().Z + Location.Z
 				);
-				FVector LevelPointLocation(
-					this->CardLevelLocationComp->GetRelativeLocation().Y + PointLocation.X,
-					this->CardLevelLocationComp->GetRelativeLocation().X + PointLocation.Y,
-					this->CardLevelLocationComp->GetRelativeLocation().Z + PointLocation.Z
-				);
+				FVector LevelPointLocation = FVector::ZeroVector;
+
+				FVector Offset = FVector(1.f, 0.f, 0.f);
+				if (this->bCustomCardLavelLocation)
+				{
+					LevelPointLocation = FVector(
+						this->CardLevelLocationComp->GetRelativeLocation().Y + PointLocation.X,
+						this->CardLevelLocationComp->GetRelativeLocation().X + PointLocation.Y,
+						this->CardLevelLocationComp->GetRelativeLocation().Z + PointLocation.Z
+					);
+				}
+				else {
+					LevelPointLocation = PointLocation;
+					LevelPointLocation.Z =
+						AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent->
+						GetMapMeshLocation(
+							this->GetLine().Row,
+							this->GetLine().Col
+						).Z + 20.f;
+				}
+
 				this->CardLevelActor->SetCardLevelLocation(
 					LevelPointLocation,
 					_CardGrade,
 					this->GetRenderLayer(),
-					FVector(1.f, 0.f, 0.f)
+					Offset
 				);
 			}
 			else {
