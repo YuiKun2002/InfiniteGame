@@ -12,4 +12,5 @@ void ACardLevelActor::SetCardLevelLocation(
 {
 	this->InitSpineShow();
 	this->SetAnimation(0,FString::FromInt(CardLevel),true);
+	this->SetActorLocation(Location + Offset);
 }
