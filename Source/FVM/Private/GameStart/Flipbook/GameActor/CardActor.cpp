@@ -97,8 +97,19 @@ void ACardActor::SetCardGrade(const int32& _CardGrade)
 
 			if (IsValid(this->CardLevelActor))
 			{
+				FVector Location = this->GetActorLocation();
+				FVector PointLocation(
+					this->GetPointComponent()->GetRelativeLocation().Y + Location.X,
+					this->GetPointComponent()->GetRelativeLocation().X + Location.Y,
+					this->GetPointComponent()->GetRelativeLocation().Z + Location.Z
+				);
+				FVector LevelPointLocation(
+					this->CardLevelLocationComp->GetRelativeLocation().Y + PointLocation.X,
+					this->CardLevelLocationComp->GetRelativeLocation().X + PointLocation.Y,
+					this->CardLevelLocationComp->GetRelativeLocation().Z + PointLocation.Z
+				);
 				this->CardLevelActor->SetCardLevelLocation(
-					this->CardLevelLocationComp->GetComponentLocation(),
+					LevelPointLocation,
 					_CardGrade,
 					this->GetRenderLayer(),
 					FVector(1.f, 0.f, 0.f)
