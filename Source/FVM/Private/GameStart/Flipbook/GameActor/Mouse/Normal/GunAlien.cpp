@@ -13,7 +13,9 @@
 
 AGunAlien::AGunAlien()
 {
-	this->AttackLauncherComp = CreateDefaultSubobject<UAlienAttackLauncherComponent>(TEXT("AlienAttackLauncherComponent"));
+	this->AttackLauncherComp = CreateDefaultSubobject<UAlienAttackLauncherComponent>(
+		TEXT("AlienAttackLauncherComponent")
+	);
 }
 
 void AGunAlien::BeginPlay()

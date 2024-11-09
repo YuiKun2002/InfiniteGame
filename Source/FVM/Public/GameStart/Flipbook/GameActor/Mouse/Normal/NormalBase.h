@@ -144,3 +144,27 @@ public:
 	ANormalCapsuleBase();
 	virtual void BeginPlay() override;
 };
+
+//自带胶囊体碰撞
+UCLASS()
+class FVM_API ANormalCapsuleByWidgetBase : public ANormalBase
+{
+	GENERATED_BODY()
+public:
+	//检查碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* MesheComp = nullptr;
+	//重叠碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCapsuleComponent* BodyComp = nullptr;
+	//界面组件
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* WidgetRenderComponent = nullptr;
+public:
+	ANormalCapsuleByWidgetBase();
+	virtual void BeginPlay() override;
+	virtual	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true) override;
+private:
+	UPROPERTY()
+	class USpineWidgetWaterAlienMask* SpineWidgetWaterAlienMask = nullptr;
+};

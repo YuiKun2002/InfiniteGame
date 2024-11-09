@@ -64,7 +64,6 @@ public:
 	//发射位置组件
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* LauncherBulletLocationComp = nullptr;
-
 	//射击攻击力
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "属性")
 	int32 ShootATK = 5;

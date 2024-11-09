@@ -4,7 +4,8 @@
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/NormalBase.h"
 #include "GameStart/Flipbook/SpriteActor.h"
 #include "Kismet/KismetMathLibrary.h"
-
+#include "GameStart/VS/SpineWidgetWaterAlienMask.h"
+#include "Components/WidgetComponent.h"
 #include <Components/Capsulecomponent.h>
 #include <Components/SphereComponent.h>
 #include <Components/BoxComponent.h>
@@ -391,4 +392,42 @@ void ANormalCapsuleBase::BeginPlay()
 		this->MesheComp->SetHiddenInGame(false);
 		this->BodyComp->SetHiddenInGame(false);
 	}
+}
+
+ANormalCapsuleByWidgetBase::ANormalCapsuleByWidgetBase()
+{
+	this->MesheComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MesheComp"));
+	this->BodyComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("BodyComp"));
+	this->WidgetRenderComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetRenderComp"));
+
+	//设置依附
+	this->MesheComp->SetupAttachment(this->GetPointComponent());
+	this->BodyComp->SetupAttachment(this->GetPointComponent());
+	this->WidgetRenderComponent->SetupAttachment(this->GetPointComponent());
+}
+
+void ANormalCapsuleByWidgetBase::BeginPlay()
+{
+	this->WidgetRenderComponent->SetWidget(
+		CreateWidget<USpineWidgetWaterAlienMask>(
+			this->GetWorld(), this->WidgetRenderComponent->GetWidgetClass()
+		)
+	);
+
+	this->SpineWidgetWaterAlienMask = Cast<USpineWidgetWaterAlienMask>(
+		this->WidgetRenderComponent->GetWidget()
+	);
+
+	Super::BeginPlay();
+
+	if (UFVMGameInstance::GetDebug())
+	{
+		this->MesheComp->SetHiddenInGame(false);
+		this->BodyComp->SetHiddenInGame(false);
+	}
+}
+
+UTrackEntry* ANormalCapsuleByWidgetBase::SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop)
+{
+	return this->SpineWidgetWaterAlienMask->PlayMaskObjectAnimation(AnimationName);
 }

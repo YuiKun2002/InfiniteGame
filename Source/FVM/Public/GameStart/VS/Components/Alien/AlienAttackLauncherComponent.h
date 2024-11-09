@@ -31,4 +31,6 @@ public:
 private:
 	UPROPERTY()
 	class AGunAlien* GunAlien = nullptr;
+	UPROPERTY()
+	class AGunAlienWidget* GunAlienWidegt = nullptr;
 };

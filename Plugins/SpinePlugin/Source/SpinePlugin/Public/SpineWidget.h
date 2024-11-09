@@ -30,7 +30,7 @@
 #pragma once
 
 // clang-format off
-#include "Runtime/UMG/Public/UMG.h"
+#include "Components/Widget.h"
 #include "SpineSkeletonDataAsset.h"
 #include "SpineSkeletonAnimationComponent.h"
 #include "spine/spine.h"

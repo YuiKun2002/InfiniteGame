@@ -87,20 +87,10 @@ public:
 	//获取当前轨道
 	UFUNCTION(BlueprintPure)
 	UTrackEntry* GetCurrentAnimationTrackEntry(int32 TrackIndex) const;
-	//获取旋转
-	UFUNCTION(BlueprintPure)
-	FRotator GetRotation() const;
-	//获取颜色
-	UFUNCTION(BlueprintPure)
-	FLinearColor GetSpineRenderColor() const;
 	//获取渲染层级
 	UFUNCTION(BlueprintPure)
 	int32 GetSpineRenderLayer();
-	virtual int32 GetRenderLayer();
 public:
-	//设置动画
-	UFUNCTION(BlueprintCallable)
-	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true);
 	//设置动画
 	UTrackEntry* SetAnimation(
 		UTrackEntry*& CurTrack,
@@ -125,20 +115,33 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable)
 	void SetAnimationClear(int32 TrackIndex = -1);
-	//设置渲染的颜色
-	UFUNCTION(BlueprintCallable)
-	void SetSpineRenderColor(FLinearColor SpineColor);
 	//设置渲染层级
 	UFUNCTION(BlueprintCallable)
 	void SetSpineRenderLayer(int32 RenderLayer);
-	virtual	void SetRenderLayer(int32 RenderLayer);
+public:
+	//设置动画
+	UFUNCTION(BlueprintCallable)
+	virtual	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true);
+	//设置渲染的颜色
+	UFUNCTION(BlueprintCallable)
+	virtual void SetSpineRenderColor(FLinearColor SpineColor);
 	//初始化Spine显示
 	UFUNCTION(BlueprintCallable)
-	void InitSpineShow();
+	virtual void InitSpineShow();
 	//旋转Spine
 	UFUNCTION(BlueprintCallable)
-	void SetRotation(float Angle);
-
+	virtual void SetRotation(float Angle);
+	//渲染层
+	virtual	void SetRenderLayer(int32 RenderLayer);
+public:
+	//获取渲染层
+	virtual int32 GetRenderLayer();
+	//获取旋转
+	UFUNCTION(BlueprintPure)
+	virtual FRotator GetRotation() const;
+	//获取颜色
+	UFUNCTION(BlueprintPure)
+	virtual FLinearColor GetSpineRenderColor() const;
 private:
 	//渲染层
 	UPROPERTY()
