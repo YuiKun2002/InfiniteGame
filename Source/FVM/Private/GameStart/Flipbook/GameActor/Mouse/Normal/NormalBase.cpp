@@ -453,14 +453,14 @@ void ANormalCapsuleByWidgetBase::OnInWater(bool State)
 		}
 	}
 	else {
-		this->SpineWidgetWaterAlienMask->SetMaskValue(0.f);
-		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(false);
-		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
-
 		if (int32(this->WidgetZ) != 0)
 		{
 			this->WidgetRenderComponent->SetRelativeLocation(this->CurWidgetZ);
 		}
+
+		this->SpineWidgetWaterAlienMask->SetMaskValue(0.f);
+		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(false);
+		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
 	}
 }
 
