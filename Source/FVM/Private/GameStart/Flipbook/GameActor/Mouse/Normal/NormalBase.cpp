@@ -427,6 +427,21 @@ void ANormalCapsuleByWidgetBase::BeginPlay()
 	}
 }
 
+void ANormalCapsuleByWidgetBase::OnInWater(bool State)
+{
+	if (State)
+	{
+		this->SpineWidgetWaterAlienMask->SetMaskAutoValue();
+		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(true);
+		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
+	}
+	else {
+		this->SpineWidgetWaterAlienMask->SetMaskValue(0.f);
+		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(false);
+		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
+	}
+}
+
 UTrackEntry* ANormalCapsuleByWidgetBase::SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop)
 {
 	return this->SpineWidgetWaterAlienMask->PlayMaskObjectAnimation(AnimationName);
