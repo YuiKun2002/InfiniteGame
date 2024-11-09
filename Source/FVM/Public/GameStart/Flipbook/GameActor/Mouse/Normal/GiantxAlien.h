@@ -10,7 +10,7 @@
  * 普通巨人
  */
 UCLASS()
-class FVM_API AGiantxAlien : public ANormalCapsuleBase
+class FVM_API AGiantxAlien : public ANormalCapsuleByWidgetBase
 {
 	GENERATED_BODY()
 public:
