@@ -242,10 +242,13 @@ public:
 	//出场曲线
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurveFloat* CurveIn = nullptr;
+	//是否入水
+	UPROPERTY()
+	bool bInWaterAnimState = false;
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)
-	void ParseBuff_Information(const FGameBuffInfor& _Buff,UObject* CurObject = nullptr);
+	void ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* CurObject = nullptr);
 	//获取当前生命值
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHP();
@@ -467,9 +470,6 @@ public:
 	//添加老鼠检测，卡片
 	UFUNCTION(BlueprintCallable)
 	void AddAttackCardUpdate();
-	//添加水组件
-	UFUNCTION(BlueprintCallable)
-	void AddWaterComponent(UWaterSceneComponent* WaterComp);
 public:
 	//老鼠目前的行为
 
@@ -507,6 +507,10 @@ public:
 
 	//排序设置
 	virtual void SetRenderLayer(int32 _Layer) override;
+
+	//入水出水
+	virtual void OnInWater(bool State);
+
 public:
 	//Tick 更新
 	virtual void Tick(float DeltaTime) override;
@@ -577,20 +581,10 @@ private:
 	UPROPERTY()
 	bool bMouseInit = false;
 private:
-	//入水的时间轴
-	UPROPERTY()
-	class UTimeLineClass* InWaterTimeLine = nullptr;
 	//时间线管理
 	UPROPERTY()
 	class UTimeLineClass* AlienInTimeLine = nullptr;
 	//动画轨道
 	UPROPERTY()
 	UTrackEntry* CurAnimTrackEntry = nullptr;
-protected:
-	//入水开启或者关闭
-	UPROPERTY()
-	bool bInWaterAnimState = true;
-	//水动画
-	UPROPERTY()
-	TArray<UWaterSceneComponent*> WaterComps;
 };

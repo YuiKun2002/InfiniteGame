@@ -163,8 +163,27 @@ public:
 public:
 	ANormalCapsuleByWidgetBase();
 	virtual void BeginPlay() override;
+public:
+	//设置动画
 	virtual	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true) override;
+	//设置渲染的颜色
+	virtual void SetSpineRenderColor(FLinearColor SpineColor) override;
+	//初始化Spine显示
+	virtual void InitSpineShow() override;
+	//旋转Spine
+	virtual void SetRotation(float Angle) override;
+	//渲染层
+	virtual	void SetRenderLayer(int32 RenderLayer) override;
+public:
+	//获取渲染层
+	virtual int32 GetRenderLayer() override;
+	//获取颜色
+	virtual FLinearColor GetSpineRenderColor() const override;
 private:
 	UPROPERTY()
 	class USpineWidgetWaterAlienMask* SpineWidgetWaterAlienMask = nullptr;
+	UPROPERTY()
+	int32 Layer = 0;
+	UPROPERTY()
+	FLinearColor MaskColor;
 };

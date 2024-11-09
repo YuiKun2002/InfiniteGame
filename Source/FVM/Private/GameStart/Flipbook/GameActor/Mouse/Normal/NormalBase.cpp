@@ -431,3 +431,47 @@ UTrackEntry* ANormalCapsuleByWidgetBase::SetAnimation(int32 TrackIndex, FString 
 {
 	return this->SpineWidgetWaterAlienMask->PlayMaskObjectAnimation(AnimationName);
 }
+
+void ANormalCapsuleByWidgetBase::SetSpineRenderColor(FLinearColor SpineColor)
+{
+	this->MaskColor = SpineColor;
+	this->SpineWidgetWaterAlienMask->SetMaskObjectRenderColor(SpineColor);
+}
+
+void ANormalCapsuleByWidgetBase::InitSpineShow()
+{
+	this->WidgetRenderComponent->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+
+	//矫正X与Y的坐标
+	if (this->WidgetRenderComponent->GetRelativeLocation().X == this->WidgetRenderComponent->GetRelativeLocation().Y)
+	{
+		return;
+	}
+
+	const float& _CurrentX = this->WidgetRenderComponent->GetRelativeLocation().X;
+	const float& _CurrentY = this->WidgetRenderComponent->GetRelativeLocation().Y;
+	const float& _CurrentZ = this->WidgetRenderComponent->GetRelativeLocation().Z;
+
+	this->WidgetRenderComponent->SetRelativeLocation(FVector(_CurrentY, _CurrentX, _CurrentZ));
+}
+
+void ANormalCapsuleByWidgetBase::SetRotation(float Angle)
+{
+	this->SpineWidgetWaterAlienMask->SetMaskObjectRotation(Angle);
+}
+
+void ANormalCapsuleByWidgetBase::SetRenderLayer(int32 RenderLayer)
+{
+	this->Layer = RenderLayer + 19;
+	this->WidgetRenderComponent->SetTranslucentSortPriority(this->Layer);
+}
+
+int32 ANormalCapsuleByWidgetBase::GetRenderLayer()
+{
+	return this->Layer;
+}
+
+FLinearColor ANormalCapsuleByWidgetBase::GetSpineRenderColor() const
+{
+	return this->MaskColor;
+}
