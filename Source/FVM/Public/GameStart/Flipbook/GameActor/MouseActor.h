@@ -242,9 +242,9 @@ public:
 	//出场曲线
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCurveFloat* CurveIn = nullptr;
-	//是否入水
+	//是否可以入水
 	UPROPERTY()
-	bool bInWaterAnimState = false;
+	bool bInWaterAnimState = true;
 public:
 	//解析Buff信息
 	UFUNCTION(BlueprintCallable)

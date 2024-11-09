@@ -161,12 +161,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* WidgetRenderComponent = nullptr;
 public:
-	//构造
 	ANormalCapsuleByWidgetBase();
-	//开始
 	virtual void BeginPlay() override;
-	//水动画
-	virtual void OnInWater(bool State) override;
 public:
 	//设置动画
 	virtual	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true) override;

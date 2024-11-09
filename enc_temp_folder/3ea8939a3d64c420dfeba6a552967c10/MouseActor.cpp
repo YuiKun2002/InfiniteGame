@@ -1138,9 +1138,9 @@ void AMouseActor::SetRenderLayer(int32 _Layer)
 
 void AMouseActor::OnInWater(bool State)
 {
-	/*UGameSystemFunction::FVMLog(UGameSystemFunction::GetObjectName(this),
+	UGameSystemFunction::FVMLog(UGameSystemFunction::GetObjectName(this),
 		State ? TEXT("入水") : TEXT("上岸")
-	);*/
+	);
 }
 
 void AMouseActor::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime)
