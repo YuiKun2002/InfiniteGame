@@ -404,6 +404,8 @@ ANormalCapsuleByWidgetBase::ANormalCapsuleByWidgetBase()
 	this->MesheComp->SetupAttachment(this->GetPointComponent());
 	this->BodyComp->SetupAttachment(this->GetPointComponent());
 	this->WidgetRenderComponent->SetupAttachment(this->GetPointComponent());
+
+	USpineWidgetWaterAlienMask::PreViewMaskObject(this->WidgetRenderComponent);
 }
 
 void ANormalCapsuleByWidgetBase::BeginPlay()
