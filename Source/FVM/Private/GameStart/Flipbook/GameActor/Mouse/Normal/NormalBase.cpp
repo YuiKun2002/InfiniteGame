@@ -404,8 +404,14 @@ ANormalCapsuleByWidgetBase::ANormalCapsuleByWidgetBase()
 	this->MesheComp->SetupAttachment(this->GetPointComponent());
 	this->BodyComp->SetupAttachment(this->GetPointComponent());
 	this->WidgetRenderComponent->SetupAttachment(this->GetPointComponent());
+}
 
+void ANormalCapsuleByWidgetBase::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+#if WITH_EDITOR
 	USpineWidgetWaterAlienMask::PreViewMaskObject(this->WidgetRenderComponent);
+#endif
 }
 
 void ANormalCapsuleByWidgetBase::BeginPlay()
@@ -422,6 +428,8 @@ void ANormalCapsuleByWidgetBase::BeginPlay()
 
 	Super::BeginPlay();
 
+	this->CurWidgetZ = this->WidgetRenderComponent->GetRelativeLocation();
+
 	if (UFVMGameInstance::GetDebug())
 	{
 		this->MesheComp->SetHiddenInGame(false);
@@ -436,11 +444,23 @@ void ANormalCapsuleByWidgetBase::OnInWater(bool State)
 		this->SpineWidgetWaterAlienMask->SetMaskAutoValue();
 		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(true);
 		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
+
+		if (int32(this->WidgetZ) != 0)
+		{
+			this->WidgetRenderComponent->SetRelativeLocation(
+				FVector(this->CurWidgetZ.X, this->CurWidgetZ.Y, this->WidgetZ)
+			);
+		}
 	}
 	else {
 		this->SpineWidgetWaterAlienMask->SetMaskValue(0.f);
 		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(false);
 		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
+
+		if (int32(this->WidgetZ) != 0)
+		{
+			this->WidgetRenderComponent->SetRelativeLocation(this->CurWidgetZ);
+		}
 	}
 }
 

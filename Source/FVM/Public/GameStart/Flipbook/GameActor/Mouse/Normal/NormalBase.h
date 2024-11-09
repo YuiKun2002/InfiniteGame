@@ -163,6 +163,8 @@ public:
 public:
 	//构造
 	ANormalCapsuleByWidgetBase();
+	//脚本构造
+	virtual void OnConstruction(const FTransform& Transform) override;
 	//开始
 	virtual void BeginPlay() override;
 	//水动画
@@ -183,11 +185,21 @@ public:
 	virtual int32 GetRenderLayer() override;
 	//获取颜色
 	virtual FLinearColor GetSpineRenderColor() const override;
+public:
+	//入水界面偏移位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NormalCapsuleByWidgetBase|WidgetZ")
+	float WidgetZ = 0.f;
 private:
+	//遮罩界面对象
 	UPROPERTY()
 	class USpineWidgetWaterAlienMask* SpineWidgetWaterAlienMask = nullptr;
+	//层级
 	UPROPERTY()
 	int32 Layer = 0;
+	//遮罩对象颜色
 	UPROPERTY()
 	FLinearColor MaskColor;
+	//当前界面偏移
+	UPROPERTY()
+	FVector CurWidgetZ;
 };
