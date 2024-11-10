@@ -23,7 +23,7 @@ class UMouseManagerComponent;
 class UBoxComponent;
 
 #define SpineMouseDeath TEXT("Death")
-#define AttackLineOnWaterOffset 15.f
+#define AttackLineOnWaterOffset 0.f
 #define AlienInTimeLineRes TEXT("CurveFloat'/Game/Resource/SpineData/外星人动画/出场/BP_AlienCurve.BP_AlienCurve'")
 #define InWaterTimeLineRes TEXT("CurveFloat'/Game/Resource/BP/GameStart/Item/Mouse/Curve/MouseInWater.MouseInWater'")
 

@@ -665,10 +665,10 @@ void AMouseActor::ForceSetWaterAnimShow(ELineType CurLineType)
 		{
 			this->OnInWater(true);
 			//得到z轴位置
-			this->fCurInWaterZ = this->GetActorLocation().Z;
-			FVector Location = this->GetActorLocation();
+			this->fCurInWaterZ = this->GetRenderComponent()->GetRelativeLocation().Z;
+			FVector Location = this->GetRenderComponent()->GetRelativeLocation();
 			Location.Z = this->fCurInWaterZ - this->fMouseInWaterZ;
-			this->SetActorLocation(Location);
+			this->GetRenderComponent()->SetRelativeLocation(Location);
 		}
 	}
 	else {
@@ -676,10 +676,9 @@ void AMouseActor::ForceSetWaterAnimShow(ELineType CurLineType)
 		if (CurLineType != ELineType::OnWater && this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater)
 		{
 			this->OnInWater(false);
-			this->fCurInWaterZ = this->GetActorLocation().Z;
-			FVector Location = this->GetActorLocation();
-			Location.Z = this->fCurInWaterZ + this->fMouseInWaterZ;
-			this->SetActorLocation(Location);
+			FVector Location = this->GetRenderComponent()->GetRelativeLocation();
+			Location.Z = Location.Z + this->fMouseInWaterZ;
+			this->GetRenderComponent()->SetRelativeLocation(Location);
 		}
 	}
 
@@ -787,35 +786,13 @@ bool AMouseActor::AddAttackLineFunc(const ECollisionChannel& CollisionType, cons
 		this->fAttackLineDelay = 0.05f;
 		if (DirectionFront)
 		{
-			if (
-				this->M_Proper_Condition.M_EMouseType == ELineType::OnGround
-				&&
-				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
-				)
-			{
-				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
-					FVector(0.f, 15.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
-					FColor::Red, CollisionType, DeltaTime, DirectionFront);
-			}
-
-			return this->AddAttackLine(FVector::ZeroVector,
-				FVector(0.f, 15.f, 0.f),
+			return this->AddAttackLine(FVector(0.f, 0.f, 10.f),
+				FVector(0.f, -15.f, 10.f),
 				FColor::Red, CollisionType, DeltaTime, DirectionFront);
 		}
 		else {
-			if (
-				this->M_Proper_Condition.M_EMouseType == ELineType::OnGround
-				&&
-				this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater
-				)
-			{
-				return this->AddAttackLine(FVector(0.f, 0.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
-					FVector(0.f, -15.f, this->fMouseInWaterZ + AttackLineOnWaterOffset),
-					FColor::Red, CollisionType, DeltaTime, DirectionFront);
-			}
-
-			return this->AddAttackLine(FVector::ZeroVector,
-				FVector(0.f, -15.f, 0.f),
+			return this->AddAttackLine(FVector(0.f, 15.f, 10.f),
+				FVector(0.f, 0.f, 10.f),
 				FColor::Red, CollisionType, DeltaTime, DirectionFront);
 		}
 	}
@@ -1108,10 +1085,10 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 
 			this->M_Proper_Condition.M_CurrentInType = ELineType::OnWater;
 			//得到z轴位置
-			this->fCurInWaterZ = this->GetActorLocation().Z;
-			FVector Location = this->GetActorLocation();
+			this->fCurInWaterZ = this->GetRenderComponent()->GetRelativeLocation().Z;
+			FVector Location = this->GetRenderComponent()->GetRelativeLocation();
 			Location.Z = this->fCurInWaterZ - this->fMouseInWaterZ;
-			this->SetActorLocation(Location);
+			this->GetRenderComponent()->SetRelativeLocation(Location);
 		}
 	}
 	else {
@@ -1121,10 +1098,9 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 			this->OnInWater(false);
 
 			this->M_Proper_Condition.M_CurrentInType = CurLineType;
-			this->fCurInWaterZ = this->GetActorLocation().Z;
-			FVector Location = this->GetActorLocation();
-			Location.Z = this->fCurInWaterZ + this->fMouseInWaterZ;
-			this->SetActorLocation(Location);
+			FVector Location = this->GetRenderComponent()->GetRelativeLocation();
+			Location.Z = Location.Z + this->fMouseInWaterZ;
+			this->GetRenderComponent()->SetRelativeLocation(Location);
 		}
 	}
 
