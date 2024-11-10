@@ -11,7 +11,7 @@
  * 护盾生成
  */
 UCLASS()
-class FVM_API AShieldGeneratorAlien : public ANormalCapsuleBase
+class FVM_API AShieldGeneratorAlien : public ANormalCapsuleByWidgetBase
 {
 	GENERATED_BODY()
 public:

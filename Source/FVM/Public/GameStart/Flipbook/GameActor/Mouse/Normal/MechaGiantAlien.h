@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameStart/Flipbook/GameActor/Mouse/Normal/GunAlien.h"
+#include "GameStart/Flipbook/GameActor/Mouse/Normal/GunAlienWidget.h"
 #include "MechaGiantAlien.generated.h"
 
 /**
  * 电锯金刚
  */
 UCLASS()
-class FVM_API AMechaGiantAlien : public AGunAlien
+class FVM_API AMechaGiantAlien : public AGunAlienWidget
 {
 	GENERATED_BODY()
 public:
