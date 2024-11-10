@@ -42,7 +42,7 @@ public:
 };
 
 UCLASS()
-class FVM_API AMachineMouse : public ANormalCapsuleBase
+class FVM_API AMachineMouse : public ANormalCapsuleByWidgetBase
 {
 	GENERATED_BODY()
 public:
