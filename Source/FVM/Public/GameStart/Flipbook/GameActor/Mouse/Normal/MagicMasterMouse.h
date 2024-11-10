@@ -58,7 +58,7 @@ private:
 
 //治疗外星人
 UCLASS()
-class FVM_API AMagicMasterMouse : public ANormalCapsuleBase
+class FVM_API AMagicMasterMouse : public ANormalCapsuleByWidgetBase
 {
 	GENERATED_BODY()
 public:
