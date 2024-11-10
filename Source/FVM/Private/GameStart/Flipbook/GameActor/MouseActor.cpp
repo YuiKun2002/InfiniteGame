@@ -676,6 +676,7 @@ void AMouseActor::ForceSetWaterAnimShow(ELineType CurLineType)
 		if (CurLineType != ELineType::OnWater && this->M_Proper_Condition.M_CurrentInType == ELineType::OnWater)
 		{
 			this->OnInWater(false);
+			this->fCurInWaterZ = this->GetActorLocation().Z;
 			FVector Location = this->GetActorLocation();
 			Location.Z = this->fCurInWaterZ + this->fMouseInWaterZ;
 			this->SetActorLocation(Location);
@@ -1120,7 +1121,7 @@ void AMouseActor::InMapMeshe(ELineType CurLineType)
 			this->OnInWater(false);
 
 			this->M_Proper_Condition.M_CurrentInType = CurLineType;
-
+			this->fCurInWaterZ = this->GetActorLocation().Z;
 			FVector Location = this->GetActorLocation();
 			Location.Z = this->fCurInWaterZ + this->fMouseInWaterZ;
 			this->SetActorLocation(Location);
