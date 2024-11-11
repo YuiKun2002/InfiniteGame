@@ -420,7 +420,7 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 	}
 	//初始化排序
 	PlayerIns->SetPlayerTranslucency(_UI_MapMeshe);
-	//初始化角色外观
+	//初始化角色数据
 	PlayerIns->InitPlayerData();
 	//初始化武器
 	PlayerIns->InitPlayerWeapon();

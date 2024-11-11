@@ -157,7 +157,7 @@ void UResourceManagerComponent::GameStart()
 	this->EnableAutoFlameSpawn(10.f);
 
 	//初始化缓存火苗
-	for (int32 i = 0; i < 40; i++)
+	for (int32 i = 0; i < 25; i++)
 	{
 		AFlameActor* NewFlameActor = AGameMapInstance::GetGameMapInstance()->GetWorld()->SpawnActor<AFlameActor>(
 			LoadClass<AFlameActor>(this,

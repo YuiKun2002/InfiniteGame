@@ -158,8 +158,14 @@ void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponDat
 			UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("初始化武器数据"));
 		}
 
+		//武器数据
+		FItemHeroBase PlayerData;
+		this->GetPlayerData(PlayerData);
+		//武器数据
+		FMainWeaponData MainWeaponData = WeaponData;
+		MainWeaponData.ATK = UItemHeroDataFunc::Calculate(PlayerData).ATK;
 		//初始化技能
-		FMainWeaponData TempWeaponData = UMainWeaponDataFunc::Calculate(WeaponData);
+		FMainWeaponData TempWeaponData = UMainWeaponDataFunc::Calculate(MainWeaponData);
 
 		this->M_PlayerFirstWeapon->InitSkill(TempWeaponData);
 
