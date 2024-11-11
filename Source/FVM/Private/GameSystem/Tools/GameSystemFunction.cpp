@@ -1101,10 +1101,12 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 	{
 		FLine ColAndRow = ControllComponent->GetMapMeshRowAndCol();
 
+		//从中心点减去，得到左上角的起点位置
 		FLine Begin;
 		Begin.Row = PlayerLine.Row - Rate;
 		Begin.Col = PlayerLine.Col - Rate;
 
+		//计算范围
 		int32 TargetNum = (Rate * 2) + 1;
 		for (int32 Row = 0; Row < TargetNum; Row++)
 		{
@@ -1116,6 +1118,7 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 					Begin.Col + Col < 0 || Begin.Col + Col >= ColAndRow.Col
 					)
 				{
+					//忽略无效点
 					continue;
 				}
 				else {
@@ -1129,6 +1132,15 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 							{
 								CurAlien.Value->SetbIsHurt(true);
 								CurAlien.Value->ParseBuff_Information(Buffs);
+
+								if (UFVMGameInstance::GetDebug())
+								{
+									UGameSystemFunction::FVMLog(
+										__FUNCTION__,
+										UGameSystemFunction::GetObjectName(CurAlien.Value) +
+										TEXT("受到伤害：") + FString::SanitizeFloat(ATK)
+									);
+								}
 							}
 						}
 					}
