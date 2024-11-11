@@ -121,6 +121,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Construct Json Request (Empty)"), Category = "VaRest|Subsystem")
 	UVaRestRequestJSON* ConstructVaRestRequest();
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Construct Json Request (Empty)"), Category = "VaRest|Subsystem")
+	static UVaRestRequestJSON* ConstructVaRestRequestX(UVaRestSubsystem* Sys);
+
 	/** Creates new request with defined verb and content type */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Construct Json Request"), Category = "VaRest|Subsystem")
 	UVaRestRequestJSON* ConstructVaRestRequestExt(EVaRestRequestVerb Verb, EVaRestRequestContentType ContentType);

@@ -290,6 +290,8 @@ TArray<FItemHeroBase> UItemHeroDataFunc::UpdatePlayerData(const TArray<FItemHero
 			FItemHeroBase NewTemp = *(FItemHeroBase*)(AaSourceData);
 			NewTemp.HeroLevel = Data.HeroLevel;
 			NewTemp.StarsLevel = Data.StarsLevel;
+			NewTemp.BagID = Data.BagID;
+			NewTemp.M_ItemID = Data.M_ItemID;
 			New.Emplace(NewTemp);
 		}
 	}

@@ -133,9 +133,9 @@ bool ULocalPlayerDataHandle::CreateNewPlayerData_Implementation()
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SetLocalPlayerDataHandle(this);
 
 	//获取全部防御卡
-	UCardBaseStruct::GetAllCardsData(NewPlayerIns->M_PlayerItems_Card, 8);
+	//UCardBaseStruct::GetAllCardsData(NewPlayerIns->M_PlayerItems_Card, 8);
 	//获取全部材料
-	UMaterialBaseStruct::GetAllMaterial(NewPlayerIns->M_PlayerItems_Material, 9999);
+	//UMaterialBaseStruct::GetAllMaterial(NewPlayerIns->M_PlayerItems_Material, 9999);
 
 	//保存存档
 	UPlayerDataSubsystem::GetPlayerDataSubsystemStatic()->SavePlayerData(this,

@@ -156,6 +156,15 @@ UVaRestRequestJSON* UVaRestSubsystem::ConstructVaRestRequest()
 	return NewObject<UVaRestRequestJSON>(this);
 }
 
+UVaRestRequestJSON* UVaRestSubsystem::ConstructVaRestRequestX(UVaRestSubsystem* Sys)
+{
+	UVaRestRequestJSON* JsObj = NewObject<UVaRestRequestJSON>(Sys);
+	UVaRestJsonObject* Obj = NewObject<UVaRestJsonObject>(Sys);
+	JsObj->SetRequestObject(Obj);
+	JsObj->ResetData();
+	return JsObj;
+}
+
 UVaRestRequestJSON* UVaRestSubsystem::ConstructVaRestRequestExt(EVaRestRequestVerb Verb, EVaRestRequestContentType ContentType)
 {
 	UVaRestRequestJSON* Request = ConstructVaRestRequest();
