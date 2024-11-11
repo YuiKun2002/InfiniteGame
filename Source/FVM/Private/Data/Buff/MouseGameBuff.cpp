@@ -68,17 +68,17 @@ void UBuffMouseObject::UpdateMaterial()
 			1.f, 0.6f, 0.f, this->GetBuffChar()->GetColorOpacity())
 		);
 
-		if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
-		{
-			if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
-			{
-				//播放粒子特效
-				AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
-					this->GetBuffChar()->GetMouseManager()->GetSolidifBuffFxObjPoolManager()->GetObjectActor()
-				);
-				CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
-			}
-		}
+		//if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
+		//{
+		//	if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
+		//	{
+		//		//播放粒子特效
+		//		AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
+		//			this->GetBuffChar()->GetMouseManager()->GetSolidifBuffFxObjPoolManager()->GetObjectActor()
+		//		);
+		//		CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
+		//	}
+		//}
 		return;
 	}
 
@@ -123,17 +123,27 @@ void UBuffMouseObject::UpdateMaterial()
 			1.f, 0.2f, 0.f, this->GetBuffChar()->GetColorOpacity())
 		);
 
-		if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
-		{
-			if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
-			{
-				//播放粒子特效
-				AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
-					this->GetBuffChar()->GetMouseManager()->GetBurnBuffFxObjPoolManager()->GetObjectActor()
-				);
-				CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
-			}
-		}
+		//if (IsValid(UFVMGameInstance::GetFVMGameInstance()))
+		//{
+		//	if (UFVMGameInstance::GetFVMGameInstance()->GetGameConfigManager()->M_GameEF.M_bEnable)
+		//	{
+		//		//播放粒子特效
+		//		AObjectPoolClass* CurObj = Cast<AObjectPoolClass>(
+		//			this->GetBuffChar()->GetMouseManager()->GetBurnBuffFxObjPoolManager()->GetObjectActor()
+		//		);
+		//		CurObj->SetActorLocation(this->GetBuffChar()->GetActorLocation() + FVector(0.f, 0.f, 40.f));
+		//	}
+		//}
+
+		return;
+	}
+
+	//剧毒
+	if (Cur->GetBuffExistByTag(EGameBuffTag::PoisoningPlus))
+	{
+		this->GetBuffChar()->SetSpineRenderColor(FLinearColor(
+			0.f, 0.4f, 0.f, this->GetBuffChar()->GetColorOpacity())
+		);
 
 		return;
 	}
