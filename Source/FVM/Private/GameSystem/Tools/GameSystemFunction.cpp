@@ -1091,6 +1091,8 @@ void UGameSystemFunction::SetGlobalGameTime(const UObject* WorldContextObject, f
 void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 	FLine PlayerLine,
 	int32 Rate,
+	FGameBuffInfor Buffs,
+	ELineType AlienLineType,
 	float ATK,
 	UMesheControllComponent* ControllComponent
 )
@@ -1103,7 +1105,6 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 		Begin.Row = PlayerLine.Row - Rate;
 		Begin.Col = PlayerLine.Col - Rate;
 
-		TArray<FLine> GenLine;
 		int32 TargetNum = (Rate * 2) + 1;
 		for (int32 Row = 0; Row < TargetNum; Row++)
 		{
@@ -1118,14 +1119,19 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 					continue;
 				}
 				else {
-					GenLine.Emplace(
-						FLine(
-							Begin.Row + Row,
-							Begin.Col + Col
-						)
-					);
-
-					UE_LOG(LogTemp, Error, TEXT("%d,%d"), Begin.Row + Row, Begin.Col + Col);
+					AMapMouseMesheManager* Map = ControllComponent->GetMapMouseMesh(Begin.Row + Row, Begin.Col + Col);
+					const TMap<FString, AMouseActor*>& Curs = Map->GetCurMouseCopy();
+					for (const auto& CurAlien : Curs)
+					{
+						if (IsValid(CurAlien.Value) && CurAlien.Value->GetMouseLineType() == AlienLineType)
+						{
+							if (CurAlien.Value->BeHit(ControllComponent, ATK, EFlyItemAttackType::Def))
+							{
+								CurAlien.Value->SetbIsHurt(true);
+								CurAlien.Value->ParseBuff_Information(Buffs);
+							}
+						}
+					}
 				}
 			}
 		}

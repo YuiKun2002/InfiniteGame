@@ -315,6 +315,8 @@ public:
 	static void PlayerHitRangeAlienByMapMouseManager(
 		FLine PlayerLine,
 		int32 Rate,
+		FGameBuffInfor Buffs,
+		ELineType AlienLineType,
 		float ATK,
 		class UMesheControllComponent* ControllComponent
 	);

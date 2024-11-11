@@ -144,7 +144,7 @@ USTRUCT(BlueprintType)
 struct FMouseProperty_Condition {
 	GENERATED_USTRUCT_BODY()
 public:
-	//老鼠的类型
+	//老鼠的类型【原始类型，与线路管理器挂钩】
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ELineType M_EMouseType;
 	//当前进入的网格类型
