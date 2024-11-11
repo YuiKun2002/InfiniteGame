@@ -123,6 +123,7 @@ public:
 	UFUNCTION()
 	void AnimComplete(UTrackEntry* Track);
 	//初始化
+	UFUNCTION(BlueprintCallable)
 	void Init();
 public:
 	//设置回池的时间【0表示永久存在】
