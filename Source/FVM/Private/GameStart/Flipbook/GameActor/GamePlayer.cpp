@@ -69,6 +69,13 @@ void AGamePlayer::InitPlayer()
 	this->CurrentHP = ItemHeroBase.HP;
 	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("角色当前生命值：") +
 		FString::FromInt(this->CurrentHP));
+
+	//计算最终数据
+	FItemHeroBase TargetData;
+	this->GetPlayerData(TargetData);
+	this->SetPlayerData(
+		UItemHeroDataFunc::Calculate(TargetData)
+	);
 }
 
 void AGamePlayer::InitPlayerWeapon()

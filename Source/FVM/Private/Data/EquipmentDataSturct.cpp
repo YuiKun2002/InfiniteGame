@@ -313,6 +313,10 @@ FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 		Data.HP * FMath::Pow(Data.HPCofficient, (Data.HeroLevel - 1));
 	Data.HP = HP;
 
+
+	Data.HP = HP;
+	Data.ATK = ATK;
+
 	return Data;
 }
 

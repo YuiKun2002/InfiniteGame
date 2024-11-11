@@ -36,6 +36,6 @@ void AGamePlayerBase::InitPlayerData(FItemHeroBase Data)
 
 void AGamePlayerBase::GetPlayerDataPa(FItemHeroBase& OutData)
 {
-	OutData = UItemHeroDataFunc::Calculate(this->HeroData);
+	OutData = this->HeroData;
 }
 
