@@ -49,4 +49,6 @@ void UPlayerSkillBooksUpdate::Update_Implementation(class UPlayerStructManager* 
 			UE_LOG(LogTemp, Warning, TEXT("技能书更新完成"));
 		}
 	}
+
+	this->ExecFinish();
 }

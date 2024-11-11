@@ -15,4 +15,6 @@ void UPlayerCardUpdate::Update_Implementation(UPlayerStructManager* PlayerDataIn
 			Item.M_CardGrade = _CardGrade;
 		}
 	}
+
+	this->ExecFinish();
 }

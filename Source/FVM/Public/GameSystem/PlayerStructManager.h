@@ -44,6 +44,11 @@ class FVM_API IPlayerUpdateClassInterface
 {
 	GENERATED_BODY()
 public:
+
+	virtual void Run(int32 FirstIndex, int32 CurIndex, class UPlayerStructManager* PlayerDataIns) = 0;
+	virtual void Finish() = 0;
+	virtual void Failed() = 0;
+
 	//更新接口
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Update(class UPlayerStructManager* PlayerDataIns);
@@ -55,11 +60,30 @@ UCLASS(BlueprintType, Blueprintable)
 class FVM_API UPlayerUpdateClass : public UObject, public IPlayerUpdateClassInterface
 {
 	GENERATED_BODY()
+
+	friend class UPlayerStructManager;
+
 public:
 	//更新接口
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Update(class UPlayerStructManager* PlayerDataIns);
 	virtual void Update_Implementation(class UPlayerStructManager* PlayerDataIns) override;
+
+	virtual void Run(int32 FirstIndex, int32 CurIndex, class UPlayerStructManager* PlayerDataIns) override;
+	virtual void Finish() override;
+	virtual void Failed() override;
+public:
+	UFUNCTION(BlueprintCallable)
+	void ExecFinish();
+	UFUNCTION(BlueprintCallable)
+	void ExecFailed();
+private:
+	UPROPERTY()
+	int32 CurFirstIndex = 0;
+	UPROPERTY()
+	int32 CurSecondIndex = 0;
+	UPROPERTY()
+	class UPlayerStructManager* PlayerDataInstance = nullptr;
 };
 
 //角色更新类数据表
@@ -75,7 +99,7 @@ public:
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_ONEPA
 
 //网络请求
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(NetRequestResult, Result, bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNetRequestResultDelegate, bool, Result);
 /**
  *  角色存储结构
  */
@@ -83,10 +107,16 @@ UCLASS()
 class FVM_API UPlayerStructManager : public USaveGame
 {
 	GENERATED_BODY()
+
+	friend class UPlayerUpdateClass;
+
 	//-----------------------------------------------角色主要处理-----------------------------------------------
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	NetRequestResult OnNetRequestResult;
+	FNetRequestResultDelegate OnNetRequestResult;
+private:
+	UFUNCTION()
+	void RunUpdate(int32 CurUpdateFirstIndex, int32 CurUpdateIndex);
 public:
 	// 0是女生  1是男生
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

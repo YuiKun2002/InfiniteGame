@@ -13,4 +13,6 @@ void UPlayerMaterialUpdate::Update_Implementation(UPlayerStructManager* PlayerDa
 		//更新材料个数
 		Item.M_Count = _ItemCound;
 	}
+
+	this->ExecFinish();
 }

@@ -10,11 +10,136 @@
 #include "GameSystem/GameUserInterfaceSubsystem.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
 
-void IPlayerUpdateClassInterface::Update_Implementation(class UPlayerStructManager* PlayerDataIns) {
-	UE_LOG(LogTemp, Warning, TEXT("默认角色更新类-IPlayerUpdateClassInterface-更新"));
+void IPlayerUpdateClassInterface::Update_Implementation(class UPlayerStructManager* PlayerDataIns)
+{
 }
+
 void UPlayerUpdateClass::Update_Implementation(class UPlayerStructManager* PlayerDataIns) {
 	UE_LOG(LogTemp, Warning, TEXT("默认角色更新类-UPlayerUpdateClass-更新"));
+	this->ExecFinish();
+}
+
+void UPlayerUpdateClass::Run(int32 FirstIndex, int32 CurIndex, UPlayerStructManager* PlayerDataIns)
+{
+	this->PlayerDataInstance = PlayerDataIns;
+	this->CurFirstIndex = FirstIndex;
+	this->CurSecondIndex = CurIndex;
+}
+
+void UPlayerUpdateClass::Finish()
+{
+	//更新条目索引
+	if (IsValid(this->PlayerDataInstance))
+	{
+		this->PlayerDataInstance->RunUpdate(this->CurFirstIndex, this->CurSecondIndex + 1);
+	}
+	else {
+		UFVMGameInstance::GetPlayerStructManager_Static()->RunUpdate(this->CurFirstIndex, this->CurSecondIndex + 1);
+	}
+
+	this->RemoveFromRoot();
+}
+
+void UPlayerUpdateClass::Failed()
+{
+	//失败，直接退出更新【广播失败】
+	if (IsValid(this->PlayerDataInstance))
+	{
+		this->PlayerDataInstance->OnNetRequestResult.Broadcast(false);
+	}
+	else {
+		UFVMGameInstance::GetPlayerStructManager_Static()->OnNetRequestResult.Broadcast(false);
+	}
+
+	this->RemoveFromRoot();
+}
+
+void UPlayerUpdateClass::ExecFinish()
+{
+	this->Finish();
+}
+
+void UPlayerUpdateClass::ExecFailed()
+{
+	this->Failed();
+}
+
+void UPlayerStructManager::RunUpdate(int32 CurUpdateFirstIndex, int32 CurUpdateIndex)
+{
+	UDataTable* Table = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetAsset()->
+		GetDataByName(GLOBALASSET_PLAYER)->GetDataByName(TEXT("Update"));
+	DataTableAssetData<FPlayerUpdateClassTableRowBase> UpdataClassData(Table);
+
+	//索引匹配
+	if (CurUpdateFirstIndex < UpdataClassData.GetDatas().Num())
+	{
+		TArray<FName> Names;
+		UpdataClassData.GetDatas().GenerateKeyArray(Names);
+
+		//查询条目
+		const FPlayerUpdateClassTableRowBase* Find = UpdataClassData.GetDatas().Find(Names[CurUpdateFirstIndex]);
+		if (Find)
+		{
+			//项目条目项
+			TArray<FString> UpdateNames;
+			Find->UpdateClass.GetKeys(UpdateNames);
+			if (CurUpdateIndex < UpdateNames.Num())
+			{
+				const TSoftClassPtr<UPlayerUpdateClass>* Ptr = Find->UpdateClass.Find(UpdateNames[CurUpdateIndex]);
+				if (Ptr)
+				{
+					//更新类
+					UPlayerUpdateClass* CurNewPlayerUpdateClass = nullptr;
+					UClass* CurClass = Ptr->LoadSynchronous();
+					if (IsValid(CurClass))
+					{
+						TSubclassOf<UPlayerUpdateClass> CurFunClass(CurClass);
+						if (CurFunClass.GetDefaultObject())
+						{
+							CurNewPlayerUpdateClass = CurFunClass.GetDefaultObject();
+							if (IsValid(CurNewPlayerUpdateClass))
+							{
+								IPlayerUpdateClassInterface* UpdateInterface = nullptr;
+								UpdateInterface = Cast<IPlayerUpdateClassInterface>(CurNewPlayerUpdateClass);
+								if (UpdateInterface)
+								{
+									//添加到根【防止GC】
+									CurNewPlayerUpdateClass->AddToRoot();
+									//调用运行实现
+									CurNewPlayerUpdateClass->Run(
+										CurUpdateFirstIndex,
+										CurUpdateIndex,
+										this);
+									//调用更新接口【蓝图】
+									UpdateInterface->Execute_Update(
+										CurNewPlayerUpdateClass,
+										this);
+
+									return;
+								}
+							}
+						}
+					}
+				}
+				//更新条目列表项
+				this->RunUpdate(CurUpdateFirstIndex, CurUpdateIndex + 1);
+			}
+			else {
+				//更新条目项
+				this->RunUpdate(CurUpdateFirstIndex + 1, 0);
+			}
+		}
+		else {
+			//更新条目项
+			this->RunUpdate(CurUpdateFirstIndex + 1, 0);
+		}
+	}
+	else {
+		//执行完成【全部内容更新完成】
+		this->OnNetRequestResult.Broadcast(true);
+	}
+
+	//UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("角色存档核心数据更新")));
 }
 
 void UPlayerStructManager::SetGameCacheSubsystem(class UGameCacheSubsystem* Subsystem, const FString& Token)
@@ -734,38 +859,7 @@ void UPlayerStructManager::Update()
 		return;
 	}
 
-	UDataTable* Table = UGameDataSubsystem::GetGameDataSubsystemStatic()->GetAsset()->
-		GetDataByName(GLOBALASSET_PLAYER)->GetDataByName(TEXT("Update"));
-	DataTableAssetData<FPlayerUpdateClassTableRowBase> UpdataClassData(Table);
-
-	//执行更新
-	for (const auto& CurUpdateClass : UpdataClassData.GetDatas())
-	{
-		for (const auto& ClassPtr : CurUpdateClass.Value.UpdateClass)
-		{
-			UPlayerUpdateClass* CurNewPlayerUpdateClass = nullptr;
-			UClass* CurClass = ClassPtr.Value.LoadSynchronous();
-			if (IsValid(CurClass))
-			{
-				TSubclassOf<UPlayerUpdateClass> CurFunClass(CurClass);
-				if (CurFunClass.GetDefaultObject())
-				{
-					CurNewPlayerUpdateClass = CurFunClass.GetDefaultObject();
-					if (IsValid(CurNewPlayerUpdateClass))
-					{
-						IPlayerUpdateClassInterface* UpdateInterface = nullptr;
-						UpdateInterface = Cast<IPlayerUpdateClassInterface>(CurNewPlayerUpdateClass);
-						if (UpdateInterface)
-						{
-							UpdateInterface->Execute_Update(CurNewPlayerUpdateClass, this);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("角色存档核心数据更新")));
+	this->RunUpdate(0, 0);
 }
 
 TMap<int32, FItemCard> UPlayerStructManager::FindCardByName(const FString& CardName)
