@@ -72,6 +72,10 @@ public:
 	TMap<FString, TSoftClassPtr<UPlayerUpdateClass>> UpdateClass;
 };
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_ONEPA
+
+//网络请求
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(NetRequestResult, Result, bool);
 /**
  *  角色存储结构
  */
@@ -80,6 +84,9 @@ class FVM_API UPlayerStructManager : public USaveGame
 {
 	GENERATED_BODY()
 	//-----------------------------------------------角色主要处理-----------------------------------------------
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	NetRequestResult OnNetRequestResult;
 public:
 	// 0是女生  1是男生
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

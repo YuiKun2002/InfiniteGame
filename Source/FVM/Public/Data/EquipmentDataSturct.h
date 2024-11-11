@@ -110,6 +110,9 @@ public:
 	//创建一个新的角色
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static FItemHeroBase CreateNewPlayerData(FString Name,int32 ID);
+	//更新数据表数据
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
+	static TArray<FItemHeroBase> UpdatePlayerData(const TArray<FItemHeroBase>& Input);
 
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
