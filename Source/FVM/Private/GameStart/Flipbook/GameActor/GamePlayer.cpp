@@ -166,7 +166,7 @@ void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponDat
 		this->GetPlayerData(PlayerData);
 		//武器数据
 		FMainWeaponData MainWeaponData = WeaponData;
-		MainWeaponData.ATK += UItemHeroDataFunc::Calculate(PlayerData).ATK;
+		MainWeaponData.ATK += PlayerData.ATK;
 
 		//初始化技能
 		FMainWeaponData TempWeaponData = UMainWeaponDataFunc::Calculate(MainWeaponData);
