@@ -24,6 +24,7 @@ UBuffObject* UMouseGameBuff::GetNewBuffObject(
 	case EGameBuffTag::Accelerate:CurNewBuff = NewObject<UAccelerateBuffMouse>(); break;
 	case EGameBuffTag::Poisoning:CurNewBuff = NewObject<UPoisoningBuffMouse>(); break;
 	case EGameBuffTag::Seckill:CurNewBuff = NewObject<USeckillBuffMouse>(); break;
+	case EGameBuffTag::PoisoningPlus:CurNewBuff = NewObject<UPoisoningPlusBuffMouse>(); break;
 	default: CurNewBuff = NewObject<UBuffObject>(); break;
 	}
 
@@ -555,5 +556,21 @@ void UPoisoningBuffMouse::Tick(float BuffTime)
 		else {
 			this->bEnable = false;
 		}
+	}
+}
+
+void UPoisoningPlusBuffMouse::BuffInit(float BuffTime)
+{
+	Super::BuffInit(BuffTime);
+}
+
+void UPoisoningPlusBuffMouse::BuffUpdate()
+{
+	Super::BuffUpdate();
+
+	//获取当前外星人的生命值
+	if (IsValid(this->GetBuffChar()) && !this->GetBuffChar()->GetMouseIsDeath())
+	{
+		this->ATK = this->GetBuffChar()->GetCurrentHP() / 2;
 	}
 }

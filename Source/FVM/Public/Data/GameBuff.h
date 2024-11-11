@@ -34,7 +34,9 @@ enum class EGameBuffTag : uint8
 	//中毒
 	Poisoning UMETA(DisplayName = "Poisoning"),
 	//击杀
-	Seckill UMETA(DisplayName = "Seckill")
+	Seckill UMETA(DisplayName = "Seckill"),
+	//剧毒
+	PoisoningPlus UMETA(DisplayName = "PoisoningPlus")
 };
 
 //对象buff，针对谁的buff

@@ -46,7 +46,7 @@ protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual void BuffUpdate() override;
 	virtual void Tick(float BuffTime) override;
-private:
+protected:
 	//延迟多少触发
 	UPROPERTY()
 	float BuffDelay = 0.2f;
@@ -62,6 +62,16 @@ private:
 	//触发
 	UPROPERTY()
 	bool bEnable = false;
+};
+
+//剧毒buff
+UCLASS()
+class FVM_API UPoisoningPlusBuffMouse : public UPoisoningBuffMouse
+{
+	GENERATED_BODY()
+protected:
+	virtual void BuffInit(float BuffTime) override;
+	virtual void BuffUpdate() override;
 };
 
 //冻结buff
