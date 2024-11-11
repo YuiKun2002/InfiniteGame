@@ -6,6 +6,7 @@
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
 #include "Game/UI/UI_HeroItem.h"
+#include "GameSystem/GameCacheSubsystem.h"
 
 
 UWidget* UUI_Heroes::WidgetCreateInitHeroes(UItemDataTable* _Data, int32 _Index)
@@ -123,6 +124,20 @@ void UUI_Heroes::Updage()
 			break;
 		}
 	}
+
+
+	//反存储到角色列表
+	if (!UGameCacheSubsystem::GetNetMode())
+	{
+		for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Heroes)
+		{
+			if (Ref.M_ItemID == Data.M_ItemID)
+			{
+				Data = Ref;
+				break;
+			}
+		}
+	}
 }
 
 bool UUI_Heroes::GetUpgrade()
@@ -154,6 +169,19 @@ void UUI_Heroes::Evolve()
 		{
 			Data.StarsLevel++;
 			break;
+		}
+	}
+
+	//反存储到角色列表
+	if (!UGameCacheSubsystem::GetNetMode())
+	{
+		for (auto& Data : UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Heroes)
+		{
+			if (Ref.M_ItemID == Data.M_ItemID)
+			{
+				Data = Ref;
+				break;
+			}
 		}
 	}
 }
