@@ -126,12 +126,16 @@ public:
 
 
 	//获取当前老鼠对象
+	UFUNCTION(BlueprintCallable)
 	AMouseActor* GetCurrentMouse();
 	//获取网格
+	UFUNCTION(BlueprintCallable)
 	AMapMeshe* const GetMapMeshe();
 	//获取UI网格
+	UFUNCTION(BlueprintCallable)
 	UUI_MapMeshe* const GetUIMapMeshe();
 	//获取角色渲染层【卡片读取】
+	UFUNCTION(BlueprintCallable)
 	int32 GetPlayerRenderLayerToCardLayer();
 
 	//获取角色数据
