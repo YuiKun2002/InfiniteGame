@@ -1088,6 +1088,50 @@ void UGameSystemFunction::SetGlobalGameTime(const UObject* WorldContextObject, f
 	UGameplayStatics::SetGlobalTimeDilation(WorldContextObject, _TimeRate);
 }
 
+void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
+	FLine PlayerLine,
+	int32 Rate,
+	float ATK,
+	UMesheControllComponent* ControllComponent
+)
+{
+	if (IsValid(ControllComponent))
+	{
+		FLine ColAndRow = ControllComponent->GetMapMeshRowAndCol();
+
+		FLine Begin;
+		Begin.Row = PlayerLine.Row - Rate;
+		Begin.Col = PlayerLine.Col - Rate;
+
+		TArray<FLine> GenLine;
+		int32 TargetNum = (Rate * 2) + 1;
+		for (int32 Row = 0; Row < TargetNum; Row++)
+		{
+			for (int32 Col = 0; Col < TargetNum; Col++)
+			{
+				if (
+					Begin.Row + Row < 0 || Begin.Row + Row >= ColAndRow.Row
+					||
+					Begin.Col + Col < 0 || Begin.Col + Col >= ColAndRow.Col
+					)
+				{
+					continue;
+				}
+				else {
+					GenLine.Emplace(
+						FLine(
+							Begin.Row + Row,
+							Begin.Col + Col
+						)
+					);
+
+					UE_LOG(LogTemp, Error, TEXT("%d,%d"), Begin.Row + Row, Begin.Col + Col);
+				}
+			}
+		}
+	}
+}
+
 void UGameSystemFunction::SetCaptureLook(const UObject* WorldContextObject, EMouseLockMode Lock)
 {
 	FInputModeGameAndUI GameUI;

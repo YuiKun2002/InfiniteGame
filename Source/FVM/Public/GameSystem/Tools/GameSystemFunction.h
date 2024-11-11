@@ -310,6 +310,15 @@ public:
 		return BaseAtk + (BaseAtk / 2.f) * AtkRate * (CardGrade * GradeUpRate);
 	}
 
+	//获取一个角色矩阵范围的老鼠网格
+	UFUNCTION(BlueprintCallable)
+	static void PlayerHitRangeAlienByMapMouseManager(
+		FLine PlayerLine,
+		int32 Rate,
+		float ATK,
+		class UMesheControllComponent* ControllComponent
+	);
+
 	//计算老鼠移动线路
 	static FLine CalculateMouseMoveLine(int32 RowMax, FLine NewLine)
 	{
