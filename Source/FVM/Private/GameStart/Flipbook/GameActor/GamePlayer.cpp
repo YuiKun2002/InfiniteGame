@@ -101,7 +101,7 @@ void AGamePlayer::InitPlayerWeapon()
 		{
 			DefWeaponData = *(FMainWeaponData*)(ASourceData);
 		}
-		DefWeaponData.M_ItemID = 15;
+		DefWeaponData.M_ItemID = 100000000;
 		DefWeaponData.WeaponLevel = 1;
 		DefWeaponData.StarsLevel = 1;
 		DefWeaponData.BagID = TEXT("100000000");
