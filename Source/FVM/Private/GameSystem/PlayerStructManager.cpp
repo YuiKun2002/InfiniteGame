@@ -123,22 +123,27 @@ void UPlayerStructManager::RunUpdate(int32 CurUpdateFirstIndex, int32 CurUpdateI
 				}
 				//更新条目列表项
 				this->RunUpdate(CurUpdateFirstIndex, CurUpdateIndex + 1);
+				return;
 			}
 			else {
 				//更新条目项
 				this->RunUpdate(CurUpdateFirstIndex + 1, 0);
+				return;
 			}
+
+			return;
 		}
 		else {
 			//更新条目项
 			this->RunUpdate(CurUpdateFirstIndex + 1, 0);
+			return;
 		}
-	}
-	else {
-		//执行完成【全部内容更新完成】
-		this->OnNetRequestResult.Broadcast(true);
+
+		return;
 	}
 
+	//执行完成【全部内容更新完成】
+	this->OnNetRequestResult.Broadcast(true);
 	//UGameSystemFunction::SaveCurrentPlayerData(__FUNCTION__ + FString(TEXT("角色存档核心数据更新")));
 }
 
