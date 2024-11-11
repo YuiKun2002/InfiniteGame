@@ -106,6 +106,11 @@ class FVM_API UItemHeroDataFunc : public UObject
 {
 	GENERATED_BODY()
 public:
+	
+	//创建一个新的角色
+	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
+	static FItemHeroBase CreateNewPlayerData(FString Name,int32 ID);
+
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static FItemHeroBase Calculate(const FItemHeroBase& InputData);
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")

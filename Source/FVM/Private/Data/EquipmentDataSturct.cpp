@@ -257,6 +257,25 @@ FMainWeaponData UMainWeaponDataFunc::Calculate_LineTraceSettings(const FMainWeap
 	return Data;
 }
 
+FItemHeroBase UItemHeroDataFunc::CreateNewPlayerData(FString Name,int32 ID)
+{
+	UGameSystemFunction::FVMLog(__FUNCTION__,TEXT("创建一个新的角色，并且选择"));
+
+	FItemHeroBase Aa;
+	FEquipmentBase* AaSourceData;
+	if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
+		Name,
+		AaSourceData, true, EEquipment::E_PlayerEquipment
+	))
+	{
+		Aa = *(FItemHeroBase*)(AaSourceData);
+	}
+	Aa.M_ItemID = ID;
+	Aa.BagID = FString::FromInt(ID);
+
+	return Aa;
+}
+
 FItemHeroBase UItemHeroDataFunc::Calculate(const FItemHeroBase& InputData)
 {
 	FItemHeroBase Data = InputData;

@@ -41,45 +41,7 @@ void UUI_Heroes::InitHeroes()
 
 	if (!this->Heroes.Num())
 	{
-		FItemHeroBase Aa;
-		FEquipmentBase* AaSourceData;
-		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
-			TEXT("Explorer"),
-			AaSourceData, true, EEquipment::E_PlayerEquipment
-		))
-		{
-			Aa = *(FItemHeroBase*)(AaSourceData);
-		}
-		Aa.M_ItemID = 12;
-		Aa.BagID = TEXT("12");
-
-		FItemHeroBase B;
-		FEquipmentBase* BSourceData;
-		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
-			TEXT("Jingke"),
-			BSourceData, true, EEquipment::E_PlayerEquipment
-		))
-		{
-			B = *(FItemHeroBase*)(BSourceData);
-		}
-		B.M_ItemID = 13;
-		B.BagID = TEXT("13");
-
-		FItemHeroBase C;
-		FEquipmentBase* CSourceData;
-		if (UEquipmentBaseStruct::SearchSourceEquipmentFromDataTable(
-			TEXT("Bustre"),
-			CSourceData, true, EEquipment::E_PlayerEquipment
-		))
-		{
-			C = *(FItemHeroBase*)(CSourceData);
-		}
-		C.M_ItemID = 14;
-		C.BagID = TEXT("14");
-
-		this->Heroes.Append(
-			{ Aa,B ,C }
-		);
+		this->Heroes = UFVMGameInstance::GetPlayerStructManager_Static()->M_PlayerItems_Heroes;
 	}
 
 	this->ItemLoadManagerItem->UpdateDatatable(
@@ -134,7 +96,10 @@ void UUI_Heroes::Select()
 {
 	UFVMGameInstance::GetPlayerStructManager_Static()->PlayerData = this->GetCurrentHeroData();
 
-	UGameSystemFunction::SaveCurrentPlayerData(TEXT("选择当前角色"));
+	UGameSystemFunction::SaveCurrentPlayerData(
+		TEXT("选择当前角色:ATK=>") + FString::FromInt(this->GetCurrentHeroData().ATK) +
+		TEXT("等级=>") + FString::FromInt(this->GetCurrentHeroData().HeroLevel)
+	);
 
 	this->InitHeroes();
 }

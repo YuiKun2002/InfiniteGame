@@ -28,14 +28,13 @@ void AGamePlayerBase::Tick(float DeltaTime)
 
 }
 
-void AGamePlayerBase::InitPlayerData()
+void AGamePlayerBase::InitPlayerData(FItemHeroBase Data)
 {
-	UPlayerStructManager* PlayerData = UFVMGameInstance::GetPlayerStructManager_Static();
 	//初始化数据
-	this->HeroData = PlayerData->PlayerData;
+	this->HeroData = Data;
 }
 
-void AGamePlayerBase::GetPlayerData(FItemHeroBase& OutData)
+void AGamePlayerBase::GetPlayerDataPa(FItemHeroBase& OutData)
 {
 	OutData = UItemHeroDataFunc::Calculate(this->HeroData);
 }

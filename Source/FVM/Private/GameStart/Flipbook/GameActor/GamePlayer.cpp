@@ -38,7 +38,7 @@ void AGamePlayer::SetPlayerSuit(FPlayerSuitItem SuitData)
 
 }
 
-void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
+void AGamePlayer::InitPlayer()
 {
 	//初始化超级武器对象
 	if (!IsValid(this->GamePlayerSuperWeapon))
@@ -48,22 +48,25 @@ void AGamePlayer::InitPlayer(const FItemHeroBase& Data)
 		);
 		this->GamePlayerSuperWeapon->SetActorLocation(this->GetActorLocation());
 	}
+
 	//初始化角色数据
-	this->ItemHeroBase = UItemHeroDataFunc::Calculate(Data);
+	FItemHeroBase ItemHeroBase;
+	this->GetPlayerData(ItemHeroBase);
+
 	//循环
-	for (auto PP = Data.Skills.CreateConstIterator(); PP; ++PP)
+	for (auto PP = ItemHeroBase.Skills.CreateConstIterator(); PP; ++PP)
 	{
-		if (PP->Key <= Data.StarsLevel + 1)
+		if (PP->Key <= ItemHeroBase.StarsLevel + 1)
 		{
 			UGamePlayerSkillObject* Skill = UDynamicProperty::MakeDynamicPropertyByClass(PP->Value);
 			Skill->Player = this;
-			Skill->CurData = Data;
+			Skill->CurData = ItemHeroBase;
 			Skill->RunSkill();
 			this->PlayerSkill.Emplace(Skill);
 		}
 	}
 
-	this->CurrentHP = this->ItemHeroBase.HP;
+	this->CurrentHP = ItemHeroBase.HP;
 	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("角色当前生命值：") +
 		FString::FromInt(this->CurrentHP));
 }
@@ -163,7 +166,8 @@ void AGamePlayer::LoadPlayerWeapon(const FName& WeapinName, const FMainWeaponDat
 		this->GetPlayerData(PlayerData);
 		//武器数据
 		FMainWeaponData MainWeaponData = WeaponData;
-		MainWeaponData.ATK = UItemHeroDataFunc::Calculate(PlayerData).ATK;
+		MainWeaponData.ATK += UItemHeroDataFunc::Calculate(PlayerData).ATK;
+
 		//初始化技能
 		FMainWeaponData TempWeaponData = UMainWeaponDataFunc::Calculate(MainWeaponData);
 
@@ -208,7 +212,7 @@ void AGamePlayer::SetCurrentMouse(AMouseActor* _MouseActor)
 
 void AGamePlayer::SetPlayerData(const FItemHeroBase& Data)
 {
-	this->ItemHeroBase = Data;
+	this->InitPlayerData(Data);
 }
 
 FLine AGamePlayer::GetLine() const
@@ -243,7 +247,7 @@ int32 AGamePlayer::GetPlayerRenderLayerToCardLayer()
 
 void AGamePlayer::GetPlayerData(FItemHeroBase& Data)
 {
-	Data = ItemHeroBase;
+	this->GetPlayerDataPa(Data);
 }
 
 AGamePlayerSuperWeapon* AGamePlayer::GetPlayerSuperWeapon()

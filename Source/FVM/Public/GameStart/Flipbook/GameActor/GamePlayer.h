@@ -96,7 +96,7 @@ public:
 	void SetPlayerSuit(FPlayerSuitItem SuitData);
 	//初始化角色
 	UFUNCTION(BlueprintCallable)
-	void InitPlayer(const FItemHeroBase& Data);
+	void InitPlayer();
 	//初始化角色武器
 	UFUNCTION(BlueprintCallable)
 	void InitPlayerWeapon();
@@ -162,9 +162,6 @@ private:
 	//角色技能
 	UPROPERTY()
 	TArray<UGamePlayerSkillObject*> PlayerSkill;
-	//角色基础数据
-	UPROPERTY()
-	FItemHeroBase ItemHeroBase;
 	//角色当前生命值
 	UPROPERTY()
 	float CurrentHP = 0.f;

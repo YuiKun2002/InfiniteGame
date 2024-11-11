@@ -30,10 +30,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//初始化角色基本数据
-	void InitPlayerData();
+	void InitPlayerData(FItemHeroBase Data);
 
 	//获取角色数据
-	void GetPlayerData(FItemHeroBase& OutData);
+	void GetPlayerDataPa(FItemHeroBase& OutData);
 private:
 	UPROPERTY()
 	FItemHeroBase HeroData;
