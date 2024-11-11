@@ -112,7 +112,7 @@ class FVM_API UPlayerStructManager : public USaveGame
 
 	//-----------------------------------------------角色主要处理-----------------------------------------------
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintAssignable)
 	FNetRequestResultDelegate OnNetRequestResult;
 private:
 	UFUNCTION()
