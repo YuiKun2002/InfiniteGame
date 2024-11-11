@@ -281,9 +281,9 @@ FItemHeroBase UItemHeroDataFunc::CalculateNext(const FItemHeroBase& InputData)
 	return UItemHeroDataFunc::Calculate(Data);
 }
 
-float UItemHeroDataFunc::CalculateRate(int32 Level, float Rate, float Base)
+float UItemHeroDataFunc::CalculateRate(int32 BaseLevel, int32 Level, float Rate, float Base)
 {
-	return (Level == 1) ? Base :
+	return (Level <= BaseLevel) ? Base :
 		Base * FMath::Pow(Rate, (Level - 1));
 }
 

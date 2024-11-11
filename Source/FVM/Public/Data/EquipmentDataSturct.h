@@ -113,7 +113,7 @@ public:
 
 	//数值计算【幂运算】
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
-	static float CalculateRate(int32 Level, float Rate, float Base);
+	static float CalculateRate(int32 BaseLevel,int32 Level, float Rate, float Base);
 	//获取英雄等级
 	UFUNCTION(BlueprintPure, Category = "英雄数据结构")
 	static int32 GetHeroLevel(const FItemHeroBase& Data);

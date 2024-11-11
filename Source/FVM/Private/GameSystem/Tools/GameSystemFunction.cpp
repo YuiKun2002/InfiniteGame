@@ -259,6 +259,7 @@ void UGameSystemFunction::WidgetsSelect(const TArray<UWidget*>& _Widgets, ESlate
 
 void UGameSystemFunction::FVMLog(const FString& _FuncName, const FString& _Content)
 {
+#if WITH_EDITOR
 	if (UFVMGameInstance::GetDebug())
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s %s"), *_FuncName, *_Content);
@@ -269,6 +270,7 @@ void UGameSystemFunction::FVMLog(const FString& _FuncName, const FString& _Conte
 			);
 		}
 	}
+#endif
 }
 
 void UGameSystemFunction::AddGameLog(const UObject* WorldContext, const FString& _Content)
