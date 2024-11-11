@@ -308,7 +308,7 @@ bool UUI_MainMenu_InGame::InspectPlayerData()
 	*/
 
 	//发送补偿邮件
-	UGameSystemFunction::SendVersionCompensate();
+	//UGameSystemFunction::SendVersionCompensate();
 
 	return true;
 }

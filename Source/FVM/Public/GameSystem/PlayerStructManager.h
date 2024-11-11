@@ -30,7 +30,7 @@
 #define PLAYER_NET_MATERIALBLUEPRINT_NAME FName(TEXT("MaterialBlueprint"))
 
 
-
+//---------------------------------------------------------------------------------------------------------------------
  /**
  *角色更新接口
  */
@@ -55,7 +55,7 @@ public:
 	virtual void Update_Implementation(class UPlayerStructManager* PlayerDataIns);
 };
 
-//角色更新类
+//角色更新类【异步，结束时必须调用【ExecFinish】或者【ExecFailed】】
 UCLASS(BlueprintType, Blueprintable)
 class FVM_API UPlayerUpdateClass : public UObject, public IPlayerUpdateClassInterface
 {
@@ -95,6 +95,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FString, TSoftClassPtr<UPlayerUpdateClass>> UpdateClass;
 };
+
+//---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_ONEPA
 
@@ -370,7 +379,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	static FString GetLastNewLevelName();
 public:
-	//更新【进入游戏后自动调用】
+	//更新【进入游戏后自动调用】-》【异步，需要绑定【OnNetRequestResult】】
 	UFUNCTION(BlueprintCallable)
 	void Update();
 	//增加硬币

@@ -11,24 +11,26 @@ UXiaoYuNetURLBPLibrary::UXiaoYuNetURLBPLibrary(const FObjectInitializer& ObjectI
 
 void UXiaoYuNetURLBPLibrary::XGetBaseURL(FString& URL)
 {
-	URL = TEXT("http://192.168.1.8:8888/api/") + URL;
+	URL = TEXT("http://192.168.1.8:8888/api/");
 }
 
 void UXiaoYuNetURLBPLibrary::XGetLoginURL(FString& URL, int32 State)
 {
+	FString Temp;
+	UXiaoYuNetURLBPLibrary::XGetBaseURL(Temp);
 	switch (State)
 	{
 	case 2:
-		UXiaoYuNetURLBPLibrary::XGetBaseURL(URL + TEXT("user/register"))
-			; break;
+		URL = Temp + TEXT("user/register");
+		break;
 	case 3:
-		UXiaoYuNetURLBPLibrary::XGetBaseURL(URL + TEXT("user/logout"));
+		URL = Temp + TEXT("user/logout");
 		break;
 	case 4:
-		UXiaoYuNetURLBPLibrary::XGetBaseURL(URL + TEXT("user/update"))
-			; break;
+		URL = Temp + TEXT("user/update");
+		; break;
 	default:
-		UXiaoYuNetURLBPLibrary::XGetBaseURL(URL + TEXT("user/login"));
+		URL = Temp + TEXT("user/login");
 		break;
 	}
 }
@@ -55,6 +57,8 @@ FString UXiaoYuNetURLBPLibrary::XGetPlayerBagURL(const FString& UserID)
 
 void UXiaoYuNetURLBPLibrary::XGetShopURL(FString& URL)
 {
-	UXiaoYuNetURLBPLibrary::XGetBaseURL(URL + TEXT("item/queryAllItem"));
+	FString Temp;
+	UXiaoYuNetURLBPLibrary::XGetBaseURL(Temp);
+	URL = Temp + TEXT("item/queryAllItem");
 }
 
