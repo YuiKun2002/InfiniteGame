@@ -281,9 +281,6 @@ void UCardDefenceComponent::OnCardManagerProChange(UDynamicProperty* Property)
 			{
 				this->DefenceCardActor->SetCardCurrentHP(CurHP);
 			}
-
-			UE_LOG(LogTemp, Error, TEXT("目前能量卡的值为：%f;HP:%f"), 
-			(*this->DefenceCardHPRate),this->DefenceCardActor->GetTotalHP());
 		}
 
 		return;

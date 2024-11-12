@@ -78,7 +78,7 @@ bool UDynamicProperty::GetFloatProperty(const FString& VariableName, float& Valu
 
 void UDynamicProperty::SetFloatPropertyPtr(const FString& VariableName, const float& Value)
 {
-	this->EditPropertyPtr<TSharedPtr<float>,float>(this->FloatPropertys_Ptr, VariableName, Value);
+	this->EditPropertyPtr<TSharedPtr<float>, float>(this->FloatPropertys_Ptr, VariableName, Value);
 }
 
 bool UDynamicProperty::GetFloatPropertyPtr(const FString& VariableName, TSharedPtr<float>& Value)
@@ -135,8 +135,11 @@ void UDynamicProperty::SetObjectPropertyPtr(const FString& VariableName, UObject
 	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
 	if (TargetValue)
 	{
-		//释放对象
-		(*TargetValue).Reset();
+		if ((*TargetValue).IsValid())
+		{
+			//释放对象
+			(*TargetValue).Reset();
+		}
 		//新增对象
 		(*TargetValue) = MakeShareable(&Value);
 	}
