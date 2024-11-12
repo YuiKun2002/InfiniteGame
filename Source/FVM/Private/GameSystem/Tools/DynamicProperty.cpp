@@ -78,7 +78,7 @@ bool UDynamicProperty::GetFloatProperty(const FString& VariableName, float& Valu
 
 void UDynamicProperty::SetFloatPropertyPtr(const FString& VariableName, const float& Value)
 {
-	this->EditPropertyPtr(this->FloatPropertys_Ptr, VariableName, Value);
+	this->EditPropertyPtr<TSharedPtr<float>,float>(this->FloatPropertys_Ptr, VariableName, Value);
 }
 
 bool UDynamicProperty::GetFloatPropertyPtr(const FString& VariableName, TSharedPtr<float>& Value)

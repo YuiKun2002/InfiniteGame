@@ -237,14 +237,14 @@ private:
 	//获取属性
 	template<class TypeValue>
 	bool GetPropertyPtr(
-		const TMap<FString, TypeValue>& Propertys,
+		TMap<FString, TypeValue>& Propertys,
 		const FString& VariableName,
 		TypeValue& Value
 	) {
-		const TypeValue* TargetValue = Propertys.Find(VariableName);
+		TypeValue* TargetValue = Propertys.Find(VariableName);
 		if (TargetValue)
 		{
-			Value = *(const_cast<TypeValue*>(TargetValue));
+			Value = *(TargetValue);
 			return true;
 		}
 		return false;
