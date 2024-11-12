@@ -3,6 +3,16 @@
 
 #include "GameSystem/Tools/DynamicProperty.h"
 
+const FString& UDynamicProperty::GetCurrentVarableName()
+{
+	return this->VarableName;
+}
+
+void UDynamicProperty::GetCurrentVarableName(FString& OutVarableName)
+{
+	OutVarableName = this->GetCurrentVarableName();
+}
+
 void UDynamicProperty::Init()
 {
 	this->OnInit();
@@ -35,6 +45,11 @@ void UDynamicProperty::SetFloatProperty(const FString& VariableName, float Value
 bool UDynamicProperty::GetFloatProperty(const FString& VariableName, float& Value)
 {
 	return this->GetProperty(this->FloatPropertys, VariableName, Value);
+}
+
+bool UDynamicProperty::GetFloatPropertyPtr(const FString& VariableName, float*& Value)
+{
+	return this->GetPropertyPtr(this->FloatPropertys, VariableName, Value);
 }
 
 void UDynamicProperty::SetFloatArrayProperty(const FString& VariableName, TArray<float> Value)

@@ -50,5 +50,5 @@ private:
 	float time = 0.f;
 	//攻击倍率
 	UPROPERTY()
-	float AttackRate = 1.f;
+	float* AttackRate = nullptr;
 };

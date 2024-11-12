@@ -137,6 +137,7 @@ public:
 	void SetFloatProperty(const FString& VariableName, float Value);
 	UFUNCTION(BlueprintPure)
 	bool GetFloatProperty(const FString& VariableName, float& Value);
+	bool GetFloatPropertyPtr(const FString& VariableName, float*& Value);
 	//浮点数组
 	UFUNCTION(BlueprintCallable)
 	void SetFloatArrayProperty(const FString& VariableName, TArray<float> Value);
@@ -152,6 +153,11 @@ public:
 	void SetObjectProperty(const FString& VariableName, UObject* Value);
 	UFUNCTION(BlueprintPure)
 	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
+
+	//当前变动的变量
+	const FString& GetCurrentVarableName();
+	UFUNCTION(BlueprintPure)
+	void GetCurrentVarableName(FString& OutVarableName);
 protected:
 	UFUNCTION()
 	virtual void Init();
@@ -164,6 +170,8 @@ private:
 	TMap<FString, FString> FStringPropertys;
 	UPROPERTY()
 	TMap<FString, UObject*> UObjectPropertys;
+	UPROPERTY()
+	FString VarableName = FString();
 private:
 	//修改属性
 	template<class TypeValue>
@@ -180,6 +188,8 @@ private:
 		else {
 			Propertys.Emplace(VariableName, Value);
 		}
+
+		this->VarableName = VariableName;
 	}
 
 	//获取属性
@@ -193,6 +203,22 @@ private:
 		if (TargetValue)
 		{
 			Value = *TargetValue;
+			return true;
+		}
+		return false;
+	}
+
+	//获取属性
+	template<class TypeValue>
+	bool GetPropertyPtr(
+		const TMap<FString, TypeValue>& Propertys,
+		const FString& VariableName,
+		TypeValue*& Value
+	) {
+		const TypeValue* TargetValue = Propertys.Find(VariableName);
+		if (TargetValue)
+		{
+			Value = const_cast<TypeValue*>(TargetValue);
 			return true;
 		}
 		return false;

@@ -110,8 +110,14 @@ void UCardAttackComponent::OnCardManagerProChange(UDynamicProperty* Property)
 	//近战卡片提升
 	if (this->AttackCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Melee)
 	{
-		Property->GetFloatProperty(TEXT("MeleeCardMeleeRate"), this->AttackRate);
+		if (this->AttackRate == nullptr)
+		{
+			float& a = *this->AttackRate;
+			Property->GetFloatProperty(TEXT("MeleeCardMeleeRate"), a);
+		}
 	}
+	return;
+
 }
 
 void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName)

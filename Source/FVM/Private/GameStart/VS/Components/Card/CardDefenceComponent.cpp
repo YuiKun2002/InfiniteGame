@@ -3,7 +3,7 @@
 
 #include "GameStart/VS/Components/Card/CardDefenceComponent.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
-
+#include "GameStart/VS/Components/CardManagerComponent.h"
 #include <Paper2D/Classes/PaperFlipbook.h>
 #include <Paper2D/Classes/PaperFlipbookComponent.h>
 
@@ -90,6 +90,16 @@ void UCardDefenceComponent::LoadResource()
 				, true);
 		}
 	}
+
+	//绑定卡片管理器
+	AGameMapInstance::GetCardManagerComponent_Static()->OnCardManagerDynamicPropertyChangeDelegate.BindUObject(
+		this, &UCardDefenceComponent::OnCardManagerProChange
+	);
+
+	//主动调用卡片管理器	
+	this->OnCardManagerProChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
+	);
 }
 
 void UCardDefenceComponent::BeHurt(AMouseActor* CurMouseActor)
@@ -249,5 +259,27 @@ void UCardDefenceComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	////卡片休息
 	//if (!this->DefenceCardActor->GetCardDay() && this->DefenceCardActor->GetMapDay())
 	//	return;
+}
+
+void UCardDefenceComponent::OnCardManagerProChange(UDynamicProperty* Property)
+{
+	//防御卡片提升
+	if (Property->GetCurrentVarableName().Equals(TEXT("DefenceCardHPRate")))
+	{
+		if (this->DefenceCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Defense)
+		{
+			Property->GetFloatProperty(TEXT("DefenceCardHPRate"), this->DefenceCardHPRate);
+
+			float HP = this->DefenceCardActor->GetTotalHP();
+			float CurHP = this->DefenceCardActor->GetCurrentHP();
+			this->DefenceCardActor->SetCardHP(HP * this->DefenceCardHPRate, 0.f);
+			//表示已经受损【】
+			if (int32(HP) != int32(CurHP))
+			{
+				this->DefenceCardActor->SetCardCurrentHP(CurHP);
+			}
+		}
+		return;
+	}
 }
 
