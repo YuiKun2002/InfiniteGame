@@ -86,8 +86,7 @@ private:
 	UPROPERTY()
 	int32 M_SpawnFlameValue = 25;
 	//产能率
-	UPROPERTY()
-	float SpawnRate = 1.f;
+	TSharedPtr<float> SpawnRate;
 	//生长模式
 	UPROPERTY()
 	bool InWeekUp = false;

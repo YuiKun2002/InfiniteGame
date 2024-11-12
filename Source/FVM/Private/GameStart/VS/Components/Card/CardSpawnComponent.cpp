@@ -99,17 +99,22 @@ void UCardSpawnComponent::Spawn()
 
 	if (IsValid(CurFlame))
 	{
-
-		if (this->M_SpawnFlameValue * this->SpawnRate < 25)
+		float TempRate = 1.f;
+		if (this->SpawnRate.IsValid())
 		{
-			CurFlame->SetActorScale3D(FVector(0.7f));
+			TempRate = (*this->SpawnRate);
+		}
+
+		if (this->M_SpawnFlameValue * TempRate < 25)
+		{
+			CurFlame->SetActorScale3D(FVector(0.6f));
 		}
 		else {
 			CurFlame->SetActorScale3D(FVector(1.f));
 		}
 
+		CurFlame->SetFlameValue(this->M_SpawnFlameValue * TempRate);
 		CurFlame->SetActorLocation(this->CurSpawnCardActor->GetActorLocation());
-		CurFlame->SetFlameValue(this->M_SpawnFlameValue * this->SpawnRate);
 		CurFlame->Run();
 	}
 	else {
@@ -255,6 +260,9 @@ void UCardSpawnComponent::OnPropertyChange(UDynamicProperty* Property)
 {
 	if (this->CurSpawnCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Energy)
 	{
-		Property->GetFloatProperty(TEXT("SpawnCardSpawnRate"), this->SpawnRate);
+		if (this->SpawnRate == nullptr)
+		{
+			Property->GetFloatPropertyPtr(TEXT("SpawnCardSpawnRate"), this->SpawnRate);
+		}
 	}
 }

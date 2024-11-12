@@ -160,11 +160,6 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
 	bool GetObjectPropertyPtr(const FString& VariableName, TSharedPtr<UObject*>& Value);
-
-	//当前变动的变量
-	const FString& GetCurrentVarableName();
-	UFUNCTION(BlueprintPure)
-	void GetCurrentVarableName(FString& OutVarableName);
 protected:
 	UFUNCTION()
 	virtual void Init();
@@ -177,28 +172,7 @@ private:
 	TMap<FString, TSharedPtr<FString>> StringPropertys_Ptr;
 	//对象属性
 	TMap<FString, TSharedPtr<UObject*>> ObjectPropertys_Ptr;
-	UPROPERTY()
-	FString VarableName = FString();
 private:
-	////修改属性
-	//template<class TypeValue>
-	//void EditProperty(
-	//	TMap<FString, TypeValue>& Propertys,
-	//	const FString& VariableName,
-	//	const TypeValue& Value
-	//) {
-	//	TypeValue* TargetValue = Propertys.Find(VariableName);
-	//	if (TargetValue)
-	//	{
-	//		*TargetValue = Value;
-	//	}
-	//	else {
-	//		Propertys.Emplace(VariableName, Value);
-	//	}
-
-	//	this->VarableName = VariableName;
-	//}
-
 	//编辑属性
 	template<class TypeValue, class VarTypeValue>
 	void EditPropertyPtr(
@@ -214,25 +188,7 @@ private:
 		else {
 			Propertys.Emplace(VariableName, MakeShareable(new VarTypeValue(Value)));
 		}
-
-		this->VarableName = VariableName;
 	}
-
-	////获取属性
-	//template<class TypeValue>
-	//bool GetProperty(
-	//	const TMap<FString, TypeValue>& Propertys,
-	//	const FString& VariableName,
-	//	TypeValue& Value
-	//) {
-	//	const TypeValue* TargetValue = Propertys.Find(VariableName);
-	//	if (TargetValue)
-	//	{
-	//		Value = *TargetValue;
-	//		return true;
-	//	}
-	//	return false;
-	//}
 
 	//获取属性
 	template<class TypeValue>

@@ -3,16 +3,6 @@
 
 #include "GameSystem/Tools/DynamicProperty.h"
 
-const FString& UDynamicProperty::GetCurrentVarableName()
-{
-	return this->VarableName;
-}
-
-void UDynamicProperty::GetCurrentVarableName(FString& OutVarableName)
-{
-	OutVarableName = this->GetCurrentVarableName();
-}
-
 void UDynamicProperty::Init()
 {
 	this->OnInit();
@@ -135,20 +125,12 @@ void UDynamicProperty::SetObjectPropertyPtr(const FString& VariableName, UObject
 	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
 	if (TargetValue)
 	{
-		if ((*TargetValue).IsValid())
-		{
-			//释放对象
-			(*TargetValue).Reset();
-		}
-		//新增对象
-		(*TargetValue) = MakeShareable(&Value);
+		*(*TargetValue) = Value;
 	}
 	else {
 		//新增对象
 		this->ObjectPropertys_Ptr.Emplace(VariableName, MakeShareable(&Value));
 	}
-
-	this->VarableName = VariableName;
 }
 
 bool UDynamicProperty::GetObjectProperty(const FString& VariableName, UObject*& Value)

@@ -528,7 +528,7 @@ void ACardActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* Cur
 		if (Sub && *Sub)
 		{
 			UBuffDynamicProperty* Pro = UDynamicProperty::MakeDynamicPropertyByClass(*Sub);
-			Pro->SetDefObject(CurObject);
+			Pro->SetDefObject(CurObject);		
 			this->GameBuff->AddBuff(Cur.Key, Cur.Value, Pro);
 		}
 		else {
