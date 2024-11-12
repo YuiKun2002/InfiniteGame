@@ -1134,13 +1134,13 @@ void UGameSystemFunction::GenerateMatrixByPoint(
 	//计算终点行有效位置
 	if (End.Row >= ColAndRow.Row)
 	{
-		Begin.Row = ColAndRow.Row - 1;
+		End.Row = ColAndRow.Row - 1;
 	}
 
 	//计算终点列位置
-	if (Begin.Col >= ColAndRow.Col)
+	if (End.Col >= ColAndRow.Col)
 	{
-		Begin.Col = ColAndRow.Col - 1;
+		End.Col = ColAndRow.Col - 1;
 	}
 
 	for (int32 Row = Begin.Row; Row <= End.Row; Row++)
@@ -1190,13 +1190,13 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 		//计算终点行有效位置
 		if (End.Row >= ColAndRow.Row)
 		{
-			Begin.Row = ColAndRow.Row - 1;
+			End.Row = ColAndRow.Row - 1;
 		}
 
 		//计算终点列位置
-		if (Begin.Col >= ColAndRow.Col)
+		if (End.Col >= ColAndRow.Col)
 		{
-			Begin.Col = ColAndRow.Col - 1;
+			End.Col = ColAndRow.Col - 1;
 		}
 
 		for (int32 Row = Begin.Row; Row <= End.Row; Row++)

@@ -20,8 +20,8 @@ class FVM_API UBuffMouseObject : public UBuffObject
 public:
 	UFUNCTION()
 	AMouseActor* GetBuffChar();
-	UFUNCTION()
-	void UpdateMaterial();
+	//UFUNCTION()
+	//void UpdateMaterial();
 	UFUNCTION()
 	void UpdateTickRate();
 protected:
@@ -35,6 +35,7 @@ class FVM_API USeckillBuffMouse : public UBuffMouseObject
 	GENERATED_BODY()
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void UpdateColor() override;
 };
 
 //中毒buff
@@ -46,6 +47,7 @@ protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual void BuffUpdate() override;
 	virtual void Tick(float BuffTime) override;
+	virtual void UpdateColor() override;
 protected:
 	//延迟多少触发
 	UPROPERTY()
@@ -72,6 +74,7 @@ class FVM_API UPoisoningPlusBuffMouse : public UPoisoningBuffMouse
 protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual void BuffUpdate() override;
+	virtual void UpdateColor() override;
 };
 
 //冻结buff
@@ -83,6 +86,7 @@ protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual void BuffEnd() override;
 	virtual bool GetConstbuff() override;
+	virtual void UpdateColor() override;
 };
 
 //凝固buff
@@ -93,6 +97,7 @@ class FVM_API USolidificationBuffMouse : public UBuffMouseObject
 protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual bool GetConstbuff() override;
+	virtual void UpdateColor() override;
 };
 
 //灼烧buff
@@ -104,6 +109,7 @@ protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual void BuffUpdate() override;
 	virtual void Tick(float BuffTime) override;
+	virtual void UpdateColor() override;
 private:
 	UPROPERTY()
 	bool bTrigger = true;
@@ -131,6 +137,7 @@ class FVM_API USlowDownBuffMouse : public UBuffMouseObject
 	GENERATED_BODY()
 protected:
 	virtual void BuffInit(float BuffTime) override;
+	virtual void UpdateColor() override;
 };
 
 //加速buff
@@ -141,6 +148,7 @@ class FVM_API UAccelerateBuffMouse : public UBuffMouseObject
 protected:
 	virtual void BuffInit(float BuffTime) override;
 	virtual bool GetDebuff() override;
+	virtual void UpdateColor() override;
 };
 
 UCLASS()
