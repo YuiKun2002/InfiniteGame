@@ -1,5 +1,6 @@
 
 #include "GameStart/Flipbook/GameActor/CardActor.h"
+#include "Data/GameBuff.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 
 #include "GameStart/VS/GameMapInstance.h"
@@ -271,6 +272,11 @@ AMouseActor* ACardActor::GetCurrentAttackSelfMouse()
 	return this->M_CardProperty.M_CurrentAttackSelfMouse;
 }
 
+void ACardActor::GetAttackDefnceRate(float& Rate)
+{
+	Rate = this->M_FCardActor_HP.M_AttackDefenceRate;
+}
+
 void ACardActor::SetCurrentMouse(AMouseActor* _MouseActor)
 {
 	this->M_CardProperty.M_CurrentMouse = _MouseActor;
@@ -395,9 +401,9 @@ void ACardActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-
-
 	this->M_AGameMapInstance = AGameMapInstance::GetGameMapInstance();
+
+	this->GameBuff = UGameBuff::MakeGameBuff(this,EGameBuffCharTag::Card);
 
 	if (!this->M_AGameMapInstance)
 	{
@@ -629,6 +635,11 @@ UCardDataComponent* ACardActor::GetCardDataComponent()
 UBoxComponent* ACardActor::GetBoxComponent()
 {
 	return this->M_CardTypeBoxCollision;
+}
+
+void ACardActor::SetAttackDefnceRate(float Rate)
+{
+	this->M_FCardActor_HP.M_AttackDefenceRate = Rate;
 }
 
 void ACardActor::SetCardCollisonState(bool bActive)

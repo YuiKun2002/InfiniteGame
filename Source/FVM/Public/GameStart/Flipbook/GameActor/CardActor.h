@@ -41,6 +41,9 @@ public:
 	//总生命值
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float M_TotalLife = 10.f;
+	//伤害减免率
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float M_AttackDefenceRate = 1.f;
 };
 
 //卡片属性
@@ -146,7 +149,13 @@ public:
 	//获取当前攻击该卡片的老鼠
 	UFUNCTION(BlueprintCallable)
 	AMouseActor* GetCurrentAttackSelfMouse();
+	//设置伤害减免率
+	UFUNCTION(BlueprintPure)
+	void GetAttackDefnceRate(float& Rate);
 public:
+	//设置伤害减免率
+	UFUNCTION(BlueprintCallable)
+	void SetAttackDefnceRate(float Rate = 1.f);
 	//设置卡片碰撞状态
 	UFUNCTION(BlueprintCallable)
 	void SetCardCollisonState(bool bActive);
@@ -260,7 +269,9 @@ private:
 	//当前卡片所在的UI网格
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UUI_MapMeshe* M_UUI_MapMeshe = nullptr;
-
+	//卡片buff
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UGameBuff* GameBuff = nullptr;
 	/*
 
 			新结构新版本

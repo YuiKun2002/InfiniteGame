@@ -1145,7 +1145,7 @@ void UGameSystemFunction::GenerateMatrixByPoint(
 
 	for (int32 Row = Begin.Row; Row <= End.Row; Row++)
 	{
-		for (int32 Col = Begin.Col; Col <= End.Col; Row++)
+		for (int32 Col = Begin.Col; Col <= End.Col; Col++)
 		{
 			OutLines.Add(FLine(Row, Col));
 		}
@@ -1201,11 +1201,11 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 
 		for (int32 Row = Begin.Row; Row <= End.Row; Row++)
 		{
-			for (int32 Col = Begin.Col; Col <= End.Col; Row++)
+			for (int32 Col = Begin.Col; Col <= End.Col; Col++)
 			{
 				AMapMouseMesheManager* Map = ControllComponent->GetMapMouseMesh(
-					Begin.Row + Row,
-					Begin.Col + Col
+					Row,
+					Col
 				);
 				const TMap<FString, AMouseActor*>& Curs = Map->GetCurMouseCopy();
 				for (const auto& CurAlien : Curs)
