@@ -273,7 +273,7 @@ void UCardDefenceComponent::OnCardManagerProChange(UDynamicProperty* Property)
 
 		if (this->DefenceCardHPRate.IsValid())
 		{
-			float HP = this->DefenceCardActor->GetTotalHP();
+			float HP = this->DefenceCardActor->GetCardData().M_CardHP;
 			float CurHP = this->DefenceCardActor->GetCurrentHP();
 			this->DefenceCardActor->SetCardHP(HP * (*this->DefenceCardHPRate), 0.f);
 			//表示已经受损【】
@@ -282,7 +282,8 @@ void UCardDefenceComponent::OnCardManagerProChange(UDynamicProperty* Property)
 				this->DefenceCardActor->SetCardCurrentHP(CurHP);
 			}
 
-			UE_LOG(LogTemp, Error, TEXT("目前能量卡的值为：%f"), (*this->DefenceCardHPRate));
+			UE_LOG(LogTemp, Error, TEXT("目前能量卡的值为：%f;HP:%f"), 
+			(*this->DefenceCardHPRate),this->DefenceCardActor->GetTotalHP());
 		}
 
 		return;
