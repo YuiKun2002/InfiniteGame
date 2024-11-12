@@ -1101,8 +1101,6 @@ void UGameSystemFunction::GenerateMatrixByPoint(
 		return;
 	}
 
-	//初始化数量
-	OutLines.Reset((Rate + Rate + 1) * (Rate + Rate + 1));
 	FLine ColAndRow(6, 10);
 	if (IsValid(Comp))
 	{
@@ -1143,6 +1141,7 @@ void UGameSystemFunction::GenerateMatrixByPoint(
 		End.Col = ColAndRow.Col - 1;
 	}
 
+	OutLines.Reset((End.Row + 1) * (End.Col + 1));
 	for (int32 Row = Begin.Row; Row <= End.Row; Row++)
 	{
 		for (int32 Col = Begin.Col; Col <= End.Col; Col++)
