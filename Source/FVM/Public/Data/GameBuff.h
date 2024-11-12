@@ -36,7 +36,9 @@ enum class EGameBuffTag : uint8
 	//击杀
 	Seckill UMETA(DisplayName = "Seckill"),
 	//剧毒
-	PoisoningPlus UMETA(DisplayName = "PoisoningPlus")
+	PoisoningPlus UMETA(DisplayName = "PoisoningPlus"),
+	//伤害减免
+	DamageRedu UMETA(DisplayName = "DamageRedu")
 };
 
 //对象buff，针对谁的buff
@@ -108,15 +110,23 @@ class FVM_API UBuffObject : public UObject, public IGameBuffInterface
 	GENERATED_BODY()
 
 	friend class UGameBuff;
+	friend class UCardGameBuff;
 	friend class UMouseGameBuff;
 
 protected:
+	//当buff第一次被添加时
 	virtual void BuffInit(float BuffTime) override;
+	//当buff多次被修改时，【二次新增,动态属性更新】
 	virtual void BuffUpdate() override;
+	//当游戏更新时
 	virtual void Tick(float BuffTime) override;
+	//当buff结束时
 	virtual void BuffEnd() override;
+	//获取这个buff是不是debuff
 	virtual bool GetDebuff() override;
+	//获取这个buff是不是固定buff
 	virtual bool GetConstbuff() override;
+	//更新buff提供的颜色
 	virtual void UpdateColor() override;
 protected:
 	//获取游戏buff对象

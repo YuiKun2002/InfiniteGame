@@ -98,12 +98,6 @@ public:
 public:
 	//获取当前卡片对应的UI
 	UUI_Card* const GetCardUI();
-public:
-	//设置当前卡片对应的UI
-	void SetCardUI(UUI_Card* _card_ui);
-	//设置浮动模式
-	void SetFloatModeEnable(bool _Value = true);
-public:
 	//获取浮动模式
 	UFUNCTION(BlueprintCallable)
 	bool GetFloatMode() const;
@@ -152,7 +146,19 @@ public:
 	//设置伤害减免率
 	UFUNCTION(BlueprintPure)
 	void GetAttackDefnceRate(float& Rate);
+	//获取卡片数据组件
+	UFUNCTION()
+	UCardDataComponent* GetCardDataComponent();
+	//获取盒体碰撞组件
+	UFUNCTION()
+	UBoxComponent* GetBoxComponent();
 public:
+	//设置当前卡片对应的UI
+	UFUNCTION()
+	void SetCardUI(UUI_Card* _card_ui);
+	//设置浮动模式
+	UFUNCTION()
+	void SetFloatModeEnable(bool _Value = true);
 	//设置伤害减免率
 	UFUNCTION(BlueprintCallable)
 	void SetAttackDefnceRate(float Rate = 1.f);
@@ -189,7 +195,33 @@ public:
 	//设置层级
 	virtual	void SetRenderLayer(int32 _Layer) override;
 public:
-
+	ACardActor();
+	//开始
+	virtual void BeginPlay() override;
+	//更新
+	virtual void Tick(float DeltaSeconds) override;
+	//函数调用发射器(当函数被调用时，会触发指针函数调用)
+	//卡片被激活时
+	UFUNCTION()
+	void CardActive();
+	//卡片受到伤害时
+	UFUNCTION()
+	void CardBeHurt(class AMouseActor* CurMouseActor);
+	//卡片死亡伤害时
+	UFUNCTION()
+	void CardDeath();
+	//当卡片移动时
+	UFUNCTION()
+	void OnCardMovedUpdate(const float& DeltaTime, const int32& _Layer, const FVector& _Location, const FLine& _Line);
+	//当卡片开始移动
+	UFUNCTION()
+	void OnCardMoveBegin(const int32& _Layer, const FLine& _Line);
+	//当卡片移动结束时
+	UFUNCTION()
+	void OnCardMoveEnd(const int32& _Layer, const FLine& _Line);
+	//解析buff
+	UFUNCTION(BlueprintCallable)
+	void ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* CurObject);
 	//解析actor
 	UFUNCTION(BlueprintCallable)
 	void AnalysisActor(AActor* _Actor);
@@ -208,34 +240,26 @@ public:
 	//更新卡片激活状态
 	UFUNCTION(BlueprintCallable)
 	void UpdateCardEnableState();
+protected:
+	//设置卡片数据
+	void SetCardActor(const FItemCard& _CardData);
 public:
-	//函数调用发射器(当函数被调用时，会触发指针函数调用)
-
-	//卡片被激活时
-	UFUNCTION()
-	void CardActive();
-	//卡片受到伤害时
-	UFUNCTION()
-	void CardBeHurt(class AMouseActor* CurMouseActor);
-	//卡片死亡伤害时
-	UFUNCTION()
-	void CardDeath();
-public:
-	//当卡片移动时
-	UFUNCTION()
-	void OnCardMovedUpdate(const float& DeltaTime, const int32& _Layer, const FVector& _Location, const FLine& _Line);
-	//当卡片开始移动
-	UFUNCTION()
-	void OnCardMoveBegin(const int32& _Layer, const FLine& _Line);
-	//当卡片移动结束时
-	UFUNCTION()
-	void OnCardMoveEnd(const int32& _Layer, const FLine& _Line);
-public:
-	ACardActor();
-
-	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaSeconds) override;
+	//卡片的基础属性蓝图填写
+	//卡片名称
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片名称")
+	FText CardActor_Name;
+	//自定义等级位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片等级位置")
+	bool bCustomCardLavelLocation = false;
+	//游戏地图实例
+	UPROPERTY(EditAnywhere)
+	AGameMapInstance* M_AGameMapInstance = nullptr;
+	//卡片碰撞
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBoxComponent* M_CardTypeBoxCollision = nullptr;
+	//卡片等级位置组件
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* CardLevelLocationComp = nullptr;
 private:
 	//颜色设置控制变量
 	UPROPERTY()
@@ -249,16 +273,6 @@ private:
 	//浮动模式(跟随地板浮动)
 	UPROPERTY()
 	bool M_bFloatMode = false;
-public:
-	//游戏地图实例
-	UPROPERTY(EditAnywhere)
-	AGameMapInstance* M_AGameMapInstance = nullptr;
-	//卡片碰撞
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UBoxComponent* M_CardTypeBoxCollision = nullptr;
-	//卡片等级位置组件
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class USceneComponent* CardLevelLocationComp = nullptr;
 private:
 	//生命类
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -272,30 +286,6 @@ private:
 	//卡片buff
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UGameBuff* GameBuff = nullptr;
-	/*
-
-			新结构新版本
-
-	*/
-public:
-	//获取卡片数据组件
-	UFUNCTION()
-	UCardDataComponent* GetCardDataComponent();
-	//获取盒体碰撞组件
-	UFUNCTION()
-	UBoxComponent* GetBoxComponent();
-public:
-	//卡片的基础属性蓝图填写
-
-	//卡片名称
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片名称")
-	FText CardActor_Name;
-	//自定义等级位置
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "卡片预设属性 | 卡片等级位置")
-	bool bCustomCardLavelLocation = false;
-protected:
-	//设置卡片数据
-	void SetCardActor(const FItemCard& _CardData);
 private:
 	//卡片数据组件
 	UPROPERTY()

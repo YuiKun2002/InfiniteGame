@@ -6,6 +6,8 @@
 #include "SpineActor.h"
 //引入老鼠buff系统
 #include "Data/Buff/MouseGameBuff.h"
+//引入卡片buff系统
+#include "Data/Buff/CardGameBuff.h"
 
 UGameBuff* UGameBuff::MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuffTag)
 {
@@ -13,7 +15,7 @@ UGameBuff* UGameBuff::MakeGameBuff(UObject* NewBuffChar, EGameBuffCharTag NewBuf
 
 	switch (NewBuffTag)
 	{
-	case EGameBuffCharTag::Card:NewBuff = NewObject<UGameBuff>(); break;
+	case EGameBuffCharTag::Card:NewBuff = NewObject<UCardGameBuff>(); break;
 	case EGameBuffCharTag::Mouse:NewBuff = NewObject<UMouseGameBuff>(); break;
 	default:NewBuff = NewObject<UGameBuff>(); break;
 	}
@@ -313,40 +315,19 @@ void UBuffObject::BuffInit(float BuffTime)
 	this->BuffUpdate();
 }
 
-void UBuffObject::BuffUpdate()
-{
+void UBuffObject::BuffUpdate() {}
 
-}
+void UBuffObject::Tick(float BuffTime) {}
 
-void UBuffObject::Tick(float BuffTime)
-{
+void UBuffObject::BuffEnd() { this->CurTime = 0.f; }
 
-}
+bool UBuffObject::GetDebuff() { return true; }
 
-void UBuffObject::BuffEnd()
-{
-	this->CurTime = 0.f;
-}
+bool UBuffObject::GetConstbuff() { return false; }
 
-bool UBuffObject::GetDebuff()
-{
-	return true;
-}
+void UBuffObject::UpdateColor() {}
 
-bool UBuffObject::GetConstbuff()
-{
-	return false;
-}
-
-void UBuffObject::UpdateColor()
-{
-
-}
-
-class UGameBuff* UBuffObject::GetGameBuff()
-{
-	return this->CurBuffObject;
-}
+class UGameBuff* UBuffObject::GetGameBuff() { return this->CurBuffObject; }
 
 UBuffObject* UBuffObject::GetBuffByTag(EGameBuffTag NewTag)
 {

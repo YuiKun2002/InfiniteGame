@@ -350,18 +350,18 @@ bool ACardActor::UpdateCardState(const float& _ATK_Value, const float& _UpHP_Val
 	}
 
 	//更新生命值
-	this->M_FCardActor_HP.M_Life = this->M_FCardActor_HP.M_Life - _ATK_Value;
+	this->M_FCardActor_HP.M_Life = this->M_FCardActor_HP.M_Life - (_ATK_Value * this->M_FCardActor_HP.M_AttackDefenceRate);
 
 	if (UFVMGameInstance::GetDebug())
 	{
 		FString Content = FString(TEXT("【")) + this->GetCardName() + FString(TEXT("】:")) +
-			FString::SanitizeFloat(_ATK_Value) + FString(TEXT("HP:")) +
+			FString::SanitizeFloat(_ATK_Value * this->M_FCardActor_HP.M_AttackDefenceRate) + FString(TEXT("HP:")) +
 			FString::SanitizeFloat(this->M_FCardActor_HP.M_Life);
 
 		UGameSystemFunction::FVMLog(__FUNCTION__, Content);
 	}
 
-	this->OnCardLifeHpChangeDelegate.ExecuteIfBound(_ATK_Value, _UpHP_Value);
+	this->OnCardLifeHpChangeDelegate.ExecuteIfBound((_ATK_Value * this->M_FCardActor_HP.M_AttackDefenceRate), _UpHP_Value);
 
 	if (this->M_FCardActor_HP.M_Life <= 0)
 	{
@@ -403,7 +403,7 @@ void ACardActor::BeginPlay()
 
 	this->M_AGameMapInstance = AGameMapInstance::GetGameMapInstance();
 
-	this->GameBuff = UGameBuff::MakeGameBuff(this,EGameBuffCharTag::Card);
+	this->GameBuff = UGameBuff::MakeGameBuff(this, EGameBuffCharTag::Card);
 
 	if (!this->M_AGameMapInstance)
 	{
@@ -519,6 +519,24 @@ UUI_MapMeshe* ACardActor::GetUIMapMesh()
 	return this->M_UUI_MapMeshe;
 }
 
+void ACardActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* CurObject)
+{
+	//添加buff
+	for (const auto& Cur : _Buff.CurBuffs)
+	{
+		const TSubclassOf<UBuffDynamicProperty>* Sub = _Buff.CurBuffPropertys.Find(Cur.Key);
+		if (Sub && *Sub)
+		{
+			UBuffDynamicProperty* Pro = UDynamicProperty::MakeDynamicPropertyByClass(*Sub);
+			Pro->SetDefObject(CurObject);
+			this->GameBuff->AddBuff(Cur.Key, Cur.Value, Pro);
+		}
+		else {
+			this->GameBuff->AddBuff(Cur.Key, Cur.Value, nullptr);
+		}
+	}
+}
+
 void ACardActor::AnalysisActor(AActor* _Actor)
 {
 	if (Cast<AMouseActor>(_Actor) && IsValid(_Actor) && Cast<AMouseActor>(_Actor)->GetCurrentHP() > 0.f)
@@ -609,6 +627,14 @@ ACardActor::ACardActor()
 void ACardActor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	//重新设置更新速度
+	DeltaSeconds = DeltaSeconds * this->GameBuff->GetTickRate();
+
+	if (this->GameBuff->GetBuffExist())
+	{
+		this->GameBuff->UpdateBuff(DeltaSeconds);
+	}
 
 	if (this->DelayTime > 0.f)
 	{
