@@ -42,7 +42,7 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
 	UFUNCTION()
 	void OnCardManagerProChange(class UDynamicProperty* Property);
 private:
@@ -53,6 +53,5 @@ private:
 	UPROPERTY()
 	int32 State = -1;
 	//生命值提升
-	UPROPERTY()
-	float DefenceCardHPRate = 1.f;
+	TSharedPtr<float> DefenceCardHPRate;
 };

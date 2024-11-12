@@ -20,41 +20,75 @@ void UDynamicProperty::Init()
 
 void UDynamicProperty::SetIntProperty(const FString& VariableName, int32 Value)
 {
-	this->EditProperty(this->IntPropertys, VariableName, Value);
+	this->SetIntPropertyPtr(VariableName, Value);
 }
+
+void UDynamicProperty::SetIntPropertyPtr(const FString& VariableName, const int32& Value)
+{
+	this->EditPropertyPtr(this->IntPropertys_Ptr, VariableName, Value);
+}
+
 bool UDynamicProperty::GetIntProperty(const FString& VariableName, int32& Value)
 {
-	return this->GetProperty(this->IntPropertys, VariableName, Value);
+	TSharedPtr<int32> Ptr;
+	if (this->GetIntPropertyPtr(VariableName, Ptr))
+	{
+		if (Ptr.Get())
+		{
+			Value = *Ptr;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UDynamicProperty::GetIntPropertyPtr(const FString& VariableName, TSharedPtr<int32>& Value)
+{
+	return this->GetPropertyPtr(this->IntPropertys_Ptr, VariableName, Value);
 }
 
 void UDynamicProperty::SetIntArrayProperty(const FString& VariableName, TArray<int32> Value)
 {
-	this->SetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName,Value);
+	this->SetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName, Value);
 }
 
 bool UDynamicProperty::GetIntArrayProperty(const FString& VariableName, TArray<int32>& Value)
 {
-	return this->GetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName,Value);
+	return this->GetArrayProperty<UDynamicPropertyArrayIntObject>(VariableName, Value);
 }
 
 void UDynamicProperty::SetFloatProperty(const FString& VariableName, float Value)
 {
-	this->EditProperty(this->FloatPropertys, VariableName, Value);
+	this->SetFloatPropertyPtr(VariableName, Value);
 }
 
 bool UDynamicProperty::GetFloatProperty(const FString& VariableName, float& Value)
 {
-	return this->GetProperty(this->FloatPropertys, VariableName, Value);
+	TSharedPtr<float> Ptr;
+	if (this->GetFloatPropertyPtr(VariableName, Ptr))
+	{
+		if (Ptr.Get())
+		{
+			Value = *Ptr;
+			return true;
+		}
+	}
+	return false;
 }
 
-bool UDynamicProperty::GetFloatPropertyPtr(const FString& VariableName, float*& Value)
+void UDynamicProperty::SetFloatPropertyPtr(const FString& VariableName, const float& Value)
 {
-	return this->GetPropertyPtr(this->FloatPropertys, VariableName, Value);
+	this->EditPropertyPtr(this->FloatPropertys_Ptr, VariableName, Value);
+}
+
+bool UDynamicProperty::GetFloatPropertyPtr(const FString& VariableName, TSharedPtr<float>& Value)
+{
+	return this->GetPropertyPtr(this->FloatPropertys_Ptr, VariableName, Value);
 }
 
 void UDynamicProperty::SetFloatArrayProperty(const FString& VariableName, TArray<float> Value)
 {
-	this->SetArrayProperty<UDynamicPropertyArrayFloatObject>(VariableName,Value);
+	this->SetArrayProperty<UDynamicPropertyArrayFloatObject>(VariableName, Value);
 }
 
 bool UDynamicProperty::GetFloatArrayProperty(const FString& VariableName, TArray<float>& Value)
@@ -64,20 +98,77 @@ bool UDynamicProperty::GetFloatArrayProperty(const FString& VariableName, TArray
 
 void UDynamicProperty::SetStringProperty(const FString& VariableName, const FString& Value)
 {
-	this->EditProperty(this->FStringPropertys, VariableName, Value);
+	this->EditPropertyPtr(this->StringPropertys_Ptr, VariableName, Value);
+}
+
+void UDynamicProperty::SetStringPropertyPtr(const FString& VariableName, const FString& Value)
+{
+	this->EditPropertyPtr(this->StringPropertys_Ptr, VariableName, Value);
 }
 
 bool UDynamicProperty::GetStringProperty(const FString& VariableName, FString& Value)
 {
-	return this->GetProperty(this->FStringPropertys, VariableName, Value);
+	TSharedPtr<FString> Ptr;
+	if (this->GetStringPropertyPtr(VariableName, Ptr))
+	{
+		if (Ptr.Get())
+		{
+			Value = *Ptr;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UDynamicProperty::GetStringPropertyPtr(const FString& VariableName, TSharedPtr<FString>& Value)
+{
+	return this->GetPropertyPtr(this->StringPropertys_Ptr, VariableName, Value);
 }
 
 void UDynamicProperty::SetObjectProperty(const FString& VariableName, UObject* Value)
 {
-	this->EditProperty(this->UObjectPropertys, VariableName, Value);
+	this->SetObjectPropertyPtr(VariableName, Value);
+}
+
+void UDynamicProperty::SetObjectPropertyPtr(const FString& VariableName, UObject*& Value)
+{
+	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
+	if (TargetValue)
+	{
+		//释放对象
+		(*TargetValue).Reset();
+		//新增对象
+		(*TargetValue) = MakeShareable(&Value);
+	}
+	else {
+		//新增对象
+		this->ObjectPropertys_Ptr.Emplace(VariableName, MakeShareable(&Value));
+	}
+
+	this->VarableName = VariableName;
 }
 
 bool UDynamicProperty::GetObjectProperty(const FString& VariableName, UObject*& Value)
 {
-	return this->GetProperty(this->UObjectPropertys, VariableName, Value);
+	TSharedPtr<UObject*> Ptr;
+	if (this->GetObjectPropertyPtr(VariableName, Ptr))
+	{
+		if (Ptr.Get())
+		{
+			Value = *Ptr;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UDynamicProperty::GetObjectPropertyPtr(const FString& VariableName, TSharedPtr<UObject*>& Value)
+{
+	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
+	if (TargetValue)
+	{
+		Value = *TargetValue;
+		return true;
+	}
+	return false;
 }

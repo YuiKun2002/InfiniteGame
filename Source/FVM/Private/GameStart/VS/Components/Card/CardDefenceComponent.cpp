@@ -264,21 +264,27 @@ void UCardDefenceComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 void UCardDefenceComponent::OnCardManagerProChange(UDynamicProperty* Property)
 {
 	//防御卡片提升
-	if (Property->GetCurrentVarableName().Equals(TEXT("DefenceCardHPRate")))
+	if (this->DefenceCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Defense)
 	{
-		if (this->DefenceCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Defense)
+		if (this->DefenceCardHPRate == nullptr)
 		{
-			Property->GetFloatProperty(TEXT("DefenceCardHPRate"), this->DefenceCardHPRate);
+			Property->GetFloatPropertyPtr(TEXT("DefenceCardHPRate"), this->DefenceCardHPRate);
+		}
 
+		if (this->DefenceCardHPRate.IsValid())
+		{
 			float HP = this->DefenceCardActor->GetTotalHP();
 			float CurHP = this->DefenceCardActor->GetCurrentHP();
-			this->DefenceCardActor->SetCardHP(HP * this->DefenceCardHPRate, 0.f);
+			this->DefenceCardActor->SetCardHP(HP * (*this->DefenceCardHPRate), 0.f);
 			//表示已经受损【】
 			if (int32(HP) != int32(CurHP))
 			{
 				this->DefenceCardActor->SetCardCurrentHP(CurHP);
 			}
+
+			UE_LOG(LogTemp, Error, TEXT("目前能量卡的值为：%f"), (*this->DefenceCardHPRate));
 		}
+
 		return;
 	}
 }

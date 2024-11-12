@@ -54,7 +54,15 @@ void UCardAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 	NewBullet->SetLine(this->AttackCardActor->GetLine().Row);
 	NewBullet->SetActorTransform(NewTrans);
 	NewBullet->SetObjectActorLocation(this->AttackCardActor->GetCurrentMouse());
-	NewBullet->SetATK(this->AttackCardActor->GetCurrentATK() * this->AttackRate);
+
+	if (this->AttackRate.IsValid())
+	{
+		NewBullet->SetATK(this->AttackCardActor->GetCurrentATK() * (*this->AttackRate));
+	}
+	else {
+		NewBullet->SetATK(this->AttackCardActor->GetCurrentATK());
+	}
+
 	NewBullet->SetSecondATK(
 		this->AttackCardActor->GetCurrentSecondATK(
 			this->AttackCardActor->GetATKCardData().M_SputteringATKRate)
@@ -112,12 +120,10 @@ void UCardAttackComponent::OnCardManagerProChange(UDynamicProperty* Property)
 	{
 		if (this->AttackRate == nullptr)
 		{
-			float& a = *this->AttackRate;
-			Property->GetFloatProperty(TEXT("MeleeCardMeleeRate"), a);
+			Property->GetFloatPropertyPtr(TEXT("MeleeCardMeleeRate"), this->AttackRate);
 		}
+		return;
 	}
-	return;
-
 }
 
 void UCardAttackComponent::ReInitDefIdleAnimName(TSubclassOf<class UAssetCategoryName> IdleName)

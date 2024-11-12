@@ -49,6 +49,8 @@ private:
 	//tick计时器
 	float time = 0.f;
 	//攻击倍率
+	TSharedPtr<float> AttackRate;
+	TSharedPtr<float> AttackRateAAAA;
 	UPROPERTY()
-	float* AttackRate = nullptr;
+	UDynamicProperty* DynamicProperty = nullptr;
 };
