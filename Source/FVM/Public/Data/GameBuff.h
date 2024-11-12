@@ -84,6 +84,8 @@ protected:
 	virtual bool GetDebuff() = 0;
 	//是否是限制类型的buff[冻结，凝固]
 	virtual bool GetConstbuff() = 0;
+	//更新buff颜色
+	virtual void UpdateColor() = 0;
 };
 
 //Buff的动态属性
@@ -115,6 +117,7 @@ protected:
 	virtual void BuffEnd() override;
 	virtual bool GetDebuff() override;
 	virtual bool GetConstbuff() override;
+	virtual void UpdateColor() override;
 protected:
 	//获取游戏buff对象
 	class UGameBuff* GetGameBuff();
@@ -208,6 +211,9 @@ public:
 	//更新buff
 	UFUNCTION(BlueprintCallable)
 	void UpdateBuff(const float& DeltaTime);
+	//更新buff颜色
+	UFUNCTION(BlueprintCallable)
+	void UpdateBuffColor();
 	//移除buff
 	UFUNCTION(BlueprintCallable)
 	void RemoveBuff(EGameBuffTag NewTag);

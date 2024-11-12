@@ -310,6 +310,15 @@ public:
 		return BaseAtk + (BaseAtk / 2.f) * AtkRate * (CardGrade * GradeUpRate);
 	}
 
+	//根据一个点生成一个方形范围【0(1*1)，1(3*3)，2(5*5)，3(7*7)】
+	UFUNCTION(BlueprintPure)
+	static void GenerateMatrixByPoint(
+		class UMesheControllComponent* Comp,
+		FLine PlayerLine,
+		int32 Rate,
+		TArray<FLine>& OutLines
+	);
+
 	//获取一个角色矩阵范围的老鼠网格
 	UFUNCTION(BlueprintCallable)
 	static void PlayerHitRangeAlienByMapMouseManager(

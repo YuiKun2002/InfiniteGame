@@ -1088,6 +1088,70 @@ void UGameSystemFunction::SetGlobalGameTime(const UObject* WorldContextObject, f
 	UGameplayStatics::SetGlobalTimeDilation(WorldContextObject, _TimeRate);
 }
 
+void UGameSystemFunction::GenerateMatrixByPoint(
+	UMesheControllComponent* Comp,
+	FLine PlayerLine,
+	int32 Rate,
+	TArray<FLine>& OutLines
+)
+{
+	if (Rate == 0)
+	{
+		OutLines.Add(PlayerLine);
+		return;
+	}
+
+	//初始化数量
+	OutLines.Reset((Rate + Rate + 1) * (Rate + Rate + 1));
+	FLine ColAndRow(6, 10);
+	if (IsValid(Comp))
+	{
+		ColAndRow = Comp->GetMapMeshRowAndCol();
+	}
+
+	//从中心点减去，得到左上角的起点位置
+	FLine Begin;
+	Begin.Row = PlayerLine.Row - Rate;
+	Begin.Col = PlayerLine.Col - Rate;
+
+	//从中心点减去，得到右下角的终点位置
+	FLine End;
+	End.Row = PlayerLine.Row + Rate;
+	End.Col = PlayerLine.Col + Rate;
+
+	//计算起点行有效位置
+	if (Begin.Row < 0)
+	{
+		Begin.Row = 0;
+	}
+
+	//计算起点列位置
+	if (Begin.Col < 0)
+	{
+		Begin.Col = 0;
+	}
+
+	//计算终点行有效位置
+	if (End.Row >= ColAndRow.Row)
+	{
+		Begin.Row = ColAndRow.Row - 1;
+	}
+
+	//计算终点列位置
+	if (Begin.Col >= ColAndRow.Col)
+	{
+		Begin.Col = ColAndRow.Col - 1;
+	}
+
+	for (int32 Row = Begin.Row; Row <= End.Row; Row++)
+	{
+		for (int32 Col = Begin.Col; Col <= End.Col; Row++)
+		{
+			OutLines.Add(FLine(Row, Col));
+		}
+	}
+}
+
 void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 	FLine PlayerLine,
 	int32 Rate,
@@ -1106,41 +1170,60 @@ void UGameSystemFunction::PlayerHitRangeAlienByMapMouseManager(
 		Begin.Row = PlayerLine.Row - Rate;
 		Begin.Col = PlayerLine.Col - Rate;
 
-		//计算范围
-		int32 TargetNum = (Rate * 2) + 1;
-		for (int32 Row = 0; Row < TargetNum; Row++)
-		{
-			for (int32 Col = 0; Col < TargetNum; Col++)
-			{
-				if (
-					Begin.Row + Row < 0 || Begin.Row + Row >= ColAndRow.Row
-					||
-					Begin.Col + Col < 0 || Begin.Col + Col >= ColAndRow.Col
-					)
-				{
-					//忽略无效点
-					continue;
-				}
-				else {
-					AMapMouseMesheManager* Map = ControllComponent->GetMapMouseMesh(Begin.Row + Row, Begin.Col + Col);
-					const TMap<FString, AMouseActor*>& Curs = Map->GetCurMouseCopy();
-					for (const auto& CurAlien : Curs)
-					{
-						if (IsValid(CurAlien.Value) && CurAlien.Value->GetMouseLineType() == AlienLineType)
-						{
-							if (CurAlien.Value->BeHit(ControllComponent, ATK, EFlyItemAttackType::Def))
-							{
-								CurAlien.Value->SetbIsHurt(true);
-								CurAlien.Value->ParseBuff_Information(Buffs);
+		//从中心点减去，得到右下角的终点位置
+		FLine End;
+		End.Row = PlayerLine.Row + Rate;
+		End.Col = PlayerLine.Col + Rate;
 
-								if (UFVMGameInstance::GetDebug())
-								{
-									UGameSystemFunction::FVMLog(
-										__FUNCTION__,
-										UGameSystemFunction::GetObjectName(CurAlien.Value) +
-										TEXT("受到伤害：") + FString::SanitizeFloat(ATK)
-									);
-								}
+		//计算起点行有效位置
+		if (Begin.Row < 0)
+		{
+			Begin.Row = 0;
+		}
+
+		//计算起点列位置
+		if (Begin.Col < 0)
+		{
+			Begin.Col = 0;
+		}
+
+		//计算终点行有效位置
+		if (End.Row >= ColAndRow.Row)
+		{
+			Begin.Row = ColAndRow.Row - 1;
+		}
+
+		//计算终点列位置
+		if (Begin.Col >= ColAndRow.Col)
+		{
+			Begin.Col = ColAndRow.Col - 1;
+		}
+
+		for (int32 Row = Begin.Row; Row <= End.Row; Row++)
+		{
+			for (int32 Col = Begin.Col; Col <= End.Col; Row++)
+			{
+				AMapMouseMesheManager* Map = ControllComponent->GetMapMouseMesh(
+					Begin.Row + Row,
+					Begin.Col + Col
+				);
+				const TMap<FString, AMouseActor*>& Curs = Map->GetCurMouseCopy();
+				for (const auto& CurAlien : Curs)
+				{
+					if (IsValid(CurAlien.Value) && CurAlien.Value->GetMouseLineType() == AlienLineType)
+					{
+						if (CurAlien.Value->BeHit(ControllComponent, ATK, EFlyItemAttackType::Def))
+						{
+							CurAlien.Value->SetbIsHurt(true);
+							CurAlien.Value->ParseBuff_Information(Buffs);
+
+							if (UFVMGameInstance::GetDebug())
+							{
+								UGameSystemFunction::FVMLog(
+									__FUNCTION__,
+									UGameSystemFunction::GetObjectName(CurAlien.Value) +
+									TEXT("受到伤害：") + FString::SanitizeFloat(ATK)
+								);
 							}
 						}
 					}

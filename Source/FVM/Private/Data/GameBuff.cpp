@@ -2,6 +2,8 @@
 
 
 #include "Data/GameBuff.h"
+//Spine
+#include "SpineActor.h"
 //引入老鼠buff系统
 #include "Data/Buff/MouseGameBuff.h"
 
@@ -79,8 +81,9 @@ void UGameBuff::AddBuff(EGameBuffTag NewTag, float NewBuffTime, UBuffDynamicProp
 			NewBuff->BuffInit(NewBuffTime);
 		}
 	}
-
 	this->OnBuffExecuteFinishedDelegate.ExecuteIfBound(this);
+	//更新buff的颜色
+	this->UpdateBuffColor();
 }
 
 void UGameBuff::AddBuffInfor(FGameBuffInfor NewBuff)
@@ -185,6 +188,26 @@ void UGameBuff::UpdateBuff(const float& DeltaTime)
 		}
 		//当前动作全部执行完毕
 		this->OnBuffExecuteFinishedDelegate.ExecuteIfBound(this);
+		//更新buff的颜色
+		this->UpdateBuffColor();
+	}
+}
+
+void UGameBuff::UpdateBuffColor()
+{
+	for (const auto& Buff : this->CurBuffs)
+	{
+		Buff.Value->UpdateColor();
+		return;
+	}
+
+	ASpineActor* Char = Cast<ASpineActor>(this->GetBuffChar());
+	if (IsValid(Char))
+	{
+		Char->SetSpineRenderColor(
+			FLinearColor(1.f, 1.f, 1.f,
+				Char->GetSpineRenderColor().A
+			));
 	}
 }
 
@@ -313,6 +336,11 @@ bool UBuffObject::GetDebuff()
 bool UBuffObject::GetConstbuff()
 {
 	return false;
+}
+
+void UBuffObject::UpdateColor()
+{
+
 }
 
 class UGameBuff* UBuffObject::GetGameBuff()
