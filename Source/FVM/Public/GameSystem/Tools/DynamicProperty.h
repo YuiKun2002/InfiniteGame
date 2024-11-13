@@ -75,7 +75,7 @@ public:
 
 		if (Property)
 		{
-			Type* Obj = NewObject(Property.GetDefaultObject());
+			Type* Obj = Property.GetDefaultObject();
 			if (IsValid(Obj))
 			{
 				Obj->Init();

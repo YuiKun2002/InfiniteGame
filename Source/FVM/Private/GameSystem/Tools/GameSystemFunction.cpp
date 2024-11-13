@@ -1715,7 +1715,10 @@ AMouseActor* UGameSystemFunction::LockingAttackComponentCheckAlien(
 		{
 			if (i != CurRow)
 			{
-				Rows.Emplace(i);
+				if (CheckLineAlien(i))
+				{
+					Rows.Emplace(i);
+				}
 			}
 		}
 
