@@ -39,6 +39,13 @@ void AGamePlayerSuperWeapon::AddNewBullet(
 	this->Bullets.Emplace(NewTag, NewActorPool);
 }
 
+void AGamePlayerSuperWeapon::RemoveBulletByTag(
+	const FString& NewTag
+)
+{
+	this->Bullets.Remove(NewTag);
+}
+
 AFlyItemActor* AGamePlayerSuperWeapon::GetBulletByTag(
 	const FString& NewTag
 )

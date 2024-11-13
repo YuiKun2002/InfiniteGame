@@ -20,6 +20,11 @@ class FVM_API AGamePlayerSuperWeapon : public ASpineActor
 
 public:
 	virtual void BeginDestroy() override;
+	//移除子弹
+	UFUNCTION(BlueprintCallable)
+	void RemoveBulletByTag(
+		const FString& NewTag
+	);
 	//添加新的子弹
 	UFUNCTION(BlueprintCallable)
 	void AddNewBullet(
