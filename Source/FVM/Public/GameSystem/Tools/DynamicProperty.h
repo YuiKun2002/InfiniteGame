@@ -75,7 +75,7 @@ public:
 
 		if (Property)
 		{
-			Type* Obj = NewObject<Type>(Property.GetDefaultObject());
+			Type* Obj = NewObject(Property.GetDefaultObject());
 			if (IsValid(Obj))
 			{
 				Obj->Init();
@@ -113,7 +113,7 @@ public:
 			return Property;
 		}
 
-		UDynamicProperty* Obj = MakeDynamicPropertyByClass<UDynamicProperty>();
+		UDynamicProperty* Obj = NewObject<UDynamicProperty>();
 		Obj->Init();
 		return Obj;
 	}
@@ -236,7 +236,7 @@ private:
 		UObject* Obj = this->SetArrayObject<TypeClass>(Value);
 		this->SetObjectPropertyPtr(
 			VariableName,
-		    Obj
+			Obj
 		);
 	}
 
