@@ -1722,12 +1722,16 @@ AMouseActor* UGameSystemFunction::LockingAttackComponentCheckAlien(
 			}
 		}
 
-		int32 RanRow = UGameSystemFunction::GetRandomRange(0, Rows.Num() - 1);
-
-		if (CheckLineAlien(Rows[RanRow]))
+		if (Rows.Num())
 		{
-			return CurrentAlien;
+			int32 RanRow = UGameSystemFunction::GetRandomRange(0, Rows.Num() - 1);
+
+			if (CheckLineAlien(Rows[RanRow]))
+			{
+				return CurrentAlien;
+			}
 		}
+
 	}
 
 	return nullptr;
