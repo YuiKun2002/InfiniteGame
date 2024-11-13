@@ -233,7 +233,7 @@ private:
 
 	//设置数组属性
 	template<class TypeClass, class TypeValue>
-	void SetArrayProperty(const FString& VariableName, TArray<TypeValue> Value) {
+	void SetArrayProperty(const FString& VariableName, const TArray<TypeValue>& Value) {
 		UObject* Obj = this->SetArrayObject<TypeClass>(Value);
 		this->SetObjectPropertyPtr(
 			VariableName,
@@ -243,11 +243,11 @@ private:
 
 	//获取数组属性
 	template<class TypeClass, class TypeValue>
-	bool GetArrayProperty(const FString& VariableName, TArray<TypeValue> Value) {
-		TSharedPtr<UObject*> ArrayObject;
+	bool GetArrayProperty(const FString& VariableName, TArray<TypeValue>& Value) {
+		UObject* ArrayObject = nullptr;
 		if (this->GetObjectPropertyPtr(VariableName, ArrayObject))
 		{
-			return this->GetArrayObject<TypeClass>(*ArrayObject, Value);
+			return this->GetArrayObject<TypeClass>(ArrayObject, Value);
 		}
 		return false;
 	}
