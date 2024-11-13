@@ -117,6 +117,19 @@ bool UVSManagerComponent::CreatePlayer(
 				return false;
 			}
 
+
+			UDataTable* Data = LoadObject<UDataTable>(nullptr,
+				TEXT(""));
+
+			if (!IsValid(Data))
+			{
+				
+
+				return false;
+			}
+
+			throw(TEXT("AAAAAAAAAAAAAA"));
+
 			//根据地形生成不同的平台【水上，水中，岩浆等地形】
 			switch (MesheActor->GetLineType())
 			{
@@ -126,12 +139,13 @@ bool UVSManagerComponent::CreatePlayer(
 
 				if (UIMeshe->TestID(-1))
 				{
-					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("橙片"));
+					FVSManagerComponentText* Temp = Data->FindRow<FVSManagerComponentText>(TEXT("橙片"),
+						TEXT("VS管理器对应文本"));
+
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(Temp->ShowText.ToString());
 					UIMeshe->PlayCard(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
-						, LoadClass<ACardActor>(0,
-							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/柠檬片/BP_柠檬片.BP_柠檬片_C'")
-						), CardData, 0, false);
+						, Temp->CardClassPath, CardData, 0, false);
 				}
 			}break;
 			case ELineType::Underwater:

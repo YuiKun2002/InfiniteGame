@@ -12,6 +12,19 @@ class UUI_GameOver;
 class UUI_VSCountDown;
 class UUI_BottomTip;
 
+USTRUCT(BlueprintType)
+struct FVSManagerComponentText : FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	//显示名字
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FText ShowText;
+	//卡片类路径
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<ACardActor> CardClassPath;
+};
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FVM_API UVSManagerComponent : public UActorComponent
 {
@@ -19,10 +32,10 @@ class FVM_API UVSManagerComponent : public UActorComponent
 public:
 	//是否是胜利
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_Win = true;
+	bool M_Win = true;
 	//是否使用过钥匙或者徽章
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool M_bUseKey = false;
+	bool M_bUseKey = false;
 public:
 	// Sets default values for this component's properties
 	UVSManagerComponent();
@@ -38,60 +51,60 @@ public:
 	) override;
 
 	UFUNCTION(BlueprintCallable)
-		static bool CreatePlayer(
-			bool bMainPlayer,
-			FString PlayerName,
-			int32 Row,
-			int32 Col,
-			int32 PlayerGrade,
-			FSoftObjectPath PlayerHead,
-			FPlayerSuitItem NewSuit,
-			FString FirstWeaponName
-		);
+	static bool CreatePlayer(
+		bool bMainPlayer,
+		FString PlayerName,
+		int32 Row,
+		int32 Col,
+		int32 PlayerGrade,
+		FSoftObjectPath PlayerHead,
+		FPlayerSuitItem NewSuit,
+		FString FirstWeaponName
+	);
 
 	UFUNCTION(BlueprintCallable)
-		static bool CreatePlayerByData(
-			FString PlayerName,
-			int32 Row,
-			int32 Col,
-			int32 PlayerGrade,
-			TSoftObjectPtr<UDataTable> PlayerDataPtr
-		);
+	static bool CreatePlayerByData(
+		FString PlayerName,
+		int32 Row,
+		int32 Col,
+		int32 PlayerGrade,
+		TSoftObjectPtr<UDataTable> PlayerDataPtr
+	);
 
 	//游戏暂停
 	UFUNCTION(BlueprintCallable)
-		void SetGamePause();
+	void SetGamePause();
 
 	//游戏继续
 	UFUNCTION(BlueprintCallable)
-		void SetGameContinue();
+	void SetGameContinue();
 public:
 	//开始游戏
 	UFUNCTION(BlueprintCallable)
-		void GameStart();
+	void GameStart();
 
 	//游戏结束
 	UFUNCTION(BlueprintCallable)
-		void GameOver();
+	void GameOver();
 public:
 	//显示文字到底部
 	UFUNCTION(BlueprintCallable)
-		void ShowText(const FString& _Title);
+	void ShowText(const FString& _Title);
 public:
 	//直接游戏胜利，结算
 	UFUNCTION(BlueprintCallable)
-		static void GameWin();
+	static void GameWin();
 	//直接游戏失败，结算
 	UFUNCTION(BlueprintCallable)
-		static void GameFailed();
+	static void GameFailed();
 private:
 	//游戏结束UI
 	UPROPERTY(EditAnywhere)
-		UUI_GameOver* M_UI_GameOver = nullptr;
+	UUI_GameOver* M_UI_GameOver = nullptr;
 	//游戏底部提示
 	UPROPERTY(EditAnywhere)
-		UUI_BottomTip* M_UIBottomTip = nullptr;
+	UUI_BottomTip* M_UIBottomTip = nullptr;
 	//游戏倒计时
 	UPROPERTY(EditAnywhere)
-		UUI_VSCountDown* UI_VSCountDown = nullptr;
+	UUI_VSCountDown* UI_VSCountDown = nullptr;
 };
