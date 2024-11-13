@@ -105,15 +105,15 @@ bool UUIMesheWidthOnWater::UpdateCardByMesheType(TMap<int32, ACardActor*>& KillC
 	{
 	case ELineType::OnGround:
 	{
-		//创建落水动画
-		AActor* CurAnim = this->GetMapMeshe()->GetWorld()->SpawnActor(
-			LoadClass<AActor>(
-				0,
-				TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/WaterAnim/BP_落水动画.BP_落水动画_C'")
-				)
-		);
+		////创建落水动画
+		//AActor* CurAnim = this->GetMapMeshe()->GetWorld()->SpawnActor(
+		//	LoadClass<AActor>(
+		//		0,
+		//		TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/WaterAnim/BP_落水动画.BP_落水动画_C'")
+		//		)
+		//);
 
-		CurAnim->SetActorLocation(CurCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
+		//CurAnim->SetActorLocation(CurCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
 	}
 	break;
 	case ELineType::SkyAndGround:

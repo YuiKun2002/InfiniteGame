@@ -126,7 +126,7 @@ bool UVSManagerComponent::CreatePlayer(
 
 				if (UIMeshe->TestID(-1))
 				{
-					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("柠檬片"));
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("橙片"));
 					UIMeshe->PlayCard(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
 						, LoadClass<ACardActor>(0,
@@ -136,7 +136,7 @@ bool UVSManagerComponent::CreatePlayer(
 			}break;
 			case ELineType::Underwater:
 			{
-				UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio");
+				/*UFVMGameInstance::PlayBGM_S_Static("PlayCardToOnWater", "ItemAudio");
 				if (UIMeshe->TestID(3))
 				{
 					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("苏打气泡"));
@@ -145,7 +145,7 @@ bool UVSManagerComponent::CreatePlayer(
 						, LoadClass<ACardActor>(0,
 							TEXT("Blueprint'/Game/Resource/BP/GameStart/Item/Card/苏打气泡.苏打气泡_C'")
 						), CardData, 0, false);
-				}
+				}*/
 			}break;
 			case ELineType::Magma:
 			{

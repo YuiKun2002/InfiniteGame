@@ -168,15 +168,15 @@ void UUI_MapMeshe::PlayFinish(ACardActor* NewCard)
 
 	UResourceManagerComponent::ResourceAddPlayCard(NewCard->GetCardName());
 
-	//创建放置动画
-	AActor* CurAnim = this->GetMapMeshe()->GetWorld()->SpawnActor(
-		LoadClass<AActor>(
-			0,
-			TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/PlayGroundAnim/BP_放置动画.BP_放置动画_C'")
-		)
-	);
+	////创建放置动画
+	//AActor* CurAnim = this->GetMapMeshe()->GetWorld()->SpawnActor(
+	//	LoadClass<AActor>(
+	//		0,
+	//		TEXT("Blueprint'/Game/Resource/Texture/Sprite/VS/Map/0/PlayGroundAnim/BP_放置动画.BP_放置动画_C'")
+	//	)
+	//);
 
-	CurAnim->SetActorLocation(NewCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
+	//CurAnim->SetActorLocation(NewCard->GetUIMapMesh()->GetMapMeshe()->GetActorLocation());
 }
 
 bool UUI_MapMeshe::PlayPlayer()
@@ -995,7 +995,8 @@ void UUI_MapMeshe::CardTypeDebug(const FString& _CardName, ELineType _LineType)
 
 AEradicateActor* UUI_MapMeshe::ShowEradicate()
 {
-	AEradicateActor* Eradicate = this->GetWorld()->SpawnActor<AEradicateActor>(LoadClass<AActor>(0,
+	return nullptr;
+	/*AEradicateActor* Eradicate = this->GetWorld()->SpawnActor<AEradicateActor>(LoadClass<AActor>(0,
 		TEXT("Blueprint'/Game/Resource/BP/GameStart/VS/Eradicate/BP_Eradicate.BP_Eradicate_C'")));
 	Eradicate->UIMeshe = this;
 	Eradicate->SetActorLocation(FVector(
@@ -1003,7 +1004,7 @@ AEradicateActor* UUI_MapMeshe::ShowEradicate()
 		this->M_MapMesheTransform.GetLocation().Y,
 		this->M_MapMesheTransform.GetLocation().Z
 	));
-	return Eradicate;
+	return Eradicate;*/
 	//UE_LOG(LogTemp,Error,TEXT("%f %f %f"),this->M_MapMesheTransform.GetLocation().X,this->M_MapMesheTransform.GetLocation().Y,this->M_MapMesheTransform.GetLocation().Z);
 }
 
