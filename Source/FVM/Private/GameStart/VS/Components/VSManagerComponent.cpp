@@ -118,17 +118,13 @@ bool UVSManagerComponent::CreatePlayer(
 			}
 
 
-			UDataTable* Data = LoadObject<UDataTable>(nullptr,
-				TEXT(""));
+			UDataTable* PlayerPayData = LoadObject<UDataTable>(nullptr, PlayerPayData_PATH);
 
-			if (!IsValid(Data))
+			if (!IsValid(PlayerPayData))
 			{
-				
-
+				throw(TEXT("资源路径出错"));
 				return false;
 			}
-
-			throw(TEXT("AAAAAAAAAAAAAA"));
 
 			//根据地形生成不同的平台【水上，水中，岩浆等地形】
 			switch (MesheActor->GetLineType())
@@ -139,7 +135,7 @@ bool UVSManagerComponent::CreatePlayer(
 
 				if (UIMeshe->TestID(-1))
 				{
-					FVSManagerComponentText* Temp = Data->FindRow<FVSManagerComponentText>(TEXT("橙片"),
+					FVSManagerComponentText* Temp = PlayerPayData->FindRow<FVSManagerComponentText>(TEXT("橙片"),
 						TEXT("VS管理器对应文本"));
 
 					FItemCard CardData = UCardDataComponent::GetCardBaseData(Temp->ShowText.ToString());
@@ -165,12 +161,12 @@ bool UVSManagerComponent::CreatePlayer(
 			{
 				if (UIMeshe->TestID(-1))
 				{
-					FItemCard CardData = UCardDataComponent::GetCardBaseData(TEXT("冰片"));
+					FVSManagerComponentText* Temp = PlayerPayData->FindRow<FVSManagerComponentText>(TEXT("冰片"),
+						TEXT("VS管理器对应文本"));
+					FItemCard CardData = UCardDataComponent::GetCardBaseData(Temp->ShowText.ToString());
 					UIMeshe->PlayCard(
 						AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent
-						, LoadClass<ACardActor>(0,
-							TEXT("Blueprint'/Game/Resource/SpineData/卡片动画/防御/冰片/BP_冰片.BP_冰片_C'")
-						), CardData, 0, false);
+						, Temp->CardClassPath, CardData, 0, false);
 				}
 			}
 			break;

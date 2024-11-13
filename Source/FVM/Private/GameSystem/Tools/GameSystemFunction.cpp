@@ -1627,7 +1627,108 @@ void UGameSystemFunction::ClearWaitingItemsForEquip(TArray<FEquipmentBase>& _Arr
 	_Arrays = _Buff;
 }
 
+AMouseActor* UGameSystemFunction::LockingAttackComponentCheckAlien(
+	UMouseManagerComponent* AlienManager,
+	int32 CurRow,
+	const TSet<ELineTraceType>& LType
+)
+{
+	AMouseActor* CurrentAlien = nullptr;
 
+	auto CheckAlien = [&](UMouseLineManager* AlienManagerComp) -> bool {
+		for (const ELineTraceType& Type : LType)
+		{
+			//优先检测空中
+			switch (Type)
+			{
+			case ELineTraceType::E_MouseSky:
+			{
+				if (AlienManagerComp->GetMouseSky().Num())
+				{
+					CurrentAlien = AlienManagerComp->GetMouseTopBySky();
+					return true;
+				}
+			}break;
+			case ELineTraceType::E_MouseGroundAndSky:
+			{
+				if (AlienManagerComp->GetMouseSky().Num())
+				{
+					CurrentAlien = AlienManagerComp->GetMouseTopBySky();
+					return true;
+				}
+
+				if (AlienManagerComp->GetMouseGround().Num())
+				{
+					CurrentAlien = AlienManagerComp->GetMouseTopByGorund();
+					return true;
+				}
+			}break;
+			case ELineTraceType::E_MouseGround:
+			{
+				if (AlienManagerComp->GetMouseGround().Num())
+				{
+					CurrentAlien = AlienManagerComp->GetMouseTopByGorund();
+					return true;
+				}
+			}break;
+			case ELineTraceType::E_MouseUnder:
+			{
+				if (AlienManagerComp->GetMouseUnderGround().Num())
+				{
+					CurrentAlien = AlienManagerComp->GetMouseTopByUnderGorund();
+					return true;
+				}
+			}
+			break;
+			default:
+				CurrentAlien = AlienManagerComp->GetMouseTopByAllType();
+				return true;
+			}
+		}
+		return false;
+		};
+
+	auto CheckLineAlien = [&](int32 CurRow) -> bool {
+		UMouseLineManager* AlienLine = AlienManager->GetMouseLineManager(CurRow);
+		if (AlienLine->GetMouseExist())
+		{
+			if (CheckAlien(AlienLine))
+			{
+				return true;
+			}
+		}
+
+		return false;
+		};
+
+
+	//查询结果
+	bool CheckResult = CheckLineAlien(CurRow);
+	if (CheckResult)
+	{
+		return CurrentAlien;
+	}
+	else {
+		TArray<int32> Rows;
+		for (int32 i = 0; i < AGameMapInstance::GetGameMapInstance()->
+			M_MesheControllComponent->GetMapMeshRowAndCol().Row; i++)
+		{
+			if (i != CurRow)
+			{
+				Rows.Emplace(i);
+			}
+		}
+
+		int32 RanRow = UGameSystemFunction::GetRandomRange(0, Rows.Num() - 1);
+
+		if (CheckLineAlien(Rows[RanRow]))
+		{
+			return CurrentAlien;
+		}
+	}
+
+	return nullptr;
+}
 
 
 class UWidgetBase* UGameSystemFunction::GetUserInterWidgetByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType, FName Name)

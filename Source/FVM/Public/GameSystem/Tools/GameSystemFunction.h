@@ -543,8 +543,22 @@ public:
 	//删除玩家背包中有待删除的道具->争对装备道具【会改变数组的内存地址】自动调用RemoveEquipmentFromPlayerBag
 	static void ClearWaitingItemsForEquip(TArray<FEquipmentBase>& _Arrays);
 public:
-	//静态
+	/************************************************************************/
+	/*                                战斗                                  */
+	/************************************************************************/
 
+	//锁定组件，检测外星人
+	UFUNCTION(BlueprintCallable)
+	static AMouseActor* LockingAttackComponentCheckAlien(
+		class UMouseManagerComponent* AlienManager,
+		int32 CurRow,
+		const TSet<ELineTraceType>& LType
+	);
+
+	//静态
+	/************************************************************************/
+	/*                                UI 名字                                */
+	/************************************************************************/
 	//通过Name直接获取UI具体的实例【使用前请确保{对象}有效】
 	UFUNCTION(BlueprintPure)
 	static class UWidgetBase* GetUserInterWidgetByClass(

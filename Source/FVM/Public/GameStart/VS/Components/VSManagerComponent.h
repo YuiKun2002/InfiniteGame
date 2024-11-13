@@ -8,21 +8,23 @@
 #include "Components/ActorComponent.h"
 #include "VSManagerComponent.generated.h"
 
+#define PlayerPayData_PATH TEXT("DataTable'/Game/Resource/BP/Data/TipText/C++代码提示文本/DT_VSManagerComponentText.DT_VSManagerComponentText'")
+
 class UUI_GameOver;
 class UUI_VSCountDown;
 class UUI_BottomTip;
 
 USTRUCT(BlueprintType)
-struct FVSManagerComponentText : FTableRowBase
+struct FVSManagerComponentText : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
 	//显示名字
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText ShowText;
 	//卡片类路径
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TSubclassOf<ACardActor> CardClassPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class ACardActor> CardClassPath;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
