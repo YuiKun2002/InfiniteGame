@@ -122,34 +122,25 @@ void UDynamicProperty::SetObjectProperty(const FString& VariableName, UObject* V
 
 void UDynamicProperty::SetObjectPropertyPtr(const FString& VariableName, UObject*& Value)
 {
-	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
+	UObject** TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
 	if (TargetValue)
 	{
-		*(*TargetValue) = Value;
+		(*TargetValue) = Value;
 	}
 	else {
 		//新增对象
-		this->ObjectPropertys_Ptr.Emplace(VariableName, MakeShareable(&Value));
+		this->ObjectPropertys_Ptr.Emplace(VariableName, Value);
 	}
 }
 
 bool UDynamicProperty::GetObjectProperty(const FString& VariableName, UObject*& Value)
 {
-	TSharedPtr<UObject*> Ptr;
-	if (this->GetObjectPropertyPtr(VariableName, Ptr))
-	{
-		if (Ptr.Get())
-		{
-			Value = *Ptr;
-			return true;
-		}
-	}
-	return false;
+	return this->GetObjectPropertyPtr(VariableName, Value);
 }
 
-bool UDynamicProperty::GetObjectPropertyPtr(const FString& VariableName, TSharedPtr<UObject*>& Value)
+bool UDynamicProperty::GetObjectPropertyPtr(const FString& VariableName, UObject*& Value)
 {
-	TSharedPtr<UObject*>* TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
+	UObject** TargetValue = this->ObjectPropertys_Ptr.Find(VariableName);
 	if (TargetValue)
 	{
 		Value = *TargetValue;

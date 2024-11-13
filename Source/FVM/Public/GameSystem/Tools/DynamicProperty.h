@@ -159,7 +159,7 @@ public:
 	void SetObjectPropertyPtr(const FString& VariableName, UObject*& Value);
 	UFUNCTION(BlueprintPure)
 	bool GetObjectProperty(const FString& VariableName, UObject*& Value);
-	bool GetObjectPropertyPtr(const FString& VariableName, TSharedPtr<UObject*>& Value);
+	bool GetObjectPropertyPtr(const FString& VariableName, UObject*& Value);
 protected:
 	UFUNCTION()
 	virtual void Init();
@@ -171,7 +171,8 @@ private:
 	//字符串属性
 	TMap<FString, TSharedPtr<FString>> StringPropertys_Ptr;
 	//对象属性
-	TMap<FString, TSharedPtr<UObject*>> ObjectPropertys_Ptr;
+	UPROPERTY()
+	TMap<FString, UObject*> ObjectPropertys_Ptr;
 private:
 	//编辑属性
 	template<class TypeValue, class VarTypeValue>
