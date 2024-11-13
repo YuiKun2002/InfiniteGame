@@ -144,9 +144,6 @@ public:
 	//获取属性
 	UFUNCTION(BlueprintPure)
 	UDynamicProperty* GetDynamicProperty();
-	//通过名称获取卡片等级
-	UFUNCTION(BlueprintPure)
-	int32 GetCardGradeByName(const FText& CardName);
 	//获取卡片管理器
 public:
 	//获取卡片原始数据

@@ -474,19 +474,6 @@ UDynamicProperty* UCardManagerComponent::GetDynamicProperty()
 	return this->DynamicProperty;
 }
 
-int32 UCardManagerComponent::GetCardGradeByName(const FText& CardName)
-{
-	for (const auto& Data : this->M_CardData)
-	{
-		if (Data.ItemName.EqualTo(CardName))
-		{
-			return Data.M_CardGrade;
-		}
-	}
-
-	return 0;
-}
-
 // Called every frame
 void UCardManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
