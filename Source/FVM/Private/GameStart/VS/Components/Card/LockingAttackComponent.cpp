@@ -5,6 +5,7 @@
 #include "GameStart/Flipbook/GameActor/CardActor/AttackCardActor.h"
 #include "GameStart/VS/Components/MesheControllComponent.h"
 #include "GameStart/Flipbook/GameActor/FlyItemActor.h"
+#include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/Flipbook/GameActor/MouseActor.h"
 #include "GameStart/VS/GameMapInstance.h"
 
@@ -89,6 +90,15 @@ void ULockingAttackComponent::LoadResource()
 		this->CardActor->GetCurrentAttackSpeed(),
 		this->CardActor->GetCurrentFristAttackDelay(),
 		this->CardActor->GetCurrentSecondAttackDelay()
+	);
+
+	//绑定卡片管理器属性变动事件
+	AGameMapInstance::GetCardManagerComponent_Static()->OnCardManagerDynamicPropertyChangeDelegate.BindUObject(
+		this, &ULockingAttackComponent::OnPropertyChange
+	);
+
+	this->OnPropertyChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
 	);
 
 	//初始化检测类型
