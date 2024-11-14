@@ -4,24 +4,20 @@
 #include <Components/Button.h>
 #include "UI/WidgetBase.h"
 #include "Data/GameLogSubsystem.h"
-
 #include <Components/BoxComponent.h>
 #include <Components/SphereComponent.h>
-
 #include "GameStart/Flipbook/SpriteActor.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
-
+#include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
 #include "Paper2D/Classes/PaperFlipbook.h"
-
 #include "GameStart/VS/GameMapInstance.h"
 #include "GameStart/VS/Components/MesheControllComponent.h"
+#include "GameStart/VS/Components/Card/CardFuncCompImplement.h"
 #include "GameStart/VS/MapMeshe.h"
-
 #include "GameFramework/GameUserSettings.h"
 #include "GameSystem/GameConfigSubsystem.h"
 #include "GameSystem/PlayerDataSubsystem.h"
 #include "GameSystem/GameUserInterfaceSubsystem.h"
-
 #include <Kismet/KismetSystemLibrary.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Kismet/KismetStringLibrary.h>
@@ -775,13 +771,17 @@ bool UGameSystemFunction::HitMouse(UObject* CurHitMouseObj, float _HitValue, AMo
 {
 	if (IsValid(_Mouse))
 	{
-		//设置老鼠状态->被击中
-		_Mouse->SetbIsHurt(true);
 		//被命中传入伤害数值
-		_Mouse->BeHit(CurHitMouseObj, _HitValue, AttackType);
-		//解析Buff信息
-		_Mouse->ParseBuff_Information(_Buff);
-		return true;
+		if (_Mouse->BeHit(CurHitMouseObj, _HitValue, AttackType))
+		{
+			//设置老鼠状态->被击中
+			_Mouse->SetbIsHurt(true);
+			//解析Buff信息
+			_Mouse->ParseBuff_Information(_Buff);
+
+			return true;
+		}
+
 	}
 	return false;
 }
@@ -1737,6 +1737,125 @@ AMouseActor* UGameSystemFunction::LockingAttackComponentCheckAlien(
 	return nullptr;
 }
 
+void UGameSystemFunction::CreateBombGridExtensionFunction(
+	AActor* TargetParentActor,
+	TSoftClassPtr<AFunctionActor> OtherShow,
+	const FLine& Line,
+	const FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
+	TArray<EMouseCollisionType> MouseCollisionType,
+	FGameBuffInfor Buff,
+	float ATK
+)
+{
+	//网格组件
+	UMesheControllComponent* MesheComp = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
+	FLine LineMax = MesheComp->GetMapMeshRowAndCol();
+	TArray<AMapMouseMesheManager*> MapMouseMeshes;
+
+	//获取当前网格
+	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, Line.Col));
+
+	//获取Top网格
+	int32 TopExtension = Line.Row - GridExtension.Top >= 0 ? Line.Row - GridExtension.Top : 0;
+	for (int32 i = Line.Row - 1; i >= TopExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
+	}
+
+	//获取Bottom网格
+	int32 BottomExtension = Line.Row + GridExtension.Bottom < LineMax.Row ? Line.Row + GridExtension.Bottom : LineMax.Row - 1;
+	for (int32 i = Line.Row + 1; i <= BottomExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
+	}
+
+	//获取Right网格
+	int32 RightExtension = Line.Col + GridExtension.Right < LineMax.Col ? Line.Col + GridExtension.Right : LineMax.Col - 1;
+	for (int32 i = Line.Col + 1; i <= RightExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
+	}
+
+	//获取Left网格
+	int32 LeftExtension = Line.Col - GridExtension.Left >= 0 ? Line.Col - GridExtension.Left : 0;
+	for (int32 i = Line.Col - 1; i >= LeftExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
+	}
+
+	//actor对象加载
+	UClass* Obj = UGameSystemFunction::LoadRes(OtherShow);
+	if (IsValid(Obj))
+	{
+		//生成对象
+		AFunctionActor* CurFunc = TargetParentActor->GetWorld()->
+			SpawnActor<AFunctionActor>(Obj);
+		CurFunc->OnInit(Cast<AFunctionCardActor>(TargetParentActor), MapMouseMeshes);
+	}
+
+	//遍历全部网格
+	for (AMapMouseMesheManager*& Meshe : MapMouseMeshes)
+	{
+		TMap<FString, AMouseActor*> MapMouse = Meshe->GetCurMouseCopy();
+		for (const auto& Mouses : MapMouse)
+		{
+			bool bResult = false;
+			for (const EMouseCollisionType& MouseCollisionType : MouseCollisionType)
+			{
+				switch (MouseCollisionType)
+				{
+				case EMouseCollisionType::MouseGround:
+					if (Mouses.Value->GetMouseLineType() == ELineType::OnGround)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseSky:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Sky)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseUnder:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Underground)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseActor:
+				{
+					bResult = true;
+				}
+				break;
+				}
+			}
+
+			if (!bResult)
+			{
+				continue;
+			}
+
+			if (UGameSystemFunction::HitMouse(
+				TargetParentActor,
+				ATK,
+				Mouses.Value,
+				Buff,
+				EFlyItemAttackType::Bomb
+			)
+				)
+			{
+				if (UFVMGameInstance::GetDebug())
+				{
+					UGameSystemFunction::FVMLog(__FUNCTION__,
+						TEXT("基于此范围所有的外星人造成[爆炸伤害：") +
+						FString::SanitizeFloat(ATK) +
+						TEXT("]")
+					);
+				}
+			}
+		}
+	}
+}
 
 class UWidgetBase* UGameSystemFunction::GetUserInterWidgetByClass(TSoftClassPtr<class UAssetCategoryName> ObjectType, FName Name)
 {

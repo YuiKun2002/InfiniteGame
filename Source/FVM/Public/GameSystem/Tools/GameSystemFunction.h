@@ -555,6 +555,18 @@ public:
 		const TSet<ELineTraceType>& LType
 	);
 
+	//创建具有延展性的范围伤害（外星人）
+	UFUNCTION(BlueprintCallable)
+	static void CreateBombGridExtensionFunction(
+		AActor* TargetParentActor,
+		TSoftClassPtr<class AFunctionActor> OtherShow,
+		const FLine& Line,
+		const FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
+		TArray<EMouseCollisionType> MouseCollisionType,
+		FGameBuffInfor Buff,
+		float ATK
+	);
+
 	//静态
 	/************************************************************************/
 	/*                                UI 名字                                */
