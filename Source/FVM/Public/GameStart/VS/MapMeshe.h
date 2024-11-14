@@ -43,6 +43,8 @@ public:
 		void BoxOverlapEnd(AActor* OtherActor);
 public:
 	const TMap<FString, AMouseActor*>& GetCurMouse() const;
+
+	UFUNCTION(BlueprintPure)
 	TMap<FString, AMouseActor*> GetCurMouseCopy();
 public:
 	//设置线路
