@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -30,20 +30,20 @@ class UXiaoYuNetURLBPLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
-	//»ñÈ¡»ù±¾µÄURL
+	//è·å–åŸºæœ¬çš„URL
 	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting")
 	static void XGetBaseURL(FString& URL);
 public:
-	//»ñÈ¡µÇÂ¼URL[1µÇÂ¼£¬2×¢²á£¬3µÇ³ö£¬4¸üĞÂ£¬5×¢Ïú]
-	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|µÇÂ¼")
+	//è·å–ç™»å½•URL[1ç™»å½•ï¼Œ2æ³¨å†Œï¼Œ3ç™»å‡ºï¼Œ4æ›´æ–°ï¼Œ5æ³¨é”€]
+	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|ç™»å½•")
 	static void XGetLoginURL(FString& URL,int32 State);
-	//»ñÈ¡½ÇÉ«»õ±ÒURL
-	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|½ÇÉ«")
+	//è·å–è§’è‰²è´§å¸URL
+	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|è§’è‰²")
 	static FString XGetPlayerCoinURL(const FString& UserID);
-	//»ñÈ¡½ÇÉ«±³°üURL
-	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|½ÇÉ«")
+	//è·å–è§’è‰²èƒŒåŒ…URL
+	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|è§’è‰²")
 	static FString XGetPlayerBagURL(const FString& UserID);
-	//»ñÈ¡ÉÌ³ÇURL
-	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|ÉÌ³Ç")
+	//è·å–å•†åŸURL
+	UFUNCTION(BlueprintPure, Category = "XiaoYuNetURLTesting|å•†åŸ")
 	static void XGetShopURL(FString& URL);
 };

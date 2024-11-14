@@ -3,7 +3,6 @@
 #include <Components/BoxComponent.h>
 #include "Components/ActorComponent.h"
 #include "Engine/Classes/Engine/DataTable.h"
-#include "GameStart/Flipbook/GameActor/FlyItemActor.h"
 #include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
 #include "CardFuncCompImplement.generated.h"
 
@@ -170,6 +169,17 @@ public:
 		UCardFunctionComponent* CardFuncComp,
 		bool bCollision
 	);
+	//创建具有延展性的范围伤害（外星人）
+	UFUNCTION(BlueprintCallable)
+	static void CreateBombGridExtensionFunction(
+		class AActor* TargetParentActor,
+		TSoftClassPtr<class AFunctionActor> OtherShow,
+		const struct FLine& Line,
+		const struct FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
+		TArray<EMouseCollisionType> MouseCollisionType,
+		FGameBuffInfor Buff,
+		float ATK
+	);
 	//攻击单个老鼠
 	UFUNCTION()
 	void CreateSingleMouse(UCardFunctionComponent* CardFuncComp);
@@ -181,7 +191,7 @@ public:
 	void SpawnFlame(class AMouseActor* CurMouse, UCardFunctionComponent* CardFuncComp);
 	//资产加载
 	UFUNCTION()
-	void ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp);
+	void ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers, UCardFunctionComponent* CardFuncComp);
 	//获取数据
 	const FCardFunctionBombImplementTRB& GetCardDaraTRB() const;
 private:

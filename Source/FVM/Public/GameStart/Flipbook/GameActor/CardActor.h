@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "SpineActor.h"
 #include "GameStart/VS/MapBaseType.h"
+#include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "GameStart/VS/Components/Card/CardDataComponent.h"
 #include "GameSystem/Item/Card/CardAtkStruct.h"
 #include "GameSystem/Item/ItemStruct.h"
-#include "GameSystem/Tools/GameSystemFunction.h"
 #include "GameStart/Flipbook/GameActorFlipbookBase.h"
 #include "CardActor.generated.h"
 

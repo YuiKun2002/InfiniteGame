@@ -1,12 +1,11 @@
 #include "GameStart/VS/Components/Card/CardFuncCompImplement.h"
 
 #include "SpineSkeletonAnimationComponent.h"
-
+#include "GameStart/Flipbook/GameActor/FlyItemActor.h"
+#include "GameStart/Flipbook/GameActor/Card/FunctionCardActor.h"
 #include "GameStart/Flipbook/GameActor/CardActor/AttackCardActor.h"
 #include "GameStart/Flipbook/GameActor/FlameActor.h"
 #include "GameStart/Flipbook/GameActor/FlyItemCardFuncImplement.h"
-
-
 #include "GameStart/VS/Components/Card/CardFunctionComponent.h"
 #include "GameStart/VS/Components/Item/ShootLineComponent.h"
 #include "GameStart/VS/Components/CardManagerComponent.h"
@@ -589,6 +588,126 @@ void UCardFunctionBombBase::CreateBombGridExtension(
 		if (IsValid(CardFuncComp->GetCardActor()->GetBoxComponent()))
 		{
 			CardFuncComp->GetCardActor()->GetBoxComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
+	}
+}
+
+void UCardFunctionBombBase::CreateBombGridExtensionFunction(
+	AActor* TargetParentActor,
+	TSoftClassPtr<AFunctionActor> OtherShow,
+	const FLine& Line,
+	const FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
+	TArray<EMouseCollisionType> MouseCollisionType,
+	FGameBuffInfor Buff,
+	float ATK
+)
+{
+	//网格组件
+	UMesheControllComponent* MesheComp = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
+	FLine LineMax = MesheComp->GetMapMeshRowAndCol();
+	TArray<AMapMouseMesheManager*> MapMouseMeshes;
+
+	//获取当前网格
+	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, Line.Col));
+
+	//获取Top网格
+	int32 TopExtension = Line.Row - GridExtension.Top >= 0 ? Line.Row - GridExtension.Top : 0;
+	for (int32 i = Line.Row - 1; i >= TopExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
+	}
+
+	//获取Bottom网格
+	int32 BottomExtension = Line.Row + GridExtension.Bottom < LineMax.Row ? Line.Row + GridExtension.Bottom : LineMax.Row - 1;
+	for (int32 i = Line.Row + 1; i <= BottomExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(i, Line.Col));
+	}
+
+	//获取Right网格
+	int32 RightExtension = Line.Col + GridExtension.Right < LineMax.Col ? Line.Col + GridExtension.Right : LineMax.Col - 1;
+	for (int32 i = Line.Col + 1; i <= RightExtension; i++)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
+	}
+
+	//获取Left网格
+	int32 LeftExtension = Line.Col - GridExtension.Left >= 0 ? Line.Col - GridExtension.Left : 0;
+	for (int32 i = Line.Col - 1; i >= LeftExtension; i--)
+	{
+		MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, i));
+	}
+
+	//actor对象加载
+	UClass* Obj = UGameSystemFunction::LoadRes(OtherShow);
+	if (IsValid(Obj))
+	{
+		//生成对象
+		AFunctionActor* CurFunc = TargetParentActor->GetWorld()->
+			SpawnActor<AFunctionActor>(Obj);
+		CurFunc->OnInit(Cast<AFunctionCardActor>(TargetParentActor), MapMouseMeshes);
+	}
+
+	//遍历全部网格
+	for (AMapMouseMesheManager*& Meshe : MapMouseMeshes)
+	{
+		TMap<FString, AMouseActor*> MapMouse = Meshe->GetCurMouseCopy();
+		for (const auto& Mouses : MapMouse)
+		{
+			bool bResult = false;
+			for (const EMouseCollisionType& MouseCollisionType : MouseCollisionType)
+			{
+				switch (MouseCollisionType)
+				{
+				case EMouseCollisionType::MouseGround:
+					if (Mouses.Value->GetMouseLineType() == ELineType::OnGround)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseSky:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Sky)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseUnder:
+					if (Mouses.Value->GetMouseLineType() == ELineType::Underground)
+					{
+						bResult = true;
+					}
+					break;
+				case EMouseCollisionType::MouseActor:
+				{
+					bResult = true;
+				}
+				break;
+				}
+			}
+
+			if (!bResult)
+			{
+				continue;
+			}
+
+			if (UGameSystemFunction::HitMouse(
+				TargetParentActor,
+				ATK,
+				Mouses.Value,
+				Buff,
+				EFlyItemAttackType::Bomb
+			)
+				)
+			{
+				if (UFVMGameInstance::GetDebug())
+				{
+					UGameSystemFunction::FVMLog(__FUNCTION__,
+						TEXT("基于此范围所有的外星人造成[爆炸伤害：") +
+						FString::SanitizeFloat(ATK) +
+						TEXT("]")
+					);
+				}
+			}
 		}
 	}
 }
