@@ -277,6 +277,11 @@ void AGamePlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (FVM_VS_GameOver())
+	{
+		return;
+	}
+
 	if (this->M_AMapMeshe->GetMove())
 	{
 		//更新角色路线
