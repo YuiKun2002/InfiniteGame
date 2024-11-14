@@ -30,6 +30,8 @@ public:
 	//动画播放完成
 	UFUNCTION()
 	void AnimationPlayEnd(class UTrackEntry* Track);
+	UFUNCTION()
+	void OnPropertyChange(class UDynamicProperty* Property);
 protected:
 	void PlayIdleAnim();
 	void PlayAttackAnim();
@@ -54,4 +56,6 @@ private:
 	//计时器
 	UPROPERTY()
 	float Time = 0.f;
+	//攻击力提升率
+	TSharedPtr<float> CardATKRate;
 };

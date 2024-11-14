@@ -121,7 +121,15 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 				NewBullet->SetLine(this->CardActor->GetLine().Row);
 				NewBullet->SetActorTransform(Trans);
 				NewBullet->SetObjectActorLocation(this->CardActor->GetCurrentMouse());
-				NewBullet->SetATK(this->CardActor->GetCurrentATK());
+
+				if (this->CardATKRate.IsValid())
+				{
+					NewBullet->SetATK(this->CardActor->GetCurrentATK() * (*this->CardATKRate));
+				}
+				else {
+					NewBullet->SetATK(this->CardActor->GetCurrentATK());
+				}
+
 				NewBullet->SetSecondATK(
 					this->CardActor->GetCurrentSecondATK(
 						this->CardActor->GetATKCardData().M_SputteringATKRate)
@@ -155,6 +163,17 @@ void ULockingAttackComponent::AnimationPlayEnd(UTrackEntry* Track)
 {
 	this->OnAnimationPlayEnd();
 	this->SetTrackEntry(nullptr);
+}
+
+void ULockingAttackComponent::OnPropertyChange(class UDynamicProperty* Property)
+{
+	if (this->CardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Thunder)
+	{
+		if (this->CardATKRate == nullptr)
+		{
+			Property->GetFloatPropertyPtr(TEXT("ThunderCardATKRate"), this->CardATKRate);
+		}
+	}
 }
 
 void ULockingAttackComponent::PlayIdleAnim()
