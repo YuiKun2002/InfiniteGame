@@ -182,7 +182,7 @@ void UBuffMouseObject::UpdateTickRate()
 		UBuffObject* Buff = Cur->GetBuff(EGameBuffTag::SlowDown);
 		float Rate = 0.5f;
 		Buff->GetDynamicProperty()->GetFloatProperty(TEXT("Rate"), Rate);
-		this->SetTickRate(Cur->GetTickRate() - Rate * Cur->GetTickRate());
+		this->SetTickRate(Rate * Cur->GetTickRate());
 	}
 
 	//如果存在加速Buff，加上速度
