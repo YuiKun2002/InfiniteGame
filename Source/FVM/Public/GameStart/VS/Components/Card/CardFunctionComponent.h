@@ -40,7 +40,8 @@ public:
 	//当动画播放完毕
 	UFUNCTION()
 	void OnAnimationPlayEnd(UTrackEntry* Track);
-
+	UFUNCTION()
+	void OnPropertyChange(class UDynamicProperty* Property);
 	//获取上一次使用的卡片名称
 	UFUNCTION()
 	FString GetLastCardName() const;
@@ -53,6 +54,9 @@ public:
 	//获取卡片对应的网格
 	UFUNCTION()
 	UUI_MapMeshe* GetCardMeshe();
+	//获取其他倍率
+	UFUNCTION()
+	float GetOtherRate();
 	//事件触发器
 	UFUNCTION()
 	void EventTrigger(
@@ -73,4 +77,6 @@ public:
 private:
 	UPROPERTY()
 	UTrackEntry* CurTrackEntry = nullptr;
+	//额外倍率
+	TSharedPtr<float> OtherRate;
 };

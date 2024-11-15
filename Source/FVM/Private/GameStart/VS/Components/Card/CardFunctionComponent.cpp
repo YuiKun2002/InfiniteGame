@@ -47,6 +47,11 @@ void UCardFunctionComponent::BeginPlay()
 	this->M_PlayerLastSelectCardActorName = AGameMapInstance::GetGameMapInstance()->
 		M_CardManagerComponent->M_LastSelectCardName;
 
+	//绑定卡片管理器属性变动事件
+	AGameMapInstance::GetCardManagerComponent_Static()->OnCardManagerDynamicPropertyChangeDelegate.BindUObject(
+		this, &UCardFunctionComponent::OnPropertyChange
+	);
+
 	//获取卡片格子
 	this->M_CardMapMeshe = this->FunctionCardActor->GetUIMapMesh();
 
@@ -63,6 +68,11 @@ void UCardFunctionComponent::BeginPlay()
 
 	//运行功能函数
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunction(this);
+
+	//主动调用卡片管理器	
+	this->OnPropertyChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
+	);
 }
 
 
@@ -83,6 +93,18 @@ void UCardFunctionComponent::OnAnimationPlayEnd(UTrackEntry* Track)
 	this->FunctionCardActor->ExecuteCardFuncClassByCardFunctionOnAnimPlayEnd(this);
 }
 
+void UCardFunctionComponent::OnPropertyChange(class UDynamicProperty* Property)
+{
+	//火系
+	if (this->FunctionCardActor->GetCardData().GamePropertyCategory == EGamePropertyCategory::Fire)
+	{
+		if (this->OtherRate == nullptr)
+		{
+			Property->GetFloatPropertyPtr(TEXT("FireCardATKRate"), this->OtherRate);
+		}
+	}
+}
+
 FString UCardFunctionComponent::GetLastCardName() const
 {
 	return this->M_PlayerLastSelectCardActorName;
@@ -101,6 +123,16 @@ AFunctionCardActor* UCardFunctionComponent::GetCardActor()
 UUI_MapMeshe* UCardFunctionComponent::GetCardMeshe()
 {
 	return this->M_CardMapMeshe;
+}
+
+float UCardFunctionComponent::GetOtherRate()
+{
+	if (this->OtherRate.IsValid())
+	{
+		return *this->OtherRate;
+	}
+
+	return 1.f;
 }
 
 void UCardFunctionComponent::EventTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

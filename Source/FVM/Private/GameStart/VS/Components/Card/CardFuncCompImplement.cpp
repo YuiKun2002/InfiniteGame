@@ -225,7 +225,7 @@ void UCardFunctionBombBase::CreateBomb(UCardFunctionComponent* CardFuncComp, boo
 	this->bBomb = true;
 
 	TArray<AMapMouseMesheManager*> MapMouseMeshes;
-	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
+	this->ResourceLoad(MapMouseMeshes, CardFuncComp);
 
 	TArray<FHitResult> Hits;
 	for (const EMouseCollisionType& MouseCollisionType : this->CardDataTRB.MouseCollisionType)
@@ -273,7 +273,7 @@ void UCardFunctionBombBase::CreateBomb(UCardFunctionComponent* CardFuncComp, boo
 						CardFuncComp->GetCardActor()->GetCardGrade(
 							CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 						) *
-						0.1f;
+						0.1f * CardFuncComp->GetOtherRate();
 
 					if (bKill)
 					{
@@ -326,7 +326,7 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 	this->bBomb = true;
 
 	TArray<AMapMouseMesheManager*> MapMouseMeshes;
-	this->ResourceLoad(MapMouseMeshes,CardFuncComp);
+	this->ResourceLoad(MapMouseMeshes, CardFuncComp);
 
 	FLine CurLine = CardFuncComp->GetCardActor()->GetLine();
 
@@ -376,7 +376,7 @@ void UCardFunctionBombBase::CreateBombLine(UCardFunctionComponent* CardFuncComp,
 					CardFuncComp->GetCardActor()->GetCardGrade(
 						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 					) *
-					0.1f;
+					0.1f * CardFuncComp->GetOtherRate();
 
 				if (bKill)
 				{
@@ -434,7 +434,7 @@ void UCardFunctionBombBase::CreateBombGridExtension(
 	UMesheControllComponent* MesheComp = AGameMapInstance::GetGameMapInstance()->GetMesheControllComponent();
 	FLine LineMax = MesheComp->GetMapMeshRowAndCol();
 	TArray<AMapMouseMesheManager*> MapMouseMeshes;
-	
+
 	//获取当前网格
 	MapMouseMeshes.Emplace(MesheComp->GetMapMouseMesh(Line.Row, Line.Col));
 
@@ -546,7 +546,7 @@ void UCardFunctionBombBase::CreateBombGridExtension(
 					CardFuncComp->GetCardActor()->GetCardGrade(
 						CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 					) *
-					0.1f;
+					0.1f * CardFuncComp->GetOtherRate();
 
 				if (bKill)
 				{
@@ -718,7 +718,7 @@ void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncCo
 	this->bBomb = true;
 
 	TArray<AMapMouseMesheManager*> MouseMesheManagers;
-	this->ResourceLoad(MouseMesheManagers,CardFuncComp);
+	this->ResourceLoad(MouseMesheManagers, CardFuncComp);
 
 	if (IsValid(this->CurCheckMouse) && this->CurCheckMouse->GetCurrentHP() > 0.f)
 	{
@@ -747,7 +747,7 @@ void UCardFunctionBombBase::CreateSingleMouse(UCardFunctionComponent* CardFuncCo
 			CardFuncComp->GetCardActor()->GetCardGrade(
 				CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 			) *
-			0.1f;
+			0.1f * CardFuncComp->GetOtherRate();
 
 		if (bKill)
 		{
@@ -851,7 +851,7 @@ void UCardFunctionBombBase::SpawnFlame(class AMouseActor* CurMouse, UCardFunctio
 	}
 }
 
-void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers,UCardFunctionComponent* CardFuncComp)
+void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& MouseMesheManagers, UCardFunctionComponent* CardFuncComp)
 {
 	if (IsValid(this->CardDataTRB.BombAnimName.GetDefaultObject()))
 	{
@@ -875,7 +875,7 @@ void UCardFunctionBombBase::ResourceLoad(const TArray<AMapMouseMesheManager*>& M
 		//生成对象
 		AFunctionActor* CurFunc = CardFuncComp->GetCardActor()->GetWorld()->
 			SpawnActor<AFunctionActor>(Obj);
-		CurFunc->OnInit(CardFuncComp->GetCardActor(),MouseMesheManagers);
+		CurFunc->OnInit(CardFuncComp->GetCardActor(), MouseMesheManagers);
 	}
 
 	//播放爆炸音效
@@ -1436,7 +1436,7 @@ void UCardFunctionProjectileATK::AddtionATK(class UCardFunctionComponent* CardFu
 							CardFuncComp->GetCardActor()->GetFunctionCardData().ItemName.ToString()
 						)
 						* 0.1f
-						)
+						) * CardFuncComp->GetOtherRate()
 				);
 
 				if (UFVMGameInstance::GetDebug())
@@ -1763,6 +1763,7 @@ bool UCardFunctionCatBox::JudgeState(class UCardFunctionComponent* CardFuncComp)
 					this->CardDataTRB.CatBoxAtkBase, CardDataTRB.CatBoxAtkRate,
 					CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 					CurCardData.M_M_ECardUpGradeUpRate);
+				CurATK *= CardFuncComp->GetOtherRate();
 
 				//设置命中老鼠
 				CurMouse->SetbIsHurt(true);
@@ -2127,6 +2128,8 @@ void UCardFunctionBurger::HitAllMouse(class UCardFunctionComponent* CardFuncComp
 				CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 				CurCardData.M_M_ECardUpGradeUpRate);
 
+			CurATK *= CardFuncComp->GetOtherRate();
+
 			if (CurMouse->BeHit(CardFuncComp->GetCardActor(), CurATK, EFlyItemAttackType::Def))
 			{
 				CurMouse->SetbIsHurt(true);
@@ -2363,7 +2366,7 @@ void UCardFunctionFlourbag::Init(UCardFunctionComponent* CardFuncComp)
 				)
 			);
 		},
-		[](UTimeLineClass* Ltime, UObject* Obj) {
+		[&](UTimeLineClass* Ltime, UObject* Obj) {
 
 			UCardFunctionFlourbag* CurObj = Cast<UCardFunctionFlourbag>(Obj);
 
@@ -2376,6 +2379,8 @@ void UCardFunctionFlourbag::Init(UCardFunctionComponent* CardFuncComp)
 				CurObj->CardDataTRB.FlourbagAtkBase, CurObj->CardDataTRB.FlourbagAtkRate,
 				CurObj->CurCardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 				CurCardData.M_M_ECardUpGradeUpRate);
+
+			CurATK *= CardFuncComp->GetOtherRate();
 
 			//生成攻击球体检测
 			for (const auto& CurOffset : CurObj->CardDataTRB.HitLocationOffset)
@@ -2720,6 +2725,8 @@ void UCardFunctionElectric::Create(UCardFunctionComponent* CardFuncComp, FVector
 		this->CardDataTRB.AtkBase, this->CardDataTRB.AtkRate,
 		CardFuncComp->GetCardActor()->GetCardGrade(CurCardData.ItemName.ToString()),
 		CurCardData.M_M_ECardUpGradeUpRate);
+
+	CurATK *= CardFuncComp->GetOtherRate();
 
 	for (const auto& CurType : this->CardDataTRB.MouseType)
 	{

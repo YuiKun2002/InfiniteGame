@@ -338,6 +338,6 @@ void UFlyItemATKCardFunc::Execute(UCardFunctionComponent* CardFuncComp, FCardFun
 		}
 
 		//提升攻击力
-		CurFlyItem->SetCurATK(CurRate * CurFlyItem->GetATK());
+		CurFlyItem->SetCurATK(CurRate * CurFlyItem->GetATK() * CardFuncComp->GetOtherRate());
 	}
 }
