@@ -56,6 +56,9 @@ public:
 	//当前的攻击线路(如果需要用到该条件)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 M_Line = 0;
+	//线路
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLine M_LineT;
 	//攻击力
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ATK = 1.f;
@@ -197,6 +200,9 @@ public:
 	//设置线路
 	UFUNCTION(BlueprintCallable)
 	void SetLine(int32 _line);
+	//设置子弹线路
+	UFUNCTION(BlueprintCallable)
+	void SetFlyItemLine(FLine NewLine);
 	//设置对象Actor
 	UFUNCTION(BlueprintCallable)
 	void SetObjectActorLocation(AActor* _MouseActor);
@@ -258,6 +264,9 @@ public:
 	//获取线路
 	UFUNCTION(BlueprintCallable)
 	int32 GetLine();
+	//获取线路
+	UFUNCTION(BlueprintPure)
+	FLine GetFlyItemLine();
 	//当前飞行物是否可以被影响
 	UFUNCTION(BlueprintCallable)
 	bool GetFlyInfluence();

@@ -247,6 +247,12 @@ void AFlyItemActor::SetLine(int32 _line)
 	this->M_FlyData.M_Line = _line;
 }
 
+void AFlyItemActor::SetFlyItemLine(FLine NewLine)
+{
+	this->M_FlyData.M_LineT = NewLine;
+	this->SetLine(NewLine.Row);
+}
+
 FVector AFlyItemActor::GetObjectActorLocation()
 {
 	//老鼠对象失效,则让子弹全部失效
@@ -508,6 +514,11 @@ float AFlyItemActor::GetSecondATK()
 int32 AFlyItemActor::GetLine()
 {
 	return this->M_FlyData.M_Line;
+}
+
+FLine AFlyItemActor::GetFlyItemLine()
+{
+	return this->M_FlyData.M_LineT;
 }
 
 bool AFlyItemActor::GetFlyInfluence()
