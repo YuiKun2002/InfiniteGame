@@ -101,6 +101,10 @@ public:
 	//获取默认对象
 	UFUNCTION(BlueprintPure)
 	void GetDefObject(UObject*& Value);
+
+	//默认对象初始化
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDefObjectInit(UObject* Value);
 };
 
 //buff基本类型

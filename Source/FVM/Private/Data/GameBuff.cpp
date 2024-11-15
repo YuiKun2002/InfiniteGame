@@ -297,6 +297,11 @@ void UGameBuff::ExecuteBuffs()
 void UBuffDynamicProperty::SetDefObject(UObject* Value)
 {
 	this->SetObjectProperty(GAMEBUFF_VAR_DEFOBJECT, Value);
+
+	if (IsValid(Value))
+	{
+		this->OnDefObjectInit(Value);
+	}
 }
 
 void UBuffDynamicProperty::GetDefObject(UObject*& Value)
