@@ -152,6 +152,9 @@ public:
 	//获取盒体碰撞组件
 	UFUNCTION()
 	UBoxComponent* GetBoxComponent();
+	//获取卡片其他额外倍率
+	UFUNCTION(BlueprintPure)
+	float GetCardOtherRate();
 public:
 	//设置当前卡片对应的UI
 	UFUNCTION()
@@ -242,7 +245,11 @@ public:
 	void UpdateCardEnableState();
 protected:
 	//设置卡片数据
+	UFUNCTION()
 	void SetCardActor(const FItemCard& _CardData);
+	//属性更新
+	UFUNCTION()
+	void OnPropertyChange(class UDynamicProperty* Property);
 public:
 	//卡片的基础属性蓝图填写
 	//卡片名称
@@ -306,4 +313,6 @@ private:
 	//更新延迟
 	UPROPERTY(EditAnywhere)
 	float DelayTime = 0.2f;
+	//其他额外倍率
+	TSharedPtr<float> CardOtherRate;
 };

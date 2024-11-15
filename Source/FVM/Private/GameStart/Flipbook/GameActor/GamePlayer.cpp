@@ -222,6 +222,16 @@ void AGamePlayer::SetPlayerData(const FItemHeroBase& Data)
 	this->InitPlayerData(Data);
 }
 
+void AGamePlayer::SetPlayerOtherRate(float NewRate)
+{
+	this->PlayerOtherRate = NewRate;
+}
+
+float AGamePlayer::GetPlayerOtherRate()
+{
+	return this->PlayerOtherRate;
+}
+
 FLine AGamePlayer::GetLine() const
 {
 	return this->M_PlayerLine;

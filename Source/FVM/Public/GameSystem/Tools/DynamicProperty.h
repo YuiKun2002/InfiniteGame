@@ -34,6 +34,8 @@ class FVM_API UDynamicPropertyArrayFloatObject : public UObject
 public:
 	UPROPERTY()
 	TArray<float> TypeValue;
+	UPROPERTY()
+	TMap<FString, float> TypeMapValue;
 };
 //字符串组类
 UCLASS()
@@ -207,6 +209,7 @@ private:
 		return false;
 	}
 
+//---------------------------------------------数组---------------------------------------------//
 	//设置数组对象
 	template<class TypeClass, class TypeValue>
 	UObject* SetArrayObject(const TArray<TypeValue>& Value) {
@@ -251,4 +254,11 @@ private:
 		}
 		return false;
 	}
+//---------------------------------------------数组---------------------------------------------//
+
+
+//---------------------------------------------映射---------------------------------------------//
+
+//---------------------------------------------映射---------------------------------------------//
+
 };

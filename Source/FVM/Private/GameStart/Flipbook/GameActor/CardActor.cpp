@@ -45,6 +45,14 @@ void ACardActor::SetCardActor(const FItemCard& _CardData)
 	this->M_SourceCardDataBase = _CardData;
 }
 
+void ACardActor::OnPropertyChange(class UDynamicProperty* Property)
+{
+	if (this->CardOtherRate == nullptr)
+	{
+		Property->GetFloatPropertyPtr(TEXT("CardOtherRate"), this->CardOtherRate);
+	}
+}
+
 UUI_Card* const ACardActor::GetCardUI()
 {
 	return this->M_UUI_Card;
@@ -406,6 +414,10 @@ void ACardActor::BeginPlay()
 
 	this->GameBuff = UGameBuff::MakeGameBuff(this, EGameBuffCharTag::Card);
 
+	this->OnPropertyChange(
+		AGameMapInstance::GetCardManagerComponent_Static()->GetDynamicProperty()
+	);
+
 	if (!this->M_AGameMapInstance)
 	{
 		if (UFVMGameInstance::GetDebug())
@@ -529,7 +541,7 @@ void ACardActor::ParseBuff_Information(const FGameBuffInfor& _Buff, UObject* Cur
 		if (Sub && *Sub)
 		{
 			UBuffDynamicProperty* Pro = UDynamicProperty::MakeDynamicPropertyByClass(*Sub);
-			Pro->SetDefObject(CurObject);		
+			Pro->SetDefObject(CurObject);
 			this->GameBuff->AddBuff(Cur.Key, Cur.Value, Pro);
 		}
 		else {
@@ -662,6 +674,16 @@ UCardDataComponent* ACardActor::GetCardDataComponent()
 UBoxComponent* ACardActor::GetBoxComponent()
 {
 	return this->M_CardTypeBoxCollision;
+}
+
+float ACardActor::GetCardOtherRate()
+{
+	if (this->CardOtherRate.IsValid())
+	{
+		return *this->CardOtherRate;
+	}
+
+	return 1.f;
 }
 
 void ACardActor::SetAttackDefnceRate(float Rate)

@@ -116,7 +116,13 @@ public:
 	//设置角色数据
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerData(const FItemHeroBase& Data);
+	//设置额外倍率
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerOtherRate(float NewRate);
 public:
+	//获取额外倍率
+	UFUNCTION(BlueprintPure)
+	float GetPlayerOtherRate();
 	//获取角色线路
 	UFUNCTION(BlueprintCallable)
 	FLine GetLine() const;
@@ -172,4 +178,7 @@ private:
 	//超级武器
 	UPROPERTY()
 	AGamePlayerSuperWeapon* GamePlayerSuperWeapon = nullptr;
+	//英雄额外倍率
+	UPROPERTY()
+	float PlayerOtherRate = 1.f;
 };
