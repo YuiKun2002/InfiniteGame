@@ -272,8 +272,27 @@ void UFreezeBuffMouse::BuffInit(float BuffTime)
 
 void UFreezeBuffMouse::BuffEnd()
 {
-	//触发减速buff
-	this->GetGameBuff()->AddBuff(EGameBuffTag::SlowDown, 10.f, nullptr);
+	if (this->NewTime == nullptr)
+	{
+		this->GetDynamicProperty()->GetFloatPropertyPtr(
+			TEXT("FreezeBuffEndTime"), this->NewTime
+		);
+	}
+
+	if (this->NewTime.IsValid())
+	{
+		//触发减速buff
+		this->GetGameBuff()->AddBuff(EGameBuffTag::SlowDown,
+			*this->NewTime,
+			nullptr);
+	}
+	else {
+		//触发减速buff
+		this->GetGameBuff()->AddBuff(EGameBuffTag::SlowDown,
+			10.f,
+			nullptr);
+	}
+
 
 	Super::BuffEnd();
 }

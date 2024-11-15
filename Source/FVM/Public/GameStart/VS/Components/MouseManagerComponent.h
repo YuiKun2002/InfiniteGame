@@ -57,8 +57,10 @@ public:
 	//获取全部
 	TMap<FString, AMouseActor*> GetMouseAll();
 	//当前行是否存在老鼠
+	UFUNCTION(BlueprintPure)
 	bool GetMouseExist();
 	//消灭所有老鼠
+	UFUNCTION(BlueprintCallable)
 	void KillAllMouse();
 	//获取小于当前坐标点老鼠
 	UFUNCTION(BlueprintPure)

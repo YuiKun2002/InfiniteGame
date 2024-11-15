@@ -87,6 +87,8 @@ protected:
 	virtual void BuffEnd() override;
 	virtual bool GetConstbuff() override;
 	virtual void UpdateColor() override;
+private:
+	TSharedPtr<float> NewTime;
 };
 
 //凝固buff
