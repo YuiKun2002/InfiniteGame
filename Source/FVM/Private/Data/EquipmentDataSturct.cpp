@@ -259,7 +259,7 @@ FMainWeaponData UMainWeaponDataFunc::Calculate_LineTraceSettings(const FMainWeap
 
 FItemHeroBase UItemHeroDataFunc::CreateNewPlayerData(FString Name, int32 ID)
 {
-	UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("创建一个新的角色，并且选择"));
+	//UGameSystemFunction::FVMLog(__FUNCTION__, TEXT("创建一个新的角色，并且选择"));
 
 	FItemHeroBase Aa;
 	FEquipmentBase* AaSourceData;

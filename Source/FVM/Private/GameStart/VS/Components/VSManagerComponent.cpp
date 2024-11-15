@@ -122,7 +122,9 @@ bool UVSManagerComponent::CreatePlayer(
 
 			if (!IsValid(PlayerPayData))
 			{
+#if WITH_EDITOR
 				throw(TEXT("资源路径出错"));
+#endif
 				return false;
 			}
 
