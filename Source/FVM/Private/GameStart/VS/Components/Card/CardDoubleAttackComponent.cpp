@@ -139,6 +139,7 @@ void UCardDoubleAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 		}
 
 		//新生成的对象设置自定义拥有者(CardActor)
+		NewBullet->SetFlyParentActor(this->AttackCardActor);
 		NewBullet->SetLine(this->AttackCardActor->GetLine().Row);
 		NewBullet->SetActorTransform(NewTrans);
 		NewBullet->SetObjectActorLocation(this->AttackCardActor->GetCurrentMouse());

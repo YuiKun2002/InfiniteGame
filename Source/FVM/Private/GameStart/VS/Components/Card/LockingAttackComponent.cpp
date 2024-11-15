@@ -128,6 +128,7 @@ void ULockingAttackComponent::SpawnBullet(AFlyItemActor* NewBullet)
 				FTransform Trans;
 				Trans.SetLocation(CurrentAlien->GetActorLocation());
 
+				NewBullet->SetFlyParentActor(this->CardActor);
 				NewBullet->SetLine(this->CardActor->GetLine().Row);
 				NewBullet->SetActorTransform(Trans);
 				NewBullet->SetObjectActorLocation(this->CardActor->GetCurrentMouse());
