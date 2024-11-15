@@ -597,7 +597,7 @@ void UCardFunctionBombBase::CreateBombGridExtensionFunction(
 	TSoftClassPtr<AFunctionActor> OtherShow,
 	const FLine& Line,
 	const FCardFunctionBomb_GridExtension_ImplementTRB& GridExtension,
-	TArray<EMouseCollisionType> MouseCollisionType,
+	TArray<EMouseCollisionType> TMouseCollisionType,
 	FGameBuffInfor Buff,
 	float ATK
 )
@@ -655,7 +655,7 @@ void UCardFunctionBombBase::CreateBombGridExtensionFunction(
 		for (const auto& Mouses : MapMouse)
 		{
 			bool bResult = false;
-			for (const EMouseCollisionType& MouseCollisionType : MouseCollisionType)
+			for (const EMouseCollisionType& MouseCollisionType : TMouseCollisionType)
 			{
 				switch (MouseCollisionType)
 				{

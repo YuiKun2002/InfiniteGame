@@ -55,6 +55,7 @@ public:
 	//获取空中老鼠
 	const TMap<FString, AMouseActor*>& GetMouseSky();
 	//获取全部
+	UFUNCTION(BlueprintPure)
 	TMap<FString, AMouseActor*> GetMouseAll();
 	//当前行是否存在老鼠
 	UFUNCTION(BlueprintPure)
