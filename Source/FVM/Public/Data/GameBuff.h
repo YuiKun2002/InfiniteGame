@@ -138,7 +138,7 @@ protected:
 	//获取buff
 	UBuffObject* GetBuffByTag(EGameBuffTag NewTag);
 	//设置更新率
-	void SetTickRate(float NewRate);
+	virtual void SetTickRate(float NewRate);
 	//设置buff的时间
 	void SetBuffCurTime(const EGameBuffTag& NewTag, const float& NewTime);
 	//强制设置buff持续时间

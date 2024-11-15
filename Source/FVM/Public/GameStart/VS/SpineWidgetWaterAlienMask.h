@@ -51,6 +51,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = SpineWidgetWaterAlienMask)
 	void SetMaskObjectRenderColor(FLinearColor NewColor);
 public:
+	//获取遮罩对象
+	UFUNCTION(BlueprintCallable, Category = SpineWidgetWaterAlienMask)
+	USpineWidget* GetMaskObject();
+public:
 	//预览
 	UFUNCTION(BlueprintCallable, Category = SpineWidgetWaterAlienMask)
 	static void PreViewMaskObject(UWidgetComponent* Comp);

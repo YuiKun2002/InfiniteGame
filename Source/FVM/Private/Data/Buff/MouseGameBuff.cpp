@@ -169,6 +169,7 @@ void UBuffMouseObject::UpdateTickRate()
 		)
 	{
 		this->SetTickRate(0.f);
+
 		this->GetBuffChar()->SetAnimationTimeScale(0, 0.f);
 		return;
 	}
@@ -199,6 +200,13 @@ void UBuffMouseObject::BuffEnd()
 {
 	this->UpdateTickRate();
 	//this->UpdateMaterial();
+}
+
+void UBuffMouseObject::SetTickRate(float NewRate)
+{
+	Super::SetTickRate(NewRate);
+
+	this->GetBuffChar()->SetTickRate(NewRate);
 }
 
 void USeckillBuffMouse::BuffInit(float BuffTime)

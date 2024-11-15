@@ -26,6 +26,7 @@ public:
 	void UpdateTickRate();
 protected:
 	virtual void BuffEnd() override;
+	virtual void SetTickRate(float NewRate) override;
 };
 
 //秒杀buff

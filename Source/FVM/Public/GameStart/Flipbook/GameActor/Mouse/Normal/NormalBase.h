@@ -169,6 +169,8 @@ public:
 	virtual void BeginPlay() override;
 	//水动画
 	virtual void OnInWater(bool State) override;
+	//更新率
+	virtual void SetTickRate(float NewRate) override;
 public:
 	//设置动画
 	virtual	UTrackEntry* SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop = true) override;

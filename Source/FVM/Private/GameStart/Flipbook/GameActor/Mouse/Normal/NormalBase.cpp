@@ -9,7 +9,7 @@
 #include <Components/Capsulecomponent.h>
 #include <Components/SphereComponent.h>
 #include <Components/BoxComponent.h>
-
+#include "SpineWidget.h"
 //游戏实例
 #include "GameSystem/FVMGameInstance.h"
 #include "GameSystem/Tools/GameSystemFunction.h"
@@ -462,6 +462,11 @@ void ANormalCapsuleByWidgetBase::OnInWater(bool State)
 		this->SpineWidgetWaterAlienMask->PlayWaterAnimation(false);
 		this->SpineWidgetWaterAlienMask->PlayInWaterAnimation();
 	}
+}
+
+void ANormalCapsuleByWidgetBase::SetTickRate(float NewRate)
+{
+	this->SpineWidgetWaterAlienMask->GetMaskObject()->SetTimeScale(NewRate);
 }
 
 UTrackEntry* ANormalCapsuleByWidgetBase::SetAnimation(int32 TrackIndex, FString AnimationName, bool Loop)

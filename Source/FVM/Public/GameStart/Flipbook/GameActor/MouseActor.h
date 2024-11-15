@@ -416,6 +416,9 @@ public:
 	//设置轨道动画
 	UFUNCTION(BlueprintCallable)
 	void SetTrackEntry(UTrackEntry* NewTrackEntry);
+	//设置新更新的比例【适配与UI外星人】
+	UFUNCTION(BlueprintCallable)
+	virtual void SetTickRate(float NewRate);
 public:
 	//进入网格
 	UFUNCTION(BlueprintCallable)

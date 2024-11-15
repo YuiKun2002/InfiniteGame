@@ -596,6 +596,8 @@ void AMouseActor::SetTrackEntry(UTrackEntry* NewTrackEntry)
 	this->CurAnimTrackEntry = NewTrackEntry;
 }
 
+void AMouseActor::SetTickRate(float NewRate){}
+
 void AMouseActor::BPInMapMeshe(ELineType CurLineType)
 {
 	this->InMapMeshe(CurLineType);

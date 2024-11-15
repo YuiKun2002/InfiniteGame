@@ -123,6 +123,11 @@ void USpineWidgetWaterAlienMask::SetMaskObjectRenderColor(FLinearColor NewColor)
 	this->MaskCharView->Color = NewColor;
 }
 
+USpineWidget* USpineWidgetWaterAlienMask::GetMaskObject()
+{
+	return this->MaskCharView;
+}
+
 void USpineWidgetWaterAlienMask::PreViewMaskObject(UWidgetComponent* Comp)
 {
 #if WITH_EDITOR
