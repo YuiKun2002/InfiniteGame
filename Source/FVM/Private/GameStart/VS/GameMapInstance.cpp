@@ -2,38 +2,27 @@
 
 
 #include "GameStart/VS/GameMapInstance.h"
-
 #include "GameSystem/GameMapStructManager.h"
 #include "GameStart/VS/GameMapFogManager.h"
-
 #include "Data/GameLogSubsystem.h"
-
 #include "GameStart/VS/Components/MesheControllComponent.h"
 #include "GameStart/VS/Components/VSManagerComponent.h"
 #include "GameStart/VS/Components/CardManagerComponent.h"
 #include "GameStart/VS/Components/MouseManagerComponent.h"
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
-
 #include "GameStart/VS/PlayerCameraPosition.h"
-
 #include "GameStart/VS/MapMeshe.h"
 #include "GameStart/VS/PlayerView.h"
-
 #include "GameStart/Flipbook/GameActor/GamePlayer.h"
-
+#include "GameSystem/GameLevelSubsystem.h"
 #include <Paper2D/Classes/PaperSprite.h>
 #include <Paper2D/Classes/PaperSpriteActor.h>
 #include <Paper2D/Classes/PaperSpriteComponent.h>
-
 #include "GameSystem/FVMGameInstance.h"
-
 #include "UI/WidgetBase.h"
-
+#include "GameSystem/GameLevelSubsystem.h"
 #include <Kismet/GameplayStatics.h>
 #include <Sound/SoundBase.h>
-
-//初始化静态变量
-AGameMapInstance* AGameMapInstance::M_AGameMapInstance = nullptr;
 
 UCardManagerComponent* AGameMapInstance::GetCardManagerComponent_Static()
 {
@@ -69,7 +58,8 @@ AGameMapInstance::AGameMapInstance()
 
 AGameMapInstance* AGameMapInstance::GetGameMapInstance()
 {
-	return AGameMapInstance::M_AGameMapInstance;
+	return UGameLevelSubsystem::GetGameLevelSubsystemStatic()->
+		GetGameMapInstance();
 }
 
 void AGameMapInstance::CreatePaperSpriteActorToWorld(APaperSpriteActor* _Actor, UPaperSprite* _PSprite, const FTransform& _ActorTranform)
@@ -242,9 +232,6 @@ void AGameMapInstance::Tick(float DeltaTime)
 void AGameMapInstance::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	//销毁实例
-	AGameMapInstance::M_AGameMapInstance = nullptr;
 }
 
 void AGameMapInstance::GameStart()
@@ -441,7 +428,8 @@ void AGameMapInstance::SpawnPlayerToMeshe(AMapMeshe* _MapMeshe, UUI_MapMeshe* _U
 
 bool AGameMapInstance::InitStaticGameMapInstance()
 {
-	AGameMapInstance::M_AGameMapInstance = this;
+	UGameLevelSubsystem::GetGameLevelSubsystemStatic()
+		->SetGameMapInstance(this);
 
 	return true;
 }

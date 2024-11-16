@@ -52,9 +52,6 @@ public:
 	//地图背景
 	UPROPERTY(EditAnywhere, Category = "Actor | Bg")
 		APaperSpriteActor* M_AMapBackground = nullptr;
-
-	//静态地图实例
-	static AGameMapInstance* M_AGameMapInstance;
 public:
 	//当放置角色时触发
 	UPROPERTY(BlueprintAssignable)
