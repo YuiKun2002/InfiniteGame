@@ -39,18 +39,25 @@ bool UUI_Card::Initialize()
 bool UUI_Card::GetCoolDownFinish()
 {
 	if (this->M_CardIndex == -1)
-		return false;
-
-	if (AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->GetCardCoolDownFinish(this->M_CardIndex))
 	{
-		if (AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent->M_FlameNum >= this->M_NeedFlame)
+		return false;
+	}
+
+	if (IsValid(AGameMapInstance::GetGameMapInstance()))
+	{
+		if (IsValid(AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent))
 		{
-			return true;
+			if (AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->GetCardCoolDownFinish(this->M_CardIndex))
+			{
+				if (AGameMapInstance::GetGameMapInstance()->M_ResourceManagerComponent->M_FlameNum >= this->M_NeedFlame)
+				{
+					return true;
+				}
+			}
 		}
 	}
 
 	return false;
-
 }
 
 float UUI_Card::GetCoolDownFinishRate()
