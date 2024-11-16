@@ -63,9 +63,22 @@ bool UUI_Card::GetCoolDownFinish()
 float UUI_Card::GetCoolDownFinishRate()
 {
 	if (this->M_CardIndex == -1)
+	{
 		return false;
+	}
 
-	return AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->M_CardCoolDownManager[this->M_CardIndex]->GetFinishRate();
+	if (IsValid(AGameMapInstance::GetGameMapInstance()))
+	{
+		if (IsValid(AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent))
+		{
+			return AGameMapInstance::GetGameMapInstance()->M_CardManagerComponent->M_CardCoolDownManager[
+				this->M_CardIndex
+			]->GetFinishRate();
+
+		}
+	}
+
+	return false;
 }
 
 void UUI_Card::SetCardName(const FString& _Name)
