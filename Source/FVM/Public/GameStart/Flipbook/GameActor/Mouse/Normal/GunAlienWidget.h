@@ -46,6 +46,8 @@ public:
 	virtual void MouseDeathed() override;
 	//进入网格时
 	virtual void InMapMeshe(ELineType CurLineType) override;
+	//触发buff时
+	virtual void ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime);
 	//动画播放完毕
 	UFUNCTION()
 	void OnAnimationPlayEnd(class UTrackEntry* Track);

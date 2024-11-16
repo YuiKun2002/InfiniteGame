@@ -106,6 +106,16 @@ void AGunAlienWidget::InMapMeshe(ELineType CurLineType)
 	}
 }
 
+void AGunAlienWidget::ExecuteBuff(EGameBuffTag BuffTag, float& CurBuffTime)
+{
+	Super::ExecuteBuff(BuffTag, CurBuffTime);
+
+	if (this->M_Buff->GetConstBuff())
+	{
+		this->AttackLauncherComp->SetAttackModEnabled(false);
+	}
+}
+
 void AGunAlienWidget::OnAnimationPlayEnd(class UTrackEntry* Track)
 {
 	if (!this->GetMouseIsDeath())
@@ -125,6 +135,12 @@ FVector AGunAlienWidget::GetBulletLauncherLocation()
 
 void AGunAlienWidget::CheckCard()
 {
+	if (this->M_Buff->GetConstBuff())
+	{
+		this->AttackLauncherComp->SetAttackModEnabled(false);
+		return;
+	}
+
 	if (IsValid(this->GetCurrentAttackCard()) && this->GetCurrentAttackCard()->GetCurrentHP() > 0.f)
 	{
 		if (this->GetCurrentAttackCard()->GetLine().Row == this->GetMouseLine().Row)
