@@ -213,6 +213,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EnableMouseNodeRemove();
 
+	//随机生成布局
+	UFUNCTION(BlueprintCallable)
+	void RandomGeneratedAlien(int32 Col);
+	//生成
+	void GenAlien(const FString& Name,int32 Row,int32 Col);
+
 	//老鼠节点开启
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMouseNodeRemoveOpen();
@@ -355,5 +361,7 @@ private:
 	//所有界面显示的容器
 	UPROPERTY()
 	UHorizontalBox* CurShowLevelItemListPanel = nullptr;
-
+	//随机排布的外星人
+	UPROPERTY()
+	TMap<FString,FSoftObjectPath> LevelItemAlienList;
 };

@@ -17,6 +17,8 @@
 #include <Components/UniformGridPanel.h>
 #include <Components/HorizontalBox.h>
 
+#include <Kismet/KismetMathLibrary.h>
+
 bool UGameMapUI_MouseViewEditor::Initialize()
 {
 	if (!Super::Initialize())
@@ -600,28 +602,190 @@ void UGameMapUI_MouseViewEditor::EnableMouseNodeRemove()
 	}
 }
 
+void UGameMapUI_MouseViewEditor::RandomGeneratedAlien(int32 Col)
+{
+	if (Col == 0)
+	{
+		Col = 1;
+	}
+
+	if (Col > 20)
+	{
+		Col = 20;
+	}
+
+	TArray<int32> Cols;
+	for (int32 i = 0; i < 20; i++)
+	{
+		Cols.Emplace(i);
+	}
+
+	int32 NewCount = this->LevelItemAlienList.Num();
+	if (NewCount <= 0)
+	{
+		return;
+	}
+
+	TArray<FString> Names;
+	this->LevelItemAlienList.GenerateKeyArray(Names);
+
+	//移除当前节点全部
+	//移除节点数据
+	if (this->CurRoundNodeIndex < this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+		this->CurRoundIndex
+	].CurNode.Num()
+			&&
+			this->CurRoundNodeIndex >= 0
+			)
+	{
+		//移除当前节点全部的外星人
+		FTimeNodeWidthRound& Node = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+			this->CurRoundIndex
+		].CurNode[this->CurRoundNodeIndex];
+		//移除节点数据	
+		this->RemoveNodeData(Node.CurNode);
+	}
+
+	//重新生成外星人
+	auto NewGen = [&]() ->int32 {
+		if (Cols.Num() == 0)
+		{
+			return -1;
+		}
+		int32 CurRandom = UKismetMathLibrary::RandomIntegerInRange(0, Cols.Num() - 1);
+		int32 Cur = Cols[CurRandom];
+		Cols.RemoveAt(CurRandom);
+		return Cur;
+		};
+
+
+	FMouseConfig& MouseRef = this->GetMouseTab()->GetConfigRef();
+	for (int32 i = 0; i < Col; i++)
+	{
+		//生产随机最小时间节点位置
+		int32 NewCol = NewGen();
+		if (NewCol == -1)
+		{
+			return;
+		}
+
+		//生成随机外星人
+		int32 CurRandom = UKismetMathLibrary::RandomIntegerInRange(0, NewCount - 1);
+		for (int32 j = 0; j < MouseRef.CurRoundConfig[
+			this->GetCurRoundIndex() //回合
+		].CurNode[
+			this->GetCurRoundNodeIndex()//回合节点
+		].CurNode[
+			0
+		].CurMouseNode.Num(); j++)
+		{
+			//生成
+			this->GenAlien(Names[CurRandom], j, NewCol);
+		}
+	}
+
+
+	//更新【编辑器视图】
+	if (this->TotalRoundNode == 0)
+	{
+		this->DisEnableView();
+	}
+	else {
+		this->EnableView();
+		this->UpdateView();
+		this->UpdateLevelItems();
+	}
+}
+
+void UGameMapUI_MouseViewEditor::GenAlien(const FString& Name, int32 Row, int32 Col)
+{
+	//获取全部老鼠列表
+	FMouseConfig& MouseRef = this->GetMouseTab()->GetConfigRef();
+	//赋予ID号
+	int32* ID = MouseRef.AllMouseListMap.Find(Name);
+	FString TargetName = FString();
+	if (ID)
+	{
+		TargetName = FString::FromInt(*ID);
+		MouseRef.AllMouseKeyListMap.Emplace(*ID, Name);
+		//添加老鼠数量
+		int32* Count = MouseRef.UseMouseKeyListCountMap.Find(*ID);
+		if (Count)
+		{
+			MouseRef.UseMouseKeyListCountMap.Emplace(*ID, (*Count + 1));
+		}
+	}
+	else {
+		//获取可用ID
+		int32 NewID = 0;
+		if (MouseRef.ValidKeyID.Num())
+		{
+			NewID = MouseRef.ValidKeyID[0];
+			MouseRef.ValidKeyID.RemoveAtSwap(0);
+		}
+		else {
+			NewID = MouseRef.AllMouseListMap.Num();
+		}
+		MouseRef.AllMouseListMap.Emplace(Name, NewID);
+		MouseRef.AllMouseKeyListMap.Emplace(NewID, Name);
+		MouseRef.UseMouseKeyListCountMap.Emplace(NewID, 1);
+		TargetName = FString::FromInt(NewID);
+	}
+	FMouseConfigNode Node;
+	Node.CurMouseName = TargetName;
+
+	{
+		//获取老鼠配置
+		FMouseConfig& CurMouseConfig = this->GetGameMapUIMouseTab()->GetConfigRef();
+
+		//覆写当前节点的老鼠
+		FMouseConfigNode& ConfigNode = CurMouseConfig.CurRoundConfig[
+			this->GetCurRoundIndex() //回合
+		].CurNode[
+			this->GetCurRoundNodeIndex()//回合节点
+		].CurNode[
+			Col //通过列得到时间节点【x轴】
+		].CurMouseNode[
+			Row//通过行得到老鼠节点【Y轴】
+		];
+
+			ConfigNode = Node;
+	}
+}
 
 //------------------------------------随机
 void UGameMapUI_MouseViewEditor::InitLevelItems()
 {
+	UDataTable* Tabs = LoadObject<UDataTable>(
+		this,
+		TEXT("DataTable'/Game/Resource/BP/Data/MouseData/MouseData.MouseData'")
+	);
+
+	TArray<FMouse_Data*> Datas;
+	Tabs->GetAllRows<FMouse_Data>(TEXT("MouseDatas"), Datas);
+
+
+
 	//获取掉落物配置
 	const FGameMapData& Data = this->FVMEditUI_GameMapEdit->GetCurEditData();
 
 	//得到全部的
 
 	int32 i = 0;
-	for (const auto& CurItem : Data.M_FLevelConfig.LevelItems)
+	for (const auto& CurItem : Datas)
 	{
-		UGameMapUI_MouseViewLevelItem* CurNewItem =
-			CreateWidget<UGameMapUI_MouseViewLevelItem>(this,
-				LoadClass<UGameMapUI_MouseViewLevelItem>(0,
-					TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BP_MouseViewLevelItem.BP_MouseViewLevelItem_C'")));
+		if (CurItem)
+		{
 
-		CurNewItem->Init(this, CurItem.Key, CurItem.Value);
+			UGameMapUI_MouseViewLevelItem* CurNewItem =
+				CreateWidget<UGameMapUI_MouseViewLevelItem>(this,
+					LoadClass<UGameMapUI_MouseViewLevelItem>(0,
+						TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BP_MouseViewLevelItem.BP_MouseViewLevelItem_C'")));
 
-		this->LevelItemsGridPanel->AddChildToUniformGrid(CurNewItem, i / 2, i % 2);
-
-		i++;
+			CurNewItem->Init(this, CurItem->M_Mouse.M_MouseName, CurItem->M_Mouse.MouseHead);
+			this->LevelItemsGridPanel->AddChildToUniformGrid(CurNewItem, i / 2, i % 2);
+			i++;
+		}
 	}
 
 	//更新显示
@@ -639,24 +803,25 @@ void UGameMapUI_MouseViewEditor::UpdateLevelItems()
 		Widget->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
-	FRondWidthMouseConfig& RoundConfig = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[this->CurRoundIndex];
-	const FGameMapData& Data = this->FVMEditUI_GameMapEdit->GetCurEditData();
+	//FRondWidthMouseConfig& RoundConfig = this->GameMapUI_MouseTab->GetConfigRef().CurRoundConfig[
+	//	this->CurRoundIndex
+	//];
+	//const FGameMapData& Data = this->FVMEditUI_GameMapEdit->GetCurEditData();
 
 	//更新显示
 	int32 i = 0;
-	for (auto Name : RoundConfig.LevelItems)
+	for (auto Name : this->LevelItemAlienList)
 	{
 		//查询
-		const FSoftObjectPath* ResultPath = Data.M_FLevelConfig.LevelItems.Find(Name);
-
 		if (i < this->CurShowLevelItemListPanel->GetAllChildren().Num())
 		{
-			this->CurShowLevelItemListPanel->GetChildAt(i)->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			this->CurShowLevelItemListPanel->GetChildAt(i)->SetVisibility(
+				ESlateVisibility::SelfHitTestInvisible
+			);
 
-			if (ResultPath)
-				Cast<UGameMapUI_MouseViewLevelItemView>(this->CurShowLevelItemListPanel->GetChildAt(i))->Init(Name, *ResultPath, this);
-			else
-				Cast<UGameMapUI_MouseViewLevelItemView>(this->CurShowLevelItemListPanel->GetChildAt(i))->Init(Name, FSoftObjectPath(), this);
+			Cast<UGameMapUI_MouseViewLevelItemView>(
+				this->CurShowLevelItemListPanel->GetChildAt(i))->Init(Name.Key,
+					Name.Value, this);
 		}
 		else {
 
@@ -665,10 +830,8 @@ void UGameMapUI_MouseViewEditor::UpdateLevelItems()
 					LoadClass<UGameMapUI_MouseViewLevelItemView>(0,
 						TEXT("WidgetBlueprint'/Game/Resource/BP/Data/MapData/MouseConfig/BP_MouseViewLevelItemEditor.BP_MouseViewLevelItemEditor_C'")));
 
-			if (ResultPath)
-				CurNewItem->Init(Name, *ResultPath, this);
-			else
-				CurNewItem->Init(Name, FSoftObjectPath(), this);
+			CurNewItem->Init(Name.Key,
+				Name.Value, this);
 
 			this->CurShowLevelItemListPanel->AddChildToHorizontalBox(CurNewItem);
 		}
@@ -750,13 +913,20 @@ void UGameMapUI_MouseViewLevelItem::Init(UGameMapUI_MouseViewEditor* OWner, cons
 void UGameMapUI_MouseViewLevelItem::AddLevelItem()
 {
 	if (this->GameMapUI_MouseViewEditor->TotalRound == 0)
+	{
 		return;
+	}
 
-	FRondWidthMouseConfig& RoundConfig =
+	this->GameMapUI_MouseViewEditor->LevelItemAlienList.Emplace(
+		this->ItemNameText->GetText().ToString(),
+		this->ImgRes
+	);
+
+	/*FRondWidthMouseConfig& RoundConfig =
 		this->GameMapUI_MouseViewEditor->GameMapUI_MouseTab->GetConfigRef().
 		CurRoundConfig[this->GameMapUI_MouseViewEditor->CurRoundIndex];
 
-	RoundConfig.LevelItems.Emplace(this->ItemNameText->GetText().ToString());
+	RoundConfig.LevelItems.Emplace();*/
 
 	this->GameMapUI_MouseViewEditor->GameMapUI_MouseTab->UpdateView();
 	this->GameMapUI_MouseViewEditor->UpdateLevelItems();
@@ -793,12 +963,7 @@ void UGameMapUI_MouseViewLevelItemView::Init(FString Name, FSoftObjectPath Img, 
 
 void UGameMapUI_MouseViewLevelItemView::Remove()
 {
-	FRondWidthMouseConfig& RoundConfig =
-		this->GameMapUI_MouseViewEditor->GameMapUI_MouseTab->GetConfigRef().
-		CurRoundConfig[this->GameMapUI_MouseViewEditor->CurRoundIndex];
-
-	RoundConfig.LevelItems.Remove(this->ItemName);
-
+	this->GameMapUI_MouseViewEditor->LevelItemAlienList.Remove(this->ItemName);
 	this->GameMapUI_MouseViewEditor->GameMapUI_MouseTab->UpdateView();
 	this->GameMapUI_MouseViewEditor->UpdateLevelItems();
 }
