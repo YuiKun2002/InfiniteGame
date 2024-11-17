@@ -602,7 +602,7 @@ void UGameMapUI_MouseViewEditor::EnableMouseNodeRemove()
 	}
 }
 
-void UGameMapUI_MouseViewEditor::RandomGeneratedAlien(int32 Col)
+void UGameMapUI_MouseViewEditor::RandomGeneratedAlien(int32 Col, bool RandomRow)
 {
 	if (Col == 0)
 	{
@@ -671,16 +671,23 @@ void UGameMapUI_MouseViewEditor::RandomGeneratedAlien(int32 Col)
 
 		//生成随机外星人
 		int32 CurRandom = UKismetMathLibrary::RandomIntegerInRange(0, NewCount - 1);
-		for (int32 j = 0; j < MouseRef.CurRoundConfig[
-			this->GetCurRoundIndex() //回合
-		].CurNode[
-			this->GetCurRoundNodeIndex()//回合节点
-		].CurNode[
-			0
-		].CurMouseNode.Num(); j++)
+
+		if (RandomRow)
 		{
-			//生成
-			this->GenAlien(Names[CurRandom], j, NewCol);
+			this->GenAlien(Names[CurRandom], 0, NewCol, true);
+		}
+		else {
+			for (int32 j = 0; j < MouseRef.CurRoundConfig[
+				this->GetCurRoundIndex() //回合
+			].CurNode[
+				this->GetCurRoundNodeIndex()//回合节点
+			].CurNode[
+				NewCol
+			].CurMouseNode.Num(); j++)
+			{
+				//生成
+				this->GenAlien(Names[CurRandom], j, NewCol, false);
+			}
 		}
 	}
 
@@ -697,7 +704,7 @@ void UGameMapUI_MouseViewEditor::RandomGeneratedAlien(int32 Col)
 	}
 }
 
-void UGameMapUI_MouseViewEditor::GenAlien(const FString& Name, int32 Row, int32 Col)
+void UGameMapUI_MouseViewEditor::GenAlien(const FString& Name, int32 Row, int32 Col, bool RandomRow)
 {
 	//获取全部老鼠列表
 	FMouseConfig& MouseRef = this->GetMouseTab()->GetConfigRef();
@@ -733,6 +740,11 @@ void UGameMapUI_MouseViewEditor::GenAlien(const FString& Name, int32 Row, int32 
 	}
 	FMouseConfigNode Node;
 	Node.CurMouseName = TargetName;
+	if (!RandomRow)
+	{
+		Node.CurMouseLine.Row = Row;
+		Node.CurMouseLine.Col = -1;
+	}
 
 	{
 		//获取老鼠配置

@@ -215,9 +215,9 @@ public:
 
 	//随机生成布局
 	UFUNCTION(BlueprintCallable)
-	void RandomGeneratedAlien(int32 Col);
+	void RandomGeneratedAlien(int32 Col,bool RandomRow = false);
 	//生成
-	void GenAlien(const FString& Name,int32 Row,int32 Col);
+	void GenAlien(const FString& Name,int32 Row,int32 Col,bool RandomRow);
 
 	//老鼠节点开启
 	UFUNCTION(BlueprintImplementableEvent)
