@@ -57,6 +57,7 @@ void ACarAlienWidget::MoveingUpdate(float DeltaTime)
 		Time = 0.f;
 		this->CheckCard();
 	}
+	this->CheckCard();
 }
 
 void ACarAlienWidget::MouseDeathed()
