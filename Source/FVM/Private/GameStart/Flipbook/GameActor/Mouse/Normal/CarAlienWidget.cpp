@@ -88,15 +88,15 @@ void ACarAlienWidget::CheckCard()
 
 	//设置基本位置
 	FVector LocationBegin = this->GetActorLocation() + FVector(
-		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
 		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
 		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationBegin.Z = CurLineZ;
 
 	FVector LocationEnd = this->GetActorLocation() + FVector(
-		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
 		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
 		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationEnd.Z = CurLineZ;
