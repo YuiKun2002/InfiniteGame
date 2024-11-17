@@ -191,6 +191,9 @@ private:
 	UFUNCTION(BlueprintCallable)
 	FRoundKey GetCurRoundKey();
 
+
+	UFUNCTION(BlueprintCallable)
+	void SetbEnableMouseNodeRandom(bool Value);
 public:
 	//选择一个最小子节点中的老鼠节点
 	UFUNCTION(BlueprintCallable)
@@ -321,6 +324,9 @@ private:
 	//是否启动老鼠移除模式
 	UPROPERTY()
 	bool bEnableMouseNodeRemove = false;
+	//是否启动老鼠随机
+	UPROPERTY()
+	bool bEnableMouseNodeRandom = false;
 private:
 	//总波数
 	UPROPERTY()

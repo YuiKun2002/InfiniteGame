@@ -508,6 +508,11 @@ FRoundKey UGameMapUI_MouseViewEditor::GetCurRoundKey()
 	return FRoundKey();
 }
 
+void UGameMapUI_MouseViewEditor::SetbEnableMouseNodeRandom(bool Value)
+{
+	this->bEnableMouseNodeRandom = Value;
+}
+
 void UGameMapUI_MouseViewEditor::SelectRoundNodeWithMouseNode(UMouseViewEditorRoundNodeGrid* CurMouseViewEditorRoundNodeGrid)
 {
 	this->MouseViewEditorRoundNodeGrid = CurMouseViewEditorRoundNodeGrid;
@@ -561,6 +566,12 @@ void UGameMapUI_MouseViewEditor::UpdateCurRoundNodeWidthMouseNode(FMouseConfigNo
 					}
 				}
 
+				if (this->bEnableMouseNodeRandom)
+				{
+					NewNode.CurMouseLine.Col = -1;
+					NewNode.CurMouseLine.Row = -1;
+				}
+
 				ConfigNode = NewNode;
 		}
 
@@ -589,6 +600,8 @@ void UGameMapUI_MouseViewEditor::EnableMouseNodeRemove()
 	}
 }
 
+
+//------------------------------------随机
 void UGameMapUI_MouseViewEditor::InitLevelItems()
 {
 	//获取掉落物配置
