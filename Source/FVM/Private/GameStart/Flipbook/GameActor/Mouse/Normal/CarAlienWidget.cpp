@@ -96,9 +96,9 @@ void ACarAlienWidget::CheckCard()
 	LocationBegin.Z = CurLineZ;
 
 	FVector LocationEnd = this->GetActorLocation() + FVector(
-		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
-		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
-		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
+		this->CheckWidRightLocationComp->GetRelativeLocation().X,
+		this->CheckWidRightLocationComp->GetRelativeLocation().Y,
+		this->CheckWidRightLocationComp->GetRelativeLocation().Z
 	);
 	LocationEnd.Z = CurLineZ;
 
