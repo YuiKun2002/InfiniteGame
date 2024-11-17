@@ -150,8 +150,8 @@ void ACarAlien::PlayMoveAnim()
 
 ACarAlienWidget::ACarAlienWidget()
 {
-	this->CheckLeftLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckLeftLocationCompWid"));
-	this->CheckRightLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckRightLocationCompWid"));
+	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckWidLeftLocationComp"));
+	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckWidRightLocationComp"));
 }
 
 void ACarAlienWidget::BeginPlay()
@@ -223,16 +223,16 @@ void ACarAlienWidget::CheckCard()
 
 	//设置基本位置
 	FVector LocationBegin = this->GetActorLocation() + FVector(
-		this->CheckLeftLocationComp->GetRelativeLocation().Y,
-		this->CheckLeftLocationComp->GetRelativeLocation().X,
-		this->CheckLeftLocationComp->GetRelativeLocation().Z
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationBegin.Z = CurLineZ;
 
 	FVector LocationEnd = this->GetActorLocation() + FVector(
-		this->CheckRightLocationComp->GetRelativeLocation().Y,
-		this->CheckRightLocationComp->GetRelativeLocation().X,
-		this->CheckRightLocationComp->GetRelativeLocation().Z
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationEnd.Z = CurLineZ;
 

@@ -60,10 +60,10 @@ public:
 	ECardCollisionType CheckCardType = ECardCollisionType::E_CardActor2;
 	//左检测点位
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USceneComponent* CheckLeftLocationComp = nullptr;
+	USceneComponent* CheckWidLeftLocationComp = nullptr;
 	//右检测点位
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USceneComponent* CheckRightLocationComp = nullptr;
+	USceneComponent* CheckWidRightLocationComp = nullptr;
 public:
 	ACarAlienWidget();
 
