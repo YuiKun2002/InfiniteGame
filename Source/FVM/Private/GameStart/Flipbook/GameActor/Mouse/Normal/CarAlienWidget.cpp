@@ -1,7 +1,7 @@
 ﻿// 该游戏是同人游戏，提供学习使用，禁止贩卖，如有侵权立刻删除
 
 
-#include "GameStart/Flipbook/GameActor/Mouse/Normal/CarAlien.h"
+#include "GameStart/Flipbook/GameActor/Mouse/Normal/CarAlienWidget.h"
 #include "GameStart/VS/MapMeshe.h"
 #include <Components/BoxComponent.h>
 #include <Components/Capsulecomponent.h>
@@ -11,13 +11,15 @@
 #include "GameStart/VS/Components/ResourceManagerComponent.h"
 #include "GameStart/VS/Components/MesheControllComponent.h"
 
-ACarAlien::ACarAlien()
+ACarAlienWidget::ACarAlienWidget()
 {
-	this->CheckLeftLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckLeftLocationComp"));
-	this->CheckRightLocationComp = CreateDefaultSubobject<USceneComponent>(TEXT("CheckRightLocationComp"));
+	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(
+		TEXT("CarAlienWidgetLeftLocationComp"));
+	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(
+		TEXT("CarAlienWidgetRightLocationComp"));
 }
 
-void ACarAlien::BeginPlay()
+void ACarAlienWidget::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -27,21 +29,21 @@ void ACarAlien::BeginPlay()
 	this->BodyComp->AddLocalOffset(this->BodyCollisionOffset);
 }
 
-void ACarAlien::MouseInit()
+void ACarAlienWidget::MouseInit()
 {
 	Super::MouseInit();
 
 	this->PlayMoveAnim();
 }
 
-void ACarAlien::BeAttakedBegin()
+void ACarAlienWidget::BeAttakedBegin()
 {
 	Super::BeAttakedBegin();
 
 	this->PlayMoveAnim();
 }
 
-void ACarAlien::MoveingUpdate(float DeltaTime)
+void ACarAlienWidget::MoveingUpdate(float DeltaTime)
 {
 	Super::MoveingUpdate(DeltaTime);
 
@@ -57,7 +59,7 @@ void ACarAlien::MoveingUpdate(float DeltaTime)
 	}
 }
 
-void ACarAlien::MouseDeathed()
+void ACarAlienWidget::MouseDeathed()
 {
 	this->ClosedBoxComponent(this->MesheComp);
 	this->BodyComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -74,7 +76,7 @@ void ACarAlien::MouseDeathed()
 	}
 }
 
-void ACarAlien::CheckCard()
+void ACarAlienWidget::CheckCard()
 {
 	//获取网格
 	UMesheControllComponent* LocalMesheComp = AGameMapInstance::GetGameMapInstance()->M_MesheControllComponent;
@@ -86,16 +88,16 @@ void ACarAlien::CheckCard()
 
 	//设置基本位置
 	FVector LocationBegin = this->GetActorLocation() + FVector(
-		this->CheckLeftLocationComp->GetRelativeLocation().Y,
-		this->CheckLeftLocationComp->GetRelativeLocation().X,
-		this->CheckLeftLocationComp->GetRelativeLocation().Z
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationBegin.Z = CurLineZ;
 
 	FVector LocationEnd = this->GetActorLocation() + FVector(
-		this->CheckRightLocationComp->GetRelativeLocation().Y,
-		this->CheckRightLocationComp->GetRelativeLocation().X,
-		this->CheckRightLocationComp->GetRelativeLocation().Z
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Y,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().X,
+		this->CheckWidLeftLocationComp->GetRelativeLocation().Z
 	);
 	LocationEnd.Z = CurLineZ;
 
@@ -114,7 +116,7 @@ void ACarAlien::CheckCard()
 	);
 }
 
-void ACarAlien::PlayMoveAnim()
+void ACarAlienWidget::PlayMoveAnim()
 {
 	if (this->GetCurrentHP() > this->GetTotalHP() * 0.5f)
 	{
@@ -142,4 +144,3 @@ void ACarAlien::PlayMoveAnim()
 		}
 	}
 }
-

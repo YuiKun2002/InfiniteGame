@@ -4,27 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "GameStart/Flipbook/GameActor/Mouse/Normal/NormalBase.h"
-#include "CarAlien.generated.h"
+#include "CarAlienWidget.generated.h"
 
 /**
- * 车类型的外星人
+ * 车类型的外星人界面
  */
 UCLASS()
-class FVM_API ACarAlien : public ANormalCapsuleBase
+class FVM_API ACarAlienWidget : public ANormalCapsuleByWidgetBase
 {
 	GENERATED_BODY()
 public:
+	public:
 	//检测卡片类型
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECardCollisionType CheckCardType = ECardCollisionType::E_CardActor2;
 	//左检测点位
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USceneComponent* CheckLeftLocationComp = nullptr;
+	UPROPERTY(VisibaleAnywehre, BlueprintReadWrite)
+	USceneComponent* CheckWidLeftLocationComp = nullptr;
 	//右检测点位
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USceneComponent* CheckRightLocationComp = nullptr;
+	UPROPERTY(VisibaleAnywehre, BlueprintReadWrite)
+	USceneComponent* CheckWidRightLocationComp = nullptr;
 public:
-	ACarAlien();
+	ACarAlienWidget();
 
 	virtual void BeginPlay() override;
 	//老鼠初始化
