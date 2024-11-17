@@ -148,6 +148,7 @@ void UMouseLineManager::SortMouseByTick(const float& _Tick)
 		this->CurMouseGroundTop = this->SortMouseTopLocation(this->CurMouseGround);
 		this->CurMouseUnderGroundTop = this->SortMouseTopLocation(this->CurMouseUnderGround);
 		this->CurMouseSkyTop = this->SortMouseTopLocation(this->CurMouseSky);
+		this->CurMouseOnWaterTop = this->SortMouseTopLocation(this->CurMouseOnWater);
 	}
 }
 
@@ -164,6 +165,11 @@ AMouseActor* UMouseLineManager::GetMouseTopByUnderGorund() const
 AMouseActor* UMouseLineManager::GetMouseTopBySky() const
 {
 	return this->CurMouseSkyTop;
+}
+
+AMouseActor* UMouseLineManager::GetMouseTopByOnWater() const
+{
+	return this->CurMouseOnWaterTop;
 }
 
 AMouseActor* UMouseLineManager::GetMouseTopByAllType() const
@@ -1311,11 +1317,11 @@ void UMouseManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!IsValid(this->M_UMouseStructManager))
+	//如果游戏暂停则不会继续
+	if (FVM_VS_GameOver())
 	{
 		return;
 	}
-
 
 	//如果游戏暂停则不会继续
 	if (AGameMapInstance::GetGameMapInstance()->GetGamePause())
@@ -1323,6 +1329,10 @@ void UMouseManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		return;
 	}
 
+	if (!IsValid(this->M_UMouseStructManager))
+	{
+		return;
+	}
 
 	//准备时间
 	this->CurGameReadyTime += DeltaTime;
@@ -1589,6 +1599,10 @@ AMouseActor* GetMouseType(const UMouseLineManager* const  CurLine, const ELineTy
 	}
 	case ELineType::OnGround: {
 		return CurLine->GetMouseTopByGorund();
+	}
+	case ELineType::OnWater:
+	{
+		return CurLine->GetMouseTopByOnWater();
 	}
 	default:
 	{

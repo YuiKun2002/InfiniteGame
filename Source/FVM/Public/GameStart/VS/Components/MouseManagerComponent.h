@@ -46,6 +46,8 @@ public:
 	AMouseActor* GetMouseTopByUnderGorund() const;
 	//获取空中最前老鼠
 	AMouseActor* GetMouseTopBySky() const;
+	//获取水中最前老鼠
+	AMouseActor* GetMouseTopByOnWater() const;
 	//获取所有类型最前的老鼠
 	AMouseActor* GetMouseTopByAllType() const;
 	//获取陆地老鼠
@@ -96,6 +98,9 @@ private:
 	//空中最前老鼠
 	UPROPERTY(EditAnywhere)
 	AMouseActor* CurMouseSkyTop = nullptr;
+	//水中最前
+	UPROPERTY(EditAnywhere)
+	AMouseActor* CurMouseOnWaterTop = nullptr;
 
 	//陆地老鼠
 	UPROPERTY(EditAnywhere, Meta = (AllowPrivateAccess = "true"))
