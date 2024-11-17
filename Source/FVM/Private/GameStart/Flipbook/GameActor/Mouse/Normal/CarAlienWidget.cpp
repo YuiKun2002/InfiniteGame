@@ -15,7 +15,7 @@ ACarAlienWidget::ACarAlienWidget()
 {
 	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(
 		TEXT("CarAlienWidgetLeftLocationComp"));
-	this->CheckWidLeftLocationComp = CreateDefaultSubobject<USceneComponent>(
+	this->CheckWidRightLocationComp = CreateDefaultSubobject<USceneComponent>(
 		TEXT("CarAlienWidgetRightLocationComp"));
 }
 
